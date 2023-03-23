@@ -2,7 +2,7 @@ import { createTheme } from "@mui/material/styles";
 import red from "@mui/material/colors/red";
 
 export const color = {
-  primary: "#34567b",
+  primary: "#274BF1",
   secondary: "#D6AC85",
   white: "#ffff",
   darkGreen: "#264653",
@@ -39,7 +39,7 @@ theme = createTheme(theme, {
     MuiGrid: {
       styleOverrides: {
         container: {
-          maxWidth: 1200,
+          maxWidth: 1800,
           margin: "0px auto",
         },
       },
@@ -48,19 +48,19 @@ theme = createTheme(theme, {
       styleOverrides: {
         root: {
           boxShadow: "0px 3px 6px #00000052",
-          fontFamily: "PoppinsMedium !important",
+          fontFamily: "Roobert-Regular !important",
           fontSize: "16px",
+          textTransform: "capitalize",
         },
         containedPrimary: {
           color: `${color.white}`,
-          background:
-            "transparent linear-gradient(264deg, #3A5B7E 0%, #1F4771 100%) 0% 0% no-repeat padding-box",
+          background: "#274BF1",
           "&:hover": {
-            backgroundColor: "#1f4771",
+            backgroundColor: "#274BF1",
           },
         },
         outlinedPrimary: {
-          border: "1px solid #1f4771",
+          border: "1px solid #274BF1",
         },
       },
     },
