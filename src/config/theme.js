@@ -3,7 +3,7 @@ import red from "@mui/material/colors/red";
 
 export const color = {
   primary: "#274BF1",
-  secondary: "#D6AC85",
+  secondary: "#202939",
   white: "#ffff",
   darkGreen: "#264653",
   black: "#5A5A5A",
@@ -49,8 +49,8 @@ theme = createTheme(theme, {
         root: {
           boxShadow: "0px 3px 6px #00000052",
           fontFamily: "Roobert-Regular !important",
-          fontSize: "16px",
-          textTransform: "capitalize",
+          fontSize: "15px",
+          textTransform: "inherit",
         },
         containedPrimary: {
           color: `${color.white}`,
@@ -76,6 +76,14 @@ theme = createTheme(theme, {
         root: {
           marginLeft: "0px !important",
           color: `${color.primary}`,
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Roobert-Regular",
+          color: "#202939",
         },
       },
     },
@@ -123,8 +131,9 @@ theme = createTheme(theme, {
     MuiStepConnector: {
       styleOverrides: {
         root: {
-          height: "4px !important",
-          backgroundColor: `${color.secondary}`,
+          height: "3px !important",
+          marginTop: "5px",
+          // backgroundColor: `${color.secondary}`,
           "&.Mui-active": {
             backgroundColor: `${color.primary}`,
           },
@@ -147,6 +156,10 @@ theme = createTheme(theme, {
     },
     MuiStepLabel: {
       styleOverrides: {
+        label: {
+          fontFamily: "Roobert-Regular !important",
+          fontSize: "14px !important",
+        },
         iconContainer: {
           padding: "0px !important",
         },
@@ -155,8 +168,8 @@ theme = createTheme(theme, {
     MuiStepIcon: {
       styleOverrides: {
         root: {
-          height: "45px !important",
-          width: "45px !important",
+          height: "35px !important",
+          width: "35px !important",
           color: "#0000",
           border: "1px solid #1f4771",
           borderRadius: "23px !important",
@@ -173,8 +186,8 @@ theme = createTheme(theme, {
             border: "0px !important",
           },
           [theme.breakpoints.down("md")]: {
-            height: "35px !important",
-            width: "35px !important",
+            height: "30px !important",
+            width: "30px !important",
             borderRadius: "18px !important",
           },
           [theme.breakpoints.down("sm")]: {
@@ -184,8 +197,8 @@ theme = createTheme(theme, {
           },
         },
         text: {
-          fontFamily: "PoppinsMedium",
-          fill: `${color.primary}`,
+          fontWeight: "700",
+          fill: "#475569",
 
           "&.Mui-active": {
             fill: `${color.white}`,
