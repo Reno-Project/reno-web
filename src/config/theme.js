@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material/styles";
+import { alpha, createTheme } from "@mui/material/styles";
 import red from "@mui/material/colors/red";
 
 export const color = {
@@ -123,8 +123,25 @@ theme = createTheme(theme, {
     MuiSelect: {
       styleOverrides: {
         root: {
-          paddingRight: 15,
+          paddingRight: 12,
           color: color.primary,
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          borderRadius: 4,
+          color: color.primary,
+          position: "relative",
+          backgroundColor: "#F5F6F8",
+          fontFamily: "Roobert-Regular",
+          padding: 0,
+        },
+        tag: {
+          backgroundColor: color.primary,
+          color: color.white,
+          borderRadius: 4,
         },
       },
     },

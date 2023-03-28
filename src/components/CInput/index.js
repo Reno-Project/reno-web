@@ -34,6 +34,7 @@ function CInput(props) {
     required = false,
     error = false,
     helperText = "",
+    multiline = "",
   } = props;
 
   return (
@@ -43,6 +44,7 @@ function CInput(props) {
       </InputLabel>
       <BootstrapInput
         {...props}
+        multiline={multiline}
         placeholder={placeholder}
         id="bootstrap-input"
       />
