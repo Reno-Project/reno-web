@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Detector } from "react-detect-offline";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import HowItWorks from "./pages/HowItWorks";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -25,6 +27,11 @@ function App() {
               </Routes>
             </div>
             <Footer />
+            <ToastContainer
+              autoClose={3000}
+              pauseOnFocusLoss={false}
+              toastClassName="toastStyle"
+            />
           </Router>
         );
       }}
