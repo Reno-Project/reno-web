@@ -1,7 +1,16 @@
 import React, { useState } from "react";
-import { Button, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { isEmpty } from "lodash";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import CInput from "../../components/CInput";
 import useStyles from "./styles";
 
@@ -23,6 +32,7 @@ const Signup = (props) => {
   const [state, setState] = useState({
     uname: "",
     email: "",
+    pCode: "971",
     phone: "",
     password: "",
   });
@@ -122,15 +132,33 @@ const Signup = (props) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <CInput
-                label="Phone"
+              <InputLabel shrink htmlFor="bootstrap-input">
+                Phone
+              </InputLabel>
+              <TextField
+                fullWidth
                 placeholder="Enter phone number"
+                style={{ marginBottom: 20 }}
                 value={state.phone}
                 onChange={(e) => {
                   setState({ ...state, phone: e.target.value });
                   setErrObj({ ...errObj, phoneErr: false, phoneMsg: "" });
                 }}
-                white={false}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment
+                      position="start"
+                      style={{ marginLeft: "-13px" }}
+                    >
+                      <PhoneInput
+                        country={"ae"}
+                        value={state.pCode}
+                        onChange={(code) => setState({ ...state, pCode: code })}
+                      />
+                    </InputAdornment>
+                  ),
+                }}
+                className={classes.pickerInput}
                 error={errObj.phoneErr}
                 helperText={errObj.phoneMsg}
               />

@@ -65,6 +65,17 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     flexDirection: "row",
   },
+  pickerInput: {
+    "& > div > div > div > input": {
+      width: "0px !important",
+      border: "0px !important",
+      paddingLeft: "38px !important",
+    },
+    "& > div > div > div > div": {
+      border: "0px !important",
+      backgroundColor: "#0000 !important",
+    },
+  },
 }));
 
 export default useStyles;
