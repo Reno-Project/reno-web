@@ -10,8 +10,8 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
   "& .MuiInputBase-input": {
     borderRadius: 4,
     position: "relative",
-    backgroundColor: "#F5F6F8",
-    border: "1px solid #F5F6F8",
+    backgroundColor: "#FFF",
+    border: "1px solid #FFF",
     fontSize: 14,
     padding: "10px 12px",
     transition: theme.transitions.create([
@@ -26,7 +26,6 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-
 function CInput(props) {
   const {
     label = "",
@@ -47,6 +46,7 @@ function CInput(props) {
         multiline={multiline}
         placeholder={placeholder}
         id="bootstrap-input"
+        style={{ border: error ? "1px solid red" : "none", borderRadius: 6 }}
       />
       <FormHelperText
         error={error}

@@ -3,6 +3,7 @@ import {
   alpha,
   Autocomplete,
   FormControl,
+  FormHelperText,
   InputLabel,
   TextField,
 } from "@mui/material";
@@ -10,7 +11,6 @@ import React, { useState } from "react";
 
 const Select = styled(Autocomplete)(({ theme }) => ({
   marginTop: 24,
-  marginBottom: 20,
   borderRadius: 6,
   "& .MuiOutlinedInput-root": {
     backgroundColor: "#FFF",
@@ -39,30 +39,41 @@ const Select = styled(Autocomplete)(({ theme }) => ({
 }));
 
 export default function Cselect(props) {
-  const [data, setData] = useState("");
-
   const {
+    handleSelect = () => null,
     label = "",
     required = false,
     error = false,
+    helperText = "",
+    multiple = "",
     placeholder = "",
     renderTags = [],
   } = props;
+
   return (
     <FormControl variant="standard" fullWidth required={required} error={error}>
       <InputLabel shrink htmlFor="bootstrap-input">
         {label}
       </InputLabel>
       <Select
+        style={{ border: error ? "1px solid red" : "none" }}
         variant="contained"
         id="tags-outlined"
+        multiple={multiple}
         options={renderTags}
         getOptionLabel={(item) => item}
         filterSelectedOptions
         renderInput={(params) => (
           <TextField {...params} placeholder={placeholder} />
         )}
+        onChange={(e) => handleSelect(e.target.innerText)}
       />
+      <FormHelperText
+        error={error}
+        style={{ marginBottom: 20, fontFamily: "Roobert-Regular" }}
+      >
+        {helperText}
+      </FormHelperText>
     </FormControl>
   );
 }
