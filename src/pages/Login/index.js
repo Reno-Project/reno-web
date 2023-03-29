@@ -4,9 +4,11 @@ import { NavLink } from "react-router-dom";
 import { isEmpty } from "lodash";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import authActions from "../../redux/reducers/auth/actions";
 import { Setting } from "../../utils/Setting";
 import CInput from "../../components/CInput";
+import GoogleLoginButton from "../../components/SocialLogin/GoogleLoginButton";
 import Images from "../../config/images";
 import { getApiData } from "../../utils/APIHelper";
 import useStyles from "./styles";
@@ -166,16 +168,9 @@ const Login = (props) => {
               <div className={classes.borderDivStyle} />
             </Grid>
             <Grid item xs={12} style={{ marginTop: 18 }}>
-              <div className={classes.socialContainerStyle}>
-                <img
-                  src={Images.google}
-                  alt="google"
-                  className={classes.socialImgStyle}
-                />
-                <Typography className={classes.socialTextStyle}>
-                  Google
-                </Typography>
-              </div>
+              <GoogleOAuthProvider clientId={Setting.GOOGLE_CLIENT_ID}>
+                <GoogleLoginButton />
+              </GoogleOAuthProvider>
               <div className={classes.socialContainerStyle}>
                 <img
                   src={Images.fb}

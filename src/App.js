@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Detector } from "react-detect-offline";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { initializeApp } from "firebase/app";
 import HowItWorks from "./pages/HowItWorks";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -11,7 +12,19 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import "./App.css";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
+  authDomain: "reno-home.firebaseapp.com",
+  projectId: "reno-home",
+  storageBucket: "reno-home.appspot.com",
+  messagingSenderId: "271291217173",
+  appId: "1:271291217173:web:7a4260dcb3527e5869651c",
+  measurementId: "G-FL6WQC501W",
+};
+
 function App() {
+  initializeApp(firebaseConfig);
+
   return (
     <Detector
       render={({ online }) => {

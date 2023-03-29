@@ -8,7 +8,8 @@ export const Setting = {
   api: baseUrl,
 
   FACEBOOK_APP_ID: "",
-  GOOGLE_CLIENT_ID: "",
+  GOOGLE_CLIENT_ID:
+    "271291217173-edt0r9crj6puar4o75r2ipagf0inimue.apps.googleusercontent.com",
   GOOGLE_CLIENT_SECRET_KEY: "",
 
   endpoints: {
