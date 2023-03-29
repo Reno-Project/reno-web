@@ -1,9 +1,14 @@
 import React, { useState } from "react";
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, CircularProgress, Grid, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { isEmpty } from "lodash";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import authActions from "../../redux/reducers/auth/actions";
+import { Setting } from "../../utils/Setting";
 import CInput from "../../components/CInput";
 import Images from "../../config/images";
+import { getApiData } from "../../utils/APIHelper";
 import useStyles from "./styles";
 
 const errorObj = {
@@ -17,9 +22,12 @@ const Login = (props) => {
   const classes = useStyles();
   const emailRegex =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const dispatch = useDispatch();
+  const { setUserData, setToken } = authActions;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errObj, setErrObj] = useState(errorObj);
+  const [btnLoad, setBtnLoad] = useState(false);
 
   // this function checks validation of login field
   function validation() {
@@ -48,10 +56,33 @@ const Login = (props) => {
       error.passwordMsg = "Password length must be of 8-15";
     }
 
-    console.log("erorr ==>>", error);
     setErrObj(error);
     if (valid) {
-      // loginUser();
+      loginUser();
+    }
+  }
+
+  // this function for login user
+  async function loginUser() {
+    setBtnLoad(true);
+    try {
+      const response = await getApiData(Setting.endpoints.login, "POST", {
+        email,
+        password,
+        device_type: "web",
+      });
+
+      if (response.success) {
+        dispatch(setUserData(response?.data));
+        dispatch(setToken(response?.token));
+      } else {
+        toast.error(response.message);
+      }
+      setBtnLoad(false);
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
+      setBtnLoad(false);
+      toast.error(error.toString());
     }
   }
 
@@ -112,8 +143,13 @@ const Login = (props) => {
                 fullWidth
                 style={{ marginTop: 20, marginBottom: 20 }}
                 onClick={validation}
+                disabled={btnLoad}
               >
-                Sign in
+                {btnLoad ? (
+                  <CircularProgress style={{ color: "#fff" }} size={26} />
+                ) : (
+                  "Sign in"
+                )}
               </Button>
             </Grid>
             <Grid

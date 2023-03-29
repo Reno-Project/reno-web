@@ -1,7 +1,7 @@
 import types from "./actions";
 
 const initialState = {
-  userdata: {},
+  userData: {},
   token: "",
 };
 
@@ -11,7 +11,7 @@ export default function reducer(state = initialState, action) {
       localStorage.setItem("userData", JSON.stringify(action.userdata));
       return {
         ...state,
-        userdata: action.userdata,
+        userData: action.userdata,
       };
 
     case types.SET_TOKEN:
@@ -25,7 +25,7 @@ export default function reducer(state = initialState, action) {
       localStorage.removeItem("userData", "token");
       return {
         ...state,
-        userdata: {},
+        userData: {},
         token: "",
       };
 
