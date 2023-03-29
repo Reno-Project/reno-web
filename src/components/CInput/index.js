@@ -3,6 +3,30 @@ import { InputLabel, InputBase, alpha, FormHelperText } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import styled from "@emotion/styled";
 
+const BootstrapInput = styled(InputBase)(({ theme }) => ({
+  "label + &": {
+    marginTop: theme.spacing(3),
+  },
+  "& .MuiInputBase-input": {
+    borderRadius: 4,
+    position: "relative",
+    backgroundColor: "#F5F6F8",
+    border: "1px solid #F5F6F8",
+    fontSize: 14,
+    padding: "10px 12px",
+    transition: theme.transitions.create([
+      "border-color",
+      "background-color",
+      "box-shadow",
+    ]),
+    fontFamily: "Roobert-Regular",
+    "&:focus": {
+      boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
+      borderColor: theme.palette.primary.main,
+    },
+  },
+}));
+
 function CInput(props) {
   const {
     label = "",
@@ -11,32 +35,7 @@ function CInput(props) {
     error = false,
     helperText = "",
     multiline = "",
-    white = true,
   } = props;
-
-  const BootstrapInput = styled(InputBase)(({ theme }) => ({
-    "label + &": {
-      marginTop: theme.spacing(3),
-    },
-    "& .MuiInputBase-input": {
-      borderRadius: 4,
-      position: "relative",
-      backgroundColor: white ? "#FFF" : "#F5F6F8",
-      border: white ? "1px solid #E8E8E8" : "1px solid #F5F6F8",
-      fontSize: 14,
-      padding: "10px 12px",
-      transition: theme.transitions.create([
-        "border-color",
-        "background-color",
-        "box-shadow",
-      ]),
-      fontFamily: "Roobert-Regular",
-      "&:focus": {
-        boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
-        borderColor: theme.palette.primary.main,
-      },
-    },
-  }));
 
   return (
     <FormControl variant="standard" fullWidth required={required} error={error}>
