@@ -12,16 +12,13 @@ import {
   LinkedIn,
   CreateOutlined,
   AttachFileOutlined,
-  Image,
   ImageOutlined,
-  PictureInPictureAlt,
 } from "@mui/icons-material";
 import CStepper from "../../components/CStepper";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
 import useStyles from "./styles";
 import { isEmpty, isObject } from "lodash";
-import { bgcolor, borderRadius, height } from "@mui/system";
 
 const errorObj = {
   cnameErr: false,
@@ -232,10 +229,15 @@ const CreateProfile = (props) => {
   // this function handles the steps
   function continueStep() {
     setActiveStep((step) => step + 1);
-    setChangeTab(changeTab === 1 ? 2 : changeTab === 2 ? 3 : 1);
+    setChangeTab((changeTab) => changeTab + 1);
+  }
+  function previousStep() {
+    setActiveStep((step) => step - 1);
+    setChangeTab((changeTab) => changeTab - 1);
   }
   const exp = ["Interior design", "Renovation", "Retouch"];
   const price = ["49", "99", "129", "189", "249"];
+  const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis"];
 
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
@@ -687,8 +689,167 @@ const CreateProfile = (props) => {
                 </Grid>
               </>
             ) : changeTab === 2 ? (
-              <></>
-            ) : null}
+              <>
+                <Grid container xs={10} style={{ marginTop: 20 }}>
+                  <Grid item xs={12}>
+                    <InputLabel htmlFor="bootstrap-input">
+                      Upload photo
+                    </InputLabel>
+                    <div
+                      style={{
+                        backgroundColor: "#F9F9FA",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "100%",
+                        height: 170,
+                      }}
+                    >
+                      <ImageOutlined
+                        style={{
+                          color: "grey",
+                          marginBottom: 20,
+                          fontSize: 30,
+                        }}
+                      />
+                      <InputLabel>
+                        <b>Upload your portfolio photos</b>
+                      </InputLabel>
+                      <InputLabel style={{ fontSize: 12 }}>
+                        {"PNG, JPG, (max size 1200*800)"}
+                      </InputLabel>
+                    </div>
+                  </Grid>
+
+                  <input
+                    type="file"
+                    accept="image/jpeg, image/png, image/jpg"
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      // opacity: 0,
+                    }}
+                    onChange={(e) => {
+                      setState({ ...state, portfolio: e.target.files[0] });
+                    }}
+                  />
+                  <Grid item style={{ marginTop: 40 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        border: "1px solid lightgrey",
+                        borderRadius: 6,
+                      }}
+                    >
+                      <img
+                        style={{
+                          width: "15%",
+
+                          borderRadius: 6,
+                          marginRight: 20,
+                        }}
+                        src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80"
+                        alt="Portfolio Photos"
+                      />
+                      <div style={{ margin: "auto 0" }}>
+                        <InputLabel>{state.portfolio.name}</InputLabel>
+                        <InputLabel>
+                          {state.portfolio
+                            ? `${(state.portfolio.size / 1000).toFixed(2)} kb`
+                            : ""}
+                        </InputLabel>
+                      </div>
+                    </div>
+                  </Grid>
+                  <Grid
+                    xs={8}
+                    item
+                    container
+                    style={{
+                      marginTop: 40,
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Grid item>
+                      <Button
+                        style={{ width: "230px" }}
+                        variant="outlined"
+                        onClick={() => previousStep()}
+                      >
+                        Previous Step
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        style={{ width: "230px" }}
+                        variant="contained"
+                        onClick={() => continueStep()}
+                      >
+                        Upload & Continue
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid item xs={10} style={{ marginTop: 20 }} id="cname">
+                  <CInput
+                    label="Beneficiary Name:"
+                    placeholder="Enter Beneficiary Name..."
+                    value={state.cname}
+                    onChange={(e) => {
+                      setState({ ...state, cname: e.target.value });
+                      setErrObj({ ...errObj, cnameErr: false, cnameMsg: "" });
+                    }}
+                    error={errObj.cnameErr}
+                    helperText={errObj.cnameMsg}
+                  />
+                </Grid>
+
+                <Grid item xs={10} id="description">
+                  <CInput
+                    multiline
+                    label="IBAN"
+                    placeholder="Enter IBAN"
+                    value={state.description}
+                    onChange={(e) => {
+                      setState({ ...state, description: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        descriptionErr: false,
+                        descriptionMsg: "",
+                      });
+                    }}
+                    error={errObj.descriptionErr}
+                    helperText={errObj.descriptionMsg}
+                  />
+                </Grid>
+
+                <Grid item xs={10} id="expertise">
+                  <Cselect
+                    label="Bank Name"
+                    placeholder="Select Bank"
+                    value={state.expertise}
+                    handleSelect={(e) => {
+                      setState({ ...state, expertise: e });
+                      setErrObj({
+                        ...errObj,
+                        expertiseErr: false,
+                        expertiseMsg: "",
+                      });
+                    }}
+                    renderTags={bank}
+                    error={errObj.expertiseErr}
+                    helperText={errObj.expertiseMsg}
+                  />
+                </Grid>
+              </>
+            )}
           </Grid>
         </Grid>
       </Grid>
