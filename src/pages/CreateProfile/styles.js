@@ -24,6 +24,19 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 40,
     padding: "50px 0px",
   },
+  buttonAbsoluteDiv: {
+    position: "absolute",
+    bottom: 5,
+    right: 8,
+  },
+  uploadIcon: {
+    backgroundColor: `#475569 !important`,
+    minWidth: "30px !important",
+    minHeight: "30px !important",
+    borderRadius: "100% !important",
+    padding: "0px !important",
+    border: "1px solid #FFF",
+  },
 }));
 
 export default useStyles;

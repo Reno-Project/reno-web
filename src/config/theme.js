@@ -90,22 +90,22 @@ theme = createTheme(theme, {
     MuiOutlinedInput: {
       styleOverrides: {
         input: {
-          padding: "10px 14px",
-          height: 24,
+          padding: "10px 12px",
           fontSize: 14,
           minHeight: "1.3375em !important",
         },
         root: {
-          // border: `1px solid ${color.primary}`,
+          backgroundColor: "#FFF",
           "&.Mui-focused": {
-            border: "0px !important",
+            boxShadow: "rgba(39, 75, 241, 0.25) 0 0 0 0.2rem",
+            borderColor: "#274BF1",
           },
           "& > textarea": {
             padding: 0,
           },
         },
         notchedOutline: {
-          borderColor: color.primary,
+          borderColor: "#F5F6F8",
         },
       },
     },

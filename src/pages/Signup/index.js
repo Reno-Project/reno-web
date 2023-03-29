@@ -102,6 +102,7 @@ const Signup = (props) => {
                   setState({ ...state, uname: e.target.value });
                   setErrObj({ ...errObj, unameErr: false, unameMsg: "" });
                 }}
+                white={false}
                 error={errObj.unameErr}
                 helperText={errObj.unameMsg}
               />
@@ -115,6 +116,7 @@ const Signup = (props) => {
                   setState({ ...state, email: e.target.value });
                   setErrObj({ ...errObj, emailErr: false, emailMsg: "" });
                 }}
+                white={false}
                 error={errObj.emailErr}
                 helperText={errObj.emailMsg}
               />
@@ -128,6 +130,7 @@ const Signup = (props) => {
                   setState({ ...state, phone: e.target.value });
                   setErrObj({ ...errObj, phoneErr: false, phoneMsg: "" });
                 }}
+                white={false}
                 error={errObj.phoneErr}
                 helperText={errObj.phoneMsg}
               />
@@ -141,6 +144,7 @@ const Signup = (props) => {
                   setState({ ...state, password: e.target.value });
                   setErrObj({ ...errObj, passwordErr: false, passwordMsg: "" });
                 }}
+                white={false}
                 error={errObj.passwordErr}
                 helperText={errObj.passwordMsg}
               />

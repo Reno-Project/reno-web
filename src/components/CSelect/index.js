@@ -10,8 +10,10 @@ import React, { useState } from "react";
 
 const Select = styled(Autocomplete)(({ theme }) => ({
   marginTop: 24,
-  marginBottom: 26,
+  marginBottom: 20,
+  borderRadius: 6,
   "& .MuiOutlinedInput-root": {
+    backgroundColor: "#FFF",
     "&.Mui-focused": {
       transition: theme.transitions.create([
         "border-color",
@@ -24,7 +26,7 @@ const Select = styled(Autocomplete)(({ theme }) => ({
     "& .MuiAutocomplete-input": {
       borderRadius: 4,
       position: "relative",
-      backgroundColor: "#F5F6F8",
+      backgroundColor: "#FFF",
       fontSize: 14,
       fontFamily: "Roobert-Regular",
       padding: 0,

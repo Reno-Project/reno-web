@@ -81,6 +81,7 @@ const Login = (props) => {
                   setEmail(e.target.value);
                   setErrObj({ ...errObj, emailErr: false, emailMsg: "" });
                 }}
+                white={false}
                 error={errObj.emailErr}
                 helperText={errObj.emailMsg}
               />
@@ -94,6 +95,7 @@ const Login = (props) => {
                   setPassword(e.target.value);
                   setErrObj({ ...errObj, passwordErr: false, passwordMsg: "" });
                 }}
+                white={false}
                 error={errObj.passwordErr}
                 helperText={errObj.passwordMsg}
               />
@@ -163,7 +165,7 @@ const Login = (props) => {
               <Typography className={classes.accountTextStyle}>
                 Need an account?{" "}
               </Typography>
-              <NavLink to="" className={classes.linkStyle}>
+              <NavLink to="/signup" className={classes.linkStyle}>
                 <Typography
                   className={`${classes.menuTitleStyle} ${classes.mrL3}`}
                 >
