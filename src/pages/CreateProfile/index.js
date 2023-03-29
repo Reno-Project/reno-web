@@ -1,12 +1,22 @@
 import React, { useState } from "react";
-import { Button, Grid, InputAdornment, Typography } from "@mui/material";
+import {
+  Button,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  TextField,
+  Typography,
+} from "@mui/material";
+import {
+  Facebook,
+  LinkedIn,
+  CreateOutlined,
+  AttachFileOutlined,
+} from "@mui/icons-material";
 import CStepper from "../../components/CStepper";
-import useStyles from "./styles";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
-import Images from "../../config/images";
-import { color } from "../../config/theme";
-import { Facebook, Image, LinkedIn, Upload } from "@mui/icons-material";
+import useStyles from "./styles";
 
 const errorObj = {
   cnameErr: false,
@@ -54,7 +64,7 @@ const CreateProfile = (props) => {
     expertise: "",
     location: "",
     linkedin: "",
-    sociel: "",
+    social: "",
   });
   const [errObj, setErrObj] = useState(errorObj);
 
@@ -95,7 +105,53 @@ const CreateProfile = (props) => {
               />
             </Grid>
 
-            <Grid item xs={10}>
+            <Grid
+              item
+              xs={10}
+              style={{ marginTop: 20 }}
+              alignItems="center"
+              justifyContent="center"
+              display="flex"
+              flexDirection="column"
+            >
+              <div style={{ marginTop: 15, marginBottom: 15 }}>
+                <div
+                  style={{
+                    position: "relative",
+                    height: 120,
+                    width: 120,
+                  }}
+                >
+                  <img
+                    src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80"
+                    alt="business_logo"
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <div className={classes.buttonAbsoluteDiv}>
+                    <Button component="label" className={classes.uploadIcon}>
+                      <CreateOutlined
+                        style={{ fontSize: "16px", color: "#FFF" }}
+                      />
+                      <input
+                        type="file"
+                        accept="image/jpeg, image/png, image/jpg"
+                        hidden
+                      />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <Typography
+                style={{ fontFamily: "Roobert-Regular", color: "#475569" }}
+              >
+                Upload business logo
+              </Typography>
+            </Grid>
+            <Grid item xs={10} style={{ marginTop: 20 }}>
               <CInput
                 label="Company name"
                 placeholder="Enter company name..."
@@ -261,14 +317,120 @@ const CreateProfile = (props) => {
             </Grid>
 
             <Grid item xs={10}>
-              <CInput
-                startAdornment={
-                  <InputAdornment position="start">
-                    {<LinkedIn />}
-                  </InputAdornment>
-                }
-                label="Team linkedin profile"
-                placeholder="Enter Link"
+              <InputLabel shrink htmlFor="bootstrap-input">
+                ISO Certificate
+              </InputLabel>
+              <div style={{ position: "relative" }}>
+                <TextField
+                  fullWidth
+                  placeholder="Upload ISO certificate"
+                  style={{ marginBottom: 20 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <AttachFileOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                  // error={errObj.CNumberErr}
+                  // helperText={errObj.CNumberErr ? errObj.CNumberMsg : null}
+                />
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png, image/jpg"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    opacity: 0,
+                  }}
+                />
+              </div>
+            </Grid>
+            <Grid item xs={10}>
+              <InputLabel shrink htmlFor="bootstrap-input">
+                Licenses
+              </InputLabel>
+              <div style={{ position: "relative" }}>
+                <TextField
+                  fullWidth
+                  placeholder="Upload Licenses"
+                  style={{ marginBottom: 20 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <AttachFileOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                  // error={errObj.CNumberErr}
+                  // helperText={errObj.CNumberErr ? errObj.CNumberMsg : null}
+                />
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png, image/jpg"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    opacity: 0,
+                  }}
+                />
+              </div>
+            </Grid>
+            <Grid item xs={10}>
+              <InputLabel shrink htmlFor="bootstrap-input">
+                Company Registration
+              </InputLabel>
+              <div style={{ position: "relative" }}>
+                <TextField
+                  fullWidth
+                  placeholder="Upload Company registration"
+                  style={{ marginBottom: 20 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <AttachFileOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                  // error={errObj.CNumberErr}
+                  // helperText={errObj.CNumberErr ? errObj.CNumberMsg : null}
+                />
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png, image/jpg"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    opacity: 0,
+                  }}
+                />
+              </div>
+            </Grid>
+
+            <Grid item xs={10}>
+              <InputLabel shrink htmlFor="bootstrap-input">
+                Team Linkedin profile
+              </InputLabel>
+              <TextField
+                fullWidth
+                placeholder="Enter link..."
+                style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LinkedIn />
+                    </InputAdornment>
+                  ),
+                }}
                 value={state.linkedin}
                 onChange={(e) => {
                   setState({ ...state, linkedin: e.target.value });
@@ -277,17 +439,23 @@ const CreateProfile = (props) => {
             </Grid>
 
             <Grid item xs={10}>
-              <CInput
-                startAdornment={
-                  <InputAdornment position="start">
-                    {<Facebook />}
-                  </InputAdornment>
-                }
-                label="Social Media"
-                placeholder="Enter Link"
-                value={state.linkedin}
+              <InputLabel shrink htmlFor="bootstrap-input">
+                Social Media
+              </InputLabel>
+              <TextField
+                fullWidth
+                placeholder="Enter link..."
+                style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Facebook />
+                    </InputAdornment>
+                  ),
+                }}
+                value={state.social}
                 onChange={(e) => {
-                  setState({ ...state, linkedin: e.target.value });
+                  setState({ ...state, social: e.target.value });
                 }}
               />
             </Grid>
@@ -304,10 +472,11 @@ const CreateProfile = (props) => {
               </Button>
             </Grid>
 
-            <Grid item xs={5}>
+            <Grid item xs={12}>
               <Typography
                 style={{
                   fontFamily: "Roobert-Regular",
+                  textAlign: "center",
                 }}
               >
                 Already have an account,
