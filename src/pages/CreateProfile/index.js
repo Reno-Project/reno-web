@@ -13,6 +13,7 @@ import {
   CreateOutlined,
   AttachFileOutlined,
   ImageOutlined,
+  ClearOutlined,
 } from "@mui/icons-material";
 import CStepper from "../../components/CStepper";
 import CInput from "../../components/CInput";
@@ -49,13 +50,17 @@ const errorObj = {
   licenseMsg: "",
   registrationErr: false,
   registrationMsg: "",
+  bnameErr: false,
+  bnameMsg: "",
+  ibanErr: false,
+  ibanMsg: "",
 };
 
 const CreateProfile = (props) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [errObj, setErrObj] = useState(errorObj);
-  const [changeTab, setChangeTab] = useState(1);
+  const [changeTab, setChangeTab] = useState(0);
   const [state, setState] = useState({
     cname: "",
     description: "",
@@ -75,7 +80,6 @@ const CreateProfile = (props) => {
     social: "",
     portfolio: "",
   });
-  console.log("state=====>>>>>", state.portfolio);
 
   //validation function
   function CheckValidattion() {
@@ -237,7 +241,9 @@ const CreateProfile = (props) => {
   }
   const exp = ["Interior design", "Renovation", "Retouch"];
   const price = ["49", "99", "129", "189", "249"];
-  const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis"];
+  const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis", ""];
+  const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+  const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, , 12, 13, 14, 15];
 
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
@@ -314,7 +320,7 @@ const CreateProfile = (props) => {
                 {changeTab === 1 && "Upload business logo"}
               </Typography>
             </Grid>
-            {changeTab === 1 ? (
+            {changeTab === 0 ? (
               <>
                 <Grid item xs={10} style={{ marginTop: 20 }} id="cname">
                   <CInput
@@ -352,7 +358,7 @@ const CreateProfile = (props) => {
                   <Grid item xs={6} id="email">
                     <CInput
                       label="Email"
-                      placeholder="Enter email..."
+                      placeholder="Enter Email..."
                       value={state.email}
                       onChange={(e) => {
                         setState({ ...state, email: e.target.value });
@@ -381,7 +387,7 @@ const CreateProfile = (props) => {
                   <Grid item xs={6} id="phone">
                     <CInput
                       label="Phone"
-                      placeholder="Enter phone number"
+                      placeholder="Enter Phone No."
                       value={state.phone}
                       onChange={(e) => {
                         setState({ ...state, phone: e.target.value });
@@ -392,14 +398,15 @@ const CreateProfile = (props) => {
                     />
                   </Grid>
                   <Grid item xs={6} id="year">
-                    <CInput
-                      label="Number of years in business:"
+                    <Cselect
+                      label="Number of Years in Business:"
                       placeholder="Enter No. of Years"
                       value={state.businessYear}
                       onChange={(e) => {
                         setState({ ...state, businessYear: e.target.value });
                         setErrObj({ ...errObj, yearErr: false, yearMsg: "" });
                       }}
+                      renderTags={contractArr}
                       error={errObj.yearErr}
                       helperText={errObj.yearMsg}
                     />
@@ -408,9 +415,9 @@ const CreateProfile = (props) => {
 
                 <Grid item container xs={10} gap={2.5} wrap="nowrap">
                   <Grid item xs={6} id="employee">
-                    <CInput
+                    <Cselect
                       label="Number of Employees"
-                      placeholder="Enter No. of Employee"
+                      placeholder="Enter No. of Employees"
                       value={state.employees}
                       onChange={(e) => {
                         setState({ ...state, employees: e.target.value });
@@ -420,13 +427,14 @@ const CreateProfile = (props) => {
                           employeeMsg: "",
                         });
                       }}
+                      renderTags={employeeArr}
                       error={errObj.employeeErr}
                       helperText={errObj.employeeMsg}
                     />
                   </Grid>
                   <Grid item xs={6} id="contract">
                     <CInput
-                      label="Number of contracts annually:"
+                      label="Number of Contracts Annually:"
                       placeholder="Enter No. of Contracts"
                       value={state.annualContract}
                       onChange={(e) => {
@@ -445,6 +453,7 @@ const CreateProfile = (props) => {
 
                 <Grid item xs={10} id="expertise">
                   <Cselect
+                    multiple
                     label="Expertise Area"
                     placeholder="Select Area of Expertise"
                     value={state.expertise}
@@ -464,6 +473,7 @@ const CreateProfile = (props) => {
 
                 <Grid item xs={10} id="pricing">
                   <Cselect
+                    multiple
                     handleSelect={(e) => {
                       setState({ ...state, pricing: e });
                       setErrObj({ ...errObj, priceErr: false, priceMsg: "" });
@@ -480,7 +490,7 @@ const CreateProfile = (props) => {
                 <Grid item xs={10} id="location">
                   <CInput
                     label="Location"
-                    placeholder="Enter location here..."
+                    placeholder="Enter Location Here..."
                     value={state.location}
                     onChange={(e) => {
                       setState({ ...state, location: e.target.value });
@@ -502,14 +512,24 @@ const CreateProfile = (props) => {
                   <div style={{ position: "relative" }}>
                     <TextField
                       fullWidth
-                      placeholder="Upload ISO certificate"
+                      placeholder="Upload ISO Certificate"
                       style={{ marginBottom: 20 }}
-                      value={state.certificate.name}
+                      value={state.certificate?.name || ""}
                       InputProps={{
                         endAdornment: (
-                          <InputAdornment position="end">
-                            <AttachFileOutlined />
-                          </InputAdornment>
+                          <>
+                            <InputAdornment position="end">
+                              <ClearOutlined
+                                style={{ zIndex: 10, cursor: "pointer" }}
+                                onClick={() => {
+                                  setState({ ...state, certificate: "" });
+                                }}
+                              />
+                            </InputAdornment>
+                            <InputAdornment position="end">
+                              <AttachFileOutlined />
+                            </InputAdornment>
+                          </>
                         ),
                       }}
                       error={errObj.certiErr}
@@ -541,13 +561,23 @@ const CreateProfile = (props) => {
                     <TextField
                       fullWidth
                       placeholder="Upload Licenses"
-                      value={state.license.name}
+                      value={state.license?.name || ""}
                       style={{ marginBottom: 20 }}
                       InputProps={{
                         endAdornment: (
-                          <InputAdornment position="end">
-                            <AttachFileOutlined />
-                          </InputAdornment>
+                          <>
+                            <InputAdornment position="end">
+                              <ClearOutlined
+                                style={{ zIndex: 10, cursor: "pointer" }}
+                                onClick={() => {
+                                  setState({ ...state, license: "" });
+                                }}
+                              />
+                            </InputAdornment>
+                            <InputAdornment position="end">
+                              <AttachFileOutlined />
+                            </InputAdornment>
+                          </>
                         ),
                       }}
                       error={errObj.licenseErr}
@@ -582,14 +612,24 @@ const CreateProfile = (props) => {
                   <div style={{ position: "relative" }}>
                     <TextField
                       fullWidth
-                      placeholder="Upload Company registration"
-                      value={state.registraion.name}
+                      placeholder="Upload Company Registration"
+                      value={state.registraion?.name || ""}
                       style={{ marginBottom: 20 }}
                       InputProps={{
                         endAdornment: (
-                          <InputAdornment position="end">
-                            <AttachFileOutlined />
-                          </InputAdornment>
+                          <>
+                            <InputAdornment position="end">
+                              <ClearOutlined
+                                style={{ zIndex: 10, cursor: "pointer" }}
+                                onClick={() => {
+                                  setState({ ...state, registraion: "" });
+                                }}
+                              />
+                            </InputAdornment>
+                            <InputAdornment position="end">
+                              <AttachFileOutlined />
+                            </InputAdornment>
+                          </>
                         ),
                       }}
                       error={errObj.registrationErr}
@@ -622,7 +662,7 @@ const CreateProfile = (props) => {
 
                 <Grid item xs={10}>
                   <InputLabel shrink htmlFor="bootstrap-input">
-                    Team Linkedin profile
+                    Team Linkedin Profile
                   </InputLabel>
                   <TextField
                     fullWidth
@@ -688,12 +728,12 @@ const CreateProfile = (props) => {
                   </Typography>
                 </Grid>
               </>
-            ) : changeTab === 2 ? (
+            ) : changeTab === 1 ? (
               <>
                 <Grid container xs={10} style={{ marginTop: 20 }}>
                   <Grid item xs={12}>
                     <InputLabel htmlFor="bootstrap-input">
-                      Upload photo
+                      Upload Photo
                     </InputLabel>
                     <div
                       style={{
@@ -714,7 +754,7 @@ const CreateProfile = (props) => {
                         }}
                       />
                       <InputLabel>
-                        <b>Upload your portfolio photos</b>
+                        <b>Upload Your Portfolio Photos</b>
                       </InputLabel>
                       <InputLabel style={{ fontSize: 12 }}>
                         {"PNG, JPG, (max size 1200*800)"}
@@ -756,22 +796,40 @@ const CreateProfile = (props) => {
                         alt="Portfolio Photos"
                       />
                       <div style={{ margin: "auto 0" }}>
-                        <InputLabel>{state.portfolio.name}</InputLabel>
+                        <InputLabel>{state.portfolio?.name || ""}</InputLabel>
                         <InputLabel>
                           {state.portfolio
                             ? `${(state.portfolio.size / 1000).toFixed(2)} kb`
                             : ""}
                         </InputLabel>
                       </div>
+                      {state.portfolio && (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            marginLeft: "auto",
+                            marginRight: 10,
+                          }}
+                        >
+                          <ClearOutlined
+                            style={{ zIndex: 10, cursor: "pointer" }}
+                            onClick={() =>
+                              setState({ ...state, portfolio: "" })
+                            }
+                          />
+                        </div>
+                      )}
                     </div>
                   </Grid>
                   <Grid
-                    xs={8}
+                    xs={12}
                     item
                     container
+                    gap={3}
                     style={{
                       marginTop: 40,
-                      justifyContent: "space-between",
+                      justifyContent: "center",
                     }}
                   >
                     <Grid item>
@@ -797,10 +855,10 @@ const CreateProfile = (props) => {
               </>
             ) : (
               <>
-                <Grid item xs={10} style={{ marginTop: 20 }} id="cname">
+                <Grid item xs={10} style={{ marginTop: 20 }} id="name">
                   <CInput
-                    label="Beneficiary Name:"
-                    placeholder="Enter Beneficiary Name..."
+                    label="Beneficiary Name"
+                    placeholder="Enter Beneficiary Name"
                     value={state.cname}
                     onChange={(e) => {
                       setState({ ...state, cname: e.target.value });
@@ -811,9 +869,8 @@ const CreateProfile = (props) => {
                   />
                 </Grid>
 
-                <Grid item xs={10} id="description">
+                <Grid item xs={10} id="iban">
                   <CInput
-                    multiline
                     label="IBAN"
                     placeholder="Enter IBAN"
                     value={state.description}
@@ -830,7 +887,7 @@ const CreateProfile = (props) => {
                   />
                 </Grid>
 
-                <Grid item xs={10} id="expertise">
+                <Grid item xs={10} id="bank">
                   <Cselect
                     label="Bank Name"
                     placeholder="Select Bank"
@@ -847,6 +904,84 @@ const CreateProfile = (props) => {
                     error={errObj.expertiseErr}
                     helperText={errObj.expertiseMsg}
                   />
+                </Grid>
+
+                <Grid item container xs={10} gap={2.5} wrap="nowrap">
+                  <Grid item xs={6} id="baccount">
+                    <CInput
+                      label="Bank Account"
+                      placeholder="Enter Bank Account Number"
+                      value={state.phone}
+                      onChange={(e) => {
+                        setState({ ...state, phone: e.target.value });
+                        setErrObj({ ...errObj, phoneErr: false, phoneMsg: "" });
+                      }}
+                      error={errObj.phoneErr}
+                      helperText={errObj.phoneMsg}
+                    />
+                  </Grid>
+                  <Grid item xs={6} id="swift">
+                    <CInput
+                      label="SWIFT code"
+                      placeholder="Enter SWIFT Code"
+                      value={state.businessYear}
+                      onChange={(e) => {
+                        setState({ ...state, businessYear: e.target.value });
+                        setErrObj({ ...errObj, yearErr: false, yearMsg: "" });
+                      }}
+                      error={errObj.yearErr}
+                      helperText={errObj.yearMsg}
+                    />
+                  </Grid>
+                </Grid>
+
+                <Grid item xs={10} id="Address">
+                  <CInput
+                    multiline
+                    label="Address"
+                    placeholder="Enter Address"
+                    value={state.description}
+                    onChange={(e) => {
+                      setState({ ...state, description: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        descriptionErr: false,
+                        descriptionMsg: "",
+                      });
+                    }}
+                    error={errObj.descriptionErr}
+                    helperText={errObj.descriptionMsg}
+                  />
+                </Grid>
+
+                <Grid
+                  xs={12}
+                  item
+                  container
+                  gap={3}
+                  style={{
+                    marginTop: 40,
+                    justifyContent: "center",
+                  }}
+                >
+                  <Grid item>
+                    <Button
+                      style={{ width: "230px" }}
+                      variant="outlined"
+                      onClick={() => previousStep()}
+                    >
+                      Previous Step
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      style={{ width: "230px" }}
+                      variant="contained"
+                      onClick={() => continueStep()}
+                    >
+                      Save & Create Profile
+                    </Button>
+                  </Grid>
                 </Grid>
               </>
             )}
