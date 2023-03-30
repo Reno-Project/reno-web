@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, CircularProgress, Grid, Typography } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { isEmpty } from "lodash";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -22,6 +22,7 @@ const errorObj = {
 
 const Login = (props) => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const emailRegex =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const Login = (props) => {
   const [password, setPassword] = useState("");
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
+  const [googleBtnLoad, setGoogleBtnLoad] = useState(false);
 
   // this function checks validation of login field
   function validation() {
@@ -84,6 +86,58 @@ const Login = (props) => {
     } catch (error) {
       console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
       setBtnLoad(false);
+      toast.error(error.toString());
+    }
+  }
+
+  // this function for login user
+  async function googleDataApiCall(googleCode) {
+    try {
+      setGoogleBtnLoad(true);
+      const response = await getApiData(Setting.endpoints.googleData, "POST", {
+        code: googleCode 
+      });
+
+      if (response.success) {
+        if (!isEmpty(response?.data)) {
+          socialLoginApiCall(response?.data, "google");
+        }
+      } else {
+        toast.error(response.message);
+        setGoogleBtnLoad(false);
+      }
+    } catch (error) {
+      console.log("🚀 ~ google data api call ~ error:", error);
+      toast.error(error.toString());
+      setGoogleBtnLoad(false);
+    }
+  }
+
+  // social login
+  async function socialLoginApiCall(socialData, type) {
+    try {
+      const response = await getApiData(Setting.endpoints.login, "POST", {
+        email: socialData?.email ? socialData?.email : "",
+        password: socialData?.password ? socialData?.password : "",
+        device_type: "web",
+        social_connection: type ? type : ""
+      });
+
+      console.log("socialLoginApiCallresponse =====>>> ", response);
+      if (response.success) {
+        if (response?.is_new_user) {
+          navigate("/signup", {state: {socialData, type}});
+        } else {
+          dispatch(setUserData(response?.data));
+          dispatch(setToken(response?.token));
+        }
+      } else {
+        toast.error(response.message);
+      }
+      setGoogleBtnLoad(false);
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
+      setGoogleBtnLoad(false);
       toast.error(error.toString());
     }
   }
@@ -169,7 +223,7 @@ const Login = (props) => {
             </Grid>
             <Grid item xs={12} style={{ marginTop: 18 }}>
               <GoogleOAuthProvider clientId={Setting.GOOGLE_CLIENT_ID}>
-                <GoogleLoginButton />
+                <GoogleLoginButton loader={googleBtnLoad} onGoogleDone={(val) => googleDataApiCall(val?.code)} />
               </GoogleOAuthProvider>
               <div className={classes.socialContainerStyle}>
                 <img

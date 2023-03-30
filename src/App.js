@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import CreateProfile from "./pages/CreateProfile";
 import ResetPassword from "./pages/ResetPassword";
+import OtpInput from "./pages/OtpInput";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import "./App.css";
@@ -39,6 +40,7 @@ function App() {
                 <Route path={"/signup"} element={<Signup />} />
                 <Route path={"/reset-password"} element={<ResetPassword />} />
                 <Route path={"/create-profile"} element={<CreateProfile />} />
+                <Route path={"/otp-verify"} element={<OtpInput />} />
               </Routes>
             </div>
             <Footer />

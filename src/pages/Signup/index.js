@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Grid,
@@ -6,13 +6,19 @@ import {
   InputLabel,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { isEmpty } from "lodash";
 import PhoneInput from "react-phone-input-2";
 import { PhoneNumberUtil } from "google-libphonenumber";
 import "react-phone-input-2/lib/style.css";
 import CInput from "../../components/CInput";
+import { getApiData } from "../../utils/APIHelper";
+import authActions from "../../redux/reducers/auth/actions";
+import { Setting } from "../../utils/Setting";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import useStyles from "./styles";
 
 const errorObj = {
@@ -27,8 +33,13 @@ const errorObj = {
 };
 
 const Signup = (props) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location?.state ? location?.state : {};
   const phoneUtil = PhoneNumberUtil.getInstance();
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { setUserData, setToken } = authActions;
   const userNameRegex = /^[a-zA-Z0-9_-]+$/;
   const passwordRegex =
     /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%^&*])((?=.*[A-Z])))(?=.{8,})/;
@@ -43,6 +54,14 @@ const Signup = (props) => {
     password: "",
   });
   const [errObj, setErrObj] = useState(errorObj);
+  const [btnLoad, setBtnLoad] = useState(false);
+
+  useEffect(() => {
+    setState({
+      ...state,
+      email: locationState?.socialData?.email,
+    })
+  }, []);
 
   // check username is valid or not
   function isValidUsername(username) {
@@ -111,11 +130,46 @@ const Signup = (props) => {
         error.phoneErr = true;
         error.phoneMsg = "Please enter valid phone number";
       }
-    } 
+    }
 
     setErrObj(error);
     if (valid) {
-      // loginUser();
+      registerUser();
+    }
+  }
+
+  // this function for registering user
+  async function registerUser() {
+    setBtnLoad(true);
+    const { uname, email, phone, password, pCode } = state;
+    let data = {
+      username: uname,
+      email,
+      phone_code: pCode ? pCode : "",
+      phone_no: phone,
+      password,
+      role: "contractor",
+      device_type: "web",
+    };
+    try {
+      const response = await getApiData(Setting.endpoints.signup, "POST", data);
+      console.log("response =register user====>>> ", response);
+
+      if (response.success) {
+        if (!response?.is_email_verified) {
+          navigate("/otp-verify", {state: {data}});
+        }
+
+        dispatch(setUserData(response?.data));
+        dispatch(setToken(response?.token));
+      } else {
+        toast.error(response.message);
+      }
+      setBtnLoad(false);
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ registeruser ~ error:", error);
+      setBtnLoad(false);
+      toast.error(error.toString());
     }
   }
 
@@ -189,8 +243,13 @@ const Signup = (props) => {
                         country={"ae"}
                         value={state.pCode}
                         onChange={(code, country) => {
-                          const countryUpperCase = country?.countryCode.toUpperCase();
-                          setState({ ...state, pCode: code, countryCode: countryUpperCase });
+                          const countryUpperCase =
+                            country?.countryCode.toUpperCase();
+                          setState({
+                            ...state,
+                            pCode: code,
+                            countryCode: countryUpperCase,
+                          });
                         }}
                       />
                     </InputAdornment>
@@ -222,8 +281,13 @@ const Signup = (props) => {
                 fullWidth
                 style={{ marginBottom: 20 }}
                 onClick={validation}
+                disabled={btnLoad}
               >
-                Sign up now
+                {btnLoad ? (
+                  <CircularProgress style={{ color: "#fff" }} size={26} />
+                ) : (
+                  "Sign up now"
+                )}
               </Button>
             </Grid>
             <Grid item xs={12} className={classes.needAccountContainer}>

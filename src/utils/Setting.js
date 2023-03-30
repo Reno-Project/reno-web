@@ -1,7 +1,7 @@
 const prod = process.env.NODE_ENV === "production";
 const baseUrl = prod
-  ? "https://reno-home.azurewebsites.net/api/"
-  : "https://reno-home.azurewebsites.net/api/";
+  ? "https://reno-home.azurewebsites.net/"
+  : "https://reno-home.azurewebsites.net/";
 
 export const Setting = {
   baseUrl,
@@ -13,7 +13,11 @@ export const Setting = {
   GOOGLE_CLIENT_SECRET_KEY: "",
 
   endpoints: {
-    login: "user/login",
+    login: "api/user/login",
+    signup: "api/user/signup",
+    googleData: "auth/google",
+    verifyOtp: 'api/user/verify-otp',
+    resendOtp: 'api/user/resend-otp',
   },
 
   JS_Regex: {
