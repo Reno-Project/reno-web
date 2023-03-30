@@ -18,6 +18,7 @@ import {
 import CStepper from "../../components/CStepper";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
+import { PhoneNumberUtil } from "google-libphonenumber";
 import useStyles from "./styles";
 import { isEmpty, isObject } from "lodash";
 
@@ -57,6 +58,7 @@ const errorObj = {
 };
 
 const CreateProfile = (props) => {
+  const phoneUtil = PhoneNumberUtil.getInstance();
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [errObj, setErrObj] = useState(errorObj);
@@ -66,6 +68,8 @@ const CreateProfile = (props) => {
     description: "",
     email: "",
     website: "",
+    countryCode: "AE",
+    pCode: "971",
     phone: "",
     businessYear: "",
     employees: "",
@@ -81,7 +85,7 @@ const CreateProfile = (props) => {
     portfolio: "",
   });
 
-  //validation function
+  //validation function for page 1
   function CheckValidattion() {
     const error = { ...errObj };
     let valid = true;
@@ -130,7 +134,19 @@ const CreateProfile = (props) => {
     if (isEmpty(state.phone)) {
       valid = false;
       error.phoneErr = true;
-      error.phoneMsg = "Please Enter Phone No.";
+      error.phoneMsg = "Please enter phone number";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#phone");
+      }
+    } else if (!isEmpty(state.phone) && !isEmpty(state.countryCode)) {
+      const phoneNumber1 = phoneUtil.parse(state.phone, state.countryCode);
+      const isValid = phoneUtil.isValidNumber(phoneNumber1);
+      if (!isValid) {
+        valid = false;
+        error.phoneErr = true;
+        error.phoneMsg = "Please enter valid phone number";
+      }
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#phone");
@@ -243,7 +259,7 @@ const CreateProfile = (props) => {
   const price = ["49", "99", "129", "189", "249"];
   const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis", ""];
   const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
-  const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, , 12, 13, 14, 15];
+  const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
@@ -254,7 +270,14 @@ const CreateProfile = (props) => {
         flexDirection="column"
         style={{ padding: "40px 0 120px" }}
       >
-        <Grid item xs={6} className={classes.formContainerStyle}>
+        <Grid
+          item
+          xs={12}
+          sm={10}
+          md={8}
+          lg={6}
+          className={classes.formContainerStyle}
+        >
           <Grid container justifyContent={"center"}>
             <Grid item xs={12}>
               <Typography className={classes.welcomeTextStyle}>
@@ -354,8 +377,8 @@ const CreateProfile = (props) => {
                   />
                 </Grid>
 
-                <Grid item container xs={10} gap={2.5} wrap="nowrap">
-                  <Grid item xs={6} id="email">
+                <Grid item container xs={10} justifyContent={"space-between"}>
+                  {/* <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="email">
                     <CInput
                       label="Email"
                       placeholder="Enter Email..."
@@ -367,8 +390,8 @@ const CreateProfile = (props) => {
                       error={errObj.emailErr}
                       helperText={errObj.emailMsg}
                     />
-                  </Grid>
-                  <Grid item xs={6} id="web">
+                  </Grid> */}
+                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="web">
                     <CInput
                       label="Website"
                       placeholder="Link Here..."
@@ -381,23 +404,8 @@ const CreateProfile = (props) => {
                       helperText={errObj.webMsg}
                     />
                   </Grid>
-                </Grid>
 
-                <Grid item container xs={10} gap={2.5} wrap="nowrap">
-                  <Grid item xs={6} id="phone">
-                    <CInput
-                      label="Phone"
-                      placeholder="Enter Phone No."
-                      value={state.phone}
-                      onChange={(e) => {
-                        setState({ ...state, phone: e.target.value });
-                        setErrObj({ ...errObj, phoneErr: false, phoneMsg: "" });
-                      }}
-                      error={errObj.phoneErr}
-                      helperText={errObj.phoneMsg}
-                    />
-                  </Grid>
-                  <Grid item xs={6} id="year">
+                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="year">
                     <Cselect
                       label="Number of Years in Business:"
                       placeholder="Enter No. of Years"
@@ -413,8 +421,51 @@ const CreateProfile = (props) => {
                   </Grid>
                 </Grid>
 
-                <Grid item container xs={10} gap={2.5} wrap="nowrap">
-                  <Grid item xs={6} id="employee">
+                <Grid item container xs={10} justifyContent="space-between">
+                  {/* <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="phone">
+                    <InputLabel shrink htmlFor="bootstrap-input">
+                      Phone
+                    </InputLabel>
+                    <TextField
+                      fullWidth
+                      placeholder="Enter phone number"
+                      style={{ marginBottom: 20 }}
+                      value={state.phone}
+                      onChange={(e) => {
+                        setState({ ...state, phone: e.target.value });
+                        setErrObj({ ...errObj, phoneErr: false, phoneMsg: "" });
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment
+                            position="start"
+                            style={{ marginLeft: "-13px" }}
+                          >
+                            <PhoneInput
+                              country={"ae"}
+                              value={state.pCode}
+                              onChange={(code, country) => {
+                                const countryUpperCase =
+                                  country?.countryCode.toUpperCase();
+                                setState({
+                                  ...state,
+                                  pCode: code,
+                                  countryCode: countryUpperCase,
+                                });
+                              }}
+                            />
+                          </InputAdornment>
+                        ),
+                      }}
+                      className={classes.pickerInput}
+                      error={errObj.phoneErr}
+                      helperText={errObj.phoneMsg}
+                    />
+                  </Grid> */}
+                </Grid>
+
+                <Grid item container xs={10} justifyContent="space-between">
+                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="employee">
                     <Cselect
                       label="Number of Employees"
                       placeholder="Enter No. of Employees"
@@ -432,7 +483,7 @@ const CreateProfile = (props) => {
                       helperText={errObj.employeeMsg}
                     />
                   </Grid>
-                  <Grid item xs={6} id="contract">
+                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="contract">
                     <CInput
                       label="Number of Contracts Annually:"
                       placeholder="Enter No. of Contracts"
@@ -471,7 +522,7 @@ const CreateProfile = (props) => {
                   />
                 </Grid>
 
-                <Grid item xs={10} id="pricing">
+                {/* <Grid item xs={10} id="pricing">
                   <Cselect
                     multiple
                     handleSelect={(e) => {
@@ -485,7 +536,7 @@ const CreateProfile = (props) => {
                     error={errObj.priceErr}
                     helperText={errObj.priceMsg}
                   />
-                </Grid>
+                </Grid> */}
 
                 <Grid item xs={10} id="location">
                   <CInput
@@ -906,8 +957,8 @@ const CreateProfile = (props) => {
                   />
                 </Grid>
 
-                <Grid item container xs={10} gap={2.5} wrap="nowrap">
-                  <Grid item xs={6} id="baccount">
+                <Grid item container xs={10} justifyContent="space-between">
+                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="baccount">
                     <CInput
                       label="Bank Account"
                       placeholder="Enter Bank Account Number"

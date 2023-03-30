@@ -16,8 +16,9 @@ export const Setting = {
     login: "api/user/login",
     signup: "api/user/signup",
     googleData: "auth/google",
-    verifyOtp: 'api/user/verify-otp',
-    resendOtp: 'api/user/resend-otp',
+    verifyOtp: "api/user/verify-otp",
+    resendOtp: "api/user/resend-otp",
+    updatepassword: "api/user/update-password",
   },
 
   JS_Regex: {

@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { isEmpty } from "lodash";
@@ -20,6 +21,7 @@ import { Setting } from "../../utils/Setting";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import useStyles from "./styles";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const errorObj = {
   unameErr: false,
@@ -53,6 +55,7 @@ const Signup = (props) => {
     phone: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
 
@@ -60,7 +63,7 @@ const Signup = (props) => {
     setState({
       ...state,
       email: locationState?.socialData?.email,
-    })
+    });
   }, []);
 
   // check username is valid or not
@@ -157,7 +160,7 @@ const Signup = (props) => {
 
       if (response.success) {
         if (!response?.is_email_verified) {
-          navigate("/otp-verify", {state: {data}});
+          navigate("/otp-verify", { state: { data } });
         }
 
         dispatch(setUserData(response?.data));
@@ -264,6 +267,7 @@ const Signup = (props) => {
               <CInput
                 label="Password"
                 placeholder="Enter password"
+                type={showPassword ? "text" : "password"}
                 value={state.password}
                 onChange={(e) => {
                   setState({ ...state, password: e.target.value });
@@ -272,6 +276,16 @@ const Signup = (props) => {
                 white={false}
                 error={errObj.passwordErr}
                 helperText={errObj.passwordMsg}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {!showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
               />
             </Grid>
             <Grid item xs={12}>

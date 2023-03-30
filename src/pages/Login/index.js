@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Button, CircularProgress, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Typography,
+} from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import { isEmpty } from "lodash";
 import { toast } from "react-toastify";
@@ -12,6 +19,7 @@ import GoogleLoginButton from "../../components/SocialLogin/GoogleLoginButton";
 import Images from "../../config/images";
 import { getApiData } from "../../utils/APIHelper";
 import useStyles from "./styles";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const errorObj = {
   emailErr: false,
@@ -31,6 +39,7 @@ const Login = (props) => {
   const [password, setPassword] = useState("");
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [googleBtnLoad, setGoogleBtnLoad] = useState(false);
 
   // this function checks validation of login field
@@ -95,7 +104,7 @@ const Login = (props) => {
     try {
       setGoogleBtnLoad(true);
       const response = await getApiData(Setting.endpoints.googleData, "POST", {
-        code: googleCode 
+        code: googleCode,
       });
 
       if (response.success) {
@@ -120,13 +129,13 @@ const Login = (props) => {
         email: socialData?.email ? socialData?.email : "",
         password: socialData?.password ? socialData?.password : "",
         device_type: "web",
-        social_connection: type ? type : ""
+        social_connection: type ? type : "",
       });
 
       console.log("socialLoginApiCallresponse =====>>> ", response);
       if (response.success) {
         if (response?.is_new_user) {
-          navigate("/signup", {state: {socialData, type}});
+          navigate("/signup", { state: { socialData, type } });
         } else {
           dispatch(setUserData(response?.data));
           dispatch(setToken(response?.token));
@@ -177,6 +186,7 @@ const Login = (props) => {
               <CInput
                 label="Password"
                 placeholder="Enter password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -185,6 +195,16 @@ const Login = (props) => {
                 white={false}
                 error={errObj.passwordErr}
                 helperText={errObj.passwordMsg}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {!showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
               />
             </Grid>
             <NavLink to="">
@@ -223,7 +243,10 @@ const Login = (props) => {
             </Grid>
             <Grid item xs={12} style={{ marginTop: 18 }}>
               <GoogleOAuthProvider clientId={Setting.GOOGLE_CLIENT_ID}>
-                <GoogleLoginButton loader={googleBtnLoad} onGoogleDone={(val) => googleDataApiCall(val?.code)} />
+                <GoogleLoginButton
+                  loader={googleBtnLoad}
+                  onGoogleDone={(val) => googleDataApiCall(val?.code)}
+                />
               </GoogleOAuthProvider>
               <div className={classes.socialContainerStyle}>
                 <img
