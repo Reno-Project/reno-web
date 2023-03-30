@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Button, Grid, Typography, CircularProgress } from "@mui/material";
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import { isEmpty } from "lodash";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getApiData } from "../../utils/APIHelper";
 import authActions from "../../redux/reducers/auth/actions";
 import { Setting } from "../../utils/Setting";
-import Images from "../../config/images";
 import OtpInputFields from "react-otp-input";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import useStyles from "./styles";
+import { color } from "../../config/theme";
 
 const OtpInput = (props) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location?.state?.data ? location?.state?.data : {};
+  console.log("locationState =====>>> ", locationState);
   const dispatch = useDispatch();
   const { setUserData, setToken } = authActions;
   const [output, setOutput] = useState("");
@@ -97,9 +97,9 @@ const OtpInput = (props) => {
         alignItems="center"
         justifyContent="center"
         flexDirection="column"
-        style={{ paddingTop: 40 }}
+        style={{ paddingTop: 50 }}
       >
-        <Grid item xs={12}>
+        <Grid item xs={9} sm={7} md={5} lg={4}>
           <Typography className={classes.welcomeTextStyle}>
             Welcome to Reno
           </Typography>
@@ -107,70 +107,82 @@ const OtpInput = (props) => {
             Verify your Email
           </Typography>
         </Grid>
-        <Grid item xs={3}>
-          <Grid container>
-            <Grid item xs={12}>
-              <OtpInputFields
-                value={output}
-                onChange={setOutput}
-                numInputs={5}
-                renderSeparator={<span style={{ padding: 5 }}> </span>}
-                renderInput={(props) => <input {...props} />}
-                inputStyle={{ height: 30, width: 30 }}
-              />
-            </Grid>
+        <Grid item xs={12} sm={7} md={5} lg={4} justifyContent={"center"}>
+          <OtpInputFields
+            fullWidth
+            value={output}
+            onChange={setOutput}
+            numInputs={5}
+            renderSeparator={<span style={{ padding: 10 }}> </span>}
+            renderInput={(props) => <input {...props} />}
+            inputStyle={{
+              height: 40,
+              width: 40,
+              fontSize: 20,
+              border: `1px solid ${color.primary}`,
+              borderRadius: 6,
+            }}
+          />
+        </Grid>
 
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                style={{ marginTop: 20 }}
-                onClick={() => {
-                  if (btnLoad === "resend" || btnLoad === "otp") {
-                    return null;
+        <Grid
+          item
+          container
+          xs={7}
+          sm={7}
+          md={5}
+          lg={4}
+          gap={2}
+          marginTop={5}
+          justifyContent="center"
+        >
+          <Grid item xs={5}>
+            <Button
+              fullWidth
+              onClick={() => {
+                if (
+                  btnLoad === "resend" ||
+                  !resendViewVisible ||
+                  btnLoad === "otp"
+                ) {
+                  return null;
+                } else {
+                  resendOtp();
+                }
+              }}
+            >
+              {btnLoad === "resend" ? (
+                <CircularProgress style={{ color: "#fff" }} size={26} />
+              ) : resendViewVisible ? (
+                "Resend Otp"
+              ) : (
+                `00:${timerCount}`
+              )}
+            </Button>
+          </Grid>
+          <Grid item xs={5}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={() => {
+                if (btnLoad === "resend" || btnLoad === "otp") {
+                  return null;
+                } else {
+                  if (output) {
+                    OTPVerify(output);
                   } else {
-                    if (output) {
-                      OTPVerify(output);
-                    } else {
-                      toast.error("Please enter one time password");
-                    }
+                    toast.error("Please enter one time password");
                   }
-                }}
-              >
-                {btnLoad === "otp" ? (
-                  <CircularProgress style={{ color: "#fff" }} size={26} />
-                ) : (
-                  "Verify"
-                )}
-              </Button>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Button
-                fullWidth
-                style={{ marginTop: 20, marginBottom: 20 }}
-                onClick={() => {
-                  if (
-                    btnLoad === "resend" ||
-                    !resendViewVisible ||
-                    btnLoad === "otp"
-                  ) {
-                    return null;
-                  } else {
-                    resendOtp();
-                  }
-                }}
-              >
-                {btnLoad === "resend" ? (
-                  <CircularProgress style={{ color: "#fff" }} size={26} />
-                ) : resendViewVisible ? (
-                  "Resend Otp"
-                ) : (
-                  `00:${timerCount}`
-                )}
-              </Button>
-            </Grid>
+                }
+              }}
+            >
+              {btnLoad === "otp" ? (
+                <CircularProgress style={{ color: "#fff" }} size={26} />
+              ) : (
+                "Verify"
+              )}
+            </Button>
           </Grid>
         </Grid>
       </Grid>
