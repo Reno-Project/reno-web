@@ -21,6 +21,10 @@ import Cselect from "../../components/CSelect";
 import { PhoneNumberUtil } from "google-libphonenumber";
 import useStyles from "./styles";
 import { isEmpty, isObject } from "lodash";
+import { toast } from "react-toastify";
+import { getApiData, getAPIProgressData } from "../../utils/APIHelper";
+import { Setting } from "../../utils/Setting";
+import PlaceAutoComplete from "../../components/PlaceAutoComplete";
 
 const errorObj = {
   cnameErr: false,
@@ -84,6 +88,8 @@ const CreateProfile = (props) => {
     social: "",
     portfolio: "",
   });
+  const [selectedLocation, setSelectedLocation] = useState({});
+  console.log("selectedLocation =====>>> ", selectedLocation);
 
   //validation function for page 1
   function CheckValidattion() {
@@ -260,6 +266,77 @@ const CreateProfile = (props) => {
   const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis", ""];
   const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
   const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+  // Step 1 Connect Api integration for api calls ---
+  // Step 1 => Pass data in form-data
+  async function step1ConnectApiCall() {
+    try {
+      const data = {
+        // "email": "",
+        // "phone_code": "",
+        // "phone_no": "",
+        company_name: state?.cname ? state?.cname : "",
+        description: state?.description ? state?.description : "",
+        website: state?.website ? state?.website : "",
+        no_of_years_in_business: state?.businessYear ? state?.businessYear : "",
+        no_of_employees: state?.employees ? state?.employees : "",
+        no_of_contracts_annually: state?.annualContract
+          ? state?.annualContract
+          : "",
+        linkedin_url: state?.linkedin ? state?.linkedin : "",
+        fb_url: state?.social ? state?.social : "",
+        company_address: state?.location ? state?.location : "",
+        contractor_expertise: "", // pass in CSV form
+        lat: "",
+        long: "",
+      };
+      const response = await getAPIProgressData(
+        Setting.endpoints.addContractorDetails,
+        "POST",
+        data
+      );
+
+      console.log("step1 ConnectApiCall response =====>>> ", response);
+      if (response.success) {
+        toast.done(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
+      toast.error(error.toString());
+    }
+  }
+
+  // Step 3 Connect Api integration for api calls
+  async function step3ConnectApiCall() {
+    try {
+      const data = {
+        beneficiary_name: "",
+        iban: "",
+        bank_name: "",
+        bank_account: "",
+        swift_code: "",
+        Address: "",
+      };
+
+      const response = await getApiData(
+        Setting.endpoints.addBillingInfo,
+        "POST",
+        data
+      );
+
+      console.log("step1 ConnectApiCall response =====>>> ", response);
+      if (response.success) {
+        toast.done(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
+      toast.error(error.toString());
+    }
+  }
 
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
@@ -539,7 +616,7 @@ const CreateProfile = (props) => {
                 </Grid> */}
 
                 <Grid item xs={10} id="location">
-                  <CInput
+                  {/* <CInput
                     label="Location"
                     placeholder="Enter Location Here..."
                     value={state.location}
@@ -553,6 +630,12 @@ const CreateProfile = (props) => {
                     }}
                     error={errObj.locationErr}
                     helperText={errObj.locationMsg}
+                  /> */}
+                  <PlaceAutoComplete
+                    placeholder="Enter Location Here..."
+                    style={{ marginBottom: 10, width: "100%" }}
+                    onChange={(obj) => setSelectedLocation(obj)}
+                    // disable={remoteOnly ? true : false}
                   />
                 </Grid>
 

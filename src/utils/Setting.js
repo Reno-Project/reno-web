@@ -7,6 +7,7 @@ export const Setting = {
   baseUrl,
   api: baseUrl,
 
+  GOOLE_MAPS_KEY: "AIzaSyBO1ZlrBp68Oj02lrpoF4gJ7DbuzaFQLNA",
   FACEBOOK_APP_ID: "",
   GOOGLE_CLIENT_ID:
     "271291217173-edt0r9crj6puar4o75r2ipagf0inimue.apps.googleusercontent.com",
@@ -19,6 +20,9 @@ export const Setting = {
     verifyOtp: "api/user/verify-otp",
     resendOtp: "api/user/resend-otp",
     updatepassword: "api/user/update-password",
+    addContractorDetails: "api/contractor/add-contractor-details",
+    addPortfolio: "api/contractor/add-portfolio",
+    addBillingInfo: "api/contractor/add-billing-info",
   },
 
   JS_Regex: {
