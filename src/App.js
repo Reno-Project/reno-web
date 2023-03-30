@@ -8,6 +8,7 @@ import HowItWorks from "./pages/HowItWorks";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import CreateProfile from "./pages/CreateProfile";
+import ResetPassword from "./pages/ResetPassword";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import "./App.css";
@@ -36,6 +37,7 @@ function App() {
                 <Route exact path={"/"} element={<HowItWorks />} />
                 <Route path={"/login"} element={<Login />} />
                 <Route path={"/signup"} element={<Signup />} />
+                <Route path={"/reset-password"} element={<ResetPassword />} />
                 <Route path={"/create-profile"} element={<CreateProfile />} />
               </Routes>
             </div>
