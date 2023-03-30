@@ -10,6 +10,7 @@ import {
 import { NavLink } from "react-router-dom";
 import { isEmpty } from "lodash";
 import PhoneInput from "react-phone-input-2";
+import { PhoneNumberUtil } from "google-libphonenumber";
 import "react-phone-input-2/lib/style.css";
 import CInput from "../../components/CInput";
 import useStyles from "./styles";
@@ -26,21 +27,31 @@ const errorObj = {
 };
 
 const Signup = (props) => {
+  const phoneUtil = PhoneNumberUtil.getInstance();
   const classes = useStyles();
+  const userNameRegex = /^[a-zA-Z0-9_-]+$/;
+  const passwordRegex =
+    /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%^&*])((?=.*[A-Z])))(?=.{8,})/;
   const emailRegex =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const [state, setState] = useState({
     uname: "",
     email: "",
     pCode: "971",
+    countryCode: "AE",
     phone: "",
     password: "",
   });
   const [errObj, setErrObj] = useState(errorObj);
 
+  // check username is valid or not
+  function isValidUsername(username) {
+    return username.length >= 3 && username.length <= 20;
+  }
+
   // this function checks validation of login field
   function validation() {
-    const { uname, email, phone, password } = state;
+    const { uname, email, phone, password, countryCode } = state;
     const error = { ...errObj };
     let valid = true;
 
@@ -49,10 +60,15 @@ const Signup = (props) => {
       valid = false;
       error.unameErr = true;
       error.unameMsg = "Please enter user name";
-    } else if (uname.length > 30) {
+    } else if (!isValidUsername(uname)) {
       valid = false;
       error.unameErr = true;
-      error.unameMsg = "Please enter valid user name";
+      error.unameMsg = "Username must be between 3 to 20 characters in long.";
+    } else if (!userNameRegex.test(uname)) {
+      valid = false;
+      error.unameErr = true;
+      error.unameMsg =
+        "Username must include letters, numbers, underscores and hyphens.";
     }
 
     // validate email
@@ -75,9 +91,28 @@ const Signup = (props) => {
       valid = false;
       error.passwordErr = true;
       error.passwordMsg = "Password length must be of 8-15";
+    } else if (!passwordRegex.test(password)) {
+      valid = false;
+      error.passwordErr = true;
+      error.passwordMsg =
+        "Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol";
     }
 
-    console.log("error ==>>", error);
+    // Validate phone
+    if (isEmpty(phone)) {
+      valid = false;
+      error.phoneErr = true;
+      error.phoneMsg = "Please enter phone number";
+    } else if (!isEmpty(phone) && !isEmpty(countryCode)) {
+      const phoneNumber1 = phoneUtil.parse(phone, countryCode);
+      const isValid = phoneUtil.isValidNumber(phoneNumber1);
+      if (!isValid) {
+        valid = false;
+        error.phoneErr = true;
+        error.phoneMsg = "Please enter valid phone number";
+      }
+    } 
+
     setErrObj(error);
     if (valid) {
       // loginUser();
@@ -153,7 +188,10 @@ const Signup = (props) => {
                       <PhoneInput
                         country={"ae"}
                         value={state.pCode}
-                        onChange={(code) => setState({ ...state, pCode: code })}
+                        onChange={(code, country) => {
+                          const countryUpperCase = country?.countryCode.toUpperCase();
+                          setState({ ...state, pCode: code, countryCode: countryUpperCase });
+                        }}
                       />
                     </InputAdornment>
                   ),
