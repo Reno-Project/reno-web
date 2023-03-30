@@ -16,13 +16,16 @@ const OtpInput = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location?.state?.data ? location?.state?.data : {};
-  console.log("locationState =====>>> ", locationState);
   const dispatch = useDispatch();
   const { setUserData, setToken } = authActions;
   const [output, setOutput] = useState("");
   const [timerCount, setTimer] = useState(60);
   const [btnLoad, setBtnLoad] = useState("");
   const [resendViewVisible, setResendViewVisible] = useState(false);
+
+  useEffect(() => {
+    setOutput("");
+  }, []);
 
   useEffect(() => {
     if (timerCount === 0) {
@@ -127,7 +130,11 @@ const OtpInput = (props) => {
                   if (btnLoad === "resend" || btnLoad === "otp") {
                     return null;
                   } else {
-                    OTPVerify(output);
+                    if (output) {
+                      OTPVerify(output);
+                    } else {
+                      toast.error("Please enter one time password");
+                    }
                   }
                 }}
               >
