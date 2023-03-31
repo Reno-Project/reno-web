@@ -85,14 +85,25 @@ const Login = (props) => {
         device_type: "web",
       });
 
+      const socialData = {
+        email,
+        password,
+      };
+
       if (response.success) {
         dispatch(setUserData(response?.data));
         dispatch(setToken(response?.token));
-        if (
+        if (response?.is_new_user) {
+          navigate("/signup", { state: { socialData } });
+        } else if (
           response?.data?.contractor_data &&
           response?.data?.contractor_data?.profile_completed === "pending"
         ) {
           navigate("/create-profile");
+        } else if (response?.data?.is_email_verified === false) {
+          sendOtpVerifyingApiCall(response?.data);
+        } else {
+          navigate("/dashboard");
         }
       } else {
         toast.error(response.message);
@@ -141,19 +152,50 @@ const Login = (props) => {
       console.log("socialLoginApiCallresponse =====>>> ", response);
       if (response.success) {
         if (response?.is_new_user) {
+          setGoogleBtnLoad(false);
           navigate("/signup", { state: { socialData, type } });
+        } else if (
+          response?.data?.contractor_data &&
+          response?.data?.contractor_data?.profile_completed === "pending"
+        ) {
+          navigate("/create-profile");
+        } else if (response?.data?.is_email_verified === false) {
+          sendOtpVerifyingApiCall(response?.data);
         } else {
+          setGoogleBtnLoad(false);
           dispatch(setUserData(response?.data));
           dispatch(setToken(response?.token));
+          navigate("/dashboard");
         }
+      } else {
+        setGoogleBtnLoad(false);
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
+      setGoogleBtnLoad(false);
+      toast.error(error.toString());
+    }
+  }
+
+  // this function if user is login but not verified email than we are sending otp again and move to otp screen
+  async function sendOtpVerifyingApiCall(resultData) {
+    try {
+      const response = await getApiData(Setting.endpoints.resendOtp, "POST", {
+        email: resultData?.email,
+      });
+
+      console.log("response ====resend otp=>>> ", response);
+      if (response.success) {
+        navigate("/otp-verify", { state: { data: resultData } });
       } else {
         toast.error(response.message);
       }
       setGoogleBtnLoad(false);
     } catch (error) {
-      console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
+      console.log("🚀 ~ file: index.js:88 ~ resendOtp ~ error:", error);
+      toast.error(error.toString() || "Something gone wrong! Please try again");
       setGoogleBtnLoad(false);
-      toast.error(error.toString());
     }
   }
 

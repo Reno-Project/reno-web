@@ -45,7 +45,7 @@ export default function Cselect(props) {
     required = false,
     error = false,
     helperText = "",
-    multiple = "",
+    multiple = false,
     placeholder = "",
     renderTags = [],
   } = props;
@@ -61,12 +61,15 @@ export default function Cselect(props) {
         id="tags-outlined"
         multiple={multiple}
         options={renderTags}
-        getOptionLabel={(item) => item}
+        // getOptionLabel={(item) => item.label}
         filterSelectedOptions
+        // isOptionEqualToValue={(option, value) => option.id === value.id}
         renderInput={(params) => (
           <TextField {...params} placeholder={placeholder} />
         )}
-        onChange={(e) => handleSelect(e.target.innerText)}
+        onChange={(a, b, c, e) => {
+          handleSelect(b);
+        }}
       />
       <FormHelperText
         error={error}

@@ -17,9 +17,9 @@ import {
   ClearOutlined,
   HighlightOffOutlined,
 } from "@mui/icons-material";
-import { isArray, isEmpty } from "lodash";
+import _, { isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CStepper from "../../components/CStepper";
 import CInput from "../../components/CInput";
@@ -74,7 +74,7 @@ const errorObj = {
 };
 
 const CreateProfile = (props) => {
-  const phoneUtil = PhoneNumberUtil.getInstance();
+  const navigate = useNavigate();
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [errObj, setErrObj] = useState(errorObj);
@@ -190,7 +190,7 @@ const CreateProfile = (props) => {
     setErrObj(error);
 
     if (valid) {
-      step1ConnectApiCall();
+      addContractorDetailsApiCall();
     }
   }
 
@@ -288,15 +288,28 @@ const CreateProfile = (props) => {
 
     if (valid) {
       console.log("proceed");
-      step3ConnectApiCall();
+      addBillingInfoApiCall();
     }
   }
 
+  const convertToCsv = (array) => {
+    let tempIds = [];
+    let tempStringIds = "";
+    if (_.isArray(array) && !_.isEmpty(array)) {
+      array?.map((it, ind) => {
+        tempIds?.push(it?.id);
+      });
+    }
+    tempStringIds = tempIds?.toString();
+    return tempStringIds;
+  };
+
   // Step 1 Connect Api integration for api calls ---
   // Step 1 => Pass data in form-data
-  async function step1ConnectApiCall() {
+  async function addContractorDetailsApiCall() {
     try {
       setButtonLoader("step1");
+      let expertiseCsv = convertToCsv(state?.expertise);
       const data = {
         // "email": "",
         // "phone_code": "",
@@ -312,23 +325,25 @@ const CreateProfile = (props) => {
         linkedin_url: state?.linkedin ? state?.linkedin : "",
         fb_url: state?.social ? state?.social : "",
         company_address: userLocation ? userLocation : "",
-        contractor_expertise: "", // pass in CSV form
+        contractor_expertise: expertiseCsv ? expertiseCsv : "", // pass in CSV form
         lat: selectedLocation?.lat ? selectedLocation?.lat : "",
         long: selectedLocation?.lng ? selectedLocation?.lng : "",
-        iso_certificate: "",
-        licenses: "",
-        company_registration: "",
-        business_logo: "",
+        iso_certificate: state?.certificate ? state?.certificate : "",
+        licenses: state?.license ? state?.license : "",
+        company_registration: state?.registraion ? state?.registraion : "",
+        business_logo: state?.businessLogo ? state?.businessLogo : "",
       };
       const response = await getAPIProgressData(
         Setting.endpoints.addContractorDetails,
         "POST",
-        data
-      );
+        data,
+        true
+        );
+        console.log("data step1 =====>>> ", data);
 
       console.log("step1 ConnectApiCall response =====>>> ", response);
       if (response.success) {
-        continueStep();
+        continueStep(1);
         toast.done(response.message);
       } else {
         toast.error(response.message);
@@ -369,7 +384,7 @@ const CreateProfile = (props) => {
   }
 
   // Step 3 Connect Api integration for api calls
-  async function step3ConnectApiCall() {
+  async function addBillingInfoApiCall() {
     try {
       setButtonLoader("step3");
       const data = {
@@ -543,7 +558,10 @@ const CreateProfile = (props) => {
                       placeholder="Enter No. of Years"
                       value={state.businessYear}
                       handleSelect={(e) => {
-                        setState({ ...state, businessYear: e });
+                        setState({
+                          ...state,
+                          businessYear: _.isNumber(e) ? e.toString() : e,
+                        });
                         setErrObj({ ...errObj, yearErr: false, yearMsg: "" });
                       }}
                       renderTags={contractArr}
@@ -603,7 +621,10 @@ const CreateProfile = (props) => {
                       placeholder="Enter No. of Employees"
                       value={state.employees}
                       handleSelect={(e) => {
-                        setState({ ...state, employees: e });
+                        setState({
+                          ...state,
+                          employees: _.isNumber(e) ? e.toString() : e,
+                        });
                         setErrObj({
                           ...errObj,
                           employeeErr: false,

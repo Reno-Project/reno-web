@@ -22,14 +22,13 @@ function PlaceAutoComplete(props) {
   const { ref: materialRef } = usePlacesWidget({
     apiKey: Setting.GOOLE_MAPS_KEY,
     onPlaceSelected: (place) => {
-      console.log("place =====>>> ", place);
       const obj = {
         location: place?.formatted_address || "",
         lat: place?.geometry?.location?.lat(),
         lng: place?.geometry?.location?.lng(),
       };
       onChange(obj);
-      console.log("PlaceAutoComplete ~ place", place);
+      // console.log("PlaceAutoComplete ~ place", place);
     },
     options: {
       types: ["geocode"],

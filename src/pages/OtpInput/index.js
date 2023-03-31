@@ -15,7 +15,6 @@ const OtpInput = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location?.state?.data ? location?.state?.data : {};
-  console.log("locationState =====>>> ", locationState);
   const dispatch = useDispatch();
   const { setUserData, setToken } = authActions;
   const [output, setOutput] = useState("");

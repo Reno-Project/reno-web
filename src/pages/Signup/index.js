@@ -159,12 +159,13 @@ const Signup = (props) => {
       console.log("response =register user====>>> ", response);
 
       if (response.success) {
-        if (!response?.is_email_verified) {
-          navigate("/otp-verify", { state: { data } });
-        }
-
         dispatch(setUserData(response?.data));
         dispatch(setToken(response?.token));
+        if (!response?.is_email_verified) {
+          navigate("/otp-verify", { state: { data } });
+        } else {
+          navigate("/dashboard")
+        }
       } else {
         toast.error(response.message);
       }

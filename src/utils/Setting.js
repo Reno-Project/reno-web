@@ -1,7 +1,10 @@
 const prod = process.env.NODE_ENV === "production";
+// const baseUrl = prod
+//   ? "https://reno-home.azurewebsites.net/"
+//   : "https://reno-home.azurewebsites.net/";
 const baseUrl = prod
-  ? "https://reno-home.azurewebsites.net/"
-  : "https://reno-home.azurewebsites.net/";
+  ? "http://192.168.2.149:3000/"
+  : "http://192.168.2.149:3000/";
 
 export const Setting = {
   baseUrl,

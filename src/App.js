@@ -10,6 +10,7 @@ import Signup from "./pages/Signup";
 import CreateProfile from "./pages/CreateProfile";
 import ResetPassword from "./pages/ResetPassword";
 import OtpInput from "./pages/OtpInput";
+import Dashboard from './pages/Dashboard';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import "./App.css";
@@ -41,6 +42,7 @@ function App() {
                 <Route path={"/reset-password"} element={<ResetPassword />} />
                 <Route path={"/create-profile"} element={<CreateProfile />} />
                 <Route path={"/otp-verify"} element={<OtpInput />} />
+                <Route path={"/dashboard"} element={<Dashboard />} />
               </Routes>
             </div>
             <Footer />
