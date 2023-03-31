@@ -88,6 +88,12 @@ const Login = (props) => {
       if (response.success) {
         dispatch(setUserData(response?.data));
         dispatch(setToken(response?.token));
+        if (
+          response?.data?.contractor_data &&
+          response?.data?.contractor_data?.profile_completed === "pending"
+        ) {
+          navigate("/create-profile");
+        }
       } else {
         toast.error(response.message);
       }
