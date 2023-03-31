@@ -32,6 +32,12 @@ export function getApiData(endpoint, method, data, headers) {
           "Content-Type": "application/json",
         };
       }
+
+      const token = getUserToken();
+      if (token) {
+        params.headers.Authorization = token;
+      }
+
       if (params.method === "post") {
         if (
           params.headers &&
