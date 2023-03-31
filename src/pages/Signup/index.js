@@ -193,10 +193,11 @@ const Signup = (props) => {
             Create an account
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={6} sm={5} md={4} lg={3}>
           <Grid container>
             <Grid item xs={12}>
               <CInput
+                outline
                 label="User Name"
                 placeholder="Enter user name"
                 value={state.uname}
@@ -206,11 +207,12 @@ const Signup = (props) => {
                 }}
                 white={false}
                 error={errObj.unameErr}
-                helperText={errObj.unameMsg}
+                helpertext={errObj.unameMsg}
               />
             </Grid>
             <Grid item xs={12}>
               <CInput
+                outline
                 label="Email"
                 placeholder="Enter email address"
                 value={state.email}
@@ -220,7 +222,7 @@ const Signup = (props) => {
                 }}
                 white={false}
                 error={errObj.emailErr}
-                helperText={errObj.emailMsg}
+                helpertext={errObj.emailMsg}
               />
             </Grid>
             <Grid item xs={12}>
@@ -260,11 +262,12 @@ const Signup = (props) => {
                 }}
                 className={classes.pickerInput}
                 error={errObj.phoneErr}
-                helperText={errObj.phoneMsg}
+                helpertext={errObj.phoneMsg}
               />
             </Grid>
             <Grid item xs={12}>
               <CInput
+                outline
                 label="Password"
                 placeholder="Enter password"
                 type={showPassword ? "text" : "password"}
@@ -275,7 +278,7 @@ const Signup = (props) => {
                 }}
                 white={false}
                 error={errObj.passwordErr}
-                helperText={errObj.passwordMsg}
+                helpertext={errObj.passwordMsg}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton

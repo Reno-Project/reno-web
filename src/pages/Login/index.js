@@ -166,10 +166,11 @@ const Login = (props) => {
           </Typography>
           <Typography className={classes.loginHeaderText}>Log in</Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={6} sm={5} md={4} lg={3}>
           <Grid container>
             <Grid item xs={12}>
               <CInput
+                outline
                 label="Email"
                 placeholder="Enter email address"
                 value={email}
@@ -179,11 +180,12 @@ const Login = (props) => {
                 }}
                 white={false}
                 error={errObj.emailErr}
-                helperText={errObj.emailMsg}
+                helpertext={errObj.emailMsg}
               />
             </Grid>
             <Grid item xs={12}>
               <CInput
+                outline
                 label="Password"
                 placeholder="Enter password"
                 type={showPassword ? "text" : "password"}
@@ -194,7 +196,7 @@ const Login = (props) => {
                 }}
                 white={false}
                 error={errObj.passwordErr}
-                helperText={errObj.passwordMsg}
+                helpertext={errObj.passwordMsg}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton

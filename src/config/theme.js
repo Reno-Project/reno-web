@@ -105,7 +105,7 @@ theme = createTheme(theme, {
           },
         },
         notchedOutline: {
-          borderColor: "#F5F6F8",
+          borderColor: "#E8E8E8",
         },
       },
     },
