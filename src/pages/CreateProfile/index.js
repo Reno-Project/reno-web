@@ -17,17 +17,18 @@ import {
   ClearOutlined,
   HighlightOffOutlined,
 } from "@mui/icons-material";
+import { isArray, isEmpty } from "lodash";
+import { toast } from "react-toastify";
+import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 import CStepper from "../../components/CStepper";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
 import { PhoneNumberUtil } from "google-libphonenumber";
-import useStyles from "./styles";
-import { isArray, isEmpty } from "lodash";
-import { toast } from "react-toastify";
 import { getApiData, getAPIProgressData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import PlaceAutoComplete from "../../components/PlaceAutoComplete";
-import { NavLink } from "react-router-dom";
+import useStyles from "./styles";
 
 const errorObj = {
   cnameErr: false,
@@ -105,12 +106,20 @@ const CreateProfile = (props) => {
     swift: "",
     address: "",
   });
-
   const [selectedLocation, setSelectedLocation] = useState({});
   const [userLocation, setUserLocation] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
+  const exp = [
+    { id: 1, label: "Interior design" },
+    { id: 2, label: "Renovation" },
+    { id: 3, label: "Retouch" },
+  ];
+  const price = ["49", "99", "129", "189", "249"];
+  const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis", ""];
+  const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+  const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
-  //validation function for page 1
+  // validation function for page 1
   function CheckValidattion() {
     const error = { ...errObj };
     let valid = true;
@@ -195,21 +204,93 @@ const CreateProfile = (props) => {
       } else {
         addPortfolio();
       }
+    } else if (step === 3) {
+      step3Validation();
     }
   }
 
   function previousStep() {
     setActiveStep((step) => step - 1);
   }
-  const exp = [
-    { id: 1, label: "Interior design" },
-    { id: 2, label: "Renovation" },
-    { id: 3, label: "Retouch" },
-  ];
-  const price = ["49", "99", "129", "189", "249"];
-  const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis", ""];
-  const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
-  const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+  // this function checks validation for step 3
+  function step3Validation() {
+    const { bname, iban, bank, acc, swift, address } = state;
+    const error = { ...errObj };
+    let valid = true;
+    let scroll = false;
+    let section = null;
+
+    if (isEmpty(bname)) {
+      valid = false;
+      error.bnameErr = true;
+      error.bnameMsg = "Please Enter Beneficiary Name";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#name");
+      }
+    }
+
+    if (isEmpty(iban)) {
+      valid = false;
+      error.ibanErr = true;
+      error.ibanMsg = "Please Enter IBAN Number";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#iban");
+      }
+    }
+
+    if (isEmpty(bank)) {
+      valid = false;
+      error.bankErr = true;
+      error.bankMsg = "Please Select Bank";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#bank");
+      }
+    }
+
+    if (isEmpty(acc)) {
+      valid = false;
+      error.accErr = true;
+      error.accMsg = "Please Enter Bank Account Number";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#baccount");
+      }
+    }
+
+    if (isEmpty(swift)) {
+      valid = false;
+      error.swiftErr = true;
+      error.swiftMsg = "Please Enter Swift Code";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#swift");
+      }
+    }
+
+    if (isEmpty(address)) {
+      valid = false;
+      error.addErr = true;
+      error.addMsg = "Please Enter Bank Address";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#Address");
+      }
+    }
+
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    setErrObj(error);
+
+    if (valid) {
+      console.log("proceed");
+      step3ConnectApiCall();
+    }
+  }
 
   // Step 1 Connect Api integration for api calls ---
   // Step 1 => Pass data in form-data
@@ -292,12 +373,12 @@ const CreateProfile = (props) => {
     try {
       setButtonLoader("step3");
       const data = {
-        beneficiary_name: "",
-        iban: "",
-        bank_name: "",
-        bank_account: "",
-        swift_code: "",
-        Address: "",
+        beneficiary_name: state.bname,
+        iban: state.iban,
+        bank_name: state.bank,
+        bank_account: state.acc,
+        swift_code: state.swift,
+        Address: state.address,
       };
 
       const response = await getApiData(
@@ -306,9 +387,8 @@ const CreateProfile = (props) => {
         data
       );
 
-      console.log("step3 ConnectApiCall response =====>>> ", response);
       if (response.success) {
-        toast.done(response.message);
+        toast.success(response.message);
       } else {
         toast.error(response.message);
       }
@@ -1130,7 +1210,7 @@ const CreateProfile = (props) => {
                     <Button
                       style={{ width: "230px" }}
                       variant="contained"
-                      onClick={() => continueStep()}
+                      onClick={() => continueStep(3)}
                     >
                       {buttonLoader == "step3" ? (
                         <CircularProgress style={{ color: "#fff" }} size={26} />
