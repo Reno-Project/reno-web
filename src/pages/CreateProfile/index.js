@@ -15,13 +15,14 @@ import {
   AttachFileOutlined,
   ImageOutlined,
   ClearOutlined,
+  HighlightOffOutlined,
 } from "@mui/icons-material";
 import CStepper from "../../components/CStepper";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
 import { PhoneNumberUtil } from "google-libphonenumber";
 import useStyles from "./styles";
-import { isEmpty, isObject } from "lodash";
+import { isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
 import { getApiData, getAPIProgressData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
@@ -76,7 +77,6 @@ const CreateProfile = (props) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [errObj, setErrObj] = useState(errorObj);
-  const [changeTab, setChangeTab] = useState(0);
   const [state, setState] = useState({
     businessLogo: "",
     cname: "",
@@ -97,7 +97,7 @@ const CreateProfile = (props) => {
     registraion: "",
     linkedin: "",
     social: "",
-    portfolio: "",
+    portfolio: [],
     bname: "",
     iban: "",
     bank: "",
@@ -186,13 +186,20 @@ const CreateProfile = (props) => {
   }
 
   // this function handles the steps
-  function continueStep() {
-    setActiveStep((step) => step + 1);
-    setChangeTab((changeTab) => changeTab + 1);
+  function continueStep(step) {
+    if (step === 1) {
+      setActiveStep((step) => step + 1);
+    } else if (step === 2) {
+      if (isArray(state.portfolio) && state.portfolio.length === 0) {
+        toast.error("Please upload atleast one image");
+      } else {
+        addPortfolio();
+      }
+    }
   }
+
   function previousStep() {
     setActiveStep((step) => step - 1);
-    setChangeTab((changeTab) => changeTab - 1);
   }
   const exp = [
     { id: 1, label: "Interior design" },
@@ -250,6 +257,33 @@ const CreateProfile = (props) => {
       console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
       setButtonLoader("");
       toast.error(error.toString());
+    }
+  }
+
+  // this function for add portfolio image
+  async function addPortfolio() {
+    setButtonLoader("step2");
+    try {
+      const response = await getAPIProgressData(
+        Setting.endpoints.addPortfolio,
+        "POST",
+        {
+          portfolio: state.portfolio,
+        },
+        true
+      );
+
+      if (response.success) {
+        toast.success(response.message);
+        setActiveStep((step) => step + 1);
+      } else {
+        toast.error(response.message);
+      }
+      setButtonLoader("");
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
+      toast.error(error.toString());
+      setButtonLoader("");
     }
   }
 
@@ -371,10 +405,10 @@ const CreateProfile = (props) => {
               <Typography
                 style={{ fontFamily: "Roobert-Regular", color: "#475569" }}
               >
-                {changeTab === 1 && "Upload business logo"}
+                {activeStep === 1 && "Upload business logo"}
               </Typography>
             </Grid>
-            {changeTab === 0 ? (
+            {activeStep === 0 ? (
               <>
                 <Grid item xs={10} style={{ marginTop: 20 }} id="cname">
                   <CInput
@@ -811,10 +845,10 @@ const CreateProfile = (props) => {
                   </NavLink>
                 </Grid>
               </>
-            ) : changeTab === 1 ? (
+            ) : activeStep === 1 ? (
               <>
                 <Grid container xs={10} style={{ marginTop: 20 }}>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} style={{ position: "relative" }}>
                     <InputLabel htmlFor="bootstrap-input">
                       Upload Photo
                     </InputLabel>
@@ -843,67 +877,95 @@ const CreateProfile = (props) => {
                         {"PNG, JPG, (max size 1200*800)"}
                       </InputLabel>
                     </div>
-                  </Grid>
-
-                  <input
-                    type="file"
-                    accept="image/jpeg, image/png, image/jpg"
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      // opacity: 0,
-                    }}
-                    onChange={(e) => {
-                      setState({ ...state, portfolio: e.target.files[0] });
-                    }}
-                  />
-                  <Grid item style={{ marginTop: 40 }}>
-                    <div
+                    <input
+                      type="file"
+                      accept="image/jpeg, image/png, image/jpg"
                       style={{
-                        display: "flex",
-                        border: "1px solid lightgrey",
-                        borderRadius: 6,
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        opacity: 0,
                       }}
-                    >
-                      <img
-                        style={{
-                          width: "15%",
-
-                          borderRadius: 6,
-                          marginRight: 20,
-                        }}
-                        src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80"
-                        alt="Portfolio Photos"
-                      />
-                      <div style={{ margin: "auto 0" }}>
-                        <InputLabel>{state.portfolio?.name || ""}</InputLabel>
-                        <InputLabel>
-                          {state.portfolio
-                            ? `${(state.portfolio.size / 1000).toFixed(2)} kb`
-                            : ""}
-                        </InputLabel>
-                      </div>
-                      {state.portfolio && (
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginLeft: "auto",
-                            marginRight: 10,
-                          }}
-                        >
-                          <ClearOutlined
-                            style={{ zIndex: 10, cursor: "pointer" }}
-                            onClick={() =>
-                              setState({ ...state, portfolio: "" })
-                            }
-                          />
-                        </div>
-                      )}
-                    </div>
+                      onChange={(e) => {
+                        const nArr = [...state.portfolio];
+                        nArr.push(e.target.files[0]);
+                        setState({ ...state, portfolio: nArr });
+                      }}
+                    />
+                  </Grid>
+                  <Grid item style={{ marginTop: 40 }}>
+                    {isArray(state.portfolio) &&
+                      state.portfolio.length > 0 &&
+                      state.portfolio.map((item, index) => {
+                        const imgUrl = URL.createObjectURL(item);
+                        return (
+                          <div
+                            style={{
+                              display: "flex",
+                              border: "1px solid #F2F3F4",
+                              borderRadius: 6,
+                              marginBottom: 10,
+                              padding: 3,
+                            }}
+                          >
+                            <img
+                              style={{
+                                width: "15%",
+                                borderRadius: 6,
+                                marginRight: 20,
+                              }}
+                              src={imgUrl}
+                              alt="Portfolio Photos"
+                            />
+                            <div style={{ margin: "auto 0" }}>
+                              <Typography
+                                style={{
+                                  fontFamily: "Roobert-Regular",
+                                  fontWeight: "500",
+                                  color: "#202939",
+                                  fontSize: 18,
+                                }}
+                              >
+                                {item?.name || ""}
+                              </Typography>
+                              <Typography
+                                style={{
+                                  fontFamily: "Roobert-Regular",
+                                  color: "#787B8C",
+                                }}
+                              >
+                                {item
+                                  ? `${(item.size / 1000).toFixed(2)} kb`
+                                  : ""}
+                              </Typography>
+                            </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                marginLeft: "auto",
+                                marginRight: 10,
+                              }}
+                            >
+                              <HighlightOffOutlined
+                                style={{
+                                  zIndex: 10,
+                                  cursor: "pointer",
+                                  fontSize: 28,
+                                  color: "#8C92A4",
+                                }}
+                                onClick={() => {
+                                  const nArr = [...state.portfolio];
+                                  nArr.splice(index, 1);
+                                  setState({ ...state, portfolio: nArr });
+                                }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
                   </Grid>
                   <Grid
                     xs={12}
@@ -928,7 +990,7 @@ const CreateProfile = (props) => {
                       <Button
                         style={{ width: "230px" }}
                         variant="contained"
-                        onClick={() => continueStep()}
+                        onClick={() => continueStep(2)}
                         disabled={buttonLoader == "step2"}
                       >
                         {buttonLoader == "step2" ? (
