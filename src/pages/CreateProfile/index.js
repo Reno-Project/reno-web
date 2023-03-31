@@ -6,6 +6,7 @@ import {
   InputLabel,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import {
   Facebook,
@@ -18,7 +19,6 @@ import {
 import CStepper from "../../components/CStepper";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
-import { PhoneNumberUtil } from "google-libphonenumber";
 import useStyles from "./styles";
 import { isEmpty, isObject } from "lodash";
 import { toast } from "react-toastify";
@@ -62,12 +62,12 @@ const errorObj = {
 };
 
 const CreateProfile = (props) => {
-  const phoneUtil = PhoneNumberUtil.getInstance();
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [errObj, setErrObj] = useState(errorObj);
   const [changeTab, setChangeTab] = useState(0);
   const [state, setState] = useState({
+    businessLogo: "",
     cname: "",
     description: "",
     email: "",
@@ -80,7 +80,6 @@ const CreateProfile = (props) => {
     annualContract: "",
     expertise: "",
     pricing: "",
-    location: "",
     certificate: "",
     license: "",
     registraion: "",
@@ -88,8 +87,11 @@ const CreateProfile = (props) => {
     social: "",
     portfolio: "",
   });
+  // console.log("state =====>>> ", state);
+
   const [selectedLocation, setSelectedLocation] = useState({});
-  console.log("selectedLocation =====>>> ", selectedLocation);
+  const [userLocation, setUserLocation] = useState("");
+  const [buttonLoader, setButtonLoader] = useState("");
 
   //validation function for page 1
   function CheckValidattion() {
@@ -108,56 +110,6 @@ const CreateProfile = (props) => {
       }
     }
 
-    if (isEmpty(state.description)) {
-      valid = false;
-      error.descriptionErr = true;
-      error.descriptionMsg = "Please Enter Descri[tion";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#description");
-      }
-    }
-
-    if (isEmpty(state.email)) {
-      valid = false;
-      error.emailErr = true;
-      error.emailMsg = "Please Enter Email";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#email");
-      }
-    }
-    if (isEmpty(state.website)) {
-      valid = false;
-      error.webErr = true;
-      error.webMsg = "Please Enter Web Address";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#web");
-      }
-    }
-
-    if (isEmpty(state.phone)) {
-      valid = false;
-      error.phoneErr = true;
-      error.phoneMsg = "Please enter phone number";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#phone");
-      }
-    } else if (!isEmpty(state.phone) && !isEmpty(state.countryCode)) {
-      const phoneNumber1 = phoneUtil.parse(state.phone, state.countryCode);
-      const isValid = phoneUtil.isValidNumber(phoneNumber1);
-      if (!isValid) {
-        valid = false;
-        error.phoneErr = true;
-        error.phoneMsg = "Please enter valid phone number";
-      }
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#phone");
-      }
-    }
     if (isEmpty(state.businessYear)) {
       valid = false;
       error.yearErr = true;
@@ -195,16 +147,8 @@ const CreateProfile = (props) => {
         section = document.querySelector("#expertise");
       }
     }
-    if (isEmpty(state.pricing)) {
-      valid = false;
-      error.priceErr = true;
-      error.priceMsg = "Please Enter Pricing";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#pricing");
-      }
-    }
-    if (isEmpty(state.location)) {
+
+    if (isEmpty(userLocation)) {
       valid = false;
       error.locationErr = true;
       error.locationMsg = "Please Enter Location";
@@ -214,41 +158,13 @@ const CreateProfile = (props) => {
       }
     }
 
-    if (!isObject(state.certificate)) {
-      valid = false;
-      error.certiErr = true;
-      error.certiMsg = "Please Upload Certificate";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#certi");
-      }
-    }
-    if (!isObject(state.license)) {
-      valid = false;
-      error.licenseErr = true;
-      error.licenseMsg = "Please Upload License";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#license");
-      }
-    }
-    if (!isObject(state.registraion)) {
-      valid = false;
-      error.registrationErr = true;
-      error.registrationMsg = "Please Upload Registration";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#registartion");
-      }
-    }
-
     if (section) {
       section.scrollIntoView({ behavior: "smooth", block: "center" });
     }
     setErrObj(error);
 
     if (valid) {
-      continueStep();
+      step1ConnectApiCall();
     }
   }
 
@@ -261,7 +177,11 @@ const CreateProfile = (props) => {
     setActiveStep((step) => step - 1);
     setChangeTab((changeTab) => changeTab - 1);
   }
-  const exp = ["Interior design", "Renovation", "Retouch"];
+  const exp = [
+    { id: 1, label: "Interior design" },
+    { id: 2, label: "Renovation" },
+    { id: 3, label: "Retouch" },
+  ];
   const price = ["49", "99", "129", "189", "249"];
   const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis", ""];
   const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
@@ -271,6 +191,7 @@ const CreateProfile = (props) => {
   // Step 1 => Pass data in form-data
   async function step1ConnectApiCall() {
     try {
+      setButtonLoader("step1");
       const data = {
         // "email": "",
         // "phone_code": "",
@@ -285,10 +206,14 @@ const CreateProfile = (props) => {
           : "",
         linkedin_url: state?.linkedin ? state?.linkedin : "",
         fb_url: state?.social ? state?.social : "",
-        company_address: state?.location ? state?.location : "",
+        company_address: userLocation ? userLocation : "",
         contractor_expertise: "", // pass in CSV form
-        lat: "",
-        long: "",
+        lat: selectedLocation?.lat ? selectedLocation?.lat : "",
+        long: selectedLocation?.lng ? selectedLocation?.lng : "",
+        iso_certificate: "",
+        licenses: "",
+        company_registration: "",
+        business_logo: "",
       };
       const response = await getAPIProgressData(
         Setting.endpoints.addContractorDetails,
@@ -298,12 +223,15 @@ const CreateProfile = (props) => {
 
       console.log("step1 ConnectApiCall response =====>>> ", response);
       if (response.success) {
+        continueStep();
         toast.done(response.message);
       } else {
         toast.error(response.message);
       }
+      setButtonLoader("");
     } catch (error) {
       console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
+      setButtonLoader("");
       toast.error(error.toString());
     }
   }
@@ -311,6 +239,7 @@ const CreateProfile = (props) => {
   // Step 3 Connect Api integration for api calls
   async function step3ConnectApiCall() {
     try {
+      setButtonLoader("step3");
       const data = {
         beneficiary_name: "",
         iban: "",
@@ -326,14 +255,16 @@ const CreateProfile = (props) => {
         data
       );
 
-      console.log("step1 ConnectApiCall response =====>>> ", response);
+      console.log("step3 ConnectApiCall response =====>>> ", response);
       if (response.success) {
         toast.done(response.message);
       } else {
         toast.error(response.message);
       }
+      setButtonLoader("");
     } catch (error) {
-      console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
+      setButtonLoader("");
+      console.log("🚀 ~ file: index.js:63 ~ connect api call ~ error:", error);
       toast.error(error.toString());
     }
   }
@@ -409,6 +340,12 @@ const CreateProfile = (props) => {
                         type="file"
                         accept="image/jpeg, image/png, image/jpg"
                         hidden
+                        onChange={(e) => {
+                          setState({
+                            ...state,
+                            businessLogo: e.target.files[0],
+                          });
+                        }}
                       />
                     </Button>
                   </div>
@@ -455,19 +392,6 @@ const CreateProfile = (props) => {
                 </Grid>
 
                 <Grid item container xs={10} justifyContent={"space-between"}>
-                  {/* <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="email">
-                    <CInput
-                      label="Email"
-                      placeholder="Enter Email..."
-                      value={state.email}
-                      onChange={(e) => {
-                        setState({ ...state, email: e.target.value });
-                        setErrObj({ ...errObj, emailErr: false, emailMsg: "" });
-                      }}
-                      error={errObj.emailErr}
-                      helperText={errObj.emailMsg}
-                    />
-                  </Grid> */}
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="web">
                     <CInput
                       label="Website"
@@ -484,11 +408,11 @@ const CreateProfile = (props) => {
 
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="year">
                     <Cselect
-                      label="Number of Years in Business:"
+                      label="Number of Years in Business"
                       placeholder="Enter No. of Years"
                       value={state.businessYear}
-                      onChange={(e) => {
-                        setState({ ...state, businessYear: e.target.value });
+                      handleSelect={(e) => {
+                        setState({ ...state, businessYear: e });
                         setErrObj({ ...errObj, yearErr: false, yearMsg: "" });
                       }}
                       renderTags={contractArr}
@@ -547,8 +471,8 @@ const CreateProfile = (props) => {
                       label="Number of Employees"
                       placeholder="Enter No. of Employees"
                       value={state.employees}
-                      onChange={(e) => {
-                        setState({ ...state, employees: e.target.value });
+                      handleSelect={(e) => {
+                        setState({ ...state, employees: e });
                         setErrObj({
                           ...errObj,
                           employeeErr: false,
@@ -562,7 +486,7 @@ const CreateProfile = (props) => {
                   </Grid>
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="contract">
                     <CInput
-                      label="Number of Contracts Annually:"
+                      label="Number of Contracts Annually"
                       placeholder="Enter No. of Contracts"
                       value={state.annualContract}
                       onChange={(e) => {
@@ -599,43 +523,19 @@ const CreateProfile = (props) => {
                   />
                 </Grid>
 
-                {/* <Grid item xs={10} id="pricing">
-                  <Cselect
-                    multiple
-                    handleSelect={(e) => {
-                      setState({ ...state, pricing: e });
-                      setErrObj({ ...errObj, priceErr: false, priceMsg: "" });
-                    }}
-                    label="Pricing"
-                    placeholder="Select Pricing"
-                    value={state.pricing}
-                    renderTags={price}
-                    error={errObj.priceErr}
-                    helperText={errObj.priceMsg}
-                  />
-                </Grid> */}
-
                 <Grid item xs={10} id="location">
-                  {/* <CInput
-                    label="Location"
-                    placeholder="Enter Location Here..."
-                    value={state.location}
-                    onChange={(e) => {
-                      setState({ ...state, location: e.target.value });
-                      setErrObj({
-                        ...errObj,
-                        locationErr: false,
-                        locationMsg: "",
-                      });
-                    }}
-                    error={errObj.locationErr}
-                    helperText={errObj.locationMsg}
-                  /> */}
+                  <InputLabel shrink htmlFor="bootstrap-input">
+                    Location
+                  </InputLabel>
                   <PlaceAutoComplete
                     placeholder="Enter Location Here..."
                     style={{ marginBottom: 10, width: "100%" }}
-                    onChange={(obj) => setSelectedLocation(obj)}
-                    // disable={remoteOnly ? true : false}
+                    onChange={(obj) => {
+                      setUserLocation(obj?.location);
+                      setSelectedLocation(obj);
+                    }}
+                    error={errObj.locationErr}
+                    helperText={errObj.locationMsg}
                   />
                 </Grid>
 
@@ -844,9 +744,14 @@ const CreateProfile = (props) => {
                     color="primary"
                     fullWidth
                     style={{ marginTop: 20, marginBottom: 20 }}
-                    onClick={continueStep}
+                    onClick={CheckValidattion}
+                    disabled={buttonLoader == "step1"}
                   >
-                    Continue
+                    {buttonLoader == "step1" ? (
+                      <CircularProgress style={{ color: "#fff" }} size={26} />
+                    ) : (
+                      "Continue"
+                    )}
                   </Button>
                 </Grid>
 
@@ -980,8 +885,16 @@ const CreateProfile = (props) => {
                         style={{ width: "230px" }}
                         variant="contained"
                         onClick={() => continueStep()}
+                        disabled={buttonLoader == "step2"}
                       >
-                        Upload & Continue
+                        {buttonLoader == "step2" ? (
+                          <CircularProgress
+                            style={{ color: "#fff" }}
+                            size={26}
+                          />
+                        ) : (
+                          "Upload & Continue"
+                        )}
                       </Button>
                     </Grid>
                   </Grid>
@@ -1113,7 +1026,11 @@ const CreateProfile = (props) => {
                       variant="contained"
                       onClick={() => continueStep()}
                     >
-                      Save & Create Profile
+                      {buttonLoader == "step3" ? (
+                        <CircularProgress style={{ color: "#fff" }} size={26} />
+                      ) : (
+                        "Save & Create Profile"
+                      )}
                     </Button>
                   </Grid>
                 </Grid>
