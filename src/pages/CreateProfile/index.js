@@ -19,12 +19,14 @@ import {
 import CStepper from "../../components/CStepper";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
+import { PhoneNumberUtil } from "google-libphonenumber";
 import useStyles from "./styles";
 import { isEmpty, isObject } from "lodash";
 import { toast } from "react-toastify";
 import { getApiData, getAPIProgressData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import PlaceAutoComplete from "../../components/PlaceAutoComplete";
+import { NavLink } from "react-router-dom";
 
 const errorObj = {
   cnameErr: false,
@@ -59,9 +61,18 @@ const errorObj = {
   bnameMsg: "",
   ibanErr: false,
   ibanMsg: "",
+  bankErr: false,
+  bankMsg: "",
+  accErr: false,
+  accMsg: "",
+  swiftErr: false,
+  swiftMsg: "",
+  addErr: false,
+  addMsg: "",
 };
 
 const CreateProfile = (props) => {
+  const phoneUtil = PhoneNumberUtil.getInstance();
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [errObj, setErrObj] = useState(errorObj);
@@ -80,14 +91,20 @@ const CreateProfile = (props) => {
     annualContract: "",
     expertise: "",
     pricing: "",
+    location: "",
     certificate: "",
     license: "",
     registraion: "",
     linkedin: "",
     social: "",
     portfolio: "",
+    bname: "",
+    iban: "",
+    bank: "",
+    acc: "",
+    swift: "",
+    address: "",
   });
-  // console.log("state =====>>> ", state);
 
   const [selectedLocation, setSelectedLocation] = useState({});
   const [userLocation, setUserLocation] = useState("");
@@ -369,12 +386,12 @@ const CreateProfile = (props) => {
                       setErrObj({ ...errObj, cnameErr: false, cnameMsg: "" });
                     }}
                     error={errObj.cnameErr}
-                    helperText={errObj.cnameMsg}
+                    helpertext={errObj.cnameMsg}
                   />
                 </Grid>
                 <Grid item xs={10} id="description">
                   <CInput
-                    multiline
+                    multiline={true}
                     label="Description"
                     placeholder="Write Description"
                     value={state.description}
@@ -387,7 +404,7 @@ const CreateProfile = (props) => {
                       });
                     }}
                     error={errObj.descriptionErr}
-                    helperText={errObj.descriptionMsg}
+                    helpertext={errObj.descriptionMsg}
                   />
                 </Grid>
 
@@ -402,7 +419,7 @@ const CreateProfile = (props) => {
                         setErrObj({ ...errObj, webErr: false, webMsg: "" });
                       }}
                       error={errObj.webErr}
-                      helperText={errObj.webMsg}
+                      helpertext={errObj.webMsg}
                     />
                   </Grid>
 
@@ -417,7 +434,7 @@ const CreateProfile = (props) => {
                       }}
                       renderTags={contractArr}
                       error={errObj.yearErr}
-                      helperText={errObj.yearMsg}
+                      helpertext={errObj.yearMsg}
                     />
                   </Grid>
                 </Grid>
@@ -460,7 +477,7 @@ const CreateProfile = (props) => {
                       }}
                       className={classes.pickerInput}
                       error={errObj.phoneErr}
-                      helperText={errObj.phoneMsg}
+                      helpertext={errObj.phoneMsg}
                     />
                   </Grid> */}
                 </Grid>
@@ -481,7 +498,7 @@ const CreateProfile = (props) => {
                       }}
                       renderTags={employeeArr}
                       error={errObj.employeeErr}
-                      helperText={errObj.employeeMsg}
+                      helpertext={errObj.employeeMsg}
                     />
                   </Grid>
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="contract">
@@ -498,14 +515,14 @@ const CreateProfile = (props) => {
                         });
                       }}
                       error={errObj.contractErr}
-                      helperText={errObj.contarctMsg}
+                      helpertext={errObj.contarctMsg}
                     />
                   </Grid>
                 </Grid>
 
                 <Grid item xs={10} id="expertise">
                   <Cselect
-                    multiple
+                    multiple={true}
                     label="Expertise Area"
                     placeholder="Select Area of Expertise"
                     value={state.expertise}
@@ -519,7 +536,7 @@ const CreateProfile = (props) => {
                     }}
                     renderTags={exp}
                     error={errObj.expertiseErr}
-                    helperText={errObj.expertiseMsg}
+                    helpertext={errObj.expertiseMsg}
                   />
                 </Grid>
 
@@ -755,7 +772,11 @@ const CreateProfile = (props) => {
                   </Button>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
                   <Typography
                     style={{
                       fontFamily: "Roobert-Regular",
@@ -763,8 +784,25 @@ const CreateProfile = (props) => {
                     }}
                   >
                     Already have an account,
-                    <b> Login now?</b>
                   </Typography>
+                  <NavLink
+                    to="/login"
+                    style={{
+                      textDecoration: "none",
+                    }}
+                  >
+                    <b
+                      style={{
+                        marginLeft: "3px",
+                        textAlign: "center",
+                        color: "#202939",
+                        fontSize: "14px",
+                        fontFamily: "Roobert-Regular",
+                      }}
+                    >
+                      Login Now
+                    </b>
+                  </NavLink>
                 </Grid>
               </>
             ) : changeTab === 1 ? (
@@ -906,13 +944,13 @@ const CreateProfile = (props) => {
                   <CInput
                     label="Beneficiary Name"
                     placeholder="Enter Beneficiary Name"
-                    value={state.cname}
+                    value={state.bname}
                     onChange={(e) => {
-                      setState({ ...state, cname: e.target.value });
-                      setErrObj({ ...errObj, cnameErr: false, cnameMsg: "" });
+                      setState({ ...state, bname: e.target.value });
+                      setErrObj({ ...errObj, bnameErr: false, bnameMsg: "" });
                     }}
-                    error={errObj.cnameErr}
-                    helperText={errObj.cnameMsg}
+                    error={errObj.bnameErr}
+                    helpertext={errObj.bnameMsg}
                   />
                 </Grid>
 
@@ -920,17 +958,17 @@ const CreateProfile = (props) => {
                   <CInput
                     label="IBAN"
                     placeholder="Enter IBAN"
-                    value={state.description}
+                    value={state.iban}
                     onChange={(e) => {
-                      setState({ ...state, description: e.target.value });
+                      setState({ ...state, iban: e.target.value });
                       setErrObj({
                         ...errObj,
-                        descriptionErr: false,
-                        descriptionMsg: "",
+                        ibanErr: false,
+                        ibanMsg: "",
                       });
                     }}
-                    error={errObj.descriptionErr}
-                    helperText={errObj.descriptionMsg}
+                    error={errObj.ibanErr}
+                    helpertext={errObj.ibanMsg}
                   />
                 </Grid>
 
@@ -938,18 +976,18 @@ const CreateProfile = (props) => {
                   <Cselect
                     label="Bank Name"
                     placeholder="Select Bank"
-                    value={state.expertise}
+                    value={state.bank}
                     handleSelect={(e) => {
-                      setState({ ...state, expertise: e });
+                      setState({ ...state, bank: e });
                       setErrObj({
                         ...errObj,
-                        expertiseErr: false,
-                        expertiseMsg: "",
+                        bankErr: false,
+                        bankMsg: "",
                       });
                     }}
                     renderTags={bank}
-                    error={errObj.expertiseErr}
-                    helperText={errObj.expertiseMsg}
+                    error={errObj.bankErr}
+                    helpertext={errObj.bankMsg}
                   />
                 </Grid>
 
@@ -958,26 +996,26 @@ const CreateProfile = (props) => {
                     <CInput
                       label="Bank Account"
                       placeholder="Enter Bank Account Number"
-                      value={state.phone}
+                      value={state.acc}
                       onChange={(e) => {
-                        setState({ ...state, phone: e.target.value });
-                        setErrObj({ ...errObj, phoneErr: false, phoneMsg: "" });
+                        setState({ ...state, acc: e.target.value });
+                        setErrObj({ ...errObj, accErr: false, accMsg: "" });
                       }}
-                      error={errObj.phoneErr}
-                      helperText={errObj.phoneMsg}
+                      error={errObj.accErr}
+                      helpertext={errObj.accMsg}
                     />
                   </Grid>
                   <Grid item xs={6} id="swift">
                     <CInput
                       label="SWIFT code"
                       placeholder="Enter SWIFT Code"
-                      value={state.businessYear}
+                      value={state.swift}
                       onChange={(e) => {
-                        setState({ ...state, businessYear: e.target.value });
-                        setErrObj({ ...errObj, yearErr: false, yearMsg: "" });
+                        setState({ ...state, swift: e.target.value });
+                        setErrObj({ ...errObj, swiftErr: false, swiftMsg: "" });
                       }}
-                      error={errObj.yearErr}
-                      helperText={errObj.yearMsg}
+                      error={errObj.swiftErr}
+                      helpertext={errObj.swiftMsg}
                     />
                   </Grid>
                 </Grid>
@@ -987,17 +1025,17 @@ const CreateProfile = (props) => {
                     multiline
                     label="Address"
                     placeholder="Enter Address"
-                    value={state.description}
+                    value={state.address}
                     onChange={(e) => {
-                      setState({ ...state, description: e.target.value });
+                      setState({ ...state, address: e.target.value });
                       setErrObj({
                         ...errObj,
-                        descriptionErr: false,
-                        descriptionMsg: "",
+                        addErr: false,
+                        addMsg: "",
                       });
                     }}
-                    error={errObj.descriptionErr}
-                    helperText={errObj.descriptionMsg}
+                    error={errObj.addErr}
+                    helpertext={errObj.addMsg}
                   />
                 </Grid>
 
