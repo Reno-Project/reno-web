@@ -569,14 +569,16 @@ const CreateProfile = (props) => {
                       InputProps={{
                         endAdornment: (
                           <>
-                            <InputAdornment position="end">
-                              <ClearOutlined
-                                style={{ zIndex: 10, cursor: "pointer" }}
-                                onClick={() => {
-                                  setState({ ...state, certificate: "" });
-                                }}
-                              />
-                            </InputAdornment>
+                            {state.certificate ? (
+                              <InputAdornment position="end">
+                                <ClearOutlined
+                                  style={{ zIndex: 10, cursor: "pointer" }}
+                                  onClick={() => {
+                                    setState({ ...state, certificate: "" });
+                                  }}
+                                />
+                              </InputAdornment>
+                            ) : null}
                             <InputAdornment position="end">
                               <AttachFileOutlined />
                             </InputAdornment>
@@ -617,14 +619,16 @@ const CreateProfile = (props) => {
                       InputProps={{
                         endAdornment: (
                           <>
-                            <InputAdornment position="end">
-                              <ClearOutlined
-                                style={{ zIndex: 10, cursor: "pointer" }}
-                                onClick={() => {
-                                  setState({ ...state, license: "" });
-                                }}
-                              />
-                            </InputAdornment>
+                            {state.license ? (
+                              <InputAdornment position="end">
+                                <ClearOutlined
+                                  style={{ zIndex: 10, cursor: "pointer" }}
+                                  onClick={() => {
+                                    setState({ ...state, license: "" });
+                                  }}
+                                />
+                              </InputAdornment>
+                            ) : null}
                             <InputAdornment position="end">
                               <AttachFileOutlined />
                             </InputAdornment>
@@ -669,14 +673,16 @@ const CreateProfile = (props) => {
                       InputProps={{
                         endAdornment: (
                           <>
-                            <InputAdornment position="end">
-                              <ClearOutlined
-                                style={{ zIndex: 10, cursor: "pointer" }}
-                                onClick={() => {
-                                  setState({ ...state, registraion: "" });
-                                }}
-                              />
-                            </InputAdornment>
+                            {state.registraion ? (
+                              <InputAdornment position="end">
+                                <ClearOutlined
+                                  style={{ zIndex: 10, cursor: "pointer" }}
+                                  onClick={() => {
+                                    setState({ ...state, registraion: "" });
+                                  }}
+                                />
+                              </InputAdornment>
+                            ) : null}
                             <InputAdornment position="end">
                               <AttachFileOutlined />
                             </InputAdornment>
