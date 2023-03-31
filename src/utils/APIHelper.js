@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _, { isArray } from "lodash";
 import { store } from "../redux/store/configureStore";
 import authAction from "../redux/reducers/auth/actions";
 import { Setting } from "./Setting";
@@ -94,7 +94,15 @@ export function getAPIProgressData(
       var FormData = require("form-data");
       var form = new FormData();
       if (data && Object.keys(data).length > 0) {
-        Object.keys(data).map((k) => form.append(k, data[k]));
+        Object.keys(data).map((k) => {
+          if (isArray(data[k]) && data[k].length > 0) {
+            data[k].map((item) => {
+              form.append(k, item);
+            });
+          } else {
+            form.append(k, data[k]);
+          }
+        });
       }
 
       const hData = {
