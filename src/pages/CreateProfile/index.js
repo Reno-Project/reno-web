@@ -29,6 +29,7 @@ import { getApiData, getAPIProgressData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import PlaceAutoComplete from "../../components/PlaceAutoComplete";
 import useStyles from "./styles";
+import ProfileSuccessModal from "../../components/ProfileSuccessModal";
 
 const errorObj = {
   cnameErr: false,
@@ -109,6 +110,7 @@ const CreateProfile = (props) => {
   const [selectedLocation, setSelectedLocation] = useState({});
   const [userLocation, setUserLocation] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
+  const [visible, setVisible] = useState(false);
   const exp = [
     { id: 1, label: "Interior design" },
     { id: 2, label: "Renovation" },
@@ -338,10 +340,8 @@ const CreateProfile = (props) => {
         "POST",
         data,
         true
-        );
-        console.log("data step1 =====>>> ", data);
+      );
 
-      console.log("step1 ConnectApiCall response =====>>> ", response);
       if (response.success) {
         continueStep(1);
         toast.done(response.message);
@@ -404,6 +404,7 @@ const CreateProfile = (props) => {
 
       if (response.success) {
         toast.success(response.message);
+        setVisible(true);
       } else {
         toast.error(response.message);
       }
@@ -1246,6 +1247,7 @@ const CreateProfile = (props) => {
           </Grid>
         </Grid>
       </Grid>
+      {visible && <ProfileSuccessModal visible={visible} />}
     </div>
   );
 };
