@@ -35,6 +35,7 @@ const ResetPassword = (props) => {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);
   const { token } = useSelector((state) => state.auth);
 
@@ -47,6 +48,9 @@ const ResetPassword = (props) => {
   const [timerCount, setTimer] = useState(60);
   const [btnLoad, setBtnLoad] = useState("");
   const [resendViewVisible, setResendViewVisible] = useState(false);
+
+  const passwordRegex =
+    /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%^&*])((?=.*[A-Z])))(?=.{8,})/;
 
   useEffect(() => {
     setOutput("");
@@ -66,29 +70,6 @@ const ResetPassword = (props) => {
 
     return () => clearInterval(intervalId);
   }, [timerCount]);
-
-  async function OTPVerify(code) {
-    setBtnLoad("otp");
-    try {
-      const response = await getApiData(Setting.endpoints.verifyOtp, "POST", {
-        otp: code,
-      });
-
-      console.log("response ====sasdasds=>>> ", response);
-      if (response.success) {
-        dispatch(setUserData(response?.data));
-        dispatch(setToken(response?.token));
-        updatepassword();
-      } else {
-        toast.error(response?.message);
-      }
-      setBtnLoad("");
-    } catch (error) {
-      console.log("🚀 ~ file: index.js:50 ~ OTPVerify ~ error:", error);
-      toast.error(error.toString() || "Something gone wrong! Please try again");
-      setBtnLoad("");
-    }
-  }
 
   // this function resend otp to the user
   async function resendOtp() {
@@ -131,10 +112,19 @@ const ResetPassword = (props) => {
       valid = false;
       error.passwordErr = true;
       error.passwordMsg = "Please enter password";
+    } else if (!passwordRegex.test(password)) {
+      valid = false;
+      error.passwordErr = true;
+      error.passwordMsg =
+        "Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol";
     } else if (password.length < 8) {
       valid = false;
       error.passwordErr = true;
       error.passwordMsg = "Password length must be of 8-15";
+    } else if (password !== newPassword) {
+      valid = false;
+      error.passwordErr = true;
+      error.passwordMsg = "New password and confirm password must be same";
     }
 
     // validate newPassword
@@ -142,18 +132,25 @@ const ResetPassword = (props) => {
       valid = false;
       error.newPasswordErr = true;
       error.newPasswordMsg = "Please enter confirm password";
+    } else if (!passwordRegex.test(newPassword)) {
+      valid = false;
+      error.newPasswordErr = true;
+      error.newPasswordMsg =
+        "Confirm Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol";
     } else if (newPassword.length < 8) {
       valid = false;
       error.newPasswordErr = true;
       error.newPasswordMsg = "Confirm password length must be of 8-15";
+    } else if (newPassword !== password) {
+      valid = false;
+      error.newPasswordErr = true;
+      error.newPasswordMsg = "New password and confirm password must be same";
     }
 
     setErrObj(error);
     if (valid) {
-      alert("hi");
-      // loginUser();
-      updatepassword();
-      // OTPVerify(output);
+      // updatepassword();
+      updatePasswordByOtp();
     }
   }
 
@@ -171,6 +168,7 @@ const ResetPassword = (props) => {
         { Authorization: `Bearer ${token}` }
       );
 
+      console.log("response =====>>> ", response);
       if (response.success) {
         toast.success(response.message);
         // move to create profile screen
@@ -179,6 +177,32 @@ const ResetPassword = (props) => {
         toast.error(response.message);
       }
     } catch (error) {
+      console.log("error=====>>>>>", error);
+      toast.error(error.toString());
+    }
+  }
+
+  async function updatePasswordByOtp() {
+    try {
+      setBtnLoad("reset");
+      const response = await getApiData(
+        Setting.endpoints.updatePasswordOtp,
+        "POST",
+        {
+          otp,
+          password,
+        }
+      );
+
+      if (response.success) {
+        toast.success(response.message);
+        navigate("/login");
+      } else {
+        toast.error(response.message);
+      }
+      setBtnLoad("");
+    } catch (error) {
+      setBtnLoad("");
       console.log("error=====>>>>>", error);
       toast.error(error.toString());
     }
@@ -225,6 +249,7 @@ const ResetPassword = (props) => {
                 label="New password"
                 placeholder="Enter new password"
                 value={password}
+                type={showNewPassword ? "text" : "password"}
                 onChange={(e) => {
                   setPassword(e.target.value);
                   setErrObj({ ...errObj, passwordErr: false, passwordMsg: "" });
@@ -232,6 +257,16 @@ const ResetPassword = (props) => {
                 white={false}
                 error={errObj.passwordErr}
                 helpertext={errObj.passwordMsg}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                    >
+                      {!showNewPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -320,7 +355,11 @@ const ResetPassword = (props) => {
                 fullWidth
                 onClick={validation}
               >
-                Reset Password
+                {btnLoad === "reset" ? (
+                  <CircularProgress style={{ color: "#fff" }} size={26} />
+                ) : (
+                  "Reset Password"
+                )}
               </Button>
             </Grid>
           </Grid>

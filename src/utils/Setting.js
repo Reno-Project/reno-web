@@ -1,10 +1,7 @@
 const prod = process.env.NODE_ENV === "production";
-// const baseUrl = prod
-//   ? "https://reno-home.azurewebsites.net/"
-//   : "https://reno-home.azurewebsites.net/";
 const baseUrl = prod
-  ? "http://192.168.2.149:3000/"
-  : "http://192.168.2.149:3000/";
+  ? "https://reno-home.azurewebsites.net/"
+  : "https://reno-home.azurewebsites.net/";
 
 export const Setting = {
   baseUrl,
@@ -23,9 +20,11 @@ export const Setting = {
     verifyOtp: "api/user/verify-otp",
     resendOtp: "api/user/resend-otp",
     updatepassword: "api/user/update-password",
+    updatePasswordOtp: 'api/user/update-password-otp',
     addContractorDetails: "api/contractor/add-contractor-details",
     addPortfolio: "api/contractor/add-portfolio",
     addBillingInfo: "api/contractor/add-billing-info",
+    forgotPassword: "api/user/forgot-password",
   },
 
   JS_Regex: {

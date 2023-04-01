@@ -21,6 +21,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "8px !important",
     marginBottom: "15px !important",
   },
+  forgotHeaderText: {
+    fontFamily: "ElMessiri-Bold !important",
+    fontSize: "22px !important",
+    color: "#274BF1",
+    textAlign: "center",
+    marginTop: "8px !important",
+    marginBottom: "15px !important",
+  },
   borderDivStyle: { height: 1, width: "32%", backgroundColor: "#F2F3F4" },
   continueTextStyle: {
     margin: "0px 15px !important",

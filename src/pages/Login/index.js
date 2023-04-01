@@ -6,6 +6,11 @@ import {
   IconButton,
   InputAdornment,
   Typography,
+  Modal,
+  Fade,
+  Box,
+  TextField,
+  Backdrop,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import { isEmpty } from "lodash";
@@ -20,12 +25,16 @@ import Images from "../../config/images";
 import { getApiData } from "../../utils/APIHelper";
 import useStyles from "./styles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 const errorObj = {
   emailErr: false,
   passwordErr: false,
+  forgotEmailErr: false,
   emailMsg: "",
   passwordMsg: "",
+  forgotEmailMsg: "",
 };
 
 const Login = (props) => {
@@ -39,8 +48,25 @@ const Login = (props) => {
   const [password, setPassword] = useState("");
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
+  const [btnForgotLoad, setBtnForgotLoad] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [googleBtnLoad, setGoogleBtnLoad] = useState(false);
+
+  const [forgotEmail, setForgotEmail] = useState("");
+  const theme = useTheme();
+  const [visibleForgotModal, setVisibleForgotModal] = useState(false);
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: sm ? 300 : 330,
+    bgcolor: "background.paper",
+    borderRadius: 1,
+    boxShadow: 24,
+    p: 4,
+  };
 
   // this function checks validation of login field
   function validation() {
@@ -151,6 +177,8 @@ const Login = (props) => {
 
       console.log("socialLoginApiCallresponse =====>>> ", response);
       if (response.success) {
+        dispatch(setUserData(response?.data));
+        dispatch(setToken(response?.token));
         if (response?.is_new_user) {
           setGoogleBtnLoad(false);
           navigate("/signup", { state: { socialData, type } });
@@ -163,8 +191,6 @@ const Login = (props) => {
           sendOtpVerifyingApiCall(response?.data);
         } else {
           setGoogleBtnLoad(false);
-          dispatch(setUserData(response?.data));
-          dispatch(setToken(response?.token));
           navigate("/dashboard");
         }
       } else {
@@ -196,6 +222,52 @@ const Login = (props) => {
       console.log("🚀 ~ file: index.js:88 ~ resendOtp ~ error:", error);
       toast.error(error.toString() || "Something gone wrong! Please try again");
       setGoogleBtnLoad(false);
+    }
+  }
+
+  // this function checks forgot validation
+  function forgotValidation() {
+    const error = { ...errObj };
+    let valid = true;
+    // validate forgot email
+    if (isEmpty(forgotEmail)) {
+      valid = false;
+      error.forgotEmailErr = true;
+      error.forgotEmailMsg = "Please enter email";
+    } else if (!emailRegex.test(forgotEmail)) {
+      valid = false;
+      error.forgotEmailErr = true;
+      error.forgotEmailMsg = "Please enter valid email";
+    }
+
+    setErrObj(error);
+    if (valid) {
+      forgotPasswordApiCall();
+    }
+  }
+
+  async function forgotPasswordApiCall() {
+    try {
+      setBtnForgotLoad(true);
+      const response = await getApiData(
+        Setting.endpoints.forgotPassword,
+        "POST",
+        {
+          email: forgotEmail ? forgotEmail : "",
+        }
+      );
+
+      console.log("response ====forgot otp=>>> ", response);
+      if (response.success) {
+        navigate("/reset-password", { state: { data: email } });
+      } else {
+        toast.error(response.message);
+      }
+      setBtnForgotLoad(false);
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:88 ~ resendOtp ~ error:", error);
+      toast.error(error.toString() || "Something gone wrong! Please try again");
+      setBtnForgotLoad(false);
     }
   }
 
@@ -257,11 +329,12 @@ const Login = (props) => {
                 }
               />
             </Grid>
-            <NavLink to="">
-              <Typography className={classes.menuTitleStyle}>
-                Forget password?
-              </Typography>
-            </NavLink>
+            <Typography
+              onClick={() => setVisibleForgotModal(true)}
+              className={classes.menuTitleStyle}
+            >
+              Forget password?
+            </Typography>
             <Grid item xs={12}>
               <Button
                 variant="contained"
@@ -331,6 +404,68 @@ const Login = (props) => {
                 </Typography>
               </NavLink>
             </Grid>
+
+            <Modal
+              open={visibleForgotModal}
+              onClose={() =>
+                btnForgotLoad ? null : setVisibleForgotModal(false)
+              }
+              closeAfterTransition
+              disableAutoFocus
+              slotProps={{ backdrop: Backdrop }}
+              style={{ overflowY: "scroll" }}
+            >
+              <Fade in={visibleForgotModal}>
+                <Box sx={style}>
+                  {/* <div className={classes.splitViewStyle}> */}
+                  <Grid container justifyContent="center" alignItems="center">
+                    <Typography className={classes.forgotHeaderText}>
+                      Forget Password
+                    </Typography>
+                    <Grid item xs={12}>
+                      <CInput
+                        outline
+                        label="Email"
+                        placeholder="Enter email address"
+                        value={forgotEmail}
+                        onChange={(e) => {
+                          setForgotEmail(e.target.value);
+                          setErrObj({
+                            ...errObj,
+                            forgotEmailErr: false,
+                            forgotEmailMsg: "",
+                          });
+                        }}
+                        white={false}
+                        error={errObj.forgotEmailErr}
+                        helpertext={errObj.forgotEmailMsg}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        style={{ marginTop: 20, marginBottom: 20 }}
+                        onClick={forgotValidation}
+                        disabled={btnForgotLoad}
+                      >
+                        {btnForgotLoad ? (
+                          <CircularProgress
+                            style={{ color: "#fff" }}
+                            size={26}
+                          />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  {/* </div> */}
+                </Box>
+              </Fade>
+            </Modal>
           </Grid>
         </Grid>
       </Grid>
