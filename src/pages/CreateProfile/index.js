@@ -18,7 +18,7 @@ import {
   HighlightOffOutlined,
   Image,
 } from "@mui/icons-material";
-import _, { isArray, isEmpty } from "lodash";
+import _, { isArray, isEmpty, isString } from "lodash";
 import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -83,7 +83,6 @@ const CreateProfile = (props) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const { userData } = useSelector((state) => state.auth);
-  console.log("userData =====>>> ", userData);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
 
@@ -207,7 +206,7 @@ const CreateProfile = (props) => {
           : {},
         linkedin: uData?.linkedin_url ? uData?.linkedin_url : "",
         social: uData?.fb_url ? uData?.fb_url : "",
-        // portfolio: [],
+        portfolio: uData?.portfolio || [],
       });
     }
   };
@@ -1183,7 +1182,12 @@ const CreateProfile = (props) => {
                     {isArray(state.portfolio) &&
                       state.portfolio.length > 0 &&
                       state.portfolio.map((item, index) => {
-                        const imgUrl = URL.createObjectURL(item);
+                        let imgUrl = "";
+                        if (typeof item === "string") {
+                          imgUrl = item;
+                        } else {
+                          imgUrl = URL.createObjectURL(item);
+                        }
                         return (
                           <div
                             style={{
@@ -1212,7 +1216,9 @@ const CreateProfile = (props) => {
                                   fontSize: 18,
                                 }}
                               >
-                                {item?.name || ""}
+                                {item?.name ||
+                                  `Portfolio Image ${index + 1}` ||
+                                  ""}
                               </Typography>
                               <Typography
                                 style={{
@@ -1220,9 +1226,9 @@ const CreateProfile = (props) => {
                                   color: "#787B8C",
                                 }}
                               >
-                                {item
-                                  ? `${(item.size / 1000).toFixed(2)} kb`
-                                  : ""}
+                                {isString(item)
+                                  ? ""
+                                  : `${(item?.size / 1000).toFixed(2)} kb`}
                               </Typography>
                             </div>
                             <div
