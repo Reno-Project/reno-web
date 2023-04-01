@@ -5,6 +5,7 @@ const Images = {
   fb: "/assets/images/fb.png",
   apple: "/assets/images/apple.png",
   flogo: "/assets/images/flogo.png",
+  success: "/assets/images/success.png",
 };
 
 export default Images;
