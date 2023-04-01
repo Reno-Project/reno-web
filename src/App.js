@@ -1,16 +1,23 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { Detector } from "react-detect-offline";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { initializeApp } from "firebase/app";
+import { useSelector } from "react-redux";
+import { isEmpty, isObject } from "lodash";
 import HowItWorks from "./pages/HowItWorks";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import CreateProfile from "./pages/CreateProfile";
 import ResetPassword from "./pages/ResetPassword";
 import OtpInput from "./pages/OtpInput";
-import Dashboard from './pages/Dashboard';
+import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import "./App.css";
@@ -27,6 +34,16 @@ const firebaseConfig = {
 
 function App() {
   initializeApp(firebaseConfig);
+  const { userData } = useSelector((state) => state.auth);
+  const [isLogin, setIsLogin] = useState(true);
+
+  useEffect(() => {
+    if (isObject(userData) && !isEmpty(userData)) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [userData]);
 
   return (
     <Detector
@@ -36,13 +53,28 @@ function App() {
             <Header />
             <div className="MT70">
               <Routes>
-                <Route exact path={"/"} element={<HowItWorks />} />
-                <Route path={"/login"} element={<Login />} />
-                <Route path={"/signup"} element={<Signup />} />
-                <Route path={"/reset-password"} element={<ResetPassword />} />
-                <Route path={"/create-profile"} element={<CreateProfile />} />
-                <Route path={"/otp-verify"} element={<OtpInput />} />
-                <Route path={"/dashboard"} element={<Dashboard />} />
+                {isLogin ? (
+                  <>
+                    <Route
+                      path={"/create-profile"}
+                      element={<CreateProfile />}
+                    />
+                    <Route path={"/dashboard"} element={<Dashboard />} />
+                    <Route exact path={"/"} element={<HowItWorks />} />
+                    <Route path="*" element={<Navigate to={"/dashboard"} />} />
+                  </>
+                ) : (
+                  <>
+                    <Route path={"/login"} element={<Login />} />
+                    <Route path={"/signup"} element={<Signup />} />
+                    <Route
+                      path={"/reset-password"}
+                      element={<ResetPassword />}
+                    />
+                    <Route path={"/otp-verify"} element={<OtpInput />} />
+                    <Route path="*" element={<Navigate to={"/login"} />} />
+                  </>
+                )}
               </Routes>
             </div>
             <Footer />
