@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Grid,
@@ -77,6 +77,8 @@ const errorObj = {
 const CreateProfile = (props) => {
   const navigate = useNavigate();
   const classes = useStyles();
+  const { userData } = useSelector((state) => state.auth);
+
   const [activeStep, setActiveStep] = useState(0);
   const [errObj, setErrObj] = useState(errorObj);
   const [state, setState] = useState({
@@ -121,6 +123,62 @@ const CreateProfile = (props) => {
   const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
   const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
+  const findFromArray = (item) => {
+    return exp?.find((it) => it?.id === item?.project_id);
+  };
+
+  useEffect(() => {
+    if (!isEmpty(userData?.contractor_data)) {
+      const uData = userData?.contractor_data;
+      const obj = {
+        lat: uData?.lat ? uData?.lat : "",
+        lng: uData?.long ? uData?.long : "",
+        location: uData?.company_address ? uData?.company_address : "",
+      };
+      setSelectedLocation(obj);
+      setUserLocation(uData?.company_address);
+
+      let tempArray = [];
+      uData?.expertise?.map((item, index) => {
+        const test = findFromArray(item);
+        tempArray.push(test);
+      });
+      console.log("tempArray =====>>> ", tempArray);
+
+      setState({
+        ...state,
+        businessLogo: "",
+        cname: uData?.company_name ? uData?.company_name : "",
+        description: uData?.description ? uData?.description : "",
+        website: uData?.website ? uData?.website : "",
+        businessYear: uData?.no_of_years_in_business
+          ? uData?.no_of_years_in_business
+          : "",
+        employees: uData?.no_of_employees ? uData?.no_of_employees : "",
+        annualContract: uData?.no_of_contracts_annually
+          ? uData?.no_of_contracts_annually
+          : "",
+        expertise: tempArray ? tempArray : [],
+        certificate: uData?.iso_certificate ? uData?.iso_certificate : {},
+        license: uData?.licenses ? uData?.licenses : {},
+        registraion: uData?.company_registration
+          ? uData?.company_registration
+          : {},
+        linkedin: uData?.linkedin_url ? uData?.linkedin_url : "",
+        social: uData?.fb_url ? uData?.fb_url : "",
+        // portfolio: [],
+        // bname: uData?.company_name ? uData?.company_name : "",
+        // iban: uData?.company_name ? uData?.company_name : "",
+        // bank: uData?.company_name ? uData?.company_name : "",
+        // acc: uData?.company_name ? uData?.company_name : "",
+        // swift: uData?.company_name ? uData?.company_name : "",
+        // address: uData?.company_name ? uData?.company_name : "",
+      });
+    }
+  }, []);
+
+
+  console.log("state =====>>> ", state);
   // validation function for page 1
   function CheckValidattion() {
     const error = { ...errObj };
@@ -135,6 +193,22 @@ const CreateProfile = (props) => {
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#cname");
+      }
+    }
+
+    if (
+      !isEmpty(state?.website) &&
+      !(
+        state?.website.indexOf("https://") === 0 ||
+        state?.website.indexOf("http://") === 0
+      )
+    ) {
+      valid = false;
+      error.webErr = true;
+      error.webMsg = "Please Enter Valid Website Name";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#web");
       }
     }
 
@@ -559,6 +633,7 @@ const CreateProfile = (props) => {
                       placeholder="Enter No. of Years"
                       value={state.businessYear}
                       handleSelect={(e) => {
+                        console.log("e ===businessyear==>>> ", e);
                         setState({
                           ...state,
                           businessYear: _.isNumber(e) ? e.toString() : e,
@@ -622,6 +697,7 @@ const CreateProfile = (props) => {
                       placeholder="Enter No. of Employees"
                       value={state.employees}
                       handleSelect={(e) => {
+                        console.log("e ==employee===>>> ", e);
                         setState({
                           ...state,
                           employees: _.isNumber(e) ? e.toString() : e,
@@ -663,6 +739,7 @@ const CreateProfile = (props) => {
                     placeholder="Select Area of Expertise"
                     value={state.expertise}
                     handleSelect={(e) => {
+                      console.log("e ==expertise==>>> ", e);
                       setState({ ...state, expertise: e });
                       setErrObj({
                         ...errObj,
