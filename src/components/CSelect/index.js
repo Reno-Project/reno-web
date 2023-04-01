@@ -48,8 +48,10 @@ export default function Cselect(props) {
     multiple = false,
     placeholder = "",
     renderTags = [],
+    value = [],
   } = props;
 
+  const val = multiple ? value || [] : value || null;
   return (
     <FormControl variant="standard" fullWidth required={required} error={error}>
       <InputLabel shrink htmlFor="bootstrap-input">
@@ -67,6 +69,7 @@ export default function Cselect(props) {
         renderInput={(params) => (
           <TextField {...params} placeholder={placeholder} />
         )}
+        value={val}
         onChange={(a, b, c, e) => {
           handleSelect(b);
         }}
