@@ -16,6 +16,7 @@ import {
   ImageOutlined,
   ClearOutlined,
   HighlightOffOutlined,
+  Image,
 } from "@mui/icons-material";
 import _, { isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
@@ -113,6 +114,7 @@ const CreateProfile = (props) => {
   const [userLocation, setUserLocation] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
   const [visible, setVisible] = useState(false);
+  const [bLogo, setBLogo] = useState(null);
   const exp = [
     { id: 1, label: "Interior design" },
     { id: 2, label: "Renovation" },
@@ -122,6 +124,13 @@ const CreateProfile = (props) => {
   const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis", ""];
   const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
   const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+  useEffect(() => {
+    if (state.businessLogo) {
+      const imgUrl = URL.createObjectURL(state.businessLogo);
+      setBLogo(imgUrl);
+    }
+  }, [state.businessLogo]);
 
   const findFromArray = (item) => {
     return exp?.find((it) => it?.id === item?.project_id);
@@ -141,7 +150,9 @@ const CreateProfile = (props) => {
       let tempArray = [];
       uData?.expertise?.map((item, index) => {
         const test = findFromArray(item);
-        tempArray.push(test);
+        if (test) {
+          tempArray.push(test);
+        }
       });
       console.log("tempArray =====>>> ", tempArray);
 
@@ -177,14 +188,21 @@ const CreateProfile = (props) => {
     }
   }, []);
 
-
-  console.log("state =====>>> ", state);
   // validation function for page 1
   function CheckValidattion() {
     const error = { ...errObj };
     let valid = true;
     let scroll = false;
     let section = null;
+
+    if (isEmpty(state.businessLogo)) {
+      valid = false;
+      toast.error("Please upload business logo");
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#cname");
+      }
+    }
 
     if (isEmpty(state.cname)) {
       valid = false;
@@ -543,15 +561,21 @@ const CreateProfile = (props) => {
                     width: 120,
                   }}
                 >
-                  <img
-                    src="https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80"
-                    alt="business_logo"
-                    style={{
-                      height: "100%",
-                      width: "100%",
-                      borderRadius: "50%",
-                    }}
-                  />
+                  {bLogo ? (
+                    <img
+                      src={bLogo}
+                      alt="business_logo"
+                      style={{
+                        height: "100%",
+                        width: "100%",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  ) : (
+                    <div className={classes.uploadImgDivStyle}>
+                      <Image style={{ color: "#FFF", fontSize: 30 }} />
+                    </div>
+                  )}
                   <div className={classes.buttonAbsoluteDiv}>
                     <Button component="label" className={classes.uploadIcon}>
                       <CreateOutlined
@@ -575,7 +599,7 @@ const CreateProfile = (props) => {
               <Typography
                 style={{ fontFamily: "Roobert-Regular", color: "#475569" }}
               >
-                {activeStep === 1 && "Upload business logo"}
+                {activeStep === 0 && "Upload business logo"}
               </Typography>
             </Grid>
             {activeStep === 0 ? (
