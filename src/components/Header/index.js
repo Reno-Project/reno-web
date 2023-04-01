@@ -1,8 +1,11 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Button, Grid, Typography } from "@mui/material";
+import { isEmpty } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import authActions from "../../redux/reducers/auth/actions";
 import Images from "../../config/images";
 import useStyles from "./styles";
 
@@ -10,7 +13,17 @@ function Header(props) {
   const currentUrl = window.location.href;
   const classes = useStyles();
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { clearAllData } = authActions;
   const isAddPadding = useMediaQuery(theme.breakpoints.down(1260));
+  const { token } = useSelector((state) => state.auth);
+
+  // this function for logout
+  function logout() {
+    dispatch(clearAllData());
+    navigate("/login");
+  }
 
   return (
     <div
@@ -44,7 +57,9 @@ function Header(props) {
           xs={8}
           className={classes.rightContainer}
         >
-          {currentUrl?.includes("signup") ? null : (
+          {currentUrl?.includes("signup") ||
+          currentUrl?.includes("login") ||
+          !isEmpty(token) ? null : (
             <Grid item className={classes.PR25}>
               <NavLink to="" className={classes.linkStyle}>
                 <Typography className={classes.menuTitleStyle}>
@@ -54,15 +69,26 @@ function Header(props) {
             </Grid>
           )}
           <Grid item>
-            <NavLink to="/login" className={classes.linkStyle}>
+            {token !== "" ? (
               <Button
                 variant="contained"
                 color="primary"
                 style={{ paddingLeft: "35px", paddingRight: "35px" }}
+                onClick={logout}
               >
-                Login
+                Logout
               </Button>
-            </NavLink>
+            ) : (
+              <NavLink to="/login" className={classes.linkStyle}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ paddingLeft: "35px", paddingRight: "35px" }}
+                >
+                  Login
+                </Button>
+              </NavLink>
+            )}
           </Grid>
         </Grid>
       </Grid>
