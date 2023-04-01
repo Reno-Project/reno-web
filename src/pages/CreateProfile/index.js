@@ -21,11 +21,11 @@ import {
 import _, { isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import CStepper from "../../components/CStepper";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
-import { PhoneNumberUtil } from "google-libphonenumber";
+import authActions from "../../redux/reducers/auth/actions";
 import { getApiData, getAPIProgressData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import PlaceAutoComplete from "../../components/PlaceAutoComplete";
@@ -73,12 +73,19 @@ const errorObj = {
   swiftMsg: "",
   addErr: false,
   addMsg: "",
+  socialErr: false,
+  socialMsg: "",
+  linkedInErr: false,
+  linkedInMsg: "",
 };
 
 const CreateProfile = (props) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const { userData } = useSelector((state) => state.auth);
+  console.log("userData =====>>> ", userData);
+  const dispatch = useDispatch();
+  const { setUserData } = authActions;
 
   const [activeStep, setActiveStep] = useState(0);
   const [errObj, setErrObj] = useState(errorObj);
@@ -126,19 +133,41 @@ const CreateProfile = (props) => {
   const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
   useEffect(() => {
-    if (state.businessLogo) {
-      const imgUrl = URL.createObjectURL(state.businessLogo);
+    getUserDetailsByIdApiCall();
+  }, []);
+
+  useEffect(() => {
+    if (state?.businessLogo && _.isObject(state?.businessLogo)) {
+      const imgUrl = URL.createObjectURL(state?.businessLogo);
       setBLogo(imgUrl);
+    } else {
+      setBLogo(state?.businessLogo || "");
     }
   }, [state.businessLogo]);
 
-  const findFromArray = (item) => {
-    return exp?.find((it) => it?.id === item?.project_id);
-  };
+  // get user details by id
+  async function getUserDetailsByIdApiCall() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.contarctorById}/${userData?.id}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        dispatch(setUserData(response?.data));
+        setPreFillDataFunction(response?.data);
+      } else {
+        setPreFillDataFunction(userData);
+      }
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
+      setPreFillDataFunction(userData);
+    }
+  }
 
-  useEffect(() => {
+  const setPreFillDataFunction = (mainData) => {
     if (!isEmpty(userData?.contractor_data)) {
-      const uData = userData?.contractor_data;
+      const uData = mainData?.contractor_data;
       const obj = {
         lat: uData?.lat ? uData?.lat : "",
         lng: uData?.long ? uData?.long : "",
@@ -154,20 +183,21 @@ const CreateProfile = (props) => {
           tempArray.push(test);
         }
       });
-      console.log("tempArray =====>>> ", tempArray);
 
       setState({
         ...state,
-        businessLogo: "",
+        businessLogo: uData?.business_logo ? uData?.business_logo : "",
         cname: uData?.company_name ? uData?.company_name : "",
         description: uData?.description ? uData?.description : "",
         website: uData?.website ? uData?.website : "",
         businessYear: uData?.no_of_years_in_business
-          ? uData?.no_of_years_in_business
+          ? uData?.no_of_years_in_business.toString()
           : "",
-        employees: uData?.no_of_employees ? uData?.no_of_employees : "",
+        employees: uData?.no_of_employees
+          ? uData?.no_of_employees.toString()
+          : "",
         annualContract: uData?.no_of_contracts_annually
-          ? uData?.no_of_contracts_annually
+          ? uData?.no_of_contracts_annually.toString()
           : "",
         expertise: tempArray ? tempArray : [],
         certificate: uData?.iso_certificate ? uData?.iso_certificate : {},
@@ -178,15 +208,13 @@ const CreateProfile = (props) => {
         linkedin: uData?.linkedin_url ? uData?.linkedin_url : "",
         social: uData?.fb_url ? uData?.fb_url : "",
         // portfolio: [],
-        // bname: uData?.company_name ? uData?.company_name : "",
-        // iban: uData?.company_name ? uData?.company_name : "",
-        // bank: uData?.company_name ? uData?.company_name : "",
-        // acc: uData?.company_name ? uData?.company_name : "",
-        // swift: uData?.company_name ? uData?.company_name : "",
-        // address: uData?.company_name ? uData?.company_name : "",
       });
     }
-  }, []);
+  };
+
+  const findFromArray = (item) => {
+    return exp?.find((it) => it?.id === item?.project_id);
+  };
 
   // validation function for page 1
   function CheckValidattion() {
@@ -194,8 +222,11 @@ const CreateProfile = (props) => {
     let valid = true;
     let scroll = false;
     let section = null;
+    const urlRegex = /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/;
+    const linkedinRegex =
+      /^(https?:\/\/)?(www\.)?linkedin\.com\/(in|pub)\/[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/;
 
-    if (isEmpty(state.businessLogo)) {
+    if (!state.businessLogo) {
       valid = false;
       toast.error("Please upload business logo");
       if (!scroll) {
@@ -213,20 +244,37 @@ const CreateProfile = (props) => {
         section = document.querySelector("#cname");
       }
     }
-
-    if (
-      !isEmpty(state?.website) &&
-      !(
-        state?.website.indexOf("https://") === 0 ||
-        state?.website.indexOf("http://") === 0
-      )
-    ) {
+    if (!isEmpty(state?.website) && !urlRegex.test(state?.website)) {
       valid = false;
       error.webErr = true;
       error.webMsg = "Please Enter Valid Website Name";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#web");
+      }
+    }
+    if (!isEmpty(state?.linkedin) && !linkedinRegex.test(state?.linkedin)) {
+      valid = false;
+      error.linkedInErr = true;
+      error.linkedInMsg = "Please Enter Valid LinkedIn URL";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#linkedIn");
+      }
+    }
+    if (
+      !isEmpty(state?.social) &&
+      !(
+        state?.social.indexOf("https://") === 0 ||
+        state?.social.indexOf("http://") === 0
+      )
+    ) {
+      valid = false;
+      error.socialErr = true;
+      error.socialMsg = "Please Enter Valid Social URL";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#social");
       }
     }
 
@@ -404,7 +452,7 @@ const CreateProfile = (props) => {
     try {
       setButtonLoader("step1");
       let expertiseCsv = convertToCsv(state?.expertise);
-      const data = {
+      let data = {
         // "email": "",
         // "phone_code": "",
         // "phone_no": "",
@@ -422,11 +470,22 @@ const CreateProfile = (props) => {
         contractor_expertise: expertiseCsv ? expertiseCsv : "", // pass in CSV form
         lat: selectedLocation?.lat ? selectedLocation?.lat : "",
         long: selectedLocation?.lng ? selectedLocation?.lng : "",
-        iso_certificate: state?.certificate ? state?.certificate : "",
-        licenses: state?.license ? state?.license : "",
-        company_registration: state?.registraion ? state?.registraion : "",
-        business_logo: state?.businessLogo ? state?.businessLogo : "",
       };
+      console.log(typeof state?.certificate);
+      if (typeof state?.certificate !== "string") {
+        data.iso_certificate = state?.certificate ? state?.certificate : "";
+      }
+      if (typeof state?.license !== "string") {
+        data.licenses = state?.license ? state?.license : "";
+      }
+      if (typeof state?.registraion !== "string") {
+        data.company_registration = state?.registraion
+          ? state?.registraion
+          : "";
+      }
+      if (typeof state?.businessLogo !== "string") {
+        data.business_logo = state?.businessLogo ? state?.businessLogo : "";
+      }
       const response = await getAPIProgressData(
         Setting.endpoints.addContractorDetails,
         "POST",
@@ -802,7 +861,11 @@ const CreateProfile = (props) => {
                       fullWidth
                       placeholder="Upload ISO Certificate"
                       style={{ marginBottom: 20 }}
-                      value={state.certificate?.name || ""}
+                      value={
+                        typeof state?.certificate === "string"
+                          ? state.certificate || ""
+                          : state.certificate?.name || ""
+                      }
                       InputProps={{
                         endAdornment: (
                           <>
@@ -851,7 +914,11 @@ const CreateProfile = (props) => {
                     <TextField
                       fullWidth
                       placeholder="Upload Licenses"
-                      value={state.license?.name || ""}
+                      value={
+                        typeof state?.license === "string"
+                          ? state.license || ""
+                          : state.license?.name || ""
+                      }
                       style={{ marginBottom: 20 }}
                       InputProps={{
                         endAdornment: (
@@ -905,7 +972,11 @@ const CreateProfile = (props) => {
                     <TextField
                       fullWidth
                       placeholder="Upload Company Registration"
-                      value={state.registraion?.name || ""}
+                      value={
+                        typeof state?.registraion === "string"
+                          ? state.registraion || ""
+                          : state.registraion?.name || ""
+                      }
                       style={{ marginBottom: 20 }}
                       InputProps={{
                         endAdornment: (
@@ -954,9 +1025,9 @@ const CreateProfile = (props) => {
                   </div>
                 </Grid>
 
-                <Grid item xs={10}>
+                <Grid item xs={10} id="linkedIn">
                   <InputLabel shrink htmlFor="bootstrap-input">
-                    Team Linkedin Profile
+                    Team LinkedIn Profile
                   </InputLabel>
                   <TextField
                     fullWidth
@@ -972,7 +1043,14 @@ const CreateProfile = (props) => {
                     value={state.linkedin}
                     onChange={(e) => {
                       setState({ ...state, linkedin: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        linkedInErr: false,
+                        linkedInMsg: "",
+                      });
                     }}
+                    error={errObj.linkedInErr}
+                    helperText={errObj.linkedInMsg}
                   />
                 </Grid>
 
@@ -994,7 +1072,10 @@ const CreateProfile = (props) => {
                     value={state.social}
                     onChange={(e) => {
                       setState({ ...state, social: e.target.value });
+                      setErrObj({ ...errObj, socialErr: false, socialMsg: "" });
                     }}
+                    error={errObj.socialErr}
+                    helperText={errObj.socialMsg}
                   />
                 </Grid>
 
@@ -1015,7 +1096,7 @@ const CreateProfile = (props) => {
                   </Button>
                 </Grid>
 
-                <Grid
+                {/* <Grid
                   item
                   xs={12}
                   style={{ display: "flex", justifyContent: "center" }}
@@ -1046,7 +1127,7 @@ const CreateProfile = (props) => {
                       Login Now
                     </b>
                   </NavLink>
-                </Grid>
+                </Grid> */}
               </>
             ) : activeStep === 1 ? (
               <>

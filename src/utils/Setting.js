@@ -25,6 +25,7 @@ export const Setting = {
     addPortfolio: "api/contractor/add-portfolio",
     addBillingInfo: "api/contractor/add-billing-info",
     forgotPassword: "api/user/forgot-password",
+    contarctorById: "api/contractor",
   },
 
   JS_Regex: {
