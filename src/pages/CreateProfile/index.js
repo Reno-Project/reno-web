@@ -17,6 +17,7 @@ import {
   ClearOutlined,
   HighlightOffOutlined,
   Image,
+  Instagram,
 } from "@mui/icons-material";
 import _, { isArray, isEmpty, isString } from "lodash";
 import { toast } from "react-toastify";
@@ -77,6 +78,8 @@ const errorObj = {
   socialMsg: "",
   linkedInErr: false,
   linkedInMsg: "",
+  instaErr: false,
+  instaMsg: "",
 };
 
 const CreateProfile = (props) => {
@@ -107,6 +110,7 @@ const CreateProfile = (props) => {
     license: "",
     registraion: "",
     linkedin: "",
+    insta: "",
     social: "",
     portfolio: [],
     bname: "",
@@ -199,13 +203,14 @@ const CreateProfile = (props) => {
           ? uData?.no_of_contracts_annually.toString()
           : "",
         expertise: tempArray ? tempArray : [],
-        certificate: uData?.iso_certificate ? uData?.iso_certificate : {},
-        license: uData?.licenses ? uData?.licenses : {},
+        certificate: uData?.iso_certificate ? uData?.iso_certificate : "",
+        license: uData?.licenses ? uData?.licenses : "",
         registraion: uData?.company_registration
           ? uData?.company_registration
-          : {},
+          : "",
         linkedin: uData?.linkedin_url ? uData?.linkedin_url : "",
         social: uData?.fb_url ? uData?.fb_url : "",
+        insta: uData?.insta_url ? uData?.insta_url : "",
         portfolio: uData?.portfolio || [],
       });
     }
@@ -224,6 +229,9 @@ const CreateProfile = (props) => {
     const urlRegex = /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/;
     const linkedinRegex =
       /^(https?:\/\/)?(www\.)?linkedin\.com\/(in|pub)\/[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/;
+    const facebookRegex = /^(?:http(?:s)?:\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\/[a-zA-Z0-9_\.]+$/;
+    const instaRegex =
+      /^(?:https?:\/\/)?(?:www\.)?(?:instagram\.com\/)([A-Za-z0-9_\-\.]+)/;
 
     if (!state.businessLogo) {
       valid = false;
@@ -243,25 +251,26 @@ const CreateProfile = (props) => {
         section = document.querySelector("#cname");
       }
     }
-    if (isEmpty(state.description)) {
-      valid = false;
-      error.descriptionErr = true;
-      error.descriptionMsg = "Please Enter Descri[tion";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#description");
-      }
-    }
+    // if (isEmpty(state.description)) {
+    //   valid = false;
+    //   error.descriptionErr = true;
+    //   error.descriptionMsg = "Please Enter Descri[tion";
+    //   if (!scroll) {
+    //     scroll = true;
+    //     section = document.querySelector("#description");
+    //   }
+    // }
 
-    if (isEmpty(state.website)) {
-      valid = false;
-      error.webErr = true;
-      error.webMsg = "Please Enter Web Address";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#web");
-      }
-    } else if (!isEmpty(state?.website) && !urlRegex.test(state?.website)) {
+    // if (isEmpty(state.website)) {
+    //   valid = false;
+    //   error.webErr = true;
+    //   error.webMsg = "Please Enter Web Address";
+    //   if (!scroll) {
+    //     scroll = true;
+    //     section = document.querySelector("#web");
+    //   }
+    // } else
+    if (!isEmpty(state?.website) && !urlRegex.test(state?.website)) {
       valid = false;
       error.webErr = true;
       error.webMsg = "Please Enter Valid Website Name";
@@ -279,19 +288,22 @@ const CreateProfile = (props) => {
         section = document.querySelector("#linkedIn");
       }
     }
-    if (
-      !isEmpty(state?.social) &&
-      !(
-        state?.social.indexOf("https://") === 0 ||
-        state?.social.indexOf("http://") === 0
-      )
-    ) {
+    if (!isEmpty(state?.social) && !facebookRegex.test(state?.social)) {
       valid = false;
       error.socialErr = true;
       error.socialMsg = "Please Enter Valid Social URL";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#social");
+      }
+    }
+    if (!isEmpty(state?.insta) && !instaRegex.test(state?.insta)) {
+      valid = false;
+      error.instaErr = true;
+      error.instaMsg = "Please Enter Valid Instagram URL";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#instagram");
       }
     }
 
@@ -351,33 +363,33 @@ const CreateProfile = (props) => {
       }
     }
 
-    if (!state.certificate) {
-      valid = false;
-      error.certiErr = true;
-      error.certiMsg = "Please Upload Certificate";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#certi");
-      }
-    }
-    if (!state.license) {
-      valid = false;
-      error.licenseErr = true;
-      error.licenseMsg = "Please Upload License";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#license");
-      }
-    }
-    if (!state.registraion) {
-      valid = false;
-      error.registrationErr = true;
-      error.registrationMsg = "Please Upload Registration";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#registartion");
-      }
-    }
+    // if (!state.certificate) {
+    //   valid = false;
+    //   error.certiErr = true;
+    //   error.certiMsg = "Please Upload Certificate";
+    //   if (!scroll) {
+    //     scroll = true;
+    //     section = document.querySelector("#certi");
+    //   }
+    // }
+    // if (!state.license) {
+    //   valid = false;
+    //   error.licenseErr = true;
+    //   error.licenseMsg = "Please Upload License";
+    //   if (!scroll) {
+    //     scroll = true;
+    //     section = document.querySelector("#license");
+    //   }
+    // }
+    // if (!state.registraion) {
+    //   valid = false;
+    //   error.registrationErr = true;
+    //   error.registrationMsg = "Please Upload Registration";
+    //   if (!scroll) {
+    //     scroll = true;
+    //     section = document.querySelector("#registartion");
+    //   }
+    // }
 
     if (section) {
       section.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -519,6 +531,7 @@ const CreateProfile = (props) => {
           : "",
         linkedin_url: state?.linkedin ? state?.linkedin : "",
         fb_url: state?.social ? state?.social : "",
+        insta_url: state?.insta ? state?.insta : "",
         company_address: userLocation ? userLocation : "",
         contractor_expertise: expertiseCsv ? expertiseCsv : "", // pass in CSV form
         lat: selectedLocation?.lat ? selectedLocation?.lat : "",
@@ -875,7 +888,6 @@ const CreateProfile = (props) => {
                     placeholder="Select Area of Expertise"
                     value={state.expertise}
                     handleSelect={(e) => {
-                      console.log("e ==expertise==>>> ", e);
                       setState({ ...state, expertise: e });
                       setErrObj({
                         ...errObj,
@@ -899,6 +911,7 @@ const CreateProfile = (props) => {
                     onChange={(obj) => {
                       setUserLocation(obj?.location);
                       setSelectedLocation(obj);
+                      setErrObj({ ...errObj, locationErr: false, locationMsg: "" });
                     }}
                     defaultValue={selectedLocation?.location}
                     error={errObj.locationErr}
@@ -1108,7 +1121,7 @@ const CreateProfile = (props) => {
                   />
                 </Grid>
 
-                <Grid item xs={10}>
+                <Grid item xs={10} id="social">
                   <InputLabel shrink htmlFor="bootstrap-input">
                     Social Media
                   </InputLabel>
@@ -1130,6 +1143,35 @@ const CreateProfile = (props) => {
                     }}
                     error={errObj.socialErr}
                     helperText={errObj.socialMsg}
+                  />
+                </Grid>
+
+                <Grid item xs={10} id="instagram">
+                  <InputLabel shrink htmlFor="bootstrap-input">
+                    Instagram
+                  </InputLabel>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter link..."
+                    style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Instagram />
+                        </InputAdornment>
+                      ),
+                    }}
+                    value={state?.insta}
+                    onChange={(e) => {
+                      setState({ ...state, insta: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        instaErr: false,
+                        instaMsg: "",
+                      });
+                    }}
+                    error={errObj.instaErr}
+                    helperText={errObj.instaMsg}
                   />
                 </Grid>
 
