@@ -185,7 +185,7 @@ const CreateProfile = (props) => {
 
       setState({
         ...state,
-        businessLogo: uData?.business_logo ? uData?.business_logo : "",
+        businessLogo: userData?.profile_url ? userData?.profile_url : "",
         cname: uData?.company_name ? uData?.company_name : "",
         description: uData?.description ? uData?.description : "",
         website: uData?.website ? uData?.website : "",
@@ -243,7 +243,25 @@ const CreateProfile = (props) => {
         section = document.querySelector("#cname");
       }
     }
-    if (!isEmpty(state?.website) && !urlRegex.test(state?.website)) {
+    if (isEmpty(state.description)) {
+      valid = false;
+      error.descriptionErr = true;
+      error.descriptionMsg = "Please Enter Descri[tion";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#description");
+      }
+    }
+
+    if (isEmpty(state.website)) {
+      valid = false;
+      error.webErr = true;
+      error.webMsg = "Please Enter Web Address";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#web");
+      }
+    } else if (!isEmpty(state?.website) && !urlRegex.test(state?.website)) {
       valid = false;
       error.webErr = true;
       error.webMsg = "Please Enter Valid Website Name";
@@ -303,6 +321,14 @@ const CreateProfile = (props) => {
         scroll = true;
         section = document.querySelector("#contract");
       }
+    } else if (state?.annualContract < 0) {
+      valid = false;
+      error.contractErr = true;
+      error.contarctMsg = "Please Enter Valid No. of Contarcts Annually";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#contract");
+      }
     }
 
     if (isEmpty(state.expertise)) {
@@ -322,6 +348,34 @@ const CreateProfile = (props) => {
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#location");
+      }
+    }
+
+    if (!state.certificate) {
+      valid = false;
+      error.certiErr = true;
+      error.certiMsg = "Please Upload Certificate";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#certi");
+      }
+    }
+    if (!state.license) {
+      valid = false;
+      error.licenseErr = true;
+      error.licenseMsg = "Please Upload License";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#license");
+      }
+    }
+    if (!state.registraion) {
+      valid = false;
+      error.registrationErr = true;
+      error.registrationMsg = "Please Upload Registration";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#registartion");
       }
     }
 
@@ -470,7 +524,6 @@ const CreateProfile = (props) => {
         lat: selectedLocation?.lat ? selectedLocation?.lat : "",
         long: selectedLocation?.lng ? selectedLocation?.lng : "",
       };
-      console.log(typeof state?.certificate);
       if (typeof state?.certificate !== "string") {
         data.iso_certificate = state?.certificate ? state?.certificate : "";
       }
@@ -799,6 +852,7 @@ const CreateProfile = (props) => {
                     <CInput
                       label="Number of Contracts Annually"
                       placeholder="Enter No. of Contracts"
+                      type="number"
                       value={state.annualContract}
                       onChange={(e) => {
                         setState({ ...state, annualContract: e.target.value });
