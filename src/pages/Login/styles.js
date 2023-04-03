@@ -6,6 +6,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#202939",
     fontSize: "14px !important",
     fontFamily: "Roobert-Regular !important",
+    cursor: "pointer",
   },
   welcomeTextStyle: {
     fontFamily: "Roobert-Regular !important",

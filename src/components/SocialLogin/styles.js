@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "10px",
     padding: "6px 0px",
     borderRadius: 5,
+    cursor: "pointer",
   },
   socialTextStyle: {
     fontFamily: "Roobert-Regular !important",
