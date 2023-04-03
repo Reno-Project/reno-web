@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography, Popover } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
@@ -17,12 +17,27 @@ function Header(props) {
   const navigate = useNavigate();
   const { clearAllData } = authActions;
   const isAddPadding = useMediaQuery(theme.breakpoints.down(1260));
-  const { token } = useSelector((state) => state.auth);
+  const { token, userData } = useSelector((state) => state.auth);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   // this function for logout
   function logout() {
     dispatch(clearAllData());
-    navigate("/login");
+    setTimeout(() => {
+      navigate("/login");
+    }, 500);
   }
 
   return (
@@ -68,17 +83,30 @@ function Header(props) {
               </NavLink>
             </Grid>
           )}
-          <Grid item>
+          <Grid item className={classes.rightLogoContainer}>
             {token !== "" ? (
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ paddingLeft: "35px", paddingRight: "35px" }}
-                onClick={logout}
-              >
-                Logout
-              </Button>
+              <>
+                <img
+                  alt="logo"
+                  src={userData?.profile_url}
+                  className={classes.logoStyle}
+                  aria-describedby={id} variant="contained" onClick={handleClick}
+                />
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <Typography onClick={logout} sx={{ p: 1.5 }} className={classes.logoutTextStyle}>Logout</Typography>
+                </Popover>
+              </>
             ) : (
+                currentUrl.includes("login") ? null : (
               <NavLink to="/login" className={classes.linkStyle}>
                 <Button
                   variant="contained"
@@ -88,6 +116,7 @@ function Header(props) {
                   Login
                 </Button>
               </NavLink>
+                )
             )}
           </Grid>
         </Grid>

@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 10,
+    zIndex: 1000,
     display: "flex",
     position: "fixed",
     height: "70px",
@@ -40,6 +40,20 @@ const useStyles = makeStyles((theme) => ({
   },
   PR25: {
     paddingRight: "25px",
+  },
+  logoStyle: {
+    height: "40px",
+    width: "40px",
+    borderRadius: "40px",
+    cursor: "pointer",
+  },
+  rightLogoContainer: {
+    display: "flex",
+    flexDirection: "row",
+    padding: 5,
+  },
+  logoutTextStyle: {
+    cursor: "pointer",
   },
 }));
 
