@@ -12,13 +12,13 @@ function CStepper(props) {
     [`&.${stepConnectorClasses.active}`]: {
       [`& .${stepConnectorClasses.line}`]: {
         backgroundImage:
-          "linear-gradient( 95deg,rgb(39, 75, 241) 0%,rgb(242, 244, 247) 100%)",
+          "linear-gradient( 95deg,#274BF1 0%,#F2F4F7 100%)",
       },
     },
     [`&.${stepConnectorClasses.completed}`]: {
       [`& .${stepConnectorClasses.line}`]: {
         backgroundImage:
-          "linear-gradient( 95deg,rgb(39, 75, 241) 0%,rgb(242, 244, 247) 100%)",
+          "linear-gradient( 95deg,#6BBBD8 0%,#6BBBD8 100%)",
       },
     },
     [`& .${stepConnectorClasses.line}`]: {

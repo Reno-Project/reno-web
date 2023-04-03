@@ -193,6 +193,7 @@ theme = createTheme(theme, {
 
           "&.Mui-active": {
             backgroundColor: `${color.white}`,
+            color: `${color.primary}`,
             border: "0px !important",
             "& > text": {
               fill: "#FFF",
@@ -200,6 +201,7 @@ theme = createTheme(theme, {
           },
           "&.Mui-completed": {
             backgroundColor: `${color.white}`,
+            color: '#6BBBD8',
             border: "0px !important",
           },
           [theme.breakpoints.down("md")]: {
