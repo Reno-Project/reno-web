@@ -29,12 +29,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "8px !important",
     marginBottom: "15px !important",
   },
-  borderDivStyle: { height: 1, width: "32%", backgroundColor: "#F2F3F4" },
+  borderDivStyle: { height: 1, width: "100%", backgroundColor: "#F2F3F4" },
   continueTextStyle: {
-    margin: "0px 15px !important",
+    // margin: "0px 15px !important",
     fontFamily: "Roobert-Regular !important",
     fontSize: "15px !important",
     color: "#787B8C",
+    textAlign: "center",
   },
   socialContainerStyle: {
     display: "flex",
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
   needAccountContainer: {
     marginTop: 12,
-    marginBottom: 15,
+    paddingBottom: "30%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
   needAccountContainer: {
     marginTop: 12,
-    marginBottom: 15,
+    paddingBottom: "30%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

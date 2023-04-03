@@ -360,15 +360,22 @@ const Login = (props) => {
             <Grid
               item
               xs={12}
+              wrap="nowrap"
               display="flex"
               alignItems="center"
               justifyContent="center"
             >
-              <div className={classes.borderDivStyle} />
-              <Typography className={classes.continueTextStyle}>
-                Continue with
-              </Typography>
-              <div className={classes.borderDivStyle} />
+              <Grid xs={3}>
+                <div className={classes.borderDivStyle} />
+              </Grid>
+              <Grid item xs={5}>
+                <Typography className={classes.continueTextStyle}>
+                  Continue with
+                </Typography>
+              </Grid>
+              <Grid xs={3}>
+                <div className={classes.borderDivStyle} />
+              </Grid>
             </Grid>
             <Grid item xs={12} style={{ marginTop: 18 }}>
               <GoogleOAuthProvider clientId={Setting.GOOGLE_CLIENT_ID}>
