@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { Button, Grid, Typography, Popover } from "@mui/material";
+import { Button, Grid, Typography, Popover, Avatar } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
@@ -84,9 +84,16 @@ function Header(props) {
             </Grid>
           )}
           <Grid item className={classes.rightLogoContainer}>
-            {token !== "" ? (
+            {token !== ""? (
               <>
-                <img
+              {
+                !userData?.profile_url ? (
+                  <div className={classes.uploadImgDivStyle}>
+                    <Avatar style={{ color: "#FFF" }}  />
+                  </div>
+                ) : (
+                  <>
+                  <img
                   alt="logo"
                   src={userData?.profile_url}
                   className={classes.logoStyle}
@@ -112,6 +119,10 @@ function Header(props) {
                     Logout
                   </Typography>
                 </Popover>
+                  </>
+                )
+              }
+                
               </>
             ) : currentUrl.includes("login") ? null : (
               <NavLink to="/login" className={classes.linkStyle}>

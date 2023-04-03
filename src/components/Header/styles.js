@@ -57,6 +57,15 @@ const useStyles = makeStyles((theme) => ({
   logoutTextStyle: {
     cursor: "pointer",
   },
+  uploadImgDivStyle: {
+    height: "100%",
+    width: "100%",
+    borderRadius: "50%",
+    backgroundColor: "rgba(0,0,0,0.4)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 }));
 
 export default useStyles;
