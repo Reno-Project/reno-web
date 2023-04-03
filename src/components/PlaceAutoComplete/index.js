@@ -23,7 +23,7 @@ function PlaceAutoComplete(props) {
     if (materialRef && defaultValue) {
       materialRef.current.value = defaultValue || "";
     }
-  }, []);
+  }, [defaultValue]);
 
   const { ref: materialRef } = usePlacesWidget({
     apiKey: Setting.GOOLE_MAPS_KEY,
