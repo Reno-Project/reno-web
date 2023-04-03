@@ -34,12 +34,14 @@ const useStyles = makeStyles((theme) => ({
     color: "#202939",
     fontSize: "15px !important",
     fontFamily: "Roobert-Regular !important",
+    textAlign: "center",
   },
   linkStyle: {
     textDecoration: "none",
   },
   PR25: {
-    paddingRight: "25px",
+    // paddingRight: "25px",
+    paddingRight: "4%",
   },
   logoStyle: {
     height: "40px",

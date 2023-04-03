@@ -30,7 +30,7 @@ function Header(props) {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? "simple-popover" : undefined;
 
   // this function for logout
   function logout() {
@@ -53,7 +53,7 @@ function Header(props) {
           lg={3}
           md={3}
           sm={3}
-          xs={4}
+          xs={3}
           className={classes.leftContainer}
         >
           <div className={classes.imgContainer}>
@@ -69,7 +69,7 @@ function Header(props) {
           lg={9}
           md={9}
           sm={9}
-          xs={8}
+          xs={9}
           className={classes.rightContainer}
         >
           {currentUrl?.includes("signup") ||
@@ -90,7 +90,9 @@ function Header(props) {
                   alt="logo"
                   src={userData?.profile_url}
                   className={classes.logoStyle}
-                  aria-describedby={id} variant="contained" onClick={handleClick}
+                  aria-describedby={id}
+                  variant="contained"
+                  onClick={handleClick}
                 />
                 <Popover
                   id={id}
@@ -102,11 +104,16 @@ function Header(props) {
                     horizontal: "left",
                   }}
                 >
-                  <Typography onClick={logout} sx={{ p: 1.5 }} className={classes.logoutTextStyle}>Logout</Typography>
+                  <Typography
+                    onClick={logout}
+                    sx={{ p: 1.5 }}
+                    className={classes.logoutTextStyle}
+                  >
+                    Logout
+                  </Typography>
                 </Popover>
               </>
-            ) : (
-                currentUrl.includes("login") ? null : (
+            ) : currentUrl.includes("login") ? null : (
               <NavLink to="/login" className={classes.linkStyle}>
                 <Button
                   variant="contained"
@@ -116,7 +123,6 @@ function Header(props) {
                   Login
                 </Button>
               </NavLink>
-                )
             )}
           </Grid>
         </Grid>

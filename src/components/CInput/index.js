@@ -4,6 +4,7 @@ import FormControl from "@mui/material/FormControl";
 import styled from "@emotion/styled";
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
+  padding: 0,
   "label + &": {
     marginTop: theme.spacing(3),
   },

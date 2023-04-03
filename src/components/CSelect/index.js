@@ -11,7 +11,7 @@ import React, { useState } from "react";
 
 const Select = styled(Autocomplete)(({ theme }) => ({
   marginTop: 24,
-  borderRadius: 6,
+  borderRadius: 5,
   "& .MuiOutlinedInput-root": {
     backgroundColor: "#FFF",
     "&.Mui-focused": {
