@@ -314,6 +314,12 @@ const Login = (props) => {
                   setPassword(e.target.value);
                   setErrObj({ ...errObj, passwordErr: false, passwordMsg: "" });
                 }}
+                onKeyPress={(ev) => {
+                  if (ev.key === "Enter") {
+                    ev.preventDefault();
+                    validation();
+                  }
+                }}
                 white={false}
                 error={errObj.passwordErr}
                 helpertext={errObj.passwordMsg}

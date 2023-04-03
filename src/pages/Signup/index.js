@@ -164,7 +164,7 @@ const Signup = (props) => {
         if (!response?.is_email_verified) {
           navigate("/otp-verify", { state: { data } });
         } else {
-          navigate("/dashboard")
+          navigate("/dashboard");
         }
       } else {
         toast.error(response.message);
@@ -276,6 +276,12 @@ const Signup = (props) => {
                 onChange={(e) => {
                   setState({ ...state, password: e.target.value });
                   setErrObj({ ...errObj, passwordErr: false, passwordMsg: "" });
+                }}
+                onKeyPress={(ev) => {
+                  if (ev.key === "Enter") {
+                    ev.preventDefault();
+                    validation();
+                  }
                 }}
                 white={false}
                 error={errObj.passwordErr}
