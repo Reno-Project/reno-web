@@ -50,6 +50,7 @@ const OtpInput = (props) => {
 
       console.log("response ====sasdasds=>>> ", response);
       if (response.success) {
+        toast.success(response?.message);
         dispatch(setUserData(response?.data));
         dispatch(setToken(response?.token));
         // move to create profile screen
@@ -75,6 +76,7 @@ const OtpInput = (props) => {
 
       console.log("response ====resend otp=>>> ", response);
       if (response.success) {
+        toast.success(response.message);
         setTimer(60);
         setResendViewVisible(false);
         setOutput("");

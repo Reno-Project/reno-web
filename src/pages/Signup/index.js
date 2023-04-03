@@ -159,6 +159,7 @@ const Signup = (props) => {
       console.log("response =register user====>>> ", response);
 
       if (response.success) {
+        toast.success(response?.message || "");
         if (!response?.is_email_verified) {
           navigate("/otp-verify", { state: { data } });
         } else {
