@@ -61,7 +61,20 @@ function App() {
                     />
                     <Route path={"/dashboard"} element={<Dashboard />} />
                     <Route exact path={"/"} element={<HowItWorks />} />
-                    <Route path="*" element={<Navigate to={"/dashboard"} />} />
+                    <Route
+                      path="*"
+                      element={
+                        <Navigate
+                          to={
+                            userData?.data?.contractor_data &&
+                            userData?.data?.contractor_data
+                              ?.profile_completed === "pending"
+                              ? "/create-profile"
+                              : "/dashboard"
+                          }
+                        />
+                      }
+                    />
                   </>
                 ) : (
                   <>
