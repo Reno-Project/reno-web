@@ -846,6 +846,7 @@ const CreateProfile = (props) => {
                       setUserLocation(obj?.location);
                       setSelectedLocation(obj);
                     }}
+                    defaultValue={selectedLocation?.location}
                     error={errObj.locationErr}
                     helperText={errObj.locationMsg}
                   />
