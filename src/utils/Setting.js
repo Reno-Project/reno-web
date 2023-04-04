@@ -20,7 +20,7 @@ export const Setting = {
     verifyOtp: "api/user/verify-otp",
     resendOtp: "api/user/resend-otp",
     updatepassword: "api/user/update-password",
-    updatePasswordOtp: 'api/user/update-password-otp',
+    updatePasswordOtp: "api/user/update-password-otp",
     addContractorDetails: "api/contractor/add-contractor-details",
     addPortfolio: "api/contractor/add-portfolio",
     addBillingInfo: "api/contractor/add-billing-info",

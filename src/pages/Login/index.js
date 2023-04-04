@@ -286,7 +286,7 @@ const Login = (props) => {
           </Typography>
           <Typography className={classes.loginHeaderText}>Log in</Typography>
         </Grid>
-        <Grid item xs={6} sm={5} md={4} lg={3}>
+        <Grid item xs={10} sm={8} md={4} lg={3}>
           <Grid container>
             <Grid item xs={12}>
               <CInput
