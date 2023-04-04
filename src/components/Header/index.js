@@ -44,7 +44,8 @@ function Header(props) {
     <div
       className={classes.headerMainCon}
       style={
-        isAddPadding ? { paddingLeft: "15px", paddingRight: "15px" } : null
+        // isAddPadding ? { paddingLeft: "15px", paddingRight: "15px" } : null
+        { padding: "0 15px" }
       }
     >
       <Grid container>
@@ -84,45 +85,42 @@ function Header(props) {
             </Grid>
           )}
           <Grid item className={classes.rightLogoContainer}>
-            {token !== ""? (
+            {token !== "" ? (
               <>
-              {
-                !userData?.profile_url ? (
+                {!userData?.profile_url ? (
                   <div className={classes.uploadImgDivStyle}>
-                    <Avatar style={{ color: "#FFF" }}  />
+                    <Avatar style={{ color: "#FFF" }} />
                   </div>
                 ) : (
                   <>
-                  <img
-                  alt="logo"
-                  src={userData?.profile_url}
-                  className={classes.logoStyle}
-                  aria-describedby={id}
-                  variant="contained"
-                  onClick={handleClick}
-                />
-                <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                >
-                  <Typography
-                    onClick={logout}
-                    sx={{ p: 1.5 }}
-                    className={classes.logoutTextStyle}
-                  >
-                    Logout
-                  </Typography>
-                </Popover>
+                    <img
+                      alt="logo"
+                      src={userData?.profile_url}
+                      className={classes.logoStyle}
+                      aria-describedby={id}
+                      variant="contained"
+                      onClick={handleClick}
+                    />
+                    <Popover
+                      id={id}
+                      open={open}
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                      }}
+                    >
+                      <Typography
+                        onClick={logout}
+                        sx={{ p: 1.5 }}
+                        className={classes.logoutTextStyle}
+                      >
+                        Logout
+                      </Typography>
+                    </Popover>
                   </>
-                )
-              }
-                
+                )}
               </>
             ) : currentUrl.includes("login") ? null : (
               <NavLink to="/login" className={classes.linkStyle}>

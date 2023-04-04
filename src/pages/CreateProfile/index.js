@@ -131,7 +131,7 @@ const CreateProfile = (props) => {
     { id: 3, label: "Retouch" },
   ];
   const price = ["49", "99", "129", "189", "249"];
-  const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis", ""];
+  const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis"];
   const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
   const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
@@ -271,7 +271,7 @@ const CreateProfile = (props) => {
     //     section = document.querySelector("#web");
     //   }
     // } else
-    if (!isEmpty(state?.website) && !urlRegex.test(state?.website)) {
+    if (isEmpty(state?.website) && !urlRegex.test(state?.website)) {
       valid = false;
       error.webErr = true;
       error.webMsg = "Please Enter Valid Website Name";
@@ -1466,7 +1466,7 @@ const CreateProfile = (props) => {
                       helpertext={errObj.accMsg}
                     />
                   </Grid>
-                  <Grid item xs={6} id="swift">
+                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="swift">
                     <CInput
                       label="SWIFT code"
                       placeholder="Enter SWIFT Code"

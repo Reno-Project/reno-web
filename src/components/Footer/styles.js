@@ -12,7 +12,11 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     height: "70px",
   },
-  container: { borderTop: "1px solid #F2F4F7", height: "100%" },
+  container: {
+    borderTop: "1px solid #F2F4F7",
+    height: "100%",
+    padding: "0 15px",
+  },
   footerTextStyle: {
     color: "#646F86",
     fontSize: "13px !important",
