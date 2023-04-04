@@ -229,7 +229,8 @@ const CreateProfile = (props) => {
     const urlRegex = /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/;
     const linkedinRegex =
       /^(https?:\/\/)?(www\.)?linkedin\.com\/(in|pub)\/[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/;
-    const facebookRegex = /^(?:http(?:s)?:\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\/[a-zA-Z0-9_\.]+$/;
+    const facebookRegex =
+      /^(?:http(?:s)?:\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\/[a-zA-Z0-9_\.]+$/;
     const instaRegex =
       /^(?:https?:\/\/)?(?:www\.)?(?:instagram\.com\/)([A-Za-z0-9_\-\.]+)/;
 
@@ -238,7 +239,7 @@ const CreateProfile = (props) => {
       toast.error("Please upload business logo");
       if (!scroll) {
         scroll = true;
-        section = document.querySelector("#cname");
+        section = document.querySelector("#logo");
       }
     }
 
@@ -676,6 +677,7 @@ const CreateProfile = (props) => {
               justifyContent="center"
               display="flex"
               flexDirection="column"
+              id="logo"
             >
               <div style={{ marginTop: 15, marginBottom: 15 }}>
                 <div
@@ -730,8 +732,8 @@ const CreateProfile = (props) => {
               <>
                 <Grid item xs={10} style={{ marginTop: 20 }} id="cname">
                   <CInput
-                    label="Company name"
-                    placeholder="Enter company name..."
+                    label="Company Name"
+                    placeholder="Enter Company Name..."
                     value={state.cname}
                     onChange={(e) => {
                       setState({ ...state, cname: e.target.value });
@@ -911,7 +913,11 @@ const CreateProfile = (props) => {
                     onChange={(obj) => {
                       setUserLocation(obj?.location);
                       setSelectedLocation(obj);
-                      setErrObj({ ...errObj, locationErr: false, locationMsg: "" });
+                      setErrObj({
+                        ...errObj,
+                        locationErr: false,
+                        locationMsg: "",
+                      });
                     }}
                     defaultValue={selectedLocation?.location}
                     error={errObj.locationErr}
@@ -919,7 +925,7 @@ const CreateProfile = (props) => {
                   />
                 </Grid>
 
-                <Grid item xs={10} id="certificate">
+                <Grid item xs={10} id="certi">
                   <InputLabel shrink htmlFor="bootstrap-input">
                     ISO Certificate
                   </InputLabel>

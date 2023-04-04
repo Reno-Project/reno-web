@@ -76,6 +76,7 @@ theme = createTheme(theme, {
         root: {
           marginLeft: "0px !important",
           color: `${color.primary}`,
+          backgroundColor: "#fff",
         },
       },
     },
@@ -139,8 +140,6 @@ theme = createTheme(theme, {
           padding: 0,
         },
         tag: {
-          backgroundColor: color.primary,
-          color: color.white,
           borderRadius: 4,
         },
       },
@@ -201,7 +200,7 @@ theme = createTheme(theme, {
           },
           "&.Mui-completed": {
             backgroundColor: `${color.white}`,
-            color: '#6BBBD8',
+            color: "#6BBBD8",
             border: "0px !important",
           },
           [theme.breakpoints.down("md")]: {
