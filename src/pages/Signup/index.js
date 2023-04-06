@@ -42,7 +42,6 @@ const Signup = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { setUserData, setToken } = authActions;
-  const userNameRegex = /^[a-zA-Z0-9_-]+$/;
   const passwordRegex =
     /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%^&*])((?=.*[A-Z])))(?=.{8,})/;
   const emailRegex =
@@ -86,11 +85,6 @@ const Signup = (props) => {
       valid = false;
       error.unameErr = true;
       error.unameMsg = "Username must be between 3 to 20 characters in long.";
-    } else if (!userNameRegex.test(uname)) {
-      valid = false;
-      error.unameErr = true;
-      error.unameMsg =
-        "Username must include letters, numbers, underscores and hyphens.";
     }
 
     // validate email
@@ -206,6 +200,7 @@ const Signup = (props) => {
                   setState({ ...state, uname: e.target.value });
                   setErrObj({ ...errObj, unameErr: false, unameMsg: "" });
                 }}
+                inputProps={{ maxLength: 20 }}
                 white={false}
                 error={errObj.unameErr}
                 helpertext={errObj.unameMsg}
