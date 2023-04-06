@@ -116,6 +116,7 @@ const OtpInput = (props) => {
             numInputs={5}
             renderSeparator={<span style={{ padding: 10 }}> </span>}
             renderInput={(props) => <input {...props} />}
+            inputType="number"
             inputStyle={{
               height: 40,
               width: 40,
