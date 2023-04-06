@@ -16,7 +16,7 @@ function Footer(props) {
             className={classes.imgStyle}
           />
           <Typography className={classes.footerTextStyle}>
-            Copyright ⓒ 2003. All Rights Reserved by Reno. Version 1.0
+            Copyright ⓒ 2023. All Rights Reserved by Reno. Version 1.0
           </Typography>
         </Grid>
         <Grid
