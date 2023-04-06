@@ -353,7 +353,7 @@ const Login = (props) => {
                 {btnLoad ? (
                   <CircularProgress style={{ color: "#fff" }} size={26} />
                 ) : (
-                  "Sign in"
+                  "Log in"
                 )}
               </Button>
             </Grid>
