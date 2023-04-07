@@ -168,6 +168,14 @@ function Header(props) {
                         View Profile
                       </MenuItem>
                       <MenuItem
+                        onClick={() => {
+                          navigate("/account-setting");
+                        }}
+                        className={classes.logoutTextStyle}
+                      >
+                        Account Setting
+                      </MenuItem>
+                      <MenuItem
                         onClick={logout}
                         className={classes.logoutTextStyle}
                       >

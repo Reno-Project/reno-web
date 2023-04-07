@@ -167,8 +167,6 @@ const Login = (props) => {
           </Typography>
         </Grid>
       </Grid>
-
-      <AccountSettings />
     </div>
   );
 };
