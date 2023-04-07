@@ -172,6 +172,20 @@ export default function Security() {
             <Typography className={classes.language}>Last Activity 1 hour ago • Cairo, Egypt</Typography>
           </Grid>
           <Grid lg={1} md={1} xs={12} sm={12} ><Typography className={classes.TextStyle}>signout </Typography></Grid>
+          <Grid xs={12} md={5} lg={5} sm={5} style={{ marginTop: 15 }}>
+          </Grid>
+          <Grid xs={12} md={4} lg={4} sm={4} item  >
+          <Typography className={classes.language}>Signout  from All devices</Typography>
+          </Grid>
+          <Grid xs={12} md={3} lg={3} sm={3}>
+          <Button
+                variant="contained"
+                color="primary"
+                style={{ paddingLeft: "20px", paddingRight: "20px" }}
+              >
+                Sign out now
+              </Button>
+              </Grid>
         </Grid>
       </Grid>
     </>
