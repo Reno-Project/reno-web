@@ -29,11 +29,27 @@ function Footer(props) {
           alignItems="center"
           justifyContent={"flex-end"}
         >
-          <Grid item xs={12} sm={5} md={4} lg={3}>
-            <Typography className={classes.footerTextStyle}>ENG</Typography>
+          <Grid>
+          <img
+            src={Images.globe}
+            alt="globe"
+            className={classes.imgStyleLanguage}
+          />
+          </Grid>
+          
+          <Grid item xs={8} sm={5} md={4} lg={3}>
+            <Typography className={classes.language}>ENG</Typography>
+
+          </Grid>
+          <Grid item>
+          <img
+            src={Images.doller}
+            alt="doller"
+            className={classes.imgStyleLanguage}
+          />
           </Grid>
           <Grid item xs={12} sm={5} md={4} lg={3}>
-            <Typography className={classes.footerTextStyle}>USD</Typography>
+            <Typography className={classes.language}>USD</Typography>
           </Grid>
         </Grid>
       </Grid>

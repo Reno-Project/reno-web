@@ -26,6 +26,15 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "15px !important",
   },
   imgStyle: { height: "20px" },
+  imgStyleLanguage: { height: "13px" },
+  language: {
+    color: "#646F86",
+    fontSize: "13px !important",
+    letterSpacing: "0.5px !important",
+    lineHeight: "25px !important",
+    fontFamily: "Roobert-Regular !important",
+    marginLeft: "5px !important",
+  },
 }));
 
 export default useStyles;

@@ -12,7 +12,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     borderRadius: 4,
     position: "relative",
     // backgroundColor: "#FFF",
-    // border: "1px solid #FFF",
+    // border: "1px solid #FFF", 
     fontSize: 14,
     padding: "10px 12px",
     transition: theme.transitions.create([
@@ -22,7 +22,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     ]),
     fontFamily: "Roobert-Regular",
     "&:focus": {
-      boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
+      // boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
       borderColor: theme.palette.primary.main,
     },
   },

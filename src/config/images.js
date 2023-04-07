@@ -20,6 +20,8 @@ const Images = {
   Instagram: "/assets/images/Instagram.svg",
   Yt: "/assets/images/Yt.svg",
   Linkedin: "/assets/images/Linkedin.svg",
+  doller:"/assets/images/dollar-circle.png",
+  globe:"/assets/images/globe.png",
 };
 
 export default Images;
