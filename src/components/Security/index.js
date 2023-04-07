@@ -154,12 +154,12 @@ export default function Security() {
               className={classes.imgStyle}
             />
           </Grid>
-          <Grid xs={12} md={11} lg={11} sm={11} item container style={{ marginTop: 15 }}>
+          <Grid xs={12} md={10} lg={10} sm={10} item container style={{ marginTop: 15 }}>
             <Typography className={classes.TextStyle}>Chrome 109, Windows </Typography>
             <Typography className={classes.TextDeviceStyle}>THIS DEVICE</Typography>
             <Typography className={classes.language}>Last Activity 13 minutes ago • Dubai, United Arab Emirates</Typography>
           </Grid>
-          <Grid lg={1} md={12} xs={12} sm={12}><Typography className={classes.TextStyle}>signout </Typography></Grid>
+          <Grid lg={1} md={1} xs={12} sm={12}><Typography className={classes.TextStyle}>signout </Typography></Grid>
           <Grid item lg={1} md={1} xs={12} sm={12}>
             <img
               src={Images.Phone}
@@ -167,11 +167,11 @@ export default function Security() {
               className={classes.imgStyle}
             />
           </Grid>
-          <Grid xs={12} md={11} lg={11} sm={11} item style={{ marginTop: 10 }}>
+          <Grid xs={12} md={10} lg={10} sm={10} item style={{ marginTop: 10 }}>
             <Typography className={classes.TextStyle}>iPhone, iOS App  </Typography>
             <Typography className={classes.language}>Last Activity 1 hour ago • Cairo, Egypt</Typography>
           </Grid>
-          <Grid lg={1} md={12} xs={12} sm={12} ><Typography className={classes.TextStyle}>signout </Typography></Grid>
+          <Grid lg={1} md={1} xs={12} sm={12} ><Typography className={classes.TextStyle}>signout </Typography></Grid>
         </Grid>
       </Grid>
     </>
