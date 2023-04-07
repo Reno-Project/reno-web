@@ -22,6 +22,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import "./App.css";
 import ContractorProfile from "./pages/ContractorProfile";
+import AccountSettings from "./pages/AccountSettings";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
@@ -64,6 +65,10 @@ function App() {
                     <Route
                       path={"/contractor-profile"}
                       element={<ContractorProfile />}
+                    />
+                    <Route
+                      path={"/account-setting"}
+                      element={<AccountSettings />}
                     />
                     <Route exact path={"/"} element={<HowItWorks />} />
                     <Route
