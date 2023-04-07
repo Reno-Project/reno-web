@@ -14,12 +14,15 @@ import {
   Grid,
   InputAdornment,
   InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
 import { PhoneNumberUtil } from "google-libphonenumber";
 import { isArray, isEmpty, isNumber, isObject, isString } from "lodash";
 import React, { useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
 import PhoneInput from "react-phone-input-2";
 import { toast } from "react-toastify";
 import CInput from "../../components/CInput";
@@ -44,28 +47,7 @@ const errorObj = {
   contarctMsg: "",
   expertiseErr: false,
   expertiseMsg: "",
-  priceErr: false,
-  priceMsg: "",
-  locationErr: false,
-  locationMsg: "",
-  certiErr: false,
-  certiMsg: "",
-  licenseErr: false,
-  licenseMsg: "",
-  registrationErr: false,
-  registrationMsg: "",
-  bnameErr: false,
-  bnameMsg: "",
-  ibanErr: false,
-  ibanMsg: "",
-  bankErr: false,
-  bankMsg: "",
-  accErr: false,
-  accMsg: "",
-  swiftErr: false,
-  swiftMsg: "",
-  bankaddErr: false,
-  bankaddMsg: "",
+
   socialErr: false,
   socialMsg: "",
   linkedInErr: false,
@@ -103,6 +85,14 @@ export default function EditProfile() {
   });
   const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
   const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  // const btnArr = [
+  //   { id: 0, value: "Company Information" },
+  //   { id: 1, value: "Documents" },
+  //   { id: 2, value: "Profile Image" },
+  //   { id: 3, value: "Social Link" },
+  //   { id: 4, value: "Portfolio" },
+  // ];
+
   const btnArr = [
     "Company Information",
     "Documents",
@@ -133,133 +123,127 @@ export default function EditProfile() {
     const urlRegex = /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/;
     const emailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    const linkedinRegex =
-      /^(https?:\/\/)?(www\.)?linkedin\.com\/(in|pub)\/[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/;
-    const facebookRegex =
-      /^(?:http(?:s)?:\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\/[a-zA-Z0-9_\.]+$/;
-    const instaRegex =
-      /^(?:https?:\/\/)?(?:www\.)?(?:instagram\.com\/)([A-Za-z0-9_\-\.]+)/;
 
-    // if (isEmpty(state.cname)) {
-    //   valid = false;
-    //   error.cnameErr = true;
-    //   error.cnameMsg = "Please Enter Company's Name";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#cname");
-    //   }
-    // }
+    if (isEmpty(state.cname)) {
+      valid = false;
+      error.cnameErr = true;
+      error.cnameMsg = "Please Enter Company's Name";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#cname");
+      }
+    }
 
-    // if (isEmpty(state.address)) {
-    //   valid = false;
-    //   error.addErr = true;
-    //   error.addMsg = "Please Enter Address[tion";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#address");
-    //   }
-    // }
+    if (isEmpty(state.address)) {
+      valid = false;
+      error.addErr = true;
+      error.addMsg = "Please Enter Address[tion";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#address");
+      }
+    }
 
-    // if (isEmpty(state.email)) {
-    //   valid = false;
-    //   error.emailErr = true;
-    //   error.emailMsg = "Please enter email";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#email");
-    //   }
-    // } else if (!emailRegex.test(state.email)) {
-    //   valid = false;
-    //   error.emailErr = true;
-    //   error.emailMsg = "Please enter valid email";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#email");
-    //   }
-    // }
+    if (isEmpty(state.email)) {
+      valid = false;
+      error.emailErr = true;
+      error.emailMsg = "Please enter email";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#email");
+      }
+    } else if (!emailRegex.test(state.email)) {
+      valid = false;
+      error.emailErr = true;
+      error.emailMsg = "Please enter valid email";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#email");
+      }
+    }
 
-    // if (isEmpty(state?.website) && !urlRegex.test(state?.website)) {
-    //   valid = false;
-    //   error.webErr = true;
-    //   error.webMsg = "Please Enter Valid Website Name";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#web");
-    //   }
-    // }
+    if (isEmpty(state?.website) && !urlRegex.test(state?.website)) {
+      valid = false;
+      error.webErr = true;
+      error.webMsg = "Please Enter Valid Website Name";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#web");
+      }
+    }
 
-    // if (isEmpty(state.phone)) {
-    //   valid = false;
-    //   error.phoneErr = true;
-    //   error.phoneMsg = "Please enter phone number";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#phone");
-    //   }
-    // } else if (!isEmpty(state.phone) && !isEmpty(state.countryCode)) {
-    //   const phoneNumber1 = phoneUtil.parse(state.phone, state.countryCode);
-    //   const isValid = phoneUtil.isValidNumber(phoneNumber1);
-    //   if (!isValid) {
-    //     valid = false;
-    //     error.phoneErr = true;
-    //     error.phoneMsg = "Please enter valid phone number";
-    //     if (!scroll) {
-    //       scroll = true;
-    //       section = document.querySelector("#phone");
-    //     }
-    //   }
-    // }
+    if (isEmpty(state.phone)) {
+      valid = false;
+      error.phoneErr = true;
+      error.phoneMsg = "Please enter phone number";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#phone");
+      }
+    } else if (!isEmpty(state.phone) && !isEmpty(state.countryCode)) {
+      const phoneNumber1 = phoneUtil.parse(state.phone, state.countryCode);
+      const isValid = phoneUtil.isValidNumber(phoneNumber1);
+      if (!isValid) {
+        valid = false;
+        error.phoneErr = true;
+        error.phoneMsg = "Please enter valid phone number";
+        if (!scroll) {
+          scroll = true;
+          section = document.querySelector("#phone");
+        }
+      }
+    }
 
-    // if (isEmpty(state.businessYear)) {
-    //   valid = false;
-    //   error.yearErr = true;
-    //   error.yearMsg = "Please Enter No. of Bussiness Years";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#year");
-    //   }
-    // }
-    // if (isEmpty(state.employees)) {
-    //   valid = false;
-    //   error.employeeErr = true;
-    //   error.employeeMsg = "Please Enter No. of Employees";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#employee");
-    //   }
-    // }
-    // if (isEmpty(state.annualContract)) {
-    //   valid = false;
-    //   error.contractErr = true;
-    //   error.contarctMsg = "Please Enter No. of Contarcts Annually";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#contract");
-    //   }
-    // } else if (state?.annualContract < 0) {
-    //   valid = false;
-    //   error.contractErr = true;
-    //   error.contarctMsg = "Please Enter Valid No. of Contarcts Annually";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#contract");
-    //   }
-    // }
+    if (isEmpty(state.businessYear)) {
+      valid = false;
+      error.yearErr = true;
+      error.yearMsg = "Please Enter No. of Bussiness Years";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#year");
+      }
+    }
+    if (isEmpty(state.employees)) {
+      valid = false;
+      error.employeeErr = true;
+      error.employeeMsg = "Please Enter No. of Employees";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#employee");
+      }
+    }
+    if (isEmpty(state.annualContract)) {
+      valid = false;
+      error.contractErr = true;
+      error.contarctMsg = "Please Enter No. of Contarcts Annually";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#contract");
+      }
+    } else if (state?.annualContract < 0) {
+      valid = false;
+      error.contractErr = true;
+      error.contarctMsg = "Please Enter Valid No. of Contarcts Annually";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#contract");
+      }
+    }
 
-    // if (isEmpty(state.expertise)) {
-    //   valid = false;
-    //   error.expertiseErr = true;
-    //   error.expertiseMsg = "Please Enter Expertise Area";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#expertise");
-    //   }
-    // }
+    if (isEmpty(state.expertise)) {
+      valid = false;
+      error.expertiseErr = true;
+      error.expertiseMsg = "Please Enter Expertise Area";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#expertise");
+      }
+    }
 
-    // if (section) {
-    //   section.scrollIntoView({ behavior: "smooth", block: "center" });
-    // }
-    // setErrObj(error);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    setErrObj(error);
 
     if (valid) {
       // addContractorDetailsApiCall();
@@ -267,20 +251,77 @@ export default function EditProfile() {
     }
   }
 
-  function validation3() {}
+  function validation4() {
+    const error = { ...errObj };
+    let valid = true;
+    let scroll = false;
+    let section = null;
+    const linkedinRegex =
+      /^(https?:\/\/)?(www\.)?linkedin\.com\/(in|pub)\/[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/;
+    const facebookRegex =
+      /^(?:http(?:s)?:\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\/[a-zA-Z0-9_\.]+$/;
+    const instaRegex =
+      /^(?:https?:\/\/)?(?:www\.)?(?:instagram\.com\/)([A-Za-z0-9_\-\.]+)/;
+
+    if (!isEmpty(state?.linkedin) && !linkedinRegex.test(state?.linkedin)) {
+      valid = false;
+      error.linkedInErr = true;
+      error.linkedInMsg = "Please Enter Valid LinkedIn URL";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#linkedIn");
+      }
+    }
+    if (!isEmpty(state?.social) && !facebookRegex.test(state?.social)) {
+      valid = false;
+      error.socialErr = true;
+      error.socialMsg = "Please Enter Valid Social URL";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#social");
+      }
+    }
+    if (!isEmpty(state?.insta) && !instaRegex.test(state?.insta)) {
+      valid = false;
+      error.instaErr = true;
+      error.instaMsg = "Please Enter Valid Instagram URL";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#instagram");
+      }
+    }
+
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    setErrObj(error);
+
+    if (valid) {
+      // addContractorDetailsApiCall();
+      continueStep(4);
+    }
+  }
 
   // this function handles the steps
   function continueStep(step) {
     if (step === 1) {
       setActive((step) => step + 1);
     } else if (step === 2) {
+      setActive(2);
+    } else if (step === 3) {
+      if (!state.businessLogo) {
+        toast.error("Please upload business logo");
+      } else {
+        setActive(3);
+      }
+    } else if (step === 4) {
+      setActive(4);
+    } else if (step === 5) {
       if (isArray(state.portfolio) && state.portfolio.length === 0) {
         toast.error("Please upload atleast one image");
       } else {
         // addPortfolio();
       }
-    } else if (step === 3) {
-      // step3Validation();
     }
   }
   return (
@@ -316,7 +357,14 @@ export default function EditProfile() {
         })}
       </Grid>
       {active === 0 ? (
-        <Grid item xs={7} sm={8} md={8} lg={8} padding="10px 20px">
+        <Grid
+          item
+          xs={12}
+          sm={8}
+          md={8}
+          lg={8}
+          padding={isMobile ? "10px 0" : "10px 20px"}
+        >
           <Typography variant="h5">Information</Typography>
           <Typography>
             Lorem Ipsum has been the industry's standard dummy text ever since.
@@ -326,7 +374,7 @@ export default function EditProfile() {
             container
             style={{
               border: "1px solid #F2F4F7",
-              padding: 20,
+              padding: isMobile ? 10 : 20,
               marginTop: 20,
             }}
           >
@@ -577,7 +625,14 @@ export default function EditProfile() {
         </Grid>
       ) : null}
       {active === 1 ? (
-        <Grid item xs={7} sm={8} md={8} lg={8} padding="10px 20px">
+        <Grid
+          item
+          xs={7}
+          sm={8}
+          md={8}
+          lg={8}
+          padding={isMobile ? "10px 0" : "10px 20px"}
+        >
           <Typography variant="h5">Documents</Typography>
           <Grid
             item
@@ -809,6 +864,7 @@ export default function EditProfile() {
               <Button
                 style={{ minWidth: "135px", width: "100%" }}
                 variant="contained"
+                onClick={() => continueStep(2)}
               >
                 Save Changes
               </Button>
@@ -817,7 +873,14 @@ export default function EditProfile() {
         </Grid>
       ) : null}
       {active === 2 ? (
-        <Grid item xs={7} sm={8} md={8} lg={8} padding="10px 20px">
+        <Grid
+          item
+          xs={7}
+          sm={8}
+          md={8}
+          lg={8}
+          padding={isMobile ? "10px 0" : "10px 20px"}
+        >
           <Typography variant="h5">Profile Image</Typography>
           <Grid
             item
@@ -910,6 +973,7 @@ export default function EditProfile() {
               <Button
                 style={{ minWidth: "135px", width: "100%" }}
                 variant="contained"
+                onClick={() => continueStep(3)}
               >
                 Save Changes
               </Button>
@@ -918,7 +982,14 @@ export default function EditProfile() {
         </Grid>
       ) : null}
       {active === 3 ? (
-        <Grid item xs={7} sm={8} md={8} lg={8} padding="10px 20px">
+        <Grid
+          item
+          xs={7}
+          sm={8}
+          md={8}
+          lg={8}
+          padding={isMobile ? "10px 0" : "10px 20px"}
+        >
           <Typography variant="h5">Social Link</Typography>
           <Grid
             item
@@ -1045,6 +1116,7 @@ export default function EditProfile() {
               <Button
                 style={{ minWidth: "135px", width: "100%" }}
                 variant="contained"
+                onClick={() => validation4()}
               >
                 Save Changes
               </Button>
@@ -1053,7 +1125,14 @@ export default function EditProfile() {
         </Grid>
       ) : null}
       {active === 4 ? (
-        <Grid item xs={7} sm={8} md={8} lg={8} padding="10px 20px">
+        <Grid
+          item
+          xs={7}
+          sm={8}
+          md={8}
+          lg={8}
+          padding={isMobile ? "10px 0" : "10px 20px"}
+        >
           <Typography variant="h5">Portfolio</Typography>
           <Grid
             item
@@ -1118,7 +1197,7 @@ export default function EditProfile() {
               item
               style={{
                 marginTop: 40,
-                overflow: "scroll",
+                overflowY: "scroll",
                 maxHeight: 500,
               }}
             >
@@ -1197,6 +1276,32 @@ export default function EditProfile() {
                     </div>
                   );
                 })}
+            </Grid>
+          </Grid>
+          <Grid
+            xs={12}
+            item
+            container
+            wrap="nowrap"
+            gap={2}
+            style={{
+              margin: "25px 0",
+              justifyContent: "center",
+            }}
+          >
+            <Grid item xs={6}>
+              <Button style={{ width: "100%" }} variant="outlined">
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                style={{ minWidth: "135px", width: "100%" }}
+                variant="contained"
+                onClick={() => continueStep(5)}
+              >
+                Save Changes
+              </Button>
             </Grid>
           </Grid>
         </Grid>

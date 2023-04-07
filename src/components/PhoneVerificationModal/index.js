@@ -31,7 +31,6 @@ const PhoneVerificationModal = (props) => {
   const dispatch = useDispatch();
   const { setUserData, setToken } = authActions;
   const [output, setOutput] = useState("");
-  console.log("output====>>>>>", output);
   const [timerCount, setTimer] = useState(60);
   const [btnLoad, setBtnLoad] = useState("");
   const [resendViewVisible, setResendViewVisible] = useState(false);

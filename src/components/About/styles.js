@@ -1,4 +1,5 @@
 import { makeStyles } from "@mui/styles";
+import { isMobile } from "react-device-detect";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -11,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
   text: {
     color: "#475569",
-    paddingTop: "10px",
+    paddingTop: isMobile ? 0 : "10px",
     cursor: "pointer",
   },
 }));
