@@ -5,10 +5,12 @@ import About from "../../components/About";
 import EditProfile from "../EditProfile";
 import Billing from "../Billing";
 import ChangePassword from "../ChangePassword";
+import PhoneVerificationModal from "../../components/PhoneVerificationModal";
 
 export default function AccountSettings() {
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(0);
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <>
@@ -57,6 +59,10 @@ export default function AccountSettings() {
       </Grid>
 
       <About />
+      <PhoneVerificationModal
+        visible={showModal}
+        handleClose={() => setShowModal(false)}
+      />
     </>
   );
 }
