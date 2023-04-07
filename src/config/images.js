@@ -22,6 +22,9 @@ const Images = {
   Linkedin: "/assets/images/Linkedin.svg",
   doller:"/assets/images/dollar-circle.png",
   globe:"/assets/images/globe.png",
+  laptop:"/assets/images/laptop.png",
+  Phone:"/assets/images/Phone.png",
+
 };
 
 export default Images;

@@ -7,7 +7,7 @@ import Billing from "../Billing";
 import ChangePassword from "../ChangePassword";
 import PhoneVerificationModal from "../../components/PhoneVerificationModal";
 import NotificationSettings from "../NotificationSettings";
-
+import Security from "../../components/Security";
 export default function AccountSettings() {
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(0);
@@ -56,6 +56,7 @@ export default function AccountSettings() {
             {tabValue === 1 ? <Billing /> : null}
             {tabValue === 2 ? <NotificationSettings /> : null}
             {tabValue === 3 ? <ChangePassword /> : null}
+            {tabValue === 4 ? <Security/> : null}
           </Grid>
         </Grid>
       </Grid>
