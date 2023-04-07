@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     width: 70,
     height: 70,
     borderRadius: 35,
+    objectFit: "cover",
   },
   titleStyle: {
     color: "#202939",

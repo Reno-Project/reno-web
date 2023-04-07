@@ -69,7 +69,12 @@ function Header(props) {
           xs={3}
           className={classes.leftContainer}
         >
-          <div className={classes.imgContainer}>
+          <div
+            className={classes.imgContainer}
+            onClick={() => {
+              navigate("/dashboard");
+            }}
+          >
             <img
               alt="logo"
               src={Images.header_logo}

@@ -46,8 +46,11 @@ const useStyles = makeStyles((theme) => ({
   logoStyle: {
     height: "40px",
     width: "40px",
+    minWidth: 40,
+    maxWidth: 40,
     borderRadius: "40px",
     cursor: "pointer",
+    objectFit: "cover",
   },
   rightLogoContainer: {
     display: "flex",

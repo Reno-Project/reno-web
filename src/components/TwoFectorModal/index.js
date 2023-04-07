@@ -22,7 +22,7 @@ import useStyles from "./styles";
 import { color } from "../../config/theme";
 import { useTheme } from "@emotion/react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-const PhoneVerificationModal = (props) => {
+const TwoFectorModal = (props) => {
   const { visible = false, handleClose = () => null } = props;
   const classes = useStyles();
   const navigate = useNavigate();
@@ -31,7 +31,6 @@ const PhoneVerificationModal = (props) => {
   const dispatch = useDispatch();
   const { setUserData, setToken } = authActions;
   const [output, setOutput] = useState("");
-  console.log("output====>>>>>", output);
   const [timerCount, setTimer] = useState(60);
   const [btnLoad, setBtnLoad] = useState("");
   const [resendViewVisible, setResendViewVisible] = useState(false);
@@ -46,7 +45,7 @@ const PhoneVerificationModal = (props) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    maxWidth: sm ? 300 : 500,
+    width: sm ? 300 : 500,
     bgcolor: "background.paper",
     borderRadius: 1,
     boxShadow: 24,
@@ -154,20 +153,16 @@ const PhoneVerificationModal = (props) => {
           </IconButton>
           <div>
             <Typography className={classes.loginHeaderText}>
-              Phone Verification
+              Two factor Authentication <br />
+              Login
             </Typography>
             <Typography className={classes.welcomeTextStyle}>
-              Protecting your account is our top priority. please confirm your
-              account by entering the authorization code sent to
-            </Typography>
-          </div>
-          <div style={{ margin: "20px 0px" }}>
-            <Typography variant="h5">
-              {hiddenDigits}
+              we’ve send a code to {hiddenDigits}
               {lastFour}
             </Typography>
           </div>
-          <Grid item xs={12} justifyContent={"center"}>
+
+          <Grid item xs={12} justifyContent={"center"} my={3}>
             <OtpInputFields
               fullWidth
               value={output}
@@ -187,7 +182,60 @@ const PhoneVerificationModal = (props) => {
               }}
             />
           </Grid>
-          <Grid item container my={2}>
+
+          <Grid
+            item
+            container
+            xs={12}
+            alignItems="center"
+            justifyContent={"center"}
+          >
+            <Typography
+              className={classes.welcomeTextStyle}
+              textAlign={"center"}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexWrap: "wrap",
+                color: "#646F86",
+              }}
+            >
+              {!resendViewVisible
+                ? ` Resend OTP in : 00: ${timerCount}`
+                : `Didn’t get a code?`}
+              {resendViewVisible && (
+                <Typography
+                  style={{
+                    cursor: "pointer",
+                    fontWeight: "bold",
+                    color: color.primary,
+                    marginLeft: 8,
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                  onClick={() => {
+                    if (
+                      btnLoad === "resend" ||
+                      !resendViewVisible ||
+                      btnLoad === "otp"
+                    ) {
+                      return null;
+                    } else {
+                      resendOtp();
+                    }
+                  }}
+                >
+                  Click to resend.
+                </Typography>
+              )}
+            </Typography>
+          </Grid>
+          <Grid item container mt={3} wrap="nowrap" columnGap={2}>
+            <Button variant="outlined" fullWidth onClick={handleClose}>
+              Cancel
+            </Button>
             <Button
               variant="contained"
               color="primary"
@@ -209,63 +257,9 @@ const PhoneVerificationModal = (props) => {
               {btnLoad === "otp" ? (
                 <CircularProgress style={{ color: "#fff" }} size={26} />
               ) : (
-                "Verify Now"
+                "Verify"
               )}
             </Button>
-          </Grid>
-          <Grid item container>
-            <Grid item xs={12}>
-              <Typography
-                textAlign={"center"}
-                className={classes.welcomeTextStyle}
-                color="#646F86"
-              >
-                It may take a minute to receive your code.
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography
-                className={classes.welcomeTextStyle}
-                textAlign={"center"}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexWrap: "wrap",
-                  color: "#646F86",
-                }}
-              >
-                {!resendViewVisible
-                  ? ` Resend OTP in : 00: ${timerCount}`
-                  : `Haven't received it?`}
-                {resendViewVisible && (
-                  <Typography
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "bold",
-                      color: color.primary,
-                      marginLeft: 8,
-                      "&:hover": {
-                        textDecoration: "underline",
-                      },
-                    }}
-                    onClick={() => {
-                      if (
-                        btnLoad === "resend" ||
-                        !resendViewVisible ||
-                        btnLoad === "otp"
-                      ) {
-                        return null;
-                      } else {
-                        resendOtp();
-                      }
-                    }}
-                  >
-                    Resend a new code.
-                  </Typography>
-                )}
-              </Typography>
-            </Grid>
           </Grid>
         </Box>
       </Fade>
@@ -273,4 +267,4 @@ const PhoneVerificationModal = (props) => {
   );
 };
 
-export default PhoneVerificationModal;
+export default TwoFectorModal;
