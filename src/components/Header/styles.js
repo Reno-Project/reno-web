@@ -53,9 +53,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
     padding: 5,
+    alignItems: "center",
   },
   logoutTextStyle: {
     cursor: "pointer",
+    padding: "0px 10px",
   },
   uploadImgDivStyle: {
     height: "100%",

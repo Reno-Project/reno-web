@@ -6,12 +6,16 @@ export const color = {
   secondary: "#202939",
   white: "#ffff",
   darkGreen: "#264653",
-  black: "#5A5A5A",
+  black: "#000",
   lightOrange: "#F4A261",
   disable: "#00000061",
   green: "#34AB70",
   blue: "#062F6D",
   offWhite: "#E8E8E8",
+  fadedblue: "rgba(227, 247, 255, 1)",
+  borderColor: "#E8E8E8E8",
+  shadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+  captionText: "rgba(100, 111, 134, 1)",
 };
 
 let theme = createTheme();

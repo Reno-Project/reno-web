@@ -6,6 +6,20 @@ const Images = {
   apple: "/assets/images/apple.png",
   flogo: "/assets/images/flogo.png",
   success: "/assets/images/success.png",
+  chatico: "/assets/images/chatico.svg",
+  BellSimple: "/assets/images/BellSimple.svg",
+  verified: "/assets/images/verified.svg",
+  share: "/assets/images/share.svg",
+  copy: "/assets/images/copy.svg",
+  Location: "/assets/images/Location.svg",
+  Heart: "/assets/images/Heart.svg",
+  reply: "/assets/images/reply.svg",
+  building: "/assets/images/building.png",
+  profile: "/assets/images/profile.png",
+  Facebook: "/assets/images/Facebook.svg",
+  Instagram: "/assets/images/Instagram.svg",
+  Yt: "/assets/images/Yt.svg",
+  Linkedin: "/assets/images/Linkedin.svg",
 };
 
 export default Images;

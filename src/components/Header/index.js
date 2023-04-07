@@ -2,12 +2,23 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { Button, Grid, Typography, Popover, Avatar } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Typography,
+  Popover,
+  Avatar,
+  InputAdornment,
+  IconButton,
+  MenuItem,
+} from "@mui/material";
 import { isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
 import Images from "../../config/images";
 import useStyles from "./styles";
+import CInput from "../CInput";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
 function Header(props) {
   const currentUrl = window.location.href;
@@ -18,6 +29,7 @@ function Header(props) {
   const { clearAllData } = authActions;
   const isAddPadding = useMediaQuery(theme.breakpoints.down(1260));
   const { token, userData } = useSelector((state) => state.auth);
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -84,7 +96,7 @@ function Header(props) {
               </NavLink>
             </Grid>
           )}
-          <Grid item className={classes.rightLogoContainer}>
+          <Grid item className={classes.rightLogoContainer} columnGap={1}>
             {token !== "" ? (
               <>
                 {!userData?.profile_url ? (
@@ -93,6 +105,33 @@ function Header(props) {
                   </div>
                 ) : (
                   <>
+                    {!sm && (
+                      <>
+                        <CInput
+                          placeholder="Search..."
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton>
+                                <SearchRoundedIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                        <Grid item>
+                          <Button variant="contained">Projects </Button>
+                        </Grid>
+                        <Grid item>
+                          <IconButton>
+                            <img src={Images.chatico} alt="chat" />
+                          </IconButton>
+                        </Grid>
+                      </>
+                    )}
+                    <Grid item>
+                      <IconButton>
+                        <img src={Images.BellSimple} alt="notification" />
+                      </IconButton>
+                    </Grid>
                     <img
                       alt="logo"
                       src={userData?.profile_url}
@@ -108,16 +147,32 @@ function Header(props) {
                       onClose={handleClose}
                       anchorOrigin={{
                         vertical: "bottom",
-                        horizontal: "left",
+                        horizontal: "right",
+                      }}
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      PaperProps={{
+                        style: {
+                          padding: 10,
+                        },
                       }}
                     >
-                      <Typography
+                      <MenuItem
+                        onClick={() => {
+                          navigate("/contractor-profile");
+                        }}
+                        className={classes.logoutTextStyle}
+                      >
+                        View Profile
+                      </MenuItem>
+                      <MenuItem
                         onClick={logout}
-                        sx={{ p: 1.5 }}
                         className={classes.logoutTextStyle}
                       >
                         Logout
-                      </Typography>
+                      </MenuItem>
                     </Popover>
                   </>
                 )}
