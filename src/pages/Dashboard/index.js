@@ -20,6 +20,7 @@ import Images from "../../config/images";
 import { getApiData } from "../../utils/APIHelper";
 import useStyles from "./styles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import AccountSettings from "../AccountSettings";
 
 const errorObj = {
   emailErr: false,
@@ -166,6 +167,8 @@ const Login = (props) => {
           </Typography>
         </Grid>
       </Grid>
+
+      <AccountSettings />
     </div>
   );
 };

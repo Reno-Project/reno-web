@@ -258,7 +258,7 @@ const Signup = (props) => {
                 }}
                 className={classes.pickerInput}
                 error={errObj.phoneErr}
-                helpertext={errObj.phoneMsg}
+                helperText={errObj.phoneMsg}
               />
             </Grid>
             <Grid item xs={12}>
