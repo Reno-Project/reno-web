@@ -178,7 +178,7 @@ function Header(props) {
                         }}
                         className={classes.logoutTextStyle}
                       >
-                        Account Setting
+                        Account Settings
                       </MenuItem>
                       <MenuItem
                         onClick={logout}

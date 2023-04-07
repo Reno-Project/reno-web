@@ -6,6 +6,7 @@ import EditProfile from "../EditProfile";
 import Billing from "../Billing";
 import ChangePassword from "../ChangePassword";
 import PhoneVerificationModal from "../../components/PhoneVerificationModal";
+import NotificationSettings from "../NotificationSettings";
 
 export default function AccountSettings() {
   const classes = useStyles();
@@ -47,12 +48,13 @@ export default function AccountSettings() {
           <Grid
             container
             padding={"20px 0"}
-            wrap="nowrap"
+            wrap={tabValue === 3 ? "wrap" : "nowrap"}
             gap={2}
             justifyContent={"center"}
           >
             {tabValue === 0 ? <EditProfile /> : null}
             {tabValue === 1 ? <Billing /> : null}
+            {tabValue === 2 ? <NotificationSettings /> : null}
             {tabValue === 3 ? <ChangePassword /> : null}
           </Grid>
         </Grid>
