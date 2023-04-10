@@ -29,7 +29,7 @@ const errorObj = {
   passwordMsg: "",
 };
 
-const Login = (props) => {
+const Dashboard = (props) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const emailRegex =
@@ -153,22 +153,20 @@ const Login = (props) => {
   }
 
   return (
-    <div>
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-        style={{ paddingTop: 40 }}
-      >
-        <Grid item xs={12}>
-          <Typography className={classes.loginHeaderText}>
-            Welcome to Reno Dashboard
-          </Typography>
-        </Grid>
+    <Grid
+      container
+      alignItems="center"
+      justifyContent="center"
+      flexDirection="column"
+      style={{ paddingTop: 40 }}
+    >
+      <Grid item>
+        <Typography className={classes.loginHeaderText}>
+          Welcome to Reno Dashboard
+        </Typography>
       </Grid>
-    </div>
+    </Grid>
   );
 };
 
-export default Login;
+export default Dashboard;

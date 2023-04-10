@@ -6,12 +6,14 @@ import EditProfile from "../EditProfile";
 import Billing from "../Billing";
 import ChangePassword from "../ChangePassword";
 import PhoneVerificationModal from "../../components/PhoneVerificationModal";
+import TwoFectorModal from "../../components/TwoFectorModal";
 import NotificationSettings from "../NotificationSettings";
 import Security from "../../components/Security";
 export default function AccountSettings() {
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [show2FModal, setShow2FModal] = useState(false);
 
   return (
     <>
@@ -56,7 +58,7 @@ export default function AccountSettings() {
             {tabValue === 1 ? <Billing /> : null}
             {tabValue === 2 ? <NotificationSettings /> : null}
             {tabValue === 3 ? <ChangePassword /> : null}
-            {tabValue === 4 ? <Security/> : null}
+            {tabValue === 4 ? <Security /> : null}
           </Grid>
         </Grid>
       </Grid>
@@ -65,6 +67,10 @@ export default function AccountSettings() {
       <PhoneVerificationModal
         visible={showModal}
         handleClose={() => setShowModal(false)}
+      />
+      <TwoFectorModal
+        visible={show2FModal}
+        handleClose={() => setShow2FModal(false)}
       />
     </>
   );

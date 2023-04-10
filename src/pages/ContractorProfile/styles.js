@@ -6,9 +6,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     overflow: "scroll",
-    maxHeight: "calc(100% - 140px)",
-    marginBottom: 70,
-
+    flex: 1,
     "&::-webkit-scrollbar": {
       display: "none !important",
     },

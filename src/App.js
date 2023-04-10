@@ -23,6 +23,7 @@ import Footer from "./components/Footer";
 import "./App.css";
 import ContractorProfile from "./pages/ContractorProfile";
 import AccountSettings from "./pages/AccountSettings";
+import { Box, Grid } from "@mui/material";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
@@ -52,8 +53,17 @@ function App() {
       render={({ online }) => {
         return (
           <Router>
-            <Header />
-            <div className="MT70">
+            <div
+              style={{
+                display: "flex",
+                height: "100vh",
+                padding: "70px 0px",
+                boxSizing: "border-box",
+                flexDirection: "column",
+              }}
+            >
+              <Header />
+              {/* <div className="MT70"> */}
               <Routes>
                 {isLogin ? (
                   <>
@@ -99,8 +109,9 @@ function App() {
                   </>
                 )}
               </Routes>
+              {/* </div> */}
+              <Footer />
             </div>
-            <Footer />
             <ToastContainer
               autoClose={3000}
               pauseOnFocusLoss={false}
