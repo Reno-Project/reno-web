@@ -12,67 +12,80 @@ import Images from "../../config/images";
 import React, { useState } from "react";
 import CInput from "../../components/CInput";
 import useStyles from "./styles";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 export default function Security() {
   const classes = useStyles();
   const [showPassword, setShowPassword] = useState(false);
 
   const IOSSwitch = styled((props) => (
-    <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+    <Switch
+      focusVisibleClassName=".Mui-focusVisible"
+      disableRipple
+      {...props}
+    />
   ))(({ theme }) => ({
     width: 42,
     height: 26,
     padding: 0,
-    '& .MuiSwitch-switchBase': {
+    "& .MuiSwitch-switchBase": {
       padding: 0,
       margin: 2,
-      transitionDuration: '300ms',
-      '&.Mui-checked': {
-        transform: 'translateX(16px)',
-        color: '#fff',
-        '& + .MuiSwitch-track': {
-          backgroundColor: theme.palette.mode === 'dark' ? '#2ECA45' : '#65C466',
+      transitionDuration: "300ms",
+      "&.Mui-checked": {
+        transform: "translateX(16px)",
+        color: "#fff",
+        "& + .MuiSwitch-track": {
+          backgroundColor:
+            theme.palette.mode === "dark" ? "#2ECA45" : "#65C466",
           opacity: 1,
           border: 0,
         },
-        '&.Mui-disabled + .MuiSwitch-track': {
+        "&.Mui-disabled + .MuiSwitch-track": {
           opacity: 0.5,
         },
       },
-      '&.Mui-focusVisible .MuiSwitch-thumb': {
-        color: '#33cf4d',
-        border: '6px solid #fff',
+      "&.Mui-focusVisible .MuiSwitch-thumb": {
+        color: "#33cf4d",
+        border: "6px solid #fff",
       },
-      '&.Mui-disabled .MuiSwitch-thumb': {
+      "&.Mui-disabled .MuiSwitch-thumb": {
         color:
-          theme.palette.mode === 'light'
+          theme.palette.mode === "light"
             ? theme.palette.grey[100]
             : theme.palette.grey[600],
       },
-      '&.Mui-disabled + .MuiSwitch-track': {
-        opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+      "&.Mui-disabled + .MuiSwitch-track": {
+        opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
       },
     },
-    '& .MuiSwitch-thumb': {
-      boxSizing: 'border-box',
+    "& .MuiSwitch-thumb": {
+      boxSizing: "border-box",
       width: 22,
       height: 22,
     },
-    '& .MuiSwitch-track': {
+    "& .MuiSwitch-track": {
       borderRadius: 26 / 2,
-      backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
+      backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
       opacity: 1,
-      transition: theme.transitions.create(['background-color'], {
+      transition: theme.transitions.create(["background-color"], {
         duration: 500,
       }),
     },
   }));
   return (
-    <>
+    <Grid
+      container
+      padding={"20px 0"}
+      wrap={"nowrap"}
+      gap={2}
+      justifyContent={"center"}
+    >
       <Grid item lg={4}></Grid>
       <Grid item xs={12} sm={12} md={12} lg={9}>
         <Typography variant="h5">Logging in Settings</Typography>
-        <Typography className={classes.language}>Lorem Ipsum has been the industry's standard dummy text ever since.</Typography>
+        <Typography className={classes.language}>
+          Lorem Ipsum has been the industry's standard dummy text ever since.
+        </Typography>
 
         <Grid
           item
@@ -83,10 +96,12 @@ export default function Security() {
             marginTop: 20,
           }}
           alignItems="center"
-          justifyContent={'flex-end'}
+          justifyContent={"flex-end"}
         >
           <Grid item xs={9.5}>
-            <Typography className={classes.TextStyle}>Allow Login attempts</Typography>
+            <Typography className={classes.TextStyle}>
+              Allow Login attempts
+            </Typography>
           </Grid>
 
           <Grid item xs={2.5}>
@@ -97,16 +112,27 @@ export default function Security() {
               type="number"
               controls={false}
               inputProps={{
-                className: classes.myOtpInput
+                className: classes.myOtpInput,
               }}
             />
           </Grid>
-          <Divider width={'100%'} />
+          <Divider width={"100%"} />
           <Grid item container style={{ marginBottom: 15 }}>
-            <Grid item xs={12} md={12} sm={12} lg={9.5} style={{ marginTop: 20 }}>
-              <Typography className={classes.TextStyle}>Phone Verifications</Typography>
-              <Typography className={classes.language}>Your phone is not verified with Reno. Click Verify Now
-                to complete phone verification</Typography>
+            <Grid
+              item
+              xs={12}
+              md={12}
+              sm={12}
+              lg={9.5}
+              style={{ marginTop: 20 }}
+            >
+              <Typography className={classes.TextStyle}>
+                Phone Verifications
+              </Typography>
+              <Typography className={classes.language}>
+                Your phone is not verified with Reno. Click Verify Now to
+                complete phone verification
+              </Typography>
             </Grid>
 
             <Grid item xs={2.5} style={{ marginTop: 20 }}>
@@ -119,12 +145,16 @@ export default function Security() {
               </Button>
             </Grid>
           </Grid>
-          <Divider width={'100%'} />
+          <Divider width={"100%"} />
           <Grid item container>
             <Grid item xs={12} md={12} sm={12} lg={9} style={{ marginTop: 20 }}>
-              <Typography className={classes.TextStyle} >Two factors authentications</Typography>
-              <Typography className={classes.language} >We will send an authentication code via SMS, email or fiverr notification
-                when using an unrecognised device.</Typography>
+              <Typography className={classes.TextStyle}>
+                Two factors authentications
+              </Typography>
+              <Typography className={classes.language}>
+                We will send an authentication code via SMS, email or fiverr
+                notification when using an unrecognised device.
+              </Typography>
             </Grid>
             <Grid xs={12} md={12} sm={12} lg={2}></Grid>
             <Grid item xs={12} sm={12} md={1} lg={1} style={{ marginTop: 10 }}>
@@ -141,11 +171,14 @@ export default function Security() {
             marginTop: 20,
           }}
           alignItems="center"
-          justifyContent={'flex-end'}
+          justifyContent={"flex-end"}
         >
-          <Grid item xs={12} >
+          <Grid item xs={12}>
             <Typography variant="h5">Connected Devices</Typography>
-            <Typography className={classes.language}>Lorem Ipsum has been the industry's standard dummy text ever since.</Typography>
+            <Typography className={classes.language}>
+              Lorem Ipsum has been the industry's standard dummy text ever
+              since.
+            </Typography>
           </Grid>
           <Grid item lg={1} md={1} xs={12} sm={12}>
             <img
@@ -154,40 +187,59 @@ export default function Security() {
               className={classes.imgStyle}
             />
           </Grid>
-          <Grid xs={12} md={10} lg={10} sm={10} item container style={{ marginTop: 15 }}>
-            <Typography className={classes.TextStyle}>Chrome 109, Windows </Typography>
-            <Typography className={classes.TextDeviceStyle}>THIS DEVICE</Typography>
-            <Typography className={classes.language}>Last Activity 13 minutes ago • Dubai, United Arab Emirates</Typography>
+          <Grid
+            xs={12}
+            md={10}
+            lg={10}
+            sm={10}
+            item
+            container
+            style={{ marginTop: 15 }}
+          >
+            <Typography className={classes.TextStyle}>
+              Chrome 109, Windows{" "}
+            </Typography>
+            <Typography className={classes.TextDeviceStyle}>
+              THIS DEVICE
+            </Typography>
+            <Typography className={classes.language}>
+              Last Activity 13 minutes ago • Dubai, United Arab Emirates
+            </Typography>
           </Grid>
-          <Grid lg={1} md={1} xs={12} sm={12}><Typography className={classes.TextStyle}>signout </Typography></Grid>
+          <Grid lg={1} md={1} xs={12} sm={12}>
+            <Typography className={classes.TextStyle}>signout </Typography>
+          </Grid>
           <Grid item lg={1} md={1} xs={12} sm={12}>
-            <img
-              src={Images.Phone}
-              alt="Phone"
-              className={classes.imgStyle}
-            />
+            <img src={Images.Phone} alt="Phone" className={classes.imgStyle} />
           </Grid>
           <Grid xs={12} md={10} lg={10} sm={10} item style={{ marginTop: 10 }}>
-            <Typography className={classes.TextStyle}>iPhone, iOS App  </Typography>
-            <Typography className={classes.language}>Last Activity 1 hour ago • Cairo, Egypt</Typography>
+            <Typography className={classes.TextStyle}>
+              iPhone, iOS App{" "}
+            </Typography>
+            <Typography className={classes.language}>
+              Last Activity 1 hour ago • Cairo, Egypt
+            </Typography>
           </Grid>
-          <Grid lg={1} md={1} xs={12} sm={12} ><Typography className={classes.TextStyle}>signout </Typography></Grid>
-          <Grid xs={12} md={5} lg={5} sm={5} style={{ marginTop: 15 }}>
+          <Grid lg={1} md={1} xs={12} sm={12}>
+            <Typography className={classes.TextStyle}>signout </Typography>
           </Grid>
-          <Grid xs={12} md={4} lg={4} sm={4} item  >
-          <Typography className={classes.language}>Signout  from All devices</Typography>
+          <Grid xs={12} md={5} lg={5} sm={5} style={{ marginTop: 15 }}></Grid>
+          <Grid xs={12} md={4} lg={4} sm={4} item>
+            <Typography className={classes.language}>
+              Signout from All devices
+            </Typography>
           </Grid>
           <Grid xs={12} md={3} lg={3} sm={3}>
-          <Button
-                variant="contained"
-                color="primary"
-                style={{ paddingLeft: "20px", paddingRight: "20px" }}
-              >
-                Sign out now
-              </Button>
-              </Grid>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ paddingLeft: "20px", paddingRight: "20px" }}
+            >
+              Sign out now
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 }

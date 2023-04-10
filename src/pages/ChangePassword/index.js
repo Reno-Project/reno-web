@@ -57,7 +57,13 @@ export default function ChangePassword() {
   }
 
   return (
-    <>
+    <Grid
+      container
+      padding={"20px 0"}
+      wrap={"wrap"}
+      gap={2}
+      justifyContent={"center"}
+    >
       <Grid item xs={12}>
         <Typography variant="h5">Change Password</Typography>
         <Typography>
@@ -176,6 +182,6 @@ export default function ChangePassword() {
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 }

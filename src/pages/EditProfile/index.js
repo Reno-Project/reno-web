@@ -325,7 +325,13 @@ export default function EditProfile() {
     }
   }
   return (
-    <>
+    <Grid
+      container
+      padding={"20px 0"}
+      wrap={"nowrap"}
+      gap={2}
+      justifyContent={"center"}
+    >
       <Grid
         item
         xs={5}
@@ -1306,6 +1312,6 @@ export default function EditProfile() {
           </Grid>
         </Grid>
       ) : null}
-    </>
+    </Grid>
   );
 }

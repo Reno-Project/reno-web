@@ -47,19 +47,11 @@ export default function AccountSettings() {
               <Tab className={classes.tabBtn} label="Security" />
             </Tabs>
           </Grid>
-          <Grid
-            container
-            padding={"20px 0"}
-            wrap={tabValue === 3 ? "wrap" : "nowrap"}
-            gap={2}
-            justifyContent={"center"}
-          >
-            {tabValue === 0 ? <EditProfile /> : null}
-            {tabValue === 1 ? <Billing /> : null}
-            {tabValue === 2 ? <NotificationSettings /> : null}
-            {tabValue === 3 ? <ChangePassword /> : null}
-            {tabValue === 4 ? <Security /> : null}
-          </Grid>
+          {tabValue === 0 ? <EditProfile /> : null}
+          {tabValue === 1 ? <Billing /> : null}
+          {tabValue === 2 ? <NotificationSettings /> : null}
+          {tabValue === 3 ? <ChangePassword /> : null}
+          {tabValue === 4 ? <Security /> : null}
         </Grid>
       </Grid>
 

@@ -81,7 +81,13 @@ export default function NotificationSettings() {
     { id: 3, label: "Account related", value: "false" },
   ];
   return (
-    <>
+    <Grid
+      container
+      padding={"20px 0"}
+      wrap={"nowrap"}
+      gap={2}
+      justifyContent={"center"}
+    >
       <Grid item xs={12}>
         <Typography variant="h5">Notifications Settings</Typography>
         <Typography>
@@ -165,6 +171,6 @@ export default function NotificationSettings() {
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 }
