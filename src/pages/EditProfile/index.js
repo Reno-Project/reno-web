@@ -328,13 +328,13 @@ export default function EditProfile() {
     <Grid
       container
       padding={"20px 0"}
-      wrap={"nowrap"}
+      wrap={isMobile ? "wrap" : "nowrap"}
       gap={2}
       justifyContent={"center"}
     >
       <Grid
         item
-        xs={5}
+        xs={isMobile ? 12 : 5}
         sm={4}
         md={4}
         lg={4}
@@ -633,7 +633,7 @@ export default function EditProfile() {
       {active === 1 ? (
         <Grid
           item
-          xs={7}
+          xs={12}
           sm={8}
           md={8}
           lg={8}
@@ -645,7 +645,7 @@ export default function EditProfile() {
             container
             style={{
               border: "1px solid #F2F4F7",
-              padding: 20,
+              padding: isMobile ? 10 : 20,
               marginTop: 20,
             }}
           >
@@ -881,7 +881,7 @@ export default function EditProfile() {
       {active === 2 ? (
         <Grid
           item
-          xs={7}
+          xs={12}
           sm={8}
           md={8}
           lg={8}
@@ -893,7 +893,7 @@ export default function EditProfile() {
             container
             style={{
               border: "1px solid #F2F4F7",
-              padding: 20,
+              padding: isMobile ? 10 : 20,
               marginTop: 20,
             }}
           >
@@ -990,7 +990,7 @@ export default function EditProfile() {
       {active === 3 ? (
         <Grid
           item
-          xs={7}
+          xs={12}
           sm={8}
           md={8}
           lg={8}
@@ -1002,7 +1002,7 @@ export default function EditProfile() {
             container
             style={{
               border: "1px solid #F2F4F7",
-              padding: 20,
+              padding: isMobile ? 10 : 20,
               marginTop: 20,
             }}
           >
@@ -1133,7 +1133,7 @@ export default function EditProfile() {
       {active === 4 ? (
         <Grid
           item
-          xs={7}
+          xs={12}
           sm={8}
           md={8}
           lg={8}
@@ -1145,7 +1145,7 @@ export default function EditProfile() {
             container
             style={{
               border: "1px solid #F2F4F7",
-              padding: 20,
+              padding: isMobile ? 10 : 20,
               marginTop: 20,
             }}
           >
