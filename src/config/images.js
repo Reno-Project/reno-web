@@ -24,6 +24,8 @@ const Images = {
   globe:"/assets/images/globe.png",
   laptop:"/assets/images/laptop.png",
   Phone:"/assets/images/Phone.png",
+  Linkedin1:"/assets/images/linkedin.png",
+  Fb1:"/assets/images/facebook.png"
 
 };
 

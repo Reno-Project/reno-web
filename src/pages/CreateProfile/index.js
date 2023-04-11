@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import {
   Facebook,
-  LinkedIn,
   CreateOutlined,
   AttachFileOutlined,
   ImageOutlined,
@@ -19,6 +18,7 @@ import {
   Image,
   Instagram,
 } from "@mui/icons-material";
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import _, { isArray, isEmpty, isString } from "lodash";
 import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -32,7 +32,7 @@ import { Setting } from "../../utils/Setting";
 import PlaceAutoComplete from "../../components/PlaceAutoComplete";
 import useStyles from "./styles";
 import ProfileSuccessModal from "../../components/ProfileSuccessModal";
-
+import Images from "../../config/images";
 const errorObj = {
   cnameErr: false,
   cnameMsg: "",
@@ -704,7 +704,7 @@ const CreateProfile = (props) => {
                   )}
                   <div className={classes.buttonAbsoluteDiv}>
                     <Button component="label" className={classes.uploadIcon}>
-                      <CreateOutlined
+                      <CreateOutlined 
                         style={{ fontSize: "16px", color: "#FFF" }}
                       />
                       <input
@@ -1107,9 +1107,16 @@ const CreateProfile = (props) => {
                     placeholder="Enter link..."
                     style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
                     InputProps={{
+                      style: { paddingLeft:'0px' },
                       startAdornment: (
                         <InputAdornment position="start">
-                          <LinkedIn />
+                          {/* <LinkedInIcon/> */}
+                          <img
+                            src={Images.Linkedin1}
+                            alt="Linkedin"
+                            style={{backgroundColor:'#F5F6F8',padding:15}}
+                            // className={classes.imgStyleLanguage}
+                          />
                         </InputAdornment>
                       ),
                     }}
@@ -1134,11 +1141,17 @@ const CreateProfile = (props) => {
                   <TextField
                     fullWidth
                     placeholder="Enter link..."
-                    style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
+                    style={{ marginBottom: 20, backgroundColor: "#F5F6F8"}}
                     InputProps={{
+                      style: { paddingLeft:'0px' },
                       startAdornment: (
-                        <InputAdornment position="start">
-                          <Facebook />
+                        <InputAdornment position="start" >
+                            <img
+                            src={Images.Fb1}
+                            alt="facebook"
+                            style={{backgroundColor:'#F5F6F8',padding:15}}
+                            // className={classes.imgStyleLanguage}
+                          />
                         </InputAdornment>
                       ),
                     }}
@@ -1196,6 +1209,12 @@ const CreateProfile = (props) => {
                       "Continue"
                     )}
                   </Button>
+                  
+                </Grid>
+                
+                <Grid item xs={10} justifyContent={'center'} container> 
+                <Typography style={{textAlign:'center',color:'#646F86'}}>Already have an account, </Typography> 
+                 <Typography style={{fontWeight:"bold",color:'#030F1C'}}>Login now?</Typography>
                 </Grid>
 
                 {/* <Grid
@@ -1265,6 +1284,7 @@ const CreateProfile = (props) => {
                     </div>
                     <input
                       type="file"
+                      multiple
                       accept="image/jpeg, image/png, image/jpg"
                       style={{
                         position: "absolute",
@@ -1273,11 +1293,18 @@ const CreateProfile = (props) => {
                         right: 0,
                         bottom: 0,
                         opacity: 0,
-                      }}
-                      onChange={(e) => {
+                      }} 
+                      onChange={(e) => {      
+                         const chosenFiles = Array.prototype.slice.call(e.target.files);
+                        // console.log("chosenFiles", chosenFiles);
                         const nArr = [...state.portfolio];
-                        nArr.push(e.target.files[0]);
-                        setState({ ...state, portfolio: nArr });
+                        chosenFiles.map((item,index) =>
+                        {
+                          nArr.push(item);
+                          
+                        })
+                        //  nArr.push(e.target.files[0]);  
+                          setState({ ...state, portfolio: nArr });
                       }}
                     />
                   </Grid>
@@ -1307,6 +1334,7 @@ const CreateProfile = (props) => {
                                 borderRadius: 6,
                                 marginRight: 20,
                               }}
+                             
                               src={imgUrl}
                               alt="Portfolio Photos"
                             />

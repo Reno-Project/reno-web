@@ -209,13 +209,13 @@ const ResetPassword = (props) => {
   }
 
   return (
-    <div>
+    <div style={{ overflow:"scroll"}}>
       <Grid
         container
         alignItems="center"
         justifyContent="center"
         flexDirection="column"
-        style={{ paddingTop: 40 }}
+        style={{ paddingTop: 40}}
       >
         <Grid item xs={12} marginTop="30px">
           <Typography className={classes.welcomeTextStyle}>
@@ -322,6 +322,7 @@ const ResetPassword = (props) => {
             gap={2}
             wrap="nowrap"
             marginTop={5}
+            marginBottom={5}
             justifyContent="space-between"
           >
             <Grid item xs={6}>

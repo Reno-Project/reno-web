@@ -81,6 +81,16 @@ function Header(props) {
               className={classes.imgStyle}
             />
           </div>
+          {currentUrl?.includes("signup") ||
+            currentUrl?.includes("login") ?
+            <Grid item style={{paddingLeft:30}} >
+              <NavLink to="" className={classes.linkStyle}>
+                <Typography className={classes.menuTitleStyle}>
+                  How it works?
+                </Typography>
+              </NavLink>
+            </Grid> : null
+          }
         </Grid>
         <Grid
           item
@@ -91,8 +101,8 @@ function Header(props) {
           className={classes.rightContainer}
         >
           {currentUrl?.includes("signup") ||
-          currentUrl?.includes("login") ||
-          !isEmpty(token) ? null : (
+            currentUrl?.includes("login") ||
+            !isEmpty(token) ? null : (
             <Grid item className={classes.PR25}>
               <NavLink to="" className={classes.linkStyle}>
                 <Typography className={classes.menuTitleStyle}>
@@ -101,6 +111,8 @@ function Header(props) {
               </NavLink>
             </Grid>
           )}
+
+         
           <Grid item className={classes.rightLogoContainer} columnGap={1}>
             {token !== "" ? (
               <>
@@ -190,7 +202,15 @@ function Header(props) {
                   </>
                 )}
               </>
-            ) : currentUrl.includes("login") ? null : (
+            ) : currentUrl.includes("login") ? <NavLink to="/login" className={classes.linkStyle}>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ paddingLeft: "35px", paddingRight: "35px" }}
+              >
+                Login
+              </Button>
+            </NavLink> : (
               <NavLink to="/login" className={classes.linkStyle}>
                 <Button
                   variant="contained"

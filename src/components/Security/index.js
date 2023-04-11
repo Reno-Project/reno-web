@@ -83,9 +83,7 @@ export default function Security() {
       <Grid item lg={4}></Grid>
       <Grid item xs={12} sm={12} md={12} lg={9}>
         <Typography variant="h5">Logging in Settings</Typography>
-        <Typography className={classes.language}>
-          Lorem Ipsum has been the industry's standard dummy text ever since.
-        </Typography>
+        <Typography className={classes.language}>Lorem Ipsum has been the industry's standard dummy text ever since.</Typography>
 
         <Grid
           item
@@ -96,15 +94,13 @@ export default function Security() {
             marginTop: 20,
           }}
           alignItems="center"
-          justifyContent={"flex-end"}
+          justifyContent={'flex-end'}
         >
-          <Grid item xs={9.5}>
-            <Typography className={classes.TextStyle}>
-              Allow Login attempts
-            </Typography>
+          <Grid item xs={12} sm={12} md={9} lg={9} >
+            <Typography className={classes.TextStyle}>Allow Login attempts</Typography>
           </Grid>
 
-          <Grid item xs={2.5}>
+          <Grid item xs={12} sm={12} md={3} lg={3}>
             <CInput
               outline
               placeholder="Enter Allow ..."
@@ -112,53 +108,38 @@ export default function Security() {
               type="number"
               controls={false}
               inputProps={{
-                className: classes.myOtpInput,
+                className: classes.myOtpInput
               }}
             />
           </Grid>
-          <Divider width={"100%"} />
+          <Divider width={'100%'} />
           <Grid item container style={{ marginBottom: 15 }}>
-            <Grid
-              item
-              xs={12}
-              md={12}
-              sm={12}
-              lg={9.5}
-              style={{ marginTop: 20 }}
-            >
-              <Typography className={classes.TextStyle}>
-                Phone Verifications
-              </Typography>
-              <Typography className={classes.language}>
-                Your phone is not verified with Reno. Click Verify Now to
-                complete phone verification
-              </Typography>
+            <Grid item xs={12} md={9} sm={12} lg={9} style={{ marginTop: 20 }}>
+              <Typography className={classes.TextStyle}>Phone Verifications</Typography>
+              <Typography className={classes.language}>Your phone is not verified with Reno. Click Verify Now
+                to complete phone verification</Typography>
             </Grid>
 
-            <Grid item xs={2.5} style={{ marginTop: 20 }}>
+            <Grid item xs={12} sm={12} md={12} lg={3} style={{ marginTop: 20 }}>
               <Button
                 variant="contained"
                 color="primary"
-                style={{ paddingLeft: "20px", paddingRight: "20px" }}
+                style={{ paddingLeft: "20px", paddingRight: "20px", width: '100%' }}
               >
                 Verify now
               </Button>
             </Grid>
           </Grid>
-          <Divider width={"100%"} />
+          <Divider width={'100%'} />
           <Grid item container>
-            <Grid item xs={12} md={12} sm={12} lg={9} style={{ marginTop: 20 }}>
-              <Typography className={classes.TextStyle}>
-                Two factors authentications
-              </Typography>
-              <Typography className={classes.language}>
-                We will send an authentication code via SMS, email or fiverr
-                notification when using an unrecognised device.
-              </Typography>
+            <Grid item xs={12} md={7} sm={12} lg={9} style={{ marginTop: 20 }}>
+              <Typography className={classes.TextStyle} >Two factors authentications</Typography>
+              <Typography className={classes.language} >We will send an authentication code via SMS, email or fiverr notification
+                when using an unrecognised device.</Typography>
             </Grid>
-            <Grid xs={12} md={12} sm={12} lg={2}></Grid>
-            <Grid item xs={12} sm={12} md={1} lg={1} style={{ marginTop: 10 }}>
-              <IOSSwitch sx={{ m: 1 }} defaultChecked />
+            <Grid xs={12} md={3} sm={12} lg={2}></Grid>
+            <Grid item xs={12} sm={12} md={2} lg={1} style={{ marginTop: 20 }} justifyContent={'flex-end'}>
+              <IOSSwitch sx={{ m: 0 }} defaultChecked />
             </Grid>
           </Grid>
         </Grid>
@@ -171,69 +152,58 @@ export default function Security() {
             marginTop: 20,
           }}
           alignItems="center"
-          justifyContent={"flex-end"}
+          justifyContent={'flex-end'}
         >
           <Grid item xs={12}>
             <Typography variant="h5">Connected Devices</Typography>
-            <Typography className={classes.language}>
-              Lorem Ipsum has been the industry's standard dummy text ever
-              since.
-            </Typography>
+            <Typography className={classes.language}>Lorem Ipsum has been the industry's standard dummy text ever since.</Typography>
           </Grid>
-          <Grid item lg={1} md={1} xs={12} sm={12}>
-            <img
-              src={Images.laptop}
-              alt="laptop"
-              className={classes.imgStyle}
-            />
-          </Grid>
-          <Grid
-            xs={12}
-            md={10}
-            lg={10}
-            sm={10}
-            item
-            container
-            style={{ marginTop: 15 }}
+          <Grid container
+            style={{ marginTop: 10, marginBottom: 10 }}
           >
-            <Typography className={classes.TextStyle}>
-              Chrome 109, Windows{" "}
-            </Typography>
-            <Typography className={classes.TextDeviceStyle}>
-              THIS DEVICE
-            </Typography>
-            <Typography className={classes.language}>
-              Last Activity 13 minutes ago • Dubai, United Arab Emirates
-            </Typography>
+            <Grid item lg={1} md={1} xs={1} sm={1} style={{ marginTop: 10, justifyContent: 'center', display: 'flex' }}>
+              <img
+                src={Images.laptop}
+                alt="laptop"
+                className={classes.imgStyle}
+              />
+            </Grid>
+            <Grid xs={10} md={10} lg={9} sm={10} item container >
+              <Typography className={classes.TextStyle}>Chrome 109, Windows </Typography>
+              <Typography className={classes.TextDeviceStyle}>THIS DEVICE</Typography>
+              <Typography className={classes.language}>Last Activity 13 minutes ago • Dubai, United Arab Emirates</Typography>
+            </Grid>
+            <Grid lg={2} md={12} xs={12} sm={12} style={{ marginTop: 5 }}><Typography className={classes.TextStyle}>signout </Typography></Grid>
           </Grid>
-          <Grid lg={1} md={1} xs={12} sm={12}>
-            <Typography className={classes.TextStyle}>signout </Typography>
+          <Grid container
+            style={{ marginTop: 10, marginBottom: 10 }}
+          >
+            <Grid item lg={1} md={1} xs={1} sm={1} style={{ marginTop: 10, justifyContent: 'center', display: 'flex' }}>
+              <img
+                src={Images.Phone}
+                alt="Phone"
+                className={classes.imgStyle}
+              />
+            </Grid>
+
+            <Grid xs={10} md={10} lg={9} sm={10} item >
+              <Typography className={classes.TextStyle}>iPhone, iOS App  </Typography>
+              <Typography className={classes.language}>Last Activity 1 hour ago • Cairo, Egypt</Typography>
+            </Grid>
+            <Grid lg={2} md={12} xs={12} sm={12} style={{ marginTop: 5 }} ><Typography className={classes.TextStyle}>signout </Typography></Grid>
           </Grid>
-          <Grid item lg={1} md={1} xs={12} sm={12}>
-            <img src={Images.Phone} alt="Phone" className={classes.imgStyle} />
+          <Divider width={'100%'} />
+          <Grid xs={12} md={5} lg={5} sm={5} style={{ marginTop: 15 }}>
           </Grid>
-          <Grid xs={12} md={10} lg={10} sm={10} item style={{ marginTop: 10 }}>
-            <Typography className={classes.TextStyle}>
-              iPhone, iOS App{" "}
-            </Typography>
-            <Typography className={classes.language}>
-              Last Activity 1 hour ago • Cairo, Egypt
-            </Typography>
+          <Grid xs={12} md={12} lg={12} xl={4} sm={12} item style={{ marginTop: 15 }} >
+            <Typography className={classes.language}>Signout  from All devices</Typography>
           </Grid>
-          <Grid lg={1} md={1} xs={12} sm={12}>
-            <Typography className={classes.TextStyle}>signout </Typography>
-          </Grid>
-          <Grid xs={12} md={5} lg={5} sm={5} style={{ marginTop: 15 }}></Grid>
-          <Grid xs={12} md={4} lg={4} sm={4} item>
-            <Typography className={classes.language}>
-              Signout from All devices
-            </Typography>
-          </Grid>
-          <Grid xs={12} md={3} lg={3} sm={3}>
+          <Grid xs={12} md={12} lg={12} xl={3} sm={12} style={{ marginTop: 15 }}>
             <Button
               variant="contained"
               color="primary"
-              style={{ paddingLeft: "20px", paddingRight: "20px" }}
+              style={{ paddingLeft: "10px", paddingRight: "10px" }}
+
             >
               Sign out now
             </Button>

@@ -20,7 +20,7 @@ const Select = styled(Autocomplete)(({ theme }) => ({
         "background-color",
         "box-shadow",
       ]),
-      boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
+      // boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
       borderColor: theme.palette.primary.main,
     },
     "& .MuiAutocomplete-input": {
