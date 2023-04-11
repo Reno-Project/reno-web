@@ -24,6 +24,7 @@ import "./App.css";
 import ContractorProfile from "./pages/ContractorProfile";
 import AccountSettings from "./pages/AccountSettings";
 import { Box, Grid } from "@mui/material";
+import Notifications from "./pages/Notifications";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
@@ -79,6 +80,10 @@ function App() {
                     <Route
                       path={"/account-setting"}
                       element={<AccountSettings />}
+                    />
+                    <Route
+                      path={"/notifications"}
+                      element={<Notifications />}
                     />
                     <Route exact path={"/"} element={<HowItWorks />} />
                     <Route

@@ -3,8 +3,7 @@ import { isMobile } from "react-device-detect";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    marginBottom: "400px",
-    paddingBottom: 100,
+    padding: "100px 0",
     justifyContent: "space-evenly",
   },
   subContainer: {

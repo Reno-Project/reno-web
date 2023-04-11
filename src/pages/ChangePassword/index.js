@@ -1,6 +1,7 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
+  CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
@@ -10,6 +11,10 @@ import { isEmpty } from "lodash";
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
 import CInput from "../../components/CInput";
+import { getAPIProgressData } from "../../utils/APIHelper";
+import { Setting } from "../../utils/Setting";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const errorObj = {
   oldPasswordErr: false,
@@ -28,6 +33,8 @@ export default function ChangePassword() {
   const [newPassword, setNewPassword] = useState("");
   const [password, setPassword] = useState("");
   const [errObj, setErrObj] = useState(errorObj);
+  const [buttonLoader, setButtonLoader] = useState(false);
+  const { token } = useSelector((state) => state.auth);
 
   function validatePassword() {
     const error = { ...errObj };
@@ -35,11 +42,17 @@ export default function ChangePassword() {
     const passwordRegex =
       /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%^&*])((?=.*[A-Z])))(?=.{8,})/;
 
+    if (isEmpty(oldPassword)) {
+      valid = false;
+      error.oldPasswordErr = true;
+      error.oldPasswordMsg = "Please enter old password";
+    }
+
     if (isEmpty(newPassword)) {
       valid = false;
       error.newPasswordErr = true;
       error.newPasswordMsg = "Please enter password";
-    } else if (password.length < 8) {
+    } else if (newPassword.length < 8) {
       valid = false;
       error.newPasswordErr = true;
       error.newPasswordMsg = "Password length must be of 8-15";
@@ -48,11 +61,60 @@ export default function ChangePassword() {
       error.newPasswordErr = true;
       error.newPasswordMsg =
         "Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol";
+    } else if (newPassword !== password) {
+      valid = false;
+      error.newPasswordErr = true;
+      error.newPasswordMsg = "New password and confirm password must be same";
+    }
+
+    if (isEmpty(password)) {
+      valid = false;
+      error.passwordErr = true;
+      error.passwordMsg = "Please enter confirm password";
+    } else if (!passwordRegex.test(password)) {
+      valid = false;
+      error.passwordErr = true;
+      error.passwordMsg =
+        "Confirm Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol";
+    } else if (password.length < 8) {
+      valid = false;
+      error.passwordErr = true;
+      error.passwordMsg = "Confirm password length must be of 8-15";
+    } else if (password !== newPassword) {
+      valid = false;
+      error.passwordErr = true;
+      error.passwordMsg = "New password and confirm password must be same";
     }
 
     setErrObj(error);
     if (valid) {
-      ////
+      // updatepassword();
+    }
+  }
+
+  async function updatepassword() {
+    setButtonLoader(true);
+    try {
+      const response = await getAPIProgressData(
+        Setting.endpoints.updatepassword,
+        "POST",
+        {
+          old_password: oldPassword,
+          new_password: password,
+        },
+        { Authorization: `Bearer ${token}` }
+      );
+
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+      setButtonLoader(false);
+    } catch (error) {
+      console.log("error=====>>>>>", error);
+      toast.error(error.toString());
+      setButtonLoader(false);
     }
   }
 
@@ -66,9 +128,6 @@ export default function ChangePassword() {
     >
       <Grid item xs={12}>
         <Typography variant="h5">Change Password</Typography>
-        <Typography>
-          Lorem Ipsum has been the industry's standard dummy text ever since.
-        </Typography>
       </Grid>
       <Grid
         item
@@ -84,7 +143,6 @@ export default function ChangePassword() {
           style={{
             border: "1px solid #F2F4F7",
             padding: isMobile ? 10 : 20,
-            marginTop: 20,
           }}
         >
           <Grid item xs={12}>
@@ -177,7 +235,11 @@ export default function ChangePassword() {
           </Grid>
           <Grid item xs={12}>
             <Button fullWidth variant="contained" onClick={validatePassword}>
-              Update Password
+              {buttonLoader ? (
+                <CircularProgress size={26} style={{ color: "#fff" }} />
+              ) : (
+                "Update Password"
+              )}
             </Button>
           </Grid>
         </Grid>

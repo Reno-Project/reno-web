@@ -17,7 +17,7 @@ export default function AccountSettings() {
 
   return (
     <>
-      <Grid container xs={12} sm={9} md={8} lg={6} marginBottom="1px">
+      <Grid container xs={12} sm={9} md={8} lg={6}>
         <Grid item xs={12}>
           <Typography
             variant="h4"
@@ -40,11 +40,11 @@ export default function AccountSettings() {
               }}
               variant="scrollable"
             >
-              <Tab className={classes.tabBtn} label="Edit Profile" />
-              <Tab className={classes.tabBtn} label="Billing" />
-              <Tab className={classes.tabBtn} label="Notifications" />
-              <Tab className={classes.tabBtn} label="Change password" />
-              <Tab className={classes.tabBtn} label="Security" />
+              <Tab label="Edit Profile" />
+              <Tab label="Billing" />
+              <Tab label="Notifications" />
+              <Tab label="Change password" />
+              <Tab label="Security" />
             </Tabs>
           </Grid>
           {tabValue === 0 ? <EditProfile /> : null}
