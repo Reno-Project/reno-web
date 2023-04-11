@@ -81,16 +81,15 @@ function Header(props) {
               className={classes.imgStyle}
             />
           </div>
-          {currentUrl?.includes("signup") ||
-            currentUrl?.includes("login") ?
-            <Grid item style={{paddingLeft:30}} >
+          {currentUrl?.includes("signup") || currentUrl?.includes("login") ? (
+            <Grid item style={{ paddingLeft: 30 }}>
               <NavLink to="" className={classes.linkStyle}>
                 <Typography className={classes.menuTitleStyle}>
                   How it works?
                 </Typography>
               </NavLink>
-            </Grid> : null
-          }
+            </Grid>
+          ) : null}
         </Grid>
         <Grid
           item
@@ -101,8 +100,8 @@ function Header(props) {
           className={classes.rightContainer}
         >
           {currentUrl?.includes("signup") ||
-            currentUrl?.includes("login") ||
-            !isEmpty(token) ? null : (
+          currentUrl?.includes("login") ||
+          !isEmpty(token) ? null : (
             <Grid item className={classes.PR25}>
               <NavLink to="" className={classes.linkStyle}>
                 <Typography className={classes.menuTitleStyle}>
@@ -112,7 +111,6 @@ function Header(props) {
             </Grid>
           )}
 
-         
           <Grid item className={classes.rightLogoContainer} columnGap={1}>
             {token !== "" ? (
               <>
@@ -145,7 +143,7 @@ function Header(props) {
                       </>
                     )}
                     <Grid item>
-                      <IconButton>
+                      <IconButton onClick={() => navigate("/notifications")}>
                         <img src={Images.BellSimple} alt="notification" />
                       </IconButton>
                     </Grid>
@@ -202,15 +200,17 @@ function Header(props) {
                   </>
                 )}
               </>
-            ) : currentUrl.includes("login") ? <NavLink to="/login" className={classes.linkStyle}>
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ paddingLeft: "35px", paddingRight: "35px" }}
-              >
-                Login
-              </Button>
-            </NavLink> : (
+            ) : currentUrl.includes("login") ? (
+              <NavLink to="/login" className={classes.linkStyle}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ paddingLeft: "35px", paddingRight: "35px" }}
+                >
+                  Login
+                </Button>
+              </NavLink>
+            ) : (
               <NavLink to="/login" className={classes.linkStyle}>
                 <Button
                   variant="contained"

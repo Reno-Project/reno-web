@@ -90,9 +90,6 @@ export default function NotificationSettings() {
     >
       <Grid item xs={12}>
         <Typography variant="h5">Notifications Settings</Typography>
-        <Typography>
-          Lorem Ipsum has been the industry's standard dummy text ever since.
-        </Typography>
         <Grid
           item
           container
