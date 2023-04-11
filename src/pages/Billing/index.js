@@ -1,17 +1,14 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, CircularProgress, Grid, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import React, { useState } from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
+import { getApiData } from "../../utils/APIHelper";
+import { Setting } from "../../utils/Setting";
+import { toast } from "react-toastify";
 
 const errorObj = {
-  bnameErr: false,
-  bnameMsg: "",
-  emailErr: false,
-  emailMsg: "",
-  addErr: false,
-  addMsg: "",
   beneficiaryErr: false,
   beneficiaryMsg: "",
   ibanErr: false,
@@ -27,11 +24,9 @@ const errorObj = {
 };
 
 export default function Billing() {
+  const [buttonLoader, setButtonLoader] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);
   const [state, setState] = useState({
-    bname: "",
-    address: "",
-    email: "",
     beneficiary: "",
     iban: "",
     bank: "",
@@ -47,38 +42,7 @@ export default function Billing() {
     let valid = true;
     let scroll = false;
     let section = null;
-    const emailRegex =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (isEmpty(state.bname)) {
-      valid = false;
-      error.bnameErr = true;
-      error.bnameMsg = "Please Enter Billing Name";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#bname");
-      }
-    }
-
-    if (isEmpty(state.address)) {
-      valid = false;
-      error.addErr = true;
-      error.addMsg = "Please Enter Address";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#Address");
-      }
-    }
-
-    if (isEmpty(state.email)) {
-      valid = false;
-      error.emailErr = true;
-      error.emailMsg = "Please enter email";
-    } else if (!emailRegex.test(state.email)) {
-      valid = false;
-      error.emailErr = true;
-      error.emailMsg = "Please enter valid email";
-    }
     if (isEmpty(state.beneficiary)) {
       valid = false;
       error.beneficiaryErr = true;
@@ -145,8 +109,38 @@ export default function Billing() {
     setErrObj(error);
 
     if (valid) {
-      console.log("proceed");
-      // addBillingInfoApiCall();
+      addBillingInfoApiCall();
+    }
+  }
+
+  async function addBillingInfoApiCall() {
+    try {
+      setButtonLoader(true);
+      const data = {
+        beneficiary_name: state.beneficiary,
+        iban: state.iban,
+        bank_name: state.bank,
+        bank_account: state.acc,
+        swift_code: state.swift,
+        Address: state.bankAddress,
+      };
+
+      const response = await getApiData(
+        Setting.endpoints.addBillingInfo,
+        "POST",
+        data
+      );
+
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+      setButtonLoader(false);
+    } catch (error) {
+      setButtonLoader(false);
+      console.log("🚀 ~ file: index.js:63 ~ connect api call ~ error:", error);
+      toast.error(error.toString());
     }
   }
 
@@ -162,79 +156,6 @@ export default function Billing() {
       <Grid item container xs={12} lg={8} justifyContent="flex-end">
         <Grid item padding={isMobile ? "10px 0" : "10px 20px"}>
           <Typography variant="h5">Billing information</Typography>
-          <Typography>
-            Lorem Ipsum has been the industry's standard dummy text ever since.
-          </Typography>
-          <Grid
-            item
-            container
-            style={{
-              border: "1px solid #F2F4F7",
-              padding: isMobile ? 10 : 20,
-              marginTop: 20,
-            }}
-          >
-            <Grid item xs={12} id="bname">
-              <CInput
-                label="Billing Name"
-                placeholder="Enter Billing Name..."
-                value={state.bname}
-                onChange={(e) => {
-                  setState({ ...state, bname: e.target.value });
-                  setErrObj({
-                    ...errObj,
-                    bnameErr: false,
-                    bnameMsg: "",
-                  });
-                }}
-                error={errObj.bnameErr}
-                helpertext={errObj.bnameMsg}
-              />
-            </Grid>
-
-            <Grid item xs={12} id="Address">
-              <CInput
-                multiline
-                label="Address"
-                placeholder="Enter Address"
-                value={state.address}
-                onChange={(e) => {
-                  setState({ ...state, address: e.target.value });
-                  setErrObj({
-                    ...errObj,
-                    addErr: false,
-                    addMsg: "",
-                  });
-                }}
-                error={errObj.addErr}
-                helpertext={errObj.addMsg}
-              />
-            </Grid>
-
-            <Grid item xs={12} id="email">
-              <CInput
-                label="Email"
-                placeholder="Enter Email Here..."
-                value={state.website}
-                onChange={(e) => {
-                  setState({ ...state, email: e.target.value });
-                  setErrObj({
-                    ...errObj,
-                    emailErr: false,
-                    emailMsg: "",
-                  });
-                }}
-                error={errObj.emailErr}
-                helpertext={errObj.emailMsg}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid itempadding={isMobile ? "10px 0" : "10px 20px"}>
-          <Typography variant="h5">Payment info</Typography>
-          <Typography>
-            Lorem Ipsum has been the industry's standard dummy text ever since.
-          </Typography>
           <Grid
             item
             container
@@ -371,7 +292,11 @@ export default function Billing() {
               variant="contained"
               onClick={validation}
             >
-              Save Changes
+              {buttonLoader ? (
+                <CircularProgress size={26} style={{ color: "#fff" }} />
+              ) : (
+                "Save Changes"
+              )}
             </Button>
           </Grid>
         </Grid>
