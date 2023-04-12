@@ -47,6 +47,7 @@ function Header(props) {
   // this function for logout
   function logout() {
     dispatch(clearAllData());
+    handleClose();
     setTimeout(() => {
       navigate("/login");
     }, 500);
@@ -179,6 +180,7 @@ function Header(props) {
                     <>
                       <MenuItem
                         onClick={() => {
+                          handleClose();
                           navigate("/contractor-profile");
                         }}
                         className={classes.logoutTextStyle}
@@ -187,6 +189,8 @@ function Header(props) {
                       </MenuItem>
                       <MenuItem
                         onClick={() => {
+                          handleClose();
+
                           navigate("/account-setting");
                         }}
                         className={classes.logoutTextStyle}
