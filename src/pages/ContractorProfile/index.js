@@ -4,7 +4,9 @@ import {
   Button,
   CircularProgress,
   Divider,
+  Fade,
   Grid,
+  Grow,
   IconButton,
   InputAdornment,
   MenuItem,
@@ -35,6 +37,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { color } from "../../config/theme";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
+import BlueAbout from "../../components/BlueAbout";
 const reviews = [
   {
     id: 1,
@@ -136,7 +139,6 @@ const expertiseArea = [
 const ContractorProfile = (props) => {
   const classes = useStyles();
   const { userData } = useSelector((state) => state.auth);
-  console.log("userData====>>>>>", userData);
   const navigate = useNavigate();
   const portfolioList = cloneDeep(userData?.contractor_data?.portfolio) || [];
   const [RList, setRList] = useState(cloneDeep(reviews));
@@ -176,6 +178,19 @@ const ContractorProfile = (props) => {
       setRList(dummyArr);
     });
   };
+
+  const handleShare = async () => {
+    // try {
+    //   await navigator.share({
+    //     title: "Share Contractor Profile",
+    //     url: userData?.profile_url,
+    //   });
+    //   console.log("Content shared successfully!");
+    // } catch (error) {
+    //   console.error("Error sharing content:", error);
+    // }
+  };
+
   return (
     <div className={classes.main}>
       <Grid item>
@@ -185,8 +200,9 @@ const ContractorProfile = (props) => {
         container
         style={{
           maxWidth: 1200,
-          padding: sm ? "0px 20px" : "0px 40px",
+          padding: sm ? "20px 20px " : "20px 40px 50px",
           flexGrow: 1,
+          boxSizing: "border-box",
         }}
       >
         <Grid item container sm={6}>
@@ -253,15 +269,33 @@ const ContractorProfile = (props) => {
                 justifyContent: sm ? "flex-start" : "flex-end",
               }}
             >
-              <div className={classes.btnStyle}>
+              <Button
+                variant="outlined"
+                className={classes.btnStyle}
+                onClick={handleShare}
+              >
                 <img src={Images.share} alt="share" />
-              </div>
-              <div className={classes.btnStyle} style={{ margin: "0px 10px" }}>
+              </Button>
+              <Button
+                variant="outlined"
+                className={classes.btnStyle}
+                style={{ margin: "0px 10px" }}
+                onClick={() => {
+                  navigator.clipboard.writeText(userData?.profile_url);
+                  toast.success("Coppied!", { toastId: 1 });
+                }}
+              >
                 <img src={Images.copy} alt="copy" />
-              </div>
-              <div className={classes.btnStyle}>
+              </Button>
+              <Button
+                variant="outlined"
+                className={classes.btnStyle}
+                onClick={() => {
+                  navigate("/account-setting");
+                }}
+              >
                 <Typography>Edit Profile</Typography>
-              </div>
+              </Button>
             </div>
           </Grid>
         </Grid>
@@ -365,42 +399,46 @@ const ContractorProfile = (props) => {
               {isArray(displayedImages) && !isEmpty(displayedImages)
                 ? displayedImages.map((e, i) =>
                     !showAll && portfolioList.length > 5 && i === 4 ? (
-                      <Grid
-                        item
-                        sm={2.4}
-                        xs={4}
-                        padding={1}
-                        className={classes.imgContainer}
-                        onClick={() => {
-                          setShowAll(true);
-                        }}
-                      >
-                        <img
-                          src={e}
-                          alt={`img_${i}`}
-                          className={classes.portfolioImg}
-                        />
-                        <div className={classes.overlay}>
-                          <Typography
-                            style={{
-                              color: "#fff",
-                              fontSize: 16,
-                              fontWeight: "bold",
-                              cursor: "pointer",
-                            }}
-                          >
-                            {`+${portfolioList.length - 4} more`}
-                          </Typography>
-                        </div>
-                      </Grid>
+                      <Fade in={true}>
+                        <Grid
+                          item
+                          sm={2.4}
+                          xs={4}
+                          padding={1}
+                          className={classes.imgContainer}
+                          onClick={() => {
+                            setShowAll(true);
+                          }}
+                        >
+                          <img
+                            src={e}
+                            alt={`img_${i}`}
+                            className={classes.portfolioImg}
+                          />
+                          <div className={classes.overlay}>
+                            <Typography
+                              style={{
+                                color: "#fff",
+                                fontSize: 16,
+                                fontWeight: "bold",
+                                cursor: "pointer",
+                              }}
+                            >
+                              {`+${portfolioList.length - 4} more`}
+                            </Typography>
+                          </div>
+                        </Grid>
+                      </Fade>
                     ) : (
-                      <Grid item sm={2.4} xs={4} padding={1}>
-                        <img
-                          src={e}
-                          alt={`img_${i}`}
-                          className={classes.portfolioImg}
-                        />
-                      </Grid>
+                      <Fade in={true}>
+                        <Grid item sm={2.4} xs={4} padding={1}>
+                          <img
+                            src={e}
+                            alt={`img_${i}`}
+                            className={classes.portfolioImg}
+                          />
+                        </Grid>
+                      </Fade>
                     )
                   )
                 : null}
@@ -484,7 +522,7 @@ const ContractorProfile = (props) => {
                       <Typography fontFamily={"Roobert-Regular !important"}>
                         {review.content}
                       </Typography>
-                      <Grid item container columnGap={2}>
+                      <Grid item container columnGap={2} rowGap={1}>
                         {isArray(review.images) &&
                           !isEmpty(review.images) &&
                           review.images.map((ele, ind) => {
@@ -504,7 +542,8 @@ const ContractorProfile = (props) => {
                       <div className={classes.separator} />
 
                       <Grid item container columnGap={1}>
-                        <span
+                        <Button
+                          variant="outlined"
                           className={classes.btnStyle}
                           onClick={() => {
                             len === activeInd
@@ -520,8 +559,9 @@ const ContractorProfile = (props) => {
                           >
                             Reply
                           </Typography>
-                        </span>
-                        <span
+                        </Button>
+                        <Button
+                          variant="outlined"
                           className={classes.btnStyle}
                           onClick={() => handleLikeBtn(len)}
                         >
@@ -534,7 +574,7 @@ const ContractorProfile = (props) => {
                           ) : (
                             <FavoriteBorder style={{ color: color.primary }} />
                           )}
-                        </span>
+                        </Button>
                       </Grid>
                       {activeInd === len ? (
                         <Grid item container alignItems={"center"}>
@@ -685,7 +725,7 @@ const ContractorProfile = (props) => {
                   <img
                     src={Images.Instagram}
                     style={{ marginRight: 8 }}
-                    alt="fbico"
+                    alt="instaico"
                   />
                   <Typography>Instagram</Typography>
                 </>
@@ -700,7 +740,7 @@ const ContractorProfile = (props) => {
                 }}
               >
                 <>
-                  <img src={Images.Yt} style={{ marginRight: 8 }} alt="fbico" />
+                  <img src={Images.Yt} style={{ marginRight: 8 }} alt="ytico" />
                   <Typography>Youtube</Typography>
                 </>
               </Grid>
@@ -720,7 +760,7 @@ const ContractorProfile = (props) => {
                   <img
                     src={Images.Linkedin}
                     style={{ marginRight: 8 }}
-                    alt="fbico"
+                    alt="linkedinico"
                   />
                   <Typography>Linkedin</Typography>
                 </>
@@ -729,6 +769,7 @@ const ContractorProfile = (props) => {
           </Grid>
         </Grid>
       </Grid>
+      <BlueAbout />
     </div>
   );
 };
