@@ -14,57 +14,55 @@ function Footer(props) {
     <>
       {pathname === "/contractor-profile" ? null : (
         <div className={classes.footerMainCon}>
-          <Grid container className={classes.container}>
-            <Grid
-              item
-              xs={10}
-              sm={10}
-              md={10}
-              display="flex"
-              alignItems="center"
-            >
-              <img
-                src={Images.flogo}
-                alt="logoimage"
-                className={classes.imgStyle}
-              />
-              <Typography className={classes.footerTextStyle}>
-                Copyright ⓒ 2023. All Rights Reserved by Reno. Version 1.0
-              </Typography>
-            </Grid>
-            <Grid
-              item
-              container
-              xs={2}
-              sm={2}
-              md={2}
-              display="flex"
-              alignItems="center"
-              justifyContent={"flex-end"}
-            >
-              <Grid xs={4} sm={1} md={1} lg={1}>
-                <img
-                  src={Images.globe}
-                  alt="globe"
-                  className={classes.imgStyleLanguage}
-                />
-              </Grid>
-
-              <Grid item xs={6} sm={5} md={4} lg={3}>
-                <Typography className={classes.language}>ENG</Typography>
-              </Grid>
-              <Grid xs={4} sm={1} md={1} lg={1}>
-                <img
-                  src={Images.doller}
-                  alt="doller"
-                  className={classes.imgStyleLanguage}
-                />
-              </Grid>
-              <Grid item xs={6} sm={5} md={4} lg={3}>
-                <Typography className={classes.language}>USD</Typography>
-              </Grid>
-            </Grid>
+         <Grid container className={classes.container}>
+        <Grid container item xs={10} sm={10} md={10} display="flex" alignItems="center">
+          <Grid item>
+          <img
+            src={Images.flogo}
+            alt="logoimage"
+            className={classes.imgStyle}
+          />
           </Grid>
+          <Grid item>
+          <Typography className={classes.footerTextStyle}>
+            Copyright ⓒ 2023. All Rights Reserved by Reno. Version 1.0
+          </Typography>
+          </Grid>
+        </Grid>
+        <Grid
+          item
+          container
+          xs={2}
+          sm={2}
+          md={2}
+          display="flex"
+          alignItems="center"
+          justifyContent={"flex-end"}
+        >
+          <Grid xs={4} sm={1} md={1} lg={1}>
+          <img
+            src={Images.globe}
+            alt="globe"
+            className={classes.imgStyleLanguage}
+          />
+          </Grid>
+          
+          <Grid item xs={6} sm={5} md={4} lg={3}>
+            <Typography className={classes.language}>ENG</Typography>
+
+          </Grid>
+          <Grid xs={4} sm={1} md={1} lg={1}>
+          <img
+            src={Images.doller}
+            alt="doller"
+            className={classes.imgStyleLanguage}
+          />
+          </Grid>
+          <Grid item xs={6} sm={5} md={4} lg={3}>
+            <Typography className={classes.language}>USD</Typography>
+          </Grid>
+        </Grid>
+      </Grid>
         </div>
       )}
     </>

@@ -695,6 +695,7 @@ const CreateProfile = (props) => {
                         height: "100%",
                         width: "100%",
                         borderRadius: "50%",
+                        objectFit: 'cover'
                       }}
                     />
                   ) : (
@@ -704,7 +705,7 @@ const CreateProfile = (props) => {
                   )}
                   <div className={classes.buttonAbsoluteDiv}>
                     <Button component="label" className={classes.uploadIcon}>
-                      <CreateOutlined 
+                      <CreateOutlined
                         style={{ fontSize: "16px", color: "#FFF" }}
                       />
                       <input
@@ -738,6 +739,9 @@ const CreateProfile = (props) => {
                     onChange={(e) => {
                       setState({ ...state, cname: e.target.value });
                       setErrObj({ ...errObj, cnameErr: false, cnameMsg: "" });
+                    }}
+                    inputProps={{
+                      maxLength: 40
                     }}
                     error={errObj.cnameErr}
                     helpertext={errObj.cnameMsg}
@@ -1107,15 +1111,15 @@ const CreateProfile = (props) => {
                     placeholder="Enter link..."
                     style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
                     InputProps={{
-                      style: { paddingLeft:'0px' },
+                      style: { paddingLeft: '0px' },
                       startAdornment: (
                         <InputAdornment position="start">
                           {/* <LinkedInIcon/> */}
                           <img
                             src={Images.Linkedin1}
                             alt="Linkedin"
-                            style={{backgroundColor:'#F5F6F8',padding:15}}
-                            // className={classes.imgStyleLanguage}
+                            style={{ backgroundColor: '#F5F6F8', padding: 15 }}
+                          // className={classes.imgStyleLanguage}
                           />
                         </InputAdornment>
                       ),
@@ -1141,16 +1145,16 @@ const CreateProfile = (props) => {
                   <TextField
                     fullWidth
                     placeholder="Enter link..."
-                    style={{ marginBottom: 20, backgroundColor: "#F5F6F8"}}
+                    style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
                     InputProps={{
-                      style: { paddingLeft:'0px' },
+                      style: { paddingLeft: '0px' },
                       startAdornment: (
                         <InputAdornment position="start" >
-                            <img
+                          <img
                             src={Images.Fb1}
                             alt="facebook"
-                            style={{backgroundColor:'#F5F6F8',padding:15}}
-                            // className={classes.imgStyleLanguage}
+                            style={{ backgroundColor: '#F5F6F8', padding: 15 }}
+                          // className={classes.imgStyleLanguage}
                           />
                         </InputAdornment>
                       ),
@@ -1209,12 +1213,14 @@ const CreateProfile = (props) => {
                       "Continue"
                     )}
                   </Button>
-                  
+
                 </Grid>
-                
-                <Grid item xs={10} justifyContent={'center'} container> 
-                <Typography style={{textAlign:'center',color:'#646F86'}}>Already have an account, </Typography> 
-                 <Typography style={{fontWeight:"bold",color:'#030F1C'}}>Login now?</Typography>
+
+                <Grid item xs={10} justifyContent={'center'} container>
+                  <Typography style={{ textAlign: 'center', color: '#646F86' }}>Already have an account, </Typography>
+                  <NavLink to="*" className={classes.linkStyle}>
+                  <Typography style={{ fontWeight: "bold", color: '#030F1C', cursor: 'pointer' }} >Login now?</Typography>
+                  </NavLink>
                 </Grid>
 
                 {/* <Grid
@@ -1293,18 +1299,17 @@ const CreateProfile = (props) => {
                         right: 0,
                         bottom: 0,
                         opacity: 0,
-                      }} 
-                      onChange={(e) => {      
-                         const chosenFiles = Array.prototype.slice.call(e.target.files);
+                      }}
+                      onChange={(e) => {
+                        const chosenFiles = Array.prototype.slice.call(e.target.files);
                         // console.log("chosenFiles", chosenFiles);
                         const nArr = [...state.portfolio];
-                        chosenFiles.map((item,index) =>
-                        {
+                        chosenFiles.map((item, index) => {
                           nArr.push(item);
-                          
+
                         })
                         //  nArr.push(e.target.files[0]);  
-                          setState({ ...state, portfolio: nArr });
+                        setState({ ...state, portfolio: nArr });
                       }}
                     />
                   </Grid>
@@ -1330,11 +1335,12 @@ const CreateProfile = (props) => {
                           >
                             <img
                               style={{
-                                width: "15%",
+                                width: "10%",
                                 borderRadius: 6,
                                 marginRight: 20,
+                                objectFit: 'cover'
                               }}
-                             
+
                               src={imgUrl}
                               alt="Portfolio Photos"
                             />
@@ -1398,18 +1404,17 @@ const CreateProfile = (props) => {
                       justifyContent: "center",
                     }}
                   >
-                    <Grid item>
-                      <Button
-                        style={{ width: "230px" }}
-                        variant="outlined"
+                    <Grid item >
+                      <Typography
+                        style={{ width: "120px", cursor: 'pointer', marginTop: 5 }}
                         onClick={() => previousStep()}
                       >
                         Previous Step
-                      </Button>
+                      </Typography>
                     </Grid>
                     <Grid item>
                       <Button
-                        style={{ width: "230px" }}
+                        style={{ width: "342px" }}
                         variant="contained"
                         onClick={() => continueStep(2)}
                         disabled={buttonLoader == "step2"}
@@ -1438,6 +1443,9 @@ const CreateProfile = (props) => {
                       setState({ ...state, bname: e.target.value });
                       setErrObj({ ...errObj, bnameErr: false, bnameMsg: "" });
                     }}
+                    inputProps={{
+                      maxLength: 40
+                    }}
                     error={errObj.bnameErr}
                     helpertext={errObj.bnameMsg}
                   />
@@ -1455,6 +1463,9 @@ const CreateProfile = (props) => {
                         ibanErr: false,
                         ibanMsg: "",
                       });
+                    }}
+                    inputProps={{
+                      maxLength: 34
                     }}
                     error={errObj.ibanErr}
                     helpertext={errObj.ibanMsg}
@@ -1490,6 +1501,9 @@ const CreateProfile = (props) => {
                         setState({ ...state, acc: e.target.value });
                         setErrObj({ ...errObj, accErr: false, accMsg: "" });
                       }}
+                      inputProps={{
+                        maxLength: 16
+                      }}
                       error={errObj.accErr}
                       helpertext={errObj.accMsg}
                     />
@@ -1502,6 +1516,9 @@ const CreateProfile = (props) => {
                       onChange={(e) => {
                         setState({ ...state, swift: e.target.value });
                         setErrObj({ ...errObj, swiftErr: false, swiftMsg: "" });
+                      }}
+                      inputProps={{
+                        maxLength: 12
                       }}
                       error={errObj.swiftErr}
                       helpertext={errObj.swiftMsg}
@@ -1539,17 +1556,16 @@ const CreateProfile = (props) => {
                   }}
                 >
                   <Grid item>
-                    <Button
-                      style={{ width: "230px" }}
-                      variant="outlined"
+                    <Typography
+                      style={{ width: "230px", cursor: 'pointer', marginTop: 5 }}
                       onClick={() => previousStep()}
                     >
                       Previous Step
-                    </Button>
+                    </Typography>
                   </Grid>
                   <Grid item>
                     <Button
-                      style={{ width: "230px" }}
+                      style={{ width: "292px" }}
                       variant="contained"
                       onClick={() => continueStep(3)}
                     >

@@ -92,6 +92,7 @@ export default function Security() {
             border: "1px solid #F2F4F7",
             padding: 20,
             marginTop: 20,
+            backgroundColor:'#F9F9FB'
           }}
           alignItems="center"
           justifyContent={'flex-end'}
@@ -150,6 +151,7 @@ export default function Security() {
             border: "1px solid #F2F4F7",
             padding: 20,
             marginTop: 20,
+            backgroundColor:'#F9F9FB'
           }}
           alignItems="center"
           justifyContent={'flex-end'}

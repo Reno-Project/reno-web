@@ -57,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
+  linkStyle: {
+    textDecoration: "none",
+  },
 }));
 
 export default useStyles;
