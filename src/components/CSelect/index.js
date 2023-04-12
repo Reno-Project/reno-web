@@ -2,13 +2,14 @@ import styled from "@emotion/styled";
 import {
   alpha,
   Autocomplete,
+  Chip,
   FormControl,
   FormHelperText,
   InputLabel,
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-
+import CloseIcon from "@mui/icons-material/Close";
 const Select = styled(Autocomplete)(({ theme }) => ({
   marginTop: 24,
   borderRadius: 5,
@@ -73,6 +74,29 @@ export default function Cselect(props) {
         onChange={(a, b, c, e) => {
           handleSelect(b);
         }}
+        renderTags={(value, getTagProps) =>
+          value.map((option, index) => (
+            <Chip
+              variant="outlined"
+              label={option.label}
+              deleteIcon={<CloseIcon />}
+              {...getTagProps({ index })}
+              sx={{
+                fontWeight: "normal",
+                textTransform: "uppercase",
+                pl: "16px",
+                bgcolor: "rgba(245, 246, 248, 1)",
+                border: "none",
+                "& .MuiChip-deleteIcon": {
+                  position: "absolute",
+                  left: 10,
+                  bgcolor: "transparent",
+                  color: "rgba(0, 0, 0, 1)",
+                },
+              }}
+            />
+          ))
+        }
       />
       <FormHelperText
         error={error}

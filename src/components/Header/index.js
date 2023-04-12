@@ -114,66 +114,69 @@ function Header(props) {
           <Grid item className={classes.rightLogoContainer} columnGap={1}>
             {token !== "" ? (
               <>
-                {!userData?.profile_url ? (
-                  <div className={classes.uploadImgDivStyle}>
-                    <Avatar style={{ color: "#FFF" }} />
-                  </div>
-                ) : (
+                {!sm && (
                   <>
-                    {!sm && (
-                      <>
-                        <CInput
-                          placeholder="Search..."
-                          endAdornment={
-                            <InputAdornment position="end">
-                              <IconButton>
-                                <SearchRoundedIcon />
-                              </IconButton>
-                            </InputAdornment>
-                          }
-                        />
-                        <Grid item>
-                          <Button variant="contained">Projects </Button>
-                        </Grid>
-                        <Grid item>
+                    <CInput
+                      placeholder="Search..."
+                      endAdornment={
+                        <InputAdornment position="end">
                           <IconButton>
-                            <img src={Images.chatico} alt="chat" />
+                            <SearchRoundedIcon />
                           </IconButton>
-                        </Grid>
-                      </>
-                    )}
+                        </InputAdornment>
+                      }
+                    />
                     <Grid item>
-                      <IconButton onClick={() => navigate("/notifications")}>
-                        <img src={Images.BellSimple} alt="notification" />
+                      <Button variant="contained">Projects </Button>
+                    </Grid>
+                    <Grid item>
+                      <IconButton>
+                        <img src={Images.chatico} alt="chat" />
                       </IconButton>
                     </Grid>
-                    <img
-                      alt="logo"
-                      src={userData?.profile_url}
-                      className={classes.logoStyle}
-                      aria-describedby={id}
-                      variant="contained"
-                      onClick={handleClick}
-                    />
-                    <Popover
-                      id={id}
-                      open={open}
-                      anchorEl={anchorEl}
-                      onClose={handleClose}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      PaperProps={{
-                        style: {
-                          padding: 10,
-                        },
-                      }}
-                    >
+                  </>
+                )}
+                <Grid item>
+                  <IconButton onClick={() => navigate("/notifications")}>
+                    <img src={Images.BellSimple} alt="notification" />
+                  </IconButton>
+                </Grid>
+                {!userData?.profile_url ? (
+                  <Avatar
+                    style={{ color: "#FFF", cursor: "pointer" }}
+                    onClick={handleClick}
+                  />
+                ) : (
+                  <img
+                    alt="logo"
+                    src={userData?.profile_url}
+                    className={classes.logoStyle}
+                    aria-describedby={id}
+                    variant="contained"
+                    onClick={handleClick}
+                  />
+                )}
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  PaperProps={{
+                    style: {
+                      padding: 10,
+                    },
+                  }}
+                >
+                  {userData?.role !== "reno" && (
+                    <>
                       <MenuItem
                         onClick={() => {
                           navigate("/contractor-profile");
@@ -190,15 +193,15 @@ function Header(props) {
                       >
                         Account Settings
                       </MenuItem>
-                      <MenuItem
-                        onClick={logout}
-                        className={classes.logoutTextStyle}
-                      >
-                        Logout
-                      </MenuItem>
-                    </Popover>
-                  </>
-                )}
+                    </>
+                  )}
+                  <MenuItem
+                    onClick={logout}
+                    className={classes.logoutTextStyle}
+                  >
+                    Logout
+                  </MenuItem>
+                </Popover>
               </>
             ) : currentUrl.includes("login") ? (
               <NavLink to="/login" className={classes.linkStyle}>
