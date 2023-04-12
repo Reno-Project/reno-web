@@ -103,7 +103,6 @@ export default function ChangePassword() {
           new_password: password,
         },
         {}
-        // { Authorization: `Bearer ${token}` }
       );
 
       if (response.success) {
