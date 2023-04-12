@@ -97,12 +97,11 @@ export default function ChangePassword() {
     try {
       const response = await getApiData(
         Setting.endpoints.updatepassword,
-        "POST",
+        "post",
         {
           old_password: oldPassword,
           new_password: password,
-        },
-        {}
+        }
       );
 
       if (response.success) {
