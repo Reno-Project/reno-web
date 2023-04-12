@@ -26,6 +26,10 @@ const Images = {
   Phone: "/assets/images/Phone.png",
   Linkedin1: "/assets/images/linkedin.png",
   Fb1: "/assets/images/facebook.png",
+  logo_white: "/assets/images/logo_white.svg",
+  fb_white: "/assets/images/fb_white.svg",
+  twitter: "/assets/images/twitter.svg",
+  insta_white: "/assets/images/insta_white.svg",
 
   icon1: "/assets/images/icon1.png",
   icon2: "/assets/images/icon2.png",
