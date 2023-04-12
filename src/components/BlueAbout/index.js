@@ -13,8 +13,6 @@ import Images from "../../config/images";
 
 export default function BlueAbout() {
   const classes = useStyles();
-  const theme = useTheme();
-  const md = useMediaQuery(theme.breakpoints.down("md"));
 
   const quickLinks = ["Home", "Our Serives", "About us", "FAQs", "Sign Up"];
   const supportArr = [
@@ -44,7 +42,7 @@ export default function BlueAbout() {
           style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: md ? "center" : "unset",
+            alignItems: "center",
           }}
         >
           {<img src={Images.logo_white} alt="logo" style={{ maxWidth: 225 }} />}
