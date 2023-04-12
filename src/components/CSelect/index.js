@@ -44,7 +44,7 @@ export default function Cselect(props) {
     label = "",
     required = false,
     error = false,
-    helperText = "",
+    helpertext = "",
     multiple = false,
     placeholder = "",
     renderTags = [],
@@ -78,7 +78,7 @@ export default function Cselect(props) {
         error={error}
         style={{ marginBottom: 20, fontFamily: "Roobert-Regular" }}
       >
-        {helperText}
+        {helpertext}
       </FormHelperText>
     </FormControl>
   );

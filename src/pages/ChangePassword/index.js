@@ -11,7 +11,7 @@ import { isEmpty } from "lodash";
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
 import CInput from "../../components/CInput";
-import { getAPIProgressData } from "../../utils/APIHelper";
+import { getAPIProgressData, getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -88,21 +88,22 @@ export default function ChangePassword() {
 
     setErrObj(error);
     if (valid) {
-      // updatepassword();
+      updatepassword();
     }
   }
 
   async function updatepassword() {
     setButtonLoader(true);
     try {
-      const response = await getAPIProgressData(
+      const response = await getApiData(
         Setting.endpoints.updatepassword,
         "POST",
         {
           old_password: oldPassword,
           new_password: password,
         },
-        { Authorization: `Bearer ${token}` }
+        {}
+        // { Authorization: `Bearer ${token}` }
       );
 
       if (response.success) {

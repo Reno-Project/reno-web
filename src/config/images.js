@@ -20,13 +20,18 @@ const Images = {
   Instagram: "/assets/images/Instagram.svg",
   Yt: "/assets/images/Yt.svg",
   Linkedin: "/assets/images/Linkedin.svg",
-  doller:"/assets/images/dollar-circle.png",
-  globe:"/assets/images/globe.png",
-  laptop:"/assets/images/laptop.png",
-  Phone:"/assets/images/Phone.png",
-  Linkedin1:"/assets/images/linkedin.png",
-  Fb1:"/assets/images/facebook.png"
+  doller: "/assets/images/dollar-circle.png",
+  globe: "/assets/images/globe.png",
+  laptop: "/assets/images/laptop.png",
+  Phone: "/assets/images/Phone.png",
+  Linkedin1: "/assets/images/linkedin.png",
+  Fb1: "/assets/images/facebook.png",
 
+  icon1: "/assets/images/icon1.png",
+  icon2: "/assets/images/icon2.png",
+  icon3: "/assets/images/icon3.png",
+  icon4: "/assets/images/icon4.png",
+  icon5: "/assets/images/icon5.png",
 };
 
 export default Images;
