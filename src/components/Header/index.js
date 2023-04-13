@@ -101,8 +101,8 @@ function Header(props) {
           className={classes.rightContainer}
         >
           {currentUrl?.includes("signup") ||
-          currentUrl?.includes("login") ||
-          !isEmpty(token) ? null : (
+            currentUrl?.includes("login") ||
+            !isEmpty(token) ? null : (
             <Grid item className={classes.PR25}>
               <NavLink to="" className={classes.linkStyle}>
                 <Typography className={classes.menuTitleStyle}>
@@ -127,22 +127,35 @@ function Header(props) {
                         </InputAdornment>
                       }
                     />
-                    <Grid item>
-                      <Button variant="contained">Projects </Button>
-                    </Grid>
-                    <Grid item>
-                      <IconButton>
-                        <img src={Images.chatico} alt="chat" />
-                      </IconButton>
-                    </Grid>
+                    {currentUrl?.includes("notifications") ?
+                      <NavLink to="/">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                         style={{padding: '6px 6px',fontSize:'14px'}}
+                        >
+                          Become contarctor
+                        </Button>
+                      </NavLink>
+                      : <> <Grid item>
+                        <Button variant="contained">Projects </Button>
+                      </Grid>
+                        <Grid item>
+                          <IconButton>
+                            <img src={Images.chatico} alt="chat" />
+                          </IconButton>
+                        </Grid>
+                      </>
+                    }
                   </>
                 )}
-                <Grid item>
+                {currentUrl?.includes("notifications") ? null : <Grid item>
                   <IconButton onClick={() => navigate("/notifications")}>
                     <img src={Images.BellSimple} alt="notification" />
                   </IconButton>
                 </Grid>
-                {!userData?.profile_url ? (
+                }
+                {currentUrl?.includes("notifications") ? null : <> {!userData?.profile_url ? (
                   <Avatar
                     style={{ color: "#FFF", cursor: "pointer" }}
                     onClick={handleClick}
@@ -156,7 +169,7 @@ function Header(props) {
                     variant="contained"
                     onClick={handleClick}
                   />
-                )}
+                )}</>}
                 <Popover
                   id={id}
                   open={open}

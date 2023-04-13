@@ -109,7 +109,7 @@ export default function Notifications() {
                       </Button>
                       <Button
                         variant="outlined"
-                        style={{ width: 110, borderRadius: 7 }}
+                        style={{ width: 110, borderRadius: 7 ,border:'none',backgroundColor:'#F5F6F8'}}
                       >
                         Decline
                       </Button>

@@ -90,8 +90,8 @@ function App() {
                         element={
                           <Navigate
                             to={
-                              userData?.data?.contractor_data &&
-                              userData?.data?.contractor_data
+                              userData?.contractor_data &&
+                              userData?.contractor_data
                                 ?.profile_completed === "pending"
                                 ? "/create-profile"
                                 : "/dashboard"

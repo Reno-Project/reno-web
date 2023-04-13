@@ -679,49 +679,65 @@ const CreateProfile = (props) => {
               flexDirection="column"
               id="logo"
             >
-              <div style={{ marginTop: 15, marginBottom: 15 }}>
-                <div
+              <div style={{ marginTop: 15, marginBottom: 15, backgroundColor: 'transparent' }}>
+                <Button
+                  component="label"
                   style={{
                     position: "relative",
                     height: 120,
                     width: 120,
-                  }}
-                >
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                    padding: '0px'
+                  }}>
+                  <input
+                    type="file"
+                    accept="image/jpeg, image/png, image/jpg"
+                    hidden
+                    multiple={true}
+                    onChange={(e) => {
+                      setState({
+                        ...state,
+                        businessLogo: e.target.files[0],
+                      });
+                    }}
+                  />
                   {bLogo ? (
-                    <img
-                      src={bLogo}
-                      alt="business_logo"
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        borderRadius: "50%",
-                        objectFit: 'cover'
-                      }}
-                    />
+                    <>
+                      <img
+                        src={bLogo}
+                        alt="business_logo"
+                        style={{
+                          height: "100%",
+                          width: "100%",
+                          borderRadius: "50%",
+                          objectFit: 'cover'
+                        }}
+                      />
+                      <div className={classes.buttonAbsoluteDiv}>
+                        <div className={classes.uploadIcon}>
+                          <CreateOutlined
+                            style={{ fontSize: "18px", color: "#FFF", position: 'absolute', top: 7, left: 8 }}
+                          />
+                        </div>
+                      </div>
+                    </>
                   ) : (
                     <div className={classes.uploadImgDivStyle}>
                       <Image style={{ color: "#FFF", fontSize: 30 }} />
+                      <div className={classes.buttonAbsoluteDiv}>
+                        <div className={classes.uploadIcon}>
+                          <CreateOutlined
+                            style={{ fontSize: "16px", color: "#FFF", position: 'absolute', top: 7, left: 8 }}
+                          />
+                        </div>
+                      </div>
+
                     </div>
                   )}
-                  <div className={classes.buttonAbsoluteDiv}>
-                    <Button component="label" className={classes.uploadIcon}>
-                      <CreateOutlined
-                        style={{ fontSize: "16px", color: "#FFF" }}
-                      />
-                      <input
-                        type="file"
-                        accept="image/jpeg, image/png, image/jpg"
-                        hidden
-                        onChange={(e) => {
-                          setState({
-                            ...state,
-                            businessLogo: e.target.files[0],
-                          });
-                        }}
-                      />
-                    </Button>
-                  </div>
-                </div>
+
+
+                </Button>
               </div>
               <Typography
                 style={{ fontFamily: "Roobert-Regular", color: "#475569" }}
@@ -1217,9 +1233,11 @@ const CreateProfile = (props) => {
                 </Grid>
 
                 <Grid item xs={10} justifyContent={'center'} container>
+
                   <Typography style={{ textAlign: 'center', color: '#646F86' }}>Already have an account, </Typography>
-                  <NavLink to="*" className={classes.linkStyle}>
-                  <Typography style={{ fontWeight: "bold", color: '#030F1C', cursor: 'pointer' }} >Login now?</Typography>
+
+                  <NavLink to="/login" className={classes.linkStyle}>
+                    <Typography style={{ fontWeight: "bold", color: '#030F1C', cursor: 'pointer' }} >Login now?</Typography>
                   </NavLink>
                 </Grid>
 

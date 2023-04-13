@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   buttonAbsoluteDiv: {
     position: "absolute",
     bottom: 5,
-    right: 8,
+    right: 6,
   },
   uploadIcon: {
     backgroundColor: `#475569 !important`,

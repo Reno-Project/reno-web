@@ -307,11 +307,7 @@ const ContractorProfile = (props) => {
             </Grid>
             <Grid item>
               <Typography style={{ paddingRight: 20 }}>
-                Lorem Ipsum has been the industry's standard dummy text ever
-                since. When an unknown printer took a galley of type and
-                scrambled it to make a type specimen book. It has survived not
-                only five centuries, but also the leap into electronic
-                typesetting, remaining essentially.
+                {userData.contractor_data.description}
               </Typography>
             </Grid>
           </Grid>
