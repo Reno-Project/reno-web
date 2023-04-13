@@ -1,12 +1,13 @@
 import { Button, CircularProgress, Grid, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
 import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const errorObj = {
   beneficiaryErr: false,
@@ -24,6 +25,10 @@ const errorObj = {
 };
 
 export default function Billing() {
+  const { userData } = useSelector((state) => state.auth);
+  const data = userData?.contractor_data?.billing_info;
+  const isEdit = !isEmpty(userData);
+
   const [buttonLoader, setButtonLoader] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);
   const [state, setState] = useState({
@@ -34,6 +39,20 @@ export default function Billing() {
     swift: "",
     bankAddress: "",
   });
+
+  useEffect(() => {
+    if (isEdit) {
+      setState({
+        ...state,
+        beneficiary: data?.beneficiary_name,
+        iban: data?.iban,
+        bank: data?.bank_name,
+        acc: data?.bank_account,
+        swift: data?.swift_code,
+        bankAddress: data?.Address,
+      });
+    }
+  }, []);
 
   const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis"];
 
