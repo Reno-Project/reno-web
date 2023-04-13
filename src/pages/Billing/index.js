@@ -7,7 +7,8 @@ import Cselect from "../../components/CSelect";
 import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import authActions from "../../redux/reducers/auth/actions";
 
 const errorObj = {
   beneficiaryErr: false,
@@ -26,7 +27,10 @@ const errorObj = {
 
 export default function Billing() {
   const { userData } = useSelector((state) => state.auth);
-  const data = userData?.contractor_data?.billing_info;
+  const dispatch = useDispatch();
+  const { setUserData } = authActions;
+  const [billingData, setBillingData] = useState([]);
+  const data = billingData?.contractor_data?.billing_info;
   const isEdit = !isEmpty(userData);
 
   const [buttonLoader, setButtonLoader] = useState(false);
@@ -39,6 +43,11 @@ export default function Billing() {
     swift: "",
     bankAddress: "",
   });
+  const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis"];
+
+  useEffect(() => {
+    getUserDetailsByIdApiCall();
+  }, []);
 
   useEffect(() => {
     if (isEdit) {
@@ -52,9 +61,26 @@ export default function Billing() {
         bankAddress: data?.Address,
       });
     }
-  }, []);
+  }, [billingData]);
 
-  const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis"];
+  async function getUserDetailsByIdApiCall() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.contarctorById}/${userData?.id}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        dispatch(setUserData(response?.data));
+        setBillingData(response?.data);
+      } else {
+        setBillingData(userData);
+      }
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
+      setBillingData(userData);
+    }
+  }
 
   function validation() {
     const error = { ...errObj };
