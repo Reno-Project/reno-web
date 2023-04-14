@@ -130,12 +130,13 @@ const notificationListArray = [
     ],
   },
 ];
+
 export default function NotificationSettings() {
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
   const [nsetting, setNsetting] = useState([]);
-  const data = nsetting?.notification_settings;
+  const data = nsetting;
   const [state, setState] = useState({
     notificationList: [],
   });
@@ -164,25 +165,31 @@ export default function NotificationSettings() {
     }
   }
 
-  async function notification(type, status, index1, index2) {
+  // this function for change user notification status from api call
+  async function changePushNotificationStatusApiCall(
+    type,
+    status,
+    index1,
+    index2
+  ) {
     try {
       const response = await getApiData(
-        `${Setting.endpoints.updatenotificationsettings}`,
+        Setting.endpoints.updateUserSetting,
         "post",
         {
-          notification_type: type ? type : "",
+          security_type: type ? type : "",
           action: status ? 1 : 0,
         }
       );
-      console.log("response=====>>>>>", response);
+
       if (response?.success) {
         changeSwitchItem(index1, index2, status);
       } else {
         toast.error(response?.message);
       }
     } catch (error) {
-      console.log("ERROR=====>>>>>", error);
-      toast.error(error || "Something went wrong! Please try again");
+      console.log("change Notification Status ApiCall ~ error:", error);
+      toast.error(error.toString() || "Something went wrong! Please try again");
     }
   }
 
@@ -192,27 +199,6 @@ export default function NotificationSettings() {
     setState({ ...state, notificationList: dummyArray });
   };
 
-  async function emailNotification(type, status, index1, index2) {
-    try {
-      const response = await getApiData(
-        `${Setting.endpoints.updateemailnotificationsettings}`,
-        "post",
-        {
-          email_notification_type: type ? type : "",
-          action: status ? 1 : 0,
-        }
-      );
-      console.log("response=====>>>>>", response);
-      if (response?.success) {
-        changeSwitchItem(index1, index2, status);
-      } else {
-        toast.error(response?.message);
-      }
-    } catch (error) {
-      console.log("ERROR=====>>>>>", error);
-      toast.error(error || "Something went wrong! Please try again");
-    }
-  }
   return (
     <Grid
       container
@@ -268,31 +254,13 @@ export default function NotificationSettings() {
                       <IOSSwitch
                         checked={it?.isChecked}
                         onChange={(event) => {
-                          if (it?.subtitle == "email") {
-                            emailNotification(
-                              it?.title,
-                              event.target.checked,
-                              index,
-                              ind
-                            );
-                          } else {
-                            notification(
-                              it?.title,
-                              event.target.checked,
-                              index,
-                              ind
-                            );
-                          }
+                          changePushNotificationStatusApiCall(
+                            it?.title,
+                            event.target.checked,
+                            index,
+                            ind
+                          );
                         }}
-                        // onClick={() => {
-                        //   setValue({
-                        //     ...value,
-                        //     btn1: value.btn1 === 0 ? 1 : 0,
-                        //   });
-                        //   setTimeout(() => {
-                        //     notification("inbox_messages", 0);
-                        //   }, 300);
-                        // }}
                       />
                     </div>
                   );

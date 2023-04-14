@@ -142,12 +142,6 @@ export default function EditProfile() {
     { id: 3, label: "Retouch" },
   ];
 
-  // const exp = [
-  //   { id: 1, project_name: "Interior design" },
-  //   { id: 2, project_name: "Renovation" },
-  //   { id: 3, project_name: "Retouch" },
-  // ];
-
   useEffect(() => {
     getUserDetailsByIdApiCall();
   }, []);

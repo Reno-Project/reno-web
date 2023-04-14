@@ -215,8 +215,7 @@ export default function Billing() {
         </div>
       ) : (
         <>
-          {isMobile || isTablet ? null : <Grid item lg={4}></Grid>}
-          <Grid item container xs={12} lg={8} justifyContent="flex-end">
+          <Grid item container xs={12}>
             <Grid item padding={isMobile ? "10px 0" : "10px 20px"}>
               <Typography variant="h5">Billing information</Typography>
               <Grid

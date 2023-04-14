@@ -26,6 +26,10 @@ export const Setting = {
     addBillingInfo: "api/contractor/add-billing-info",
     forgotPassword: "api/user/forgot-password",
     contarctorById: "api/contractor",
+    deleteportfolio: "api/contractor/delete-portfolio",
+    updatesecuritysettings: "api/user/update-security-settings",
+    updateUserSetting: "api/user/update-user-settings",
+    twoFactorSetting: "api/user/verified-two-factor",
   },
 
   JS_Regex: {

@@ -131,9 +131,8 @@ export default function ChangePassword() {
       <Grid
         item
         xs={12}
-        sm={12}
-        md={12}
-        lg={9}
+        sm={11}
+        md={9}
         padding={isMobile ? "10px 0" : "10px 20px"}
       >
         <Grid
