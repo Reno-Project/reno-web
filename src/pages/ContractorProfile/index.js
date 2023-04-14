@@ -120,22 +120,6 @@ const reviews = [
     ],
   },
 ];
-
-const expertiseArea = [
-  {
-    id: 1,
-    title: "Interior design",
-  },
-  {
-    id: 2,
-    title: "Renovation",
-  },
-  {
-    id: 3,
-    title: "Kitchen",
-  },
-];
-
 const ContractorProfile = (props) => {
   const classes = useStyles();
   const { userData } = useSelector((state) => state.auth);
@@ -675,95 +659,106 @@ const ContractorProfile = (props) => {
             Expertise Area:
           </Typography>
           <Grid item container columnGap={2} rowGap={2}>
-            {expertiseArea.map((ele, ind) => {
-              return (
-                <Grid item className={classes.chip}>
-                  <Typography textTransform={"uppercase"}>
-                    {ele.title}
-                  </Typography>
+            {isArray(userData.contractor_data.expertise) &&
+              !isEmpty(userData.contractor_data.expertise) &&
+              userData.contractor_data.expertise.map((ele, ind) => {
+                return (
+                  <Grid item className={classes.chip}>
+                    <Typography textTransform={"uppercase"}>
+                      {ele.project_name}
+                    </Typography>
+                  </Grid>
+                );
+              })}
+          </Grid>
+        </Grid>
+        {isEmpty(userData?.contractor_data?.fb_url) &&
+        isEmpty(userData?.contractor_data?.insta_url) &&
+        isEmpty(userData?.contractor_data?.yt_url) &&
+        isEmpty(userData?.contractor_data?.linkedin_url) ? null : (
+          <Grid container mt={3}>
+            <Typography className={classes.titleStyle} mb={1}>
+              Social media
+            </Typography>
+            <Grid item container columnGap={2} rowGap={2}>
+              {userData?.contractor_data?.fb_url && (
+                <Grid
+                  item
+                  className={classes.chip}
+                  onClick={() => {
+                    window.open(userData?.contractor_data?.fb_url, "_blank");
+                  }}
+                >
+                  <>
+                    <img
+                      src={Images.Facebook}
+                      style={{ marginRight: 8 }}
+                      alt="fbico"
+                    />
+                    <Typography>Facebook</Typography>
+                  </>
                 </Grid>
-              );
-            })}
+              )}
+              {userData?.contractor_data?.insta_url && (
+                <Grid
+                  item
+                  className={classes.chip}
+                  onClick={() => {
+                    window.open(userData?.contractor_data?.insta_url, "_blank");
+                  }}
+                >
+                  <>
+                    <img
+                      src={Images.Instagram}
+                      style={{ marginRight: 8 }}
+                      alt="instaico"
+                    />
+                    <Typography>Instagram</Typography>
+                  </>
+                </Grid>
+              )}
+              {userData?.contractor_data?.yt_url && (
+                <Grid
+                  item
+                  className={classes.chip}
+                  onClick={() => {
+                    window.open(userData?.contractor_data?.yt_url, "_blank");
+                  }}
+                >
+                  <>
+                    <img
+                      src={Images.Yt}
+                      style={{ marginRight: 8 }}
+                      alt="ytico"
+                    />
+                    <Typography>Youtube</Typography>
+                  </>
+                </Grid>
+              )}
+              {userData?.contractor_data?.linkedin_url && (
+                <Grid
+                  item
+                  className={classes.chip}
+                  onClick={() => {
+                    window.open(
+                      userData?.contractor_data?.linkedin_url,
+                      "_blank"
+                    );
+                  }}
+                >
+                  <>
+                    <img
+                      src={Images.Linkedin}
+                      style={{ marginRight: 8 }}
+                      alt="linkedinico"
+                    />
+                    <Typography>Linkedin</Typography>
+                  </>
+                </Grid>
+              )}
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid container mt={3}>
-          <Typography className={classes.titleStyle} mb={1}>
-            Social media
-          </Typography>
-          <Grid item container columnGap={2} rowGap={2}>
-            {userData?.contractor_data?.fb_url && (
-              <Grid
-                item
-                className={classes.chip}
-                onClick={() => {
-                  window.open(userData?.contractor_data?.fb_url, "_blank");
-                }}
-              >
-                <>
-                  <img
-                    src={Images.Facebook}
-                    style={{ marginRight: 8 }}
-                    alt="fbico"
-                  />
-                  <Typography>Facebook</Typography>
-                </>
-              </Grid>
-            )}
-            {userData?.contractor_data?.insta_url && (
-              <Grid
-                item
-                className={classes.chip}
-                onClick={() => {
-                  window.open(userData?.contractor_data?.insta_url, "_blank");
-                }}
-              >
-                <>
-                  <img
-                    src={Images.Instagram}
-                    style={{ marginRight: 8 }}
-                    alt="instaico"
-                  />
-                  <Typography>Instagram</Typography>
-                </>
-              </Grid>
-            )}
-            {userData?.contractor_data?.yt_url && (
-              <Grid
-                item
-                className={classes.chip}
-                onClick={() => {
-                  window.open(userData?.contractor_data?.yt_url, "_blank");
-                }}
-              >
-                <>
-                  <img src={Images.Yt} style={{ marginRight: 8 }} alt="ytico" />
-                  <Typography>Youtube</Typography>
-                </>
-              </Grid>
-            )}
-            {userData?.contractor_data?.linkedin_url && (
-              <Grid
-                item
-                className={classes.chip}
-                onClick={() => {
-                  window.open(
-                    userData?.contractor_data?.linkedin_url,
-                    "_blank"
-                  );
-                }}
-              >
-                <>
-                  <img
-                    src={Images.Linkedin}
-                    style={{ marginRight: 8 }}
-                    alt="linkedinico"
-                  />
-                  <Typography>Linkedin</Typography>
-                </>
-              </Grid>
-            )}
-          </Grid>
-        </Grid>
+        )}
       </Grid>
       <BlueAbout />
     </div>
