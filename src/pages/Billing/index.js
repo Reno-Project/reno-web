@@ -9,6 +9,7 @@ import { Setting } from "../../utils/Setting";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
+import { color } from "../../config/theme";
 
 const errorObj = {
   beneficiaryErr: false,
@@ -29,6 +30,7 @@ export default function Billing() {
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
+  const [pageLoad, setPageLoad] = useState(true);
   const [billingData, setBillingData] = useState([]);
   const data = billingData?.contractor_data?.billing_info;
   const isEdit = !isEmpty(userData);
@@ -64,6 +66,7 @@ export default function Billing() {
   }, [billingData]);
 
   async function getUserDetailsByIdApiCall() {
+    setPageLoad(true);
     try {
       const response = await getApiData(
         `${Setting.endpoints.contarctorById}/${userData?.id}`,
@@ -76,9 +79,11 @@ export default function Billing() {
       } else {
         setBillingData(userData);
       }
+      setPageLoad(false);
     } catch (error) {
       console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
       setBillingData(userData);
+      setPageLoad(false);
     }
   }
 
@@ -197,155 +202,170 @@ export default function Billing() {
       gap={2}
       justifyContent={"center"}
     >
-      {isMobile || isTablet ? null : <Grid item lg={4}></Grid>}
-      <Grid item container xs={12} lg={8} justifyContent="flex-end">
-        <Grid item padding={isMobile ? "10px 0" : "10px 20px"}>
-          <Typography variant="h5">Billing information</Typography>
-          <Grid
-            item
-            container
-            style={{
-              border: "1px solid #F2F4F7",
-              padding: isMobile ? 10 : 20,
-              marginTop: 20,
-            }}
-          >
-            <Grid item xs={12} style={{ marginTop: 20 }} id="beneficiary">
-              <CInput
-                label="Beneficiary Name"
-                placeholder="Enter Beneficiary Name"
-                value={state.beneficiary}
-                onChange={(e) => {
-                  setState({ ...state, beneficiary: e.target.value });
-                  setErrObj({
-                    ...errObj,
-                    beneficiaryErr: false,
-                    beneficiaryMsg: "",
-                  });
-                }}
-                error={errObj.beneficiaryErr}
-                helpertext={errObj.beneficiaryMsg}
-              />
-            </Grid>
-
-            <Grid item xs={12} id="iban">
-              <CInput
-                label="IBAN"
-                placeholder="Enter IBAN"
-                value={state.iban}
-                onChange={(e) => {
-                  setState({ ...state, iban: e.target.value });
-                  setErrObj({
-                    ...errObj,
-                    ibanErr: false,
-                    ibanMsg: "",
-                  });
-                }}
-                error={errObj.ibanErr}
-                helpertext={errObj.ibanMsg}
-              />
-            </Grid>
-
-            <Grid item xs={12} id="bank">
-              <Cselect
-                label="Bank Name"
-                placeholder="Select Bank"
-                value={state.bank}
-                handleSelect={(e) => {
-                  setState({ ...state, bank: e });
-                  setErrObj({
-                    ...errObj,
-                    bankErr: false,
-                    bankMsg: "",
-                  });
-                }}
-                renderTags={bank}
-                error={errObj.bankErr}
-                helpertext={errObj.bankMsg}
-              />
-            </Grid>
-
-            <Grid item xs={12} id="baccount">
-              <CInput
-                label="Bank Account"
-                placeholder="Enter Bank Account Number"
-                value={state.acc}
-                onChange={(e) => {
-                  setState({ ...state, acc: e.target.value });
-                  setErrObj({ ...errObj, accErr: false, accMsg: "" });
-                }}
-                error={errObj.accErr}
-                helpertext={errObj.accMsg}
-              />
-            </Grid>
-            <Grid item xs={12} id="swift">
-              <CInput
-                label="SWIFT code"
-                placeholder="Enter SWIFT Code"
-                value={state.swift}
-                onChange={(e) => {
-                  setState({ ...state, swift: e.target.value });
-                  setErrObj({
-                    ...errObj,
-                    swiftErr: false,
-                    swiftMsg: "",
-                  });
-                }}
-                error={errObj.swiftErr}
-                helpertext={errObj.swiftMsg}
-              />
-            </Grid>
-            <Grid item xs={12} id="bAddress">
-              <CInput
-                multiline
-                label="Address"
-                placeholder="Enter Address"
-                value={state.bankAddress}
-                onChange={(e) => {
-                  setState({ ...state, bankAddress: e.target.value });
-                  setErrObj({
-                    ...errObj,
-                    bankAddErr: false,
-                    bankAddMsg: "",
-                  });
-                }}
-                error={errObj.bankAddErr}
-                helpertext={errObj.bankAddMsg}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid
-          xs={12}
-          item
-          container
-          wrap="nowrap"
-          gap={2}
+      {pageLoad ? (
+        <div
           style={{
-            margin: isMobile ? "20px 0" : "20px",
+            display: "flex",
             justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
           }}
         >
-          <Grid item xs={6}>
-            <Button style={{ width: "100%" }} variant="outlined">
-              Cancel
-            </Button>
-          </Grid>
-          <Grid item xs={6}>
-            <Button
-              style={{ minWidth: "135px", width: "100%" }}
-              variant="contained"
-              onClick={validation}
+          <CircularProgress style={{ color: color.primary }} size={30} />
+        </div>
+      ) : (
+        <>
+          {isMobile || isTablet ? null : <Grid item lg={4}></Grid>}
+          <Grid item container xs={12} lg={8} justifyContent="flex-end">
+            <Grid item padding={isMobile ? "10px 0" : "10px 20px"}>
+              <Typography variant="h5">Billing information</Typography>
+              <Grid
+                item
+                container
+                style={{
+                  border: "1px solid #F2F4F7",
+                  padding: isMobile ? 10 : 20,
+                  marginTop: 20,
+                }}
+              >
+                <Grid item xs={12} style={{ marginTop: 20 }} id="beneficiary">
+                  <CInput
+                    label="Beneficiary Name"
+                    placeholder="Enter Beneficiary Name"
+                    value={state.beneficiary}
+                    onChange={(e) => {
+                      setState({ ...state, beneficiary: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        beneficiaryErr: false,
+                        beneficiaryMsg: "",
+                      });
+                    }}
+                    error={errObj.beneficiaryErr}
+                    helpertext={errObj.beneficiaryMsg}
+                  />
+                </Grid>
+
+                <Grid item xs={12} id="iban">
+                  <CInput
+                    label="IBAN"
+                    placeholder="Enter IBAN"
+                    value={state.iban}
+                    onChange={(e) => {
+                      setState({ ...state, iban: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        ibanErr: false,
+                        ibanMsg: "",
+                      });
+                    }}
+                    error={errObj.ibanErr}
+                    helpertext={errObj.ibanMsg}
+                  />
+                </Grid>
+
+                <Grid item xs={12} id="bank">
+                  <Cselect
+                    label="Bank Name"
+                    placeholder="Select Bank"
+                    value={state.bank}
+                    handleSelect={(e) => {
+                      setState({ ...state, bank: e });
+                      setErrObj({
+                        ...errObj,
+                        bankErr: false,
+                        bankMsg: "",
+                      });
+                    }}
+                    renderTags={bank}
+                    error={errObj.bankErr}
+                    helpertext={errObj.bankMsg}
+                  />
+                </Grid>
+
+                <Grid item xs={12} id="baccount">
+                  <CInput
+                    label="Bank Account"
+                    placeholder="Enter Bank Account Number"
+                    value={state.acc}
+                    onChange={(e) => {
+                      setState({ ...state, acc: e.target.value });
+                      setErrObj({ ...errObj, accErr: false, accMsg: "" });
+                    }}
+                    error={errObj.accErr}
+                    helpertext={errObj.accMsg}
+                  />
+                </Grid>
+                <Grid item xs={12} id="swift">
+                  <CInput
+                    label="SWIFT code"
+                    placeholder="Enter SWIFT Code"
+                    value={state.swift}
+                    onChange={(e) => {
+                      setState({ ...state, swift: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        swiftErr: false,
+                        swiftMsg: "",
+                      });
+                    }}
+                    error={errObj.swiftErr}
+                    helpertext={errObj.swiftMsg}
+                  />
+                </Grid>
+                <Grid item xs={12} id="bAddress">
+                  <CInput
+                    multiline
+                    label="Address"
+                    placeholder="Enter Address"
+                    value={state.bankAddress}
+                    onChange={(e) => {
+                      setState({ ...state, bankAddress: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        bankAddErr: false,
+                        bankAddMsg: "",
+                      });
+                    }}
+                    error={errObj.bankAddErr}
+                    helpertext={errObj.bankAddMsg}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid
+              xs={12}
+              item
+              container
+              wrap="nowrap"
+              gap={2}
+              style={{
+                margin: isMobile ? "20px 0" : "20px",
+                justifyContent: "center",
+              }}
             >
-              {buttonLoader ? (
-                <CircularProgress size={26} style={{ color: "#fff" }} />
-              ) : (
-                "Save Changes"
-              )}
-            </Button>
+              <Grid item xs={6}>
+                <Button style={{ width: "100%" }} variant="outlined">
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  style={{ minWidth: "135px", width: "100%" }}
+                  variant="contained"
+                  onClick={validation}
+                >
+                  {buttonLoader ? (
+                    <CircularProgress size={26} style={{ color: "#fff" }} />
+                  ) : (
+                    "Save Changes"
+                  )}
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        </>
+      )}
     </Grid>
   );
 }
