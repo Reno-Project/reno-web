@@ -1,8 +1,13 @@
 import styled from "@emotion/styled";
-import { Grid, Switch, Typography } from "@mui/material";
+import { Button, Grid, Switch, Typography } from "@mui/material";
 import { lastIndexOf } from "lodash";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
+import { getApiData } from "../../utils/APIHelper";
+import { Setting } from "../../utils/Setting";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import authActions from "../../redux/reducers/auth/actions";
 
 const IOSSwitch = styled((props) => (
   <div style={{ display: "flex" }}>
@@ -62,24 +67,152 @@ const IOSSwitch = styled((props) => (
   },
 }));
 
+const notificationListArray = [
+  {
+    id: 1,
+    title: "Push Notifications:",
+    subArray: [
+      {
+        id: 11,
+        name: "Inbox messages",
+        isChecked: false,
+        title: "push_inbox_messages",
+        subtitle: "push",
+      },
+      {
+        id: 12,
+        name: "Project messages",
+        isChecked: false,
+        title: "push_project_messages",
+        subtitle: "push",
+      },
+      {
+        id: 15,
+        name: "Account related",
+        isChecked: false,
+        title: "push_account_releted",
+        subtitle: "push",
+      },
+      {
+        id: 16,
+        name: "Promotional",
+        isChecked: false,
+        title: "push_promotional",
+        subtitle: "push",
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: "Email Notifications:",
+    subArray: [
+      {
+        id: 22,
+        name: "Project messages",
+        isChecked: false,
+        title: "email_project_messages",
+        subtitle: "email",
+      },
+      {
+        id: 23,
+        name: "Account related",
+        isChecked: false,
+        title: "email_account_releted",
+        subtitle: "email",
+      },
+      {
+        id: 24,
+        name: "Promotional",
+        isChecked: false,
+        title: "email_promotional",
+        subtitle: "email",
+      },
+    ],
+  },
+];
 export default function NotificationSettings() {
-  const pushArr = [
-    { id: 0, label: "Inbox messages", value: "false" },
-    { id: 1, label: "Project update", value: "false" },
-    { id: 2, label: "Project inquiry", value: "false" },
-    { id: 3, label: "Account related", value: "false" },
-    { id: 4, label: "Reminde ", value: "false" },
-    { id: 5, label: "Reviews", value: "false" },
-    { id: 6, label: "Promotional", value: "false" },
-    { id: 7, label: "Billing", value: "false" },
-  ];
+  const { userData } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { setUserData } = authActions;
+  const [nsetting, setNsetting] = useState([]);
+  const data = nsetting?.notification_settings;
+  const [state, setState] = useState({
+    notificationList: [],
+  });
 
-  const emailArr = [
-    { id: 0, label: "Project update", value: "false" },
-    { id: 1, label: "Inbox messages", value: "false" },
-    { id: 2, label: "Project inquiry", value: "false" },
-    { id: 3, label: "Account related", value: "false" },
-  ];
+  useEffect(() => {
+    getUserDetailsByIdApiCall();
+    setState({ ...state, notificationList: notificationListArray });
+  }, []);
+
+  async function getUserDetailsByIdApiCall() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.contarctorById}/${userData?.id}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        dispatch(setUserData(response?.data));
+        setNsetting(response?.data);
+      } else {
+        setNsetting(userData);
+      }
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
+      setNsetting(userData);
+    }
+  }
+
+  async function notification(type, status, index1, index2) {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.updatenotificationsettings}`,
+        "post",
+        {
+          notification_type: type ? type : "",
+          action: status ? 1 : 0,
+        }
+      );
+      console.log("response=====>>>>>", response);
+      if (response?.success) {
+        changeSwitchItem(index1, index2, status);
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error || "Something went wrong! Please try again");
+    }
+  }
+
+  const changeSwitchItem = (index1, index2, status) => {
+    let dummyArray = notificationListArray;
+    dummyArray[index1].subArray[index2].isChecked = status;
+    setState({ ...state, notificationList: dummyArray });
+  };
+
+  async function emailNotification(type, status, index1, index2) {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.updateemailnotificationsettings}`,
+        "post",
+        {
+          email_notification_type: type ? type : "",
+          action: status ? 1 : 0,
+        }
+      );
+      console.log("response=====>>>>>", response);
+      if (response?.success) {
+        changeSwitchItem(index1, index2, status);
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error || "Something went wrong! Please try again");
+    }
+  }
   return (
     <Grid
       container
@@ -101,71 +234,72 @@ export default function NotificationSettings() {
             justifyContent: "space-between",
           }}
         >
-          <Grid
-            item
-            container
-            sm={12}
-            lg={6}
-            flexDirection="column"
-            style={{
-              padding: 20,
-              backgroundColor: "#F5F6F8",
-              borderRadius: 5,
-            }}
-          >
-            <Typography variant="h6" marginBottom={"10px"}>
-              Push Notifications:
-            </Typography>
-
-            {pushArr.map((item, index) => {
-              let last = lastIndexOf(pushArr) - 1;
-              return (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    padding: "10px 0",
-                    borderBottom: index === last ? "none" : "1px solid #E8E8E8",
-                  }}
-                >
-                  <Typography>{item?.label}</Typography>
-                  <IOSSwitch />
-                </div>
-              );
-            })}
-          </Grid>
-          <Grid
-            item
-            container
-            sm={12}
-            lg={6}
-            flexDirection="column"
-            style={{
-              padding: 20,
-              backgroundColor: "#F5F6F8",
-              borderRadius: 5,
-            }}
-          >
-            <Typography variant="h6" marginBottom={"10px"}>
-              Email Notifications:
-            </Typography>
-            {emailArr.map((item, index) => {
-              let last = lastIndexOf(emailArr) - 1;
-              return (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    padding: "10px 0",
-                    borderBottom: index === last ? "none" : "1px solid #E8E8E8",
-                  }}
-                >
-                  <Typography>{item?.label}</Typography>
-                  <IOSSwitch />
-                </div>
-              );
-            })}
-          </Grid>
+          {state?.notificationList.map((item, index) => {
+            return (
+              <Grid
+                item
+                container
+                sm={12}
+                lg={6}
+                flexDirection="column"
+                style={{
+                  padding: 20,
+                  backgroundColor: "#F5F6F8",
+                  borderRadius: 5,
+                }}
+              >
+                <Typography variant="h6" marginBottom={"10px"}>
+                  {item?.title}
+                </Typography>
+                {item?.subArray.map((it, ind) => {
+                  return (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        padding: "10px 0",
+                        borderBottom:
+                          item?.subArray?.length - 1 == ind
+                            ? null
+                            : "1px solid #E8E8E8",
+                      }}
+                    >
+                      <Typography>{it.name}</Typography>
+                      <IOSSwitch
+                        checked={it?.isChecked}
+                        onChange={(event) => {
+                          if (it?.subtitle == "email") {
+                            emailNotification(
+                              it?.title,
+                              event.target.checked,
+                              index,
+                              ind
+                            );
+                          } else {
+                            notification(
+                              it?.title,
+                              event.target.checked,
+                              index,
+                              ind
+                            );
+                          }
+                        }}
+                        // onClick={() => {
+                        //   setValue({
+                        //     ...value,
+                        //     btn1: value.btn1 === 0 ? 1 : 0,
+                        //   });
+                        //   setTimeout(() => {
+                        //     notification("inbox_messages", 0);
+                        //   }, 300);
+                        // }}
+                      />
+                    </div>
+                  );
+                })}
+              </Grid>
+            );
+          })}
         </Grid>
       </Grid>
     </Grid>
