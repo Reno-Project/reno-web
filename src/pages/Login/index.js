@@ -9,7 +9,6 @@ import {
   Modal,
   Fade,
   Box,
-  TextField,
   Backdrop,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -121,6 +120,8 @@ const Login = (props) => {
         dispatch(setToken(response?.token));
         if (response?.is_new_user) {
           navigate("/signup", { state: { socialData } });
+        } else if (response?.data?.is_two_factor_verified) {
+          sendOtpVerifyingApiCall(response?.data);
         } else if (
           response?.data?.contractor_data &&
           response?.data?.contractor_data?.profile_completed === "pending"

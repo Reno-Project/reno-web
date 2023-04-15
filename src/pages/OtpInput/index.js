@@ -54,7 +54,11 @@ const OtpInput = (props) => {
         dispatch(setUserData(response?.data));
         dispatch(setToken(response?.token));
         // move to create profile screen
-        navigate("/create-profile");
+        if (response?.data?.contractor_data?.profile_completed === "pending") {
+          navigate("/create-profile");
+        } else {
+          navigate("/dashboard");
+        }
       } else {
         toast.error(response?.message);
       }
@@ -116,7 +120,7 @@ const OtpInput = (props) => {
             numInputs={5}
             renderSeparator={<span style={{ padding: 10 }}> </span>}
             renderInput={(props) => <input {...props} />}
-            inputType="number"
+            inputType="tel"
             inputStyle={{
               height: 40,
               width: 40,
@@ -154,7 +158,7 @@ const OtpInput = (props) => {
               }}
             >
               {btnLoad === "resend" ? (
-                <CircularProgress style={{ color: "#fff" }} size={26} />
+                <CircularProgress style={{ color: color.primary }} size={26} />
               ) : resendViewVisible ? (
                 "Resend Otp"
               ) : (

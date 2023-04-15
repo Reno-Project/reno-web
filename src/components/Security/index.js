@@ -83,11 +83,11 @@ export default function Security() {
         dispatch(setUserData(response?.data));
         setStatus(response?.data?.is_two_factor_verified);
       } else {
-        setStatus(userData);
+        setStatus(userData?.is_two_factor_verified);
       }
     } catch (error) {
       console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
-      setStatus(userData);
+      setStatus(userData?.is_two_factor_verified);
     }
   }
 
@@ -101,6 +101,7 @@ export default function Security() {
         }
       );
       if (response?.success) {
+        getUserDetailsByIdApiCall();
         toast.success(response?.message);
       } else {
         toast.error(response?.message);
@@ -195,10 +196,8 @@ export default function Security() {
             >
               <IOSSwitch
                 sx={{ m: 0 }}
-                defaultChecked
                 checked={status}
                 onChange={(event) => {
-                  setStatus(!status);
                   twoFectorAuth(event.target.checked);
                 }}
               />

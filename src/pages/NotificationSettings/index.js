@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, Grid, Switch, Typography } from "@mui/material";
-import { lastIndexOf } from "lodash";
+import { Grid, Switch, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { getApiData } from "../../utils/APIHelper";

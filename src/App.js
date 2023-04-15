@@ -67,6 +67,7 @@ function App() {
                 <Routes>
                   {isLogin ? (
                     <>
+                      <Route path={"/otp-verify"} element={<OtpInput />} />
                       <Route
                         path={"/create-profile"}
                         element={<CreateProfile />}
@@ -91,8 +92,8 @@ function App() {
                           <Navigate
                             to={
                               userData?.contractor_data &&
-                              userData?.contractor_data
-                                ?.profile_completed === "pending"
+                              userData?.contractor_data?.profile_completed ===
+                                "pending"
                                 ? "/create-profile"
                                 : "/dashboard"
                             }

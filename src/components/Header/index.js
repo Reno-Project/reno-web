@@ -101,8 +101,8 @@ function Header(props) {
           className={classes.rightContainer}
         >
           {currentUrl?.includes("signup") ||
-            currentUrl?.includes("login") ||
-            !isEmpty(token) ? null : (
+          currentUrl?.includes("login") ||
+          !isEmpty(token) ? null : (
             <Grid item className={classes.PR25}>
               <NavLink to="" className={classes.linkStyle}>
                 <Typography className={classes.menuTitleStyle}>
@@ -127,49 +127,58 @@ function Header(props) {
                         </InputAdornment>
                       }
                     />
-                    {currentUrl?.includes("notifications") ?
+                    {currentUrl?.includes("notifications") ? (
                       <NavLink to="/">
                         <Button
                           variant="contained"
                           color="primary"
-                         style={{padding: '6px 6px',fontSize:'14px'}}
+                          style={{ padding: "6px 6px", fontSize: "14px" }}
                         >
                           Become contarctor
                         </Button>
                       </NavLink>
-                      : <> <Grid item>
-                        <Button variant="contained">Projects </Button>
-                      </Grid>
+                    ) : (
+                      <>
+                        <Grid item>
+                          <Button variant="contained">Projects</Button>
+                        </Grid>
                         <Grid item>
                           <IconButton>
                             <img src={Images.chatico} alt="chat" />
                           </IconButton>
                         </Grid>
                       </>
-                    }
+                    )}
                   </>
                 )}
-                {currentUrl?.includes("notifications") ? null : <Grid item>
-                  <IconButton onClick={() => navigate("/notifications")}>
-                    <img src={Images.BellSimple} alt="notification" />
-                  </IconButton>
-                </Grid>
-                }
-                {currentUrl?.includes("notifications") ? null : <> {!userData?.profile_url ? (
-                  <Avatar
-                    style={{ color: "#FFF", cursor: "pointer" }}
-                    onClick={handleClick}
-                  />
-                ) : (
-                  <img
-                    alt="logo"
-                    src={userData?.profile_url}
-                    className={classes.logoStyle}
-                    aria-describedby={id}
-                    variant="contained"
-                    onClick={handleClick}
-                  />
-                )}</>}
+                {currentUrl?.includes("notifications") ||
+                currentUrl?.includes("otp-verify") ? null : (
+                  <Grid item>
+                    <IconButton onClick={() => navigate("/notifications")}>
+                      <img src={Images.BellSimple} alt="notification" />
+                    </IconButton>
+                  </Grid>
+                )}
+                {currentUrl?.includes("notifications") ||
+                currentUrl?.includes("otp-verify") ? null : (
+                  <>
+                    {!userData?.profile_url ? (
+                      <Avatar
+                        style={{ color: "#FFF", cursor: "pointer" }}
+                        onClick={handleClick}
+                      />
+                    ) : (
+                      <img
+                        alt="logo"
+                        src={userData?.profile_url}
+                        className={classes.logoStyle}
+                        aria-describedby={id}
+                        variant="contained"
+                        onClick={handleClick}
+                      />
+                    )}
+                  </>
+                )}
                 <Popover
                   id={id}
                   open={open}
