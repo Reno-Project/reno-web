@@ -294,7 +294,7 @@ const ContractorProfile = (props) => {
             </Grid>
             <Grid item>
               <Typography style={{ paddingRight: 20 }}>
-                {userData.contractor_data.description}
+                {userData?.contractor_data?.description}
               </Typography>
             </Grid>
           </Grid>
