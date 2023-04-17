@@ -570,10 +570,16 @@ export default function EditProfile() {
                     padding: "15px 10px",
                     borderBottom: "1px solid #F2F3F4",
                     borderRadius: 6,
+                    cursor: "pointer",
                   }}
                   onClick={() => setActive(index)}
                 >
-                  <Typography variant="outlined">{item}</Typography>
+                  <Typography
+                    variant="outlined"
+                    style={{ fontFamily: "Roobert-Regular" }}
+                  >
+                    {item}
+                  </Typography>
                 </Grid>
               );
             })}

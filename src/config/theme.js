@@ -278,7 +278,9 @@ theme = createTheme(theme, {
     MuiTab: {
       styleOverrides: {
         root: {
-          // padding: "12px 45px",
+          textTransform: "capitalize",
+          fontFamily: "Roobert-Regular",
+          fontWeight: "500",
         },
       },
     },

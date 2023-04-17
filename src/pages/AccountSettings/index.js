@@ -23,8 +23,7 @@ export default function AccountSettings() {
             variant="h4"
             style={{
               lineHeight: 3,
-              fontFamily: "El Messiri",
-              padding: "0 15px",
+              fontFamily: "ElMessiri-SemiBold",
             }}
           >
             Account Settings
