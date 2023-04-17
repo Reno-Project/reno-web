@@ -51,9 +51,9 @@ export default function Notifications() {
         <Typography
           variant="h4"
           style={{
-            lineHeight: 3,
-            fontFamily: "El Messiri",
-            padding: "0 15px",
+            lineHeight: 4,
+            fontFamily: "ElMessiri-semiBold",
+            fontSize: "28px",
           }}
         >
           Notifications
@@ -97,19 +97,39 @@ export default function Notifications() {
                   </Grid>
                   <Grid item container xs={10.5} alignItems={"center"}>
                     <Grid item xs={12}>
-                      <Typography>{item?.label}</Typography>
-                      <Typography color={"#274BF1"}>{item?.time}</Typography>
+                      <Typography style={{ fontFamily: "'Roobert'-Regular" }}>
+                        {item?.label}
+                      </Typography>
+                      <Typography
+                        style={{
+                          fontFamily: "'Roobert'-Regular",
+                          color: "#274BF1",
+                        }}
+                      >
+                        {item?.time}
+                      </Typography>
                     </Grid>
                     <Grid item xs={12} marginTop={1}>
                       <Button
                         variant="contained"
-                        style={{ width: 110, borderRadius: 7, marginRight: 10 }}
+                        style={{
+                          width: 100,
+                          borderRadius: 7,
+                          marginRight: 10,
+                          padding: 3,
+                        }}
                       >
                         Chat now
                       </Button>
                       <Button
                         variant="outlined"
-                        style={{ width: 110, borderRadius: 7 ,border:'none',backgroundColor:'#F5F6F8'}}
+                        style={{
+                          width: 10,
+                          borderRadius: 7,
+                          padding: 3,
+                          border: "none",
+                          backgroundColor: "#F5F6F8",
+                        }}
                       >
                         Decline
                       </Button>
