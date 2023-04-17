@@ -58,7 +58,6 @@ const errorObj = {
 export default function EditProfile() {
   const classes = useStyles();
   const { token, userData } = useSelector((state) => state.auth);
-  const isEdit = !isEmpty(userData);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
   const [profileData, setProfileData] = useState([]);
@@ -70,6 +69,7 @@ export default function EditProfile() {
   const [bLogo, setBLogo] = useState(null);
   const [errObj, setErrObj] = useState(errorObj);
   const data = profileData?.contractor_data;
+  const isEdit = !isEmpty(profileData);
   const [state, setState] = useState({
     businessLogo: "",
     cname: "",

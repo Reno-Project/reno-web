@@ -33,7 +33,7 @@ export default function Billing() {
   const [pageLoad, setPageLoad] = useState(true);
   const [billingData, setBillingData] = useState([]);
   const data = billingData?.contractor_data?.billing_info;
-  const isEdit = !isEmpty(userData);
+  const isEdit = !isEmpty(billingData);
 
   const [buttonLoader, setButtonLoader] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);

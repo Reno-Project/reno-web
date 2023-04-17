@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -122,9 +122,10 @@ const reviews = [
 ];
 const ContractorProfile = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { setUserData } = authActions;
   const { userData } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const portfolioList = cloneDeep(userData?.contractor_data?.portfolio) || [];
   const [RList, setRList] = useState(cloneDeep(reviews));
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
@@ -132,14 +133,44 @@ const ContractorProfile = (props) => {
   const totalReview = 480;
   const rating = 4.0;
   const [showAll, setShowAll] = useState(false);
+  const [pageLoad, setPageLoad] = useState(true);
+  const [profileData, setProfileData] = useState([]);
+  const portfolioList =
+    cloneDeep(profileData?.contractor_data?.portfolio) || [];
   const displayedImages = showAll ? portfolioList : portfolioList.slice(0, 5);
-
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyName, setReplyName] = useState("");
   const [activeInd, setActiveInd] = useState(null);
   const [replyContent, setReplyContent] = useState("");
   const [showMoreR, setShowMoreR] = useState(false);
   const reviewList = showMoreR ? RList : RList.slice(0, 2);
+
+  useEffect(() => {
+    getUserDetailsByIdApiCall();
+  }, []);
+
+  async function getUserDetailsByIdApiCall() {
+    setPageLoad(true);
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.contarctorById}/${userData?.id}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        dispatch(setUserData(response?.data));
+        setProfileData(response?.data);
+      } else {
+        setProfileData(userData);
+      }
+      setPageLoad(false);
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
+      setProfileData(userData);
+      setPageLoad(false);
+    }
+  }
+
   const handleReplySubmit = (e, review) => {
     e.preventDefault();
     const newReply = {
@@ -175,11 +206,22 @@ const ContractorProfile = (props) => {
     // }
   };
 
-  return (
+  return pageLoad ? (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <CircularProgress style={{ color: color.primary }} size={40} />
+    </div>
+  ) : (
     <div className={classes.main}>
       <Grid item>
         <img
-          src={portfolioList[0]?.image || ""}
+          src={profileData?.profile_url || ""}
           className={classes.coverStyle}
         />
       </Grid>
@@ -200,7 +242,7 @@ const ContractorProfile = (props) => {
             style={{ paddingRight: md ? 20 : 0 }}
           >
             <img
-              src={userData?.profile_url}
+              src={profileData?.profile_url}
               alt="profile"
               className={classes.avtar}
             />
@@ -210,9 +252,9 @@ const ContractorProfile = (props) => {
               <Typography
                 className={`${classes.loginHeaderText} ${classes.mrL3}`}
               >
-                {userData?.contractor_data?.company_name}
+                {profileData?.contractor_data?.company_name}
               </Typography>
-              {userData?.is_email_verified && (
+              {profileData?.is_email_verified && (
                 <div className={classes.verifycontainer}>
                   <img
                     src={Images.verified}
@@ -294,7 +336,7 @@ const ContractorProfile = (props) => {
             </Grid>
             <Grid item>
               <Typography style={{ paddingRight: 20 }}>
-                {userData?.contractor_data?.description}
+                {profileData?.contractor_data?.description}
               </Typography>
             </Grid>
           </Grid>
@@ -662,9 +704,9 @@ const ContractorProfile = (props) => {
             Expertise Area:
           </Typography>
           <Grid item container columnGap={2} rowGap={2}>
-            {isArray(userData?.contractor_data?.expertise) &&
-              !isEmpty(userData?.contractor_data?.expertise) &&
-              userData?.contractor_data?.expertise.map((ele, ind) => {
+            {isArray(profileData?.contractor_data?.expertise) &&
+              !isEmpty(profileData?.contractor_data?.expertise) &&
+              profileData?.contractor_data?.expertise.map((ele, ind) => {
                 return (
                   <Grid item className={classes.chip}>
                     <Typography textTransform={"uppercase"}>
@@ -675,21 +717,21 @@ const ContractorProfile = (props) => {
               })}
           </Grid>
         </Grid>
-        {isEmpty(userData?.contractor_data?.fb_url) &&
-        isEmpty(userData?.contractor_data?.insta_url) &&
-        isEmpty(userData?.contractor_data?.yt_url) &&
-        isEmpty(userData?.contractor_data?.linkedin_url) ? null : (
+        {isEmpty(profileData?.contractor_data?.fb_url) &&
+        isEmpty(profileData?.contractor_data?.insta_url) &&
+        isEmpty(profileData?.contractor_data?.yt_url) &&
+        isEmpty(profileData?.contractor_data?.linkedin_url) ? null : (
           <Grid container mt={3}>
             <Typography className={classes.titleStyle} mb={1}>
               Social media
             </Typography>
             <Grid item container columnGap={2} rowGap={2}>
-              {userData?.contractor_data?.fb_url && (
+              {profileData?.contractor_data?.fb_url && (
                 <Grid
                   item
                   className={classes.chip}
                   onClick={() => {
-                    window.open(userData?.contractor_data?.fb_url, "_blank");
+                    window.open(profileData?.contractor_data?.fb_url, "_blank");
                   }}
                 >
                   <>
@@ -702,12 +744,15 @@ const ContractorProfile = (props) => {
                   </>
                 </Grid>
               )}
-              {userData?.contractor_data?.insta_url && (
+              {profileData?.contractor_data?.insta_url && (
                 <Grid
                   item
                   className={classes.chip}
                   onClick={() => {
-                    window.open(userData?.contractor_data?.insta_url, "_blank");
+                    window.open(
+                      profileData?.contractor_data?.insta_url,
+                      "_blank"
+                    );
                   }}
                 >
                   <>
@@ -720,12 +765,12 @@ const ContractorProfile = (props) => {
                   </>
                 </Grid>
               )}
-              {userData?.contractor_data?.yt_url && (
+              {profileData?.contractor_data?.yt_url && (
                 <Grid
                   item
                   className={classes.chip}
                   onClick={() => {
-                    window.open(userData?.contractor_data?.yt_url, "_blank");
+                    window.open(profileData?.contractor_data?.yt_url, "_blank");
                   }}
                 >
                   <>
@@ -738,13 +783,13 @@ const ContractorProfile = (props) => {
                   </>
                 </Grid>
               )}
-              {userData?.contractor_data?.linkedin_url && (
+              {profileData?.contractor_data?.linkedin_url && (
                 <Grid
                   item
                   className={classes.chip}
                   onClick={() => {
                     window.open(
-                      userData?.contractor_data?.linkedin_url,
+                      profileData?.contractor_data?.linkedin_url,
                       "_blank"
                     );
                   }}
