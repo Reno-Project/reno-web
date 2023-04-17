@@ -178,7 +178,10 @@ const ContractorProfile = (props) => {
   return (
     <div className={classes.main}>
       <Grid item>
-        <img src={portfolioList[0] || ""} className={classes.coverStyle} />
+        <img
+          src={portfolioList[0]?.image || ""}
+          className={classes.coverStyle}
+        />
       </Grid>
       <Grid
         container
@@ -391,7 +394,7 @@ const ContractorProfile = (props) => {
                           }}
                         >
                           <img
-                            src={e}
+                            src={e?.image}
                             alt={`img_${i}`}
                             className={classes.portfolioImg}
                           />
@@ -413,7 +416,7 @@ const ContractorProfile = (props) => {
                       <Fade in={true}>
                         <Grid item sm={2.4} xs={4} padding={1}>
                           <img
-                            src={e}
+                            src={e?.image}
                             alt={`img_${i}`}
                             className={classes.portfolioImg}
                           />
