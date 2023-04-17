@@ -137,7 +137,7 @@ const CreateProfile = (props) => {
 
   useEffect(() => {
     getUserDetailsByIdApiCall();
-  }, []);
+  }, [activeStep]);
 
   useEffect(() => {
     if (state?.businessLogo && _.isObject(state?.businessLogo)) {
@@ -179,13 +179,10 @@ const CreateProfile = (props) => {
       setSelectedLocation(obj);
       setUserLocation(uData?.company_address);
 
-      let tempArray = [];
-      uData?.expertise?.map((item, index) => {
-        const test = findFromArray(item);
-        if (test) {
-          tempArray.push(test);
-        }
-      });
+      const newArray = uData?.expertise.map(({ id, project_name }) => ({
+        id: id,
+        label: project_name,
+      }));
 
       setState({
         ...state,
@@ -202,7 +199,7 @@ const CreateProfile = (props) => {
         annualContract: uData?.no_of_contracts_annually
           ? uData?.no_of_contracts_annually.toString()
           : "",
-        expertise: tempArray ? tempArray : [],
+        expertise: newArray ? newArray : [],
         certificate: uData?.iso_certificate ? uData?.iso_certificate : "",
         license: uData?.licenses ? uData?.licenses : "",
         registraion: uData?.company_registration
@@ -597,6 +594,25 @@ const CreateProfile = (props) => {
       console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
       toast.error(error.toString());
       setButtonLoader("");
+    }
+  }
+
+  // this function for delete portfolio image
+  async function deletePortfolio(id) {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.deleteportfolio}/${id}`,
+        "GET",
+        {}
+      );
+      if (response?.success) {
+        toast.success(response?.message);
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error.toString() || "Somthing went wromg try again later");
     }
   }
 
@@ -1361,8 +1377,8 @@ const CreateProfile = (props) => {
                       state.portfolio.length > 0 &&
                       state.portfolio.map((item, index) => {
                         let imgUrl = "";
-                        if (typeof item === "string") {
-                          imgUrl = item;
+                        if (typeof item?.image === "string") {
+                          imgUrl = item?.image;
                         } else {
                           imgUrl = URL.createObjectURL(item);
                         }
@@ -1399,7 +1415,7 @@ const CreateProfile = (props) => {
                                   `Portfolio Image ${index + 1}` ||
                                   ""}
                               </Typography>
-                              <Typography
+                              {/* <Typography
                                 style={{
                                   fontFamily: "Roobert-Regular",
                                   color: "#787B8C",
@@ -1408,7 +1424,7 @@ const CreateProfile = (props) => {
                                 {isString(item)
                                   ? ""
                                   : `${(item?.size / 1000).toFixed(2)} kb`}
-                              </Typography>
+                              </Typography> */}
                             </div>
                             <div
                               style={{
@@ -1426,6 +1442,7 @@ const CreateProfile = (props) => {
                                   color: "#8C92A4",
                                 }}
                                 onClick={() => {
+                                  item?.id && deletePortfolio(item?.id);
                                   const nArr = [...state.portfolio];
                                   nArr.splice(index, 1);
                                   setState({ ...state, portfolio: nArr });

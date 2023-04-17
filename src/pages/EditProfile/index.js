@@ -85,11 +85,11 @@ export default function EditProfile() {
     website: "",
     phone: "",
     countryCode: "AE",
-    pCode: "971",
+    pCode: "",
     businessYear: "",
     employees: "",
     annualContract: "",
-    expertise: "",
+    expertise: [],
     certificate: "",
     license: "",
     registraion: "",
@@ -172,7 +172,6 @@ export default function EditProfile() {
         label: project_name,
       }));
 
-      console.log(newArray);
       setState({
         ...state,
         businessLogo: profileData?.profile_url,
@@ -180,12 +179,12 @@ export default function EditProfile() {
         address: obj.location || "",
         email: profileData?.email || "",
         website: data?.website || "",
-        pCode: data?.phone_code || "",
+        pCode: profileData?.phone_code || "",
         phone: profileData?.phone_no || "",
         businessYear: data?.no_of_years_in_business.toString() || "",
         employees: data?.no_of_employees.toString() || "",
         annualContract: data?.no_of_contracts_annually.toString() || "",
-        expertise: newArray || "",
+        expertise: newArray || [],
         certificate: data?.iso_certificate || "",
         license: data?.licenses || "",
         registraion: data?.company_registration || "",
@@ -485,14 +484,13 @@ export default function EditProfile() {
     }
   }
 
-  async function deletePortfolio() {
+  async function deletePortfolio(id) {
     try {
       const response = await getApiData(
-        `${Setting.endpoints.deleteportfolio}/${userData.id}`,
+        `${Setting.endpoints.deleteportfolio}/${id}`,
         "GET",
         {}
       );
-      console.log("response=====>>>>>", response);
       if (response?.success) {
         toast.success(response?.message);
       } else {
@@ -704,26 +702,8 @@ export default function EditProfile() {
                     }}
                     InputProps={{
                       startAdornment: (
-                        <InputAdornment
-                          position="start"
-                          style={{
-                            marginLeft: "-13px",
-                          }}
-                        >
-                          <PhoneInput
-                            disabled
-                            country={"ae"}
-                            value={state.pCode}
-                            onChange={(code, country) => {
-                              const countryUpperCase =
-                                country?.countryCode.toUpperCase();
-                              setState({
-                                ...state,
-                                pCode: code,
-                                countryCode: countryUpperCase,
-                              });
-                            }}
-                          />
+                        <InputAdornment position="start">
+                          <Typography>+{state.pCode}</Typography>
                         </InputAdornment>
                       ),
                     }}
@@ -1457,8 +1437,8 @@ export default function EditProfile() {
                     state.portfolio.length > 0 &&
                     state.portfolio.map((item, index) => {
                       let imgUrl = "";
-                      if (typeof item === "string") {
-                        imgUrl = item;
+                      if (typeof item?.image === "string") {
+                        imgUrl = item?.image;
                       } else {
                         imgUrl = URL.createObjectURL(item);
                       }
@@ -1494,16 +1474,16 @@ export default function EditProfile() {
                                 `Portfolio Image ${index + 1}` ||
                                 ""}
                             </Typography>
-                            <Typography
+                            {/* <Typography
                               style={{
                                 fontFamily: "Roobert-Regular",
                                 color: "#787B8C",
                               }}
                             >
-                              {isString(item)
+                              {isString(item?.image)
                                 ? ""
                                 : `${(item?.size / 1000).toFixed(2)} kb`}
-                            </Typography>
+                            </Typography> */}
                           </div>
                           <div
                             style={{
@@ -1521,6 +1501,7 @@ export default function EditProfile() {
                                 color: "#8C92A4",
                               }}
                               onClick={() => {
+                                item?.id && deletePortfolio(item?.id);
                                 const nArr = [...state.portfolio];
                                 nArr.splice(index, 1);
                                 setState({ ...state, portfolio: nArr });
@@ -1543,16 +1524,15 @@ export default function EditProfile() {
                   justifyContent: "center",
                 }}
               >
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                   <Button
                     style={{ width: "100%" }}
                     variant="outlined"
-                    onClick={() => deletePortfolio()}
                   >
                     Delete portfolio
                   </Button>
-                </Grid>
-                <Grid item xs={6}>
+                </Grid> */}
+                <Grid item xs={12}>
                   <Button
                     style={{ minWidth: "135px", width: "100%" }}
                     variant="contained"
