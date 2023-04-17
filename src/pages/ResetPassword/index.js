@@ -343,7 +343,7 @@ const ResetPassword = (props) => {
                 {btnLoad === "resend" ? (
                   <CircularProgress style={{ color: "#fff" }} size={26} />
                 ) : resendViewVisible ? (
-                  "Resend Otp"
+                  "Resend OTP"
                 ) : (
                   `00:${timerCount}`
                 )}
