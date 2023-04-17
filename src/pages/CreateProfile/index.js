@@ -87,7 +87,7 @@ const CreateProfile = (props) => {
   const classes = useStyles();
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const { setUserData } = authActions;
+  const { setUserData, clearAllData } = authActions;
 
   const [activeStep, setActiveStep] = useState(0);
   const [errObj, setErrObj] = useState(errorObj);
@@ -179,7 +179,7 @@ const CreateProfile = (props) => {
       setSelectedLocation(obj);
       setUserLocation(uData?.company_address);
 
-      const newArray = uData?.expertise.map(({ id, project_name }) => ({
+      const newArray = uData?.expertise?.map(({ id, project_name }) => ({
         id: id,
         label: project_name,
       }));
@@ -1163,12 +1163,21 @@ const CreateProfile = (props) => {
                       startAdornment: (
                         <InputAdornment position="start">
                           {/* <LinkedInIcon/> */}
-                          <img
-                            src={Images.Linkedin1}
-                            alt="Linkedin"
-                            style={{ backgroundColor: "#F5F6F8", padding: 15 }}
-                            // className={classes.imgStyleLanguage}
-                          />
+                          <div
+                            style={{
+                              display: "flex",
+                              flex: 1,
+                              padding: 10,
+                              backgroundColor: "#F5F6F8",
+                            }}
+                          >
+                            <img
+                              src={Images.Linkedin1}
+                              alt="Linkedin"
+                              style={{ borderRadius: 2 }}
+                              // className={classes.imgStyleLanguage}
+                            />
+                          </div>
                         </InputAdornment>
                       ),
                     }}
@@ -1198,12 +1207,20 @@ const CreateProfile = (props) => {
                       style: { paddingLeft: "0px" },
                       startAdornment: (
                         <InputAdornment position="start">
-                          <img
-                            src={Images.Fb1}
-                            alt="facebook"
-                            style={{ backgroundColor: "#F5F6F8", padding: 15 }}
-                            // className={classes.imgStyleLanguage}
-                          />
+                          <div
+                            style={{
+                              display: "flex",
+                              flex: 1,
+                              padding: 10,
+                              backgroundColor: "#F5F6F8",
+                            }}
+                          >
+                            <img
+                              src={Images.Fb1}
+                              alt="facebook"
+                              // className={classes.imgStyleLanguage}
+                            />
+                          </div>
                         </InputAdornment>
                       ),
                     }}
@@ -1267,18 +1284,18 @@ const CreateProfile = (props) => {
                   <Typography style={{ textAlign: "center", color: "#646F86" }}>
                     Already have an account,{" "}
                   </Typography>
-
-                  <NavLink to="/login" className={classes.linkStyle}>
-                    <Typography
-                      style={{
-                        fontWeight: "bold",
-                        color: "#030F1C",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Login now?
-                    </Typography>
-                  </NavLink>
+                  <Typography
+                    onClick={() => {
+                      dispatch(clearAllData());
+                    }}
+                    style={{
+                      fontWeight: "bold",
+                      color: "#030F1C",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Login now?
+                  </Typography>
                 </Grid>
 
                 {/* <Grid

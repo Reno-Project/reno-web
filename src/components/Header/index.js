@@ -45,11 +45,11 @@ function Header(props) {
   const id = open ? "simple-popover" : undefined;
 
   // this function for logout
-  function logout() {
+  function logout(type) {
     dispatch(clearAllData());
     handleClose();
     setTimeout(() => {
-      navigate("/login");
+      type === "signup" ? navigate("/signup") : navigate("/login");
     }, 500);
   }
 
@@ -113,30 +113,34 @@ function Header(props) {
           )}
 
           <Grid item className={classes.rightLogoContainer} columnGap={1}>
-            {token !== "" ? (
+            {!isEmpty(token) ? (
               <>
                 {!sm && (
                   <>
-                    <CInput
-                      placeholder="Search..."
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton>
-                            <SearchRoundedIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                    {currentUrl?.includes("notifications") ? (
-                      <NavLink to="/">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          style={{ padding: "6px 6px", fontSize: "14px" }}
-                        >
-                          Become contarctor
-                        </Button>
-                      </NavLink>
+                    {currentUrl?.includes("create-profile") ||
+                    currentUrl?.includes("otp-verify") ? null : (
+                      <CInput
+                        placeholder="Search..."
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton>
+                              <SearchRoundedIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                    )}
+                    {currentUrl?.includes("create-profile") ? (
+                      <Button
+                        onClick={() => {
+                          logout("signup");
+                        }}
+                        variant="contained"
+                        color="primary"
+                        style={{ padding: "6px 6px", fontSize: "14px" }}
+                      >
+                        Become contarctor
+                      </Button>
                     ) : (
                       <>
                         <Grid item>
@@ -152,14 +156,15 @@ function Header(props) {
                   </>
                 )}
                 {currentUrl?.includes("notifications") ||
-                currentUrl?.includes("otp-verify") ? null : (
+                currentUrl?.includes("otp-verify") ||
+                currentUrl?.includes("create-profile") ? null : (
                   <Grid item>
                     <IconButton onClick={() => navigate("/notifications")}>
                       <img src={Images.BellSimple} alt="notification" />
                     </IconButton>
                   </Grid>
                 )}
-                {currentUrl?.includes("notifications") ||
+                {currentUrl?.includes("create-profile") ||
                 currentUrl?.includes("otp-verify") ? null : (
                   <>
                     {!userData?.profile_url ? (
@@ -222,7 +227,7 @@ function Header(props) {
                     </>
                   )}
                   <MenuItem
-                    onClick={logout}
+                    onClick={() => logout("")}
                     className={classes.logoutTextStyle}
                   >
                     Logout

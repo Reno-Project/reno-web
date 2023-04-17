@@ -127,8 +127,11 @@ const Login = (props) => {
           response?.data?.contractor_data?.profile_completed === "pending"
         ) {
           navigate("/create-profile");
-        } else if (response?.data?.is_email_verified === false) {
-          sendOtpVerifyingApiCall(response?.data);
+        } else if (response?.is_email_verified === false) {
+          navigate("/otp-verify");
+          sendOtpVerifyingApiCall({
+            email,
+          });
         } else {
           navigate("/dashboard");
         }
@@ -188,7 +191,8 @@ const Login = (props) => {
           response?.data?.contractor_data?.profile_completed === "pending"
         ) {
           navigate("/create-profile");
-        } else if (response?.data?.is_email_verified === false) {
+        } else if (response?.is_email_verified === false) {
+          navigate("/otp-verify");
           sendOtpVerifyingApiCall(response?.data);
         } else {
           setGoogleBtnLoad(false);

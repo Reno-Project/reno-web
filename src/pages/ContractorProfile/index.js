@@ -662,9 +662,9 @@ const ContractorProfile = (props) => {
             Expertise Area:
           </Typography>
           <Grid item container columnGap={2} rowGap={2}>
-            {isArray(userData.contractor_data.expertise) &&
-              !isEmpty(userData.contractor_data.expertise) &&
-              userData.contractor_data.expertise.map((ele, ind) => {
+            {isArray(userData?.contractor_data?.expertise) &&
+              !isEmpty(userData?.contractor_data?.expertise) &&
+              userData?.contractor_data?.expertise.map((ele, ind) => {
                 return (
                   <Grid item className={classes.chip}>
                     <Typography textTransform={"uppercase"}>
