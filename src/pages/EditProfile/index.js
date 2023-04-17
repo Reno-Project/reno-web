@@ -1368,6 +1368,7 @@ export default function EditProfile() {
                   <input
                     type="file"
                     accept="image/jpeg, image/png, image/jpg"
+                    multiple
                     style={{
                       position: "absolute",
                       top: 0,
@@ -1378,8 +1379,11 @@ export default function EditProfile() {
                       cursor: "pointer",
                     }}
                     onChange={(e) => {
+                      const chosenFiles = Array.prototype.slice.call(
+                        e.target.files
+                      );
                       const nArr = [...state.portfolio];
-                      nArr.push(e.target.files[0]);
+                      chosenFiles.map((item) => nArr.push(item));
                       setState({ ...state, portfolio: nArr });
                     }}
                   />

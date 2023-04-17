@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
   logoutTextStyle: {
     cursor: "pointer",
     padding: "0px 10px",
+    fontFamily: "Roobert-Regular !important",
   },
   uploadImgDivStyle: {
     height: "100%",
