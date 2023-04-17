@@ -9,6 +9,7 @@ import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
+import { isMobile } from "react-device-detect";
 
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -63,7 +64,7 @@ const IOSSwitch = styled((props) => (
 
 export default function Security() {
   const classes = useStyles();
-  const { userData } = useSelector((state) => state.auth);
+  const { userData, token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
   const [status, setStatus] = useState("");
@@ -71,6 +72,10 @@ export default function Security() {
   useEffect(() => {
     getUserDetailsByIdApiCall();
   }, [status]);
+
+  useEffect(() => {
+    deviceList();
+  }, []);
 
   async function getUserDetailsByIdApiCall() {
     try {
@@ -112,6 +117,43 @@ export default function Security() {
     }
   }
 
+  async function deviceList() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.logindeviceslist}/${userData?.id}`,
+        "POST",
+        {}
+      );
+      console.log("response=====>>>>>", response);
+      if (response?.success) {
+        toast.success(response?.message);
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.log("error=====>>>>>", error);
+    }
+  }
+
+  async function logoutallApi() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.logoutall}`,
+        "post",
+        {},
+        { Authorization: `Bearer ${token}` }
+      );
+      if (response?.success) {
+        toast.success(response?.message);
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.log("error=====>>>>>", error);
+      toast.error(error.toString() || "Something went wrong try again later");
+    }
+  }
+
   return (
     <Grid
       container
@@ -120,7 +162,9 @@ export default function Security() {
       justifyContent={"center"}
     >
       <Grid item xs={12}>
-        <Typography variant="h5">Logging in Settings</Typography>
+        <Typography variant="h5" fontFamily={"'Roobert-Regular'"}>
+          Logging in Settings
+        </Typography>
         <Grid
           item
           container
@@ -133,13 +177,17 @@ export default function Security() {
           alignItems="center"
           justifyContent={"flex-end"}
         >
-          <Grid item xs={12} sm={12} md={9} lg={9}>
-            <Typography className={classes.TextStyle}>
+          <Grid item xs={12} sm={8} md={9} lg={9}>
+            <Typography
+              className={classes.TextStyle}
+              paddingTop={isMobile ? 3 : 0}
+              fontFamily={"Roobert-Regular"}
+            >
               Allow Login attempts
             </Typography>
           </Grid>
 
-          <Grid item xs={12} sm={12} md={3} lg={3}>
+          <Grid item xs={12} sm={4} md={3} lg={3}>
             <CInput
               outline
               placeholder="Enter Allow ..."
@@ -154,16 +202,23 @@ export default function Security() {
           <Divider width={"100%"} />
           <Grid item container style={{ marginBottom: 15 }}>
             <Grid item xs={12} md={9} sm={12} lg={9} style={{ marginTop: 20 }}>
-              <Typography className={classes.TextStyle}>
+              <Typography
+                className={classes.TextStyle}
+                fontFamily={"Roobert-Regular"}
+              >
                 Phone Verifications
               </Typography>
-              <Typography className={classes.language}>
+              <Typography
+                className={classes.language}
+                fontFamily={"Roobert-Regular"}
+                paddingRight={2}
+              >
                 Your phone is not verified with Reno. Click Verify Now to
                 complete phone verification
               </Typography>
             </Grid>
 
-            <Grid item xs={12} sm={12} md={12} lg={3} style={{ marginTop: 20 }}>
+            <Grid item xs={12} sm={12} md={3} lg={3} style={{ marginTop: 20 }}>
               <Button
                 variant="contained"
                 color="primary"
@@ -180,10 +235,16 @@ export default function Security() {
           <Divider width={"100%"} />
           <Grid item container justifyContent={"space-between"}>
             <Grid item xs={10} sm={9} md={8} style={{ marginTop: 20 }}>
-              <Typography className={classes.TextStyle}>
+              <Typography
+                className={classes.TextStyle}
+                fontFamily={"Roobert-Regular"}
+              >
                 Two factors authentications
               </Typography>
-              <Typography className={classes.language}>
+              <Typography
+                className={classes.language}
+                fontFamily={"Roobert-Regular"}
+              >
                 We will send an authentication code via SMS, email or fiverr
                 notification when using an unrecognised device.
               </Typography>
@@ -217,7 +278,13 @@ export default function Security() {
           justifyContent={"flex-end"}
         >
           <Grid item xs={12}>
-            <Typography variant="h5">Connected Devices</Typography>
+            <Typography
+              variant="h5"
+              fontFamily={"Roobert-Regular"}
+              marginBottom={2}
+            >
+              Connected Devices
+            </Typography>
           </Grid>
           <Grid
             item
@@ -245,11 +312,17 @@ export default function Security() {
               />
             </Grid>
             <Grid xs={9} item>
-              <Typography className={classes.TextStyle}>
+              <Typography
+                fontFamily={"Roobert-Regular"}
+                className={classes.TextStyle}
+              >
                 Chrome 109, Windows
                 <span className={classes.TextDeviceStyle}>THIS DEVICE</span>
               </Typography>
-              <Typography className={classes.language}>
+              <Typography
+                fontFamily={"Roobert-Regular"}
+                className={classes.language}
+              >
                 Last Activity 13 minutes ago • Dubai, United Arab Emirates
               </Typography>
             </Grid>
@@ -257,6 +330,7 @@ export default function Security() {
               <Typography
                 style={{ textAlign: "end" }}
                 className={classes.TextStyle}
+                fontFamily={"Roobert"}
               >
                 signout
               </Typography>
@@ -289,10 +363,16 @@ export default function Security() {
               />
             </Grid>
             <Grid xs={9} item>
-              <Typography className={classes.TextStyle}>
+              <Typography
+                className={classes.TextStyle}
+                fontFamily={"Roobert-Regular"}
+              >
                 iPhone, iOS App
               </Typography>
-              <Typography className={classes.language}>
+              <Typography
+                className={classes.language}
+                fontFamily={"Roobert-Regular"}
+              >
                 Last Activity 1 hour ago • Cairo, Egypt
               </Typography>
             </Grid>
@@ -300,6 +380,7 @@ export default function Security() {
               <Typography
                 style={{ textAlign: "end" }}
                 className={classes.TextStyle}
+                fontFamily={"Roobert"}
               >
                 signout
               </Typography>
@@ -325,6 +406,7 @@ export default function Security() {
                 variant="contained"
                 color="primary"
                 style={{ paddingLeft: "10px", paddingRight: "10px" }}
+                onClick={logoutallApi}
               >
                 Sign out now
               </Button>

@@ -6,6 +6,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "18px !important",
     letterSpacing: "0.5px !important",
     lineHeight: "24px !important",
+    fontFamily: "'Roobert-Regular'",
   },
   TextDeviceStyle: {
     color: "#5CC385",
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "4px !important",
   },
   language: {
+    fontFamily: "'Roobert-Regular'",
     color: "#646F86",
     fontSize: "13px !important",
     letterSpacing: "0.5px !important",

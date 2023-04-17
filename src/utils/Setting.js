@@ -30,6 +30,8 @@ export const Setting = {
     updatesecuritysettings: "api/user/update-security-settings",
     updateUserSetting: "api/user/update-user-settings",
     twoFactorSetting: "api/user/verified-two-factor",
+    logoutall: "api/user/logout-all",
+    logindeviceslist: "api/user/login-devices-list",
   },
 
   JS_Regex: {
