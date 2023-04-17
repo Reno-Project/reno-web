@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import {
@@ -26,9 +26,11 @@ function Header(props) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { clearAllData } = authActions;
   const isAddPadding = useMediaQuery(theme.breakpoints.down(1260));
   const { token, userData } = useSelector((state) => state.auth);
+  console.log("userData====>>>>>", userData);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -73,7 +75,11 @@ function Header(props) {
           <div
             className={classes.imgContainer}
             onClick={() => {
-              navigate("/dashboard");
+              if (userData?.contractor_data?.profile_completed === "pending") {
+                return;
+              } else {
+                navigate("/dashboard");
+              }
             }}
           >
             <img
@@ -100,11 +106,9 @@ function Header(props) {
           xs={9}
           className={classes.rightContainer}
         >
-          {currentUrl?.includes("signup") ||
-          currentUrl?.includes("login") ||
-          !isEmpty(token) ? null : (
+          {location?.pathname === "/" && (
             <Grid item className={classes.PR25}>
-              <NavLink to="" className={classes.linkStyle}>
+              <NavLink to="/signup" className={classes.linkStyle}>
                 <Typography className={classes.menuTitleStyle}>
                   Become a contractor
                 </Typography>
@@ -117,8 +121,8 @@ function Header(props) {
               <>
                 {!sm && (
                   <>
-                    {currentUrl?.includes("create-profile") ||
-                    currentUrl?.includes("otp-verify") ? null : (
+                    {userData?.contractor_data?.profile_completed ===
+                      "pending" || currentUrl?.includes("otp-verify") ? null : (
                       <CInput
                         placeholder="Search..."
                         endAdornment={
@@ -130,18 +134,8 @@ function Header(props) {
                         }
                       />
                     )}
-                    {currentUrl?.includes("create-profile") ? (
-                      <Button
-                        onClick={() => {
-                          logout("signup");
-                        }}
-                        variant="contained"
-                        color="primary"
-                        style={{ padding: "6px 6px", fontSize: "14px" }}
-                      >
-                        Become contarctor
-                      </Button>
-                    ) : (
+                    {userData?.contractor_data?.profile_completed ===
+                    "pending" ? null : ( // </Button> //   Become contarctor // > //   style={{ padding: "6px 6px", fontSize: "14px" }} //   color="primary" //   variant="contained" //   }} //     logout("signup"); //   onClick={() => { // <Button
                       <>
                         <Grid item>
                           <Button variant="contained">Projects</Button>
@@ -157,15 +151,15 @@ function Header(props) {
                 )}
                 {currentUrl?.includes("notifications") ||
                 currentUrl?.includes("otp-verify") ||
-                currentUrl?.includes("create-profile") ? null : (
+                userData?.contractor_data?.profile_completed ===
+                  "pending" ? null : (
                   <Grid item>
                     <IconButton onClick={() => navigate("/notifications")}>
                       <img src={Images.BellSimple} alt="notification" />
                     </IconButton>
                   </Grid>
                 )}
-                {currentUrl?.includes("create-profile") ||
-                currentUrl?.includes("otp-verify") ? null : (
+                {currentUrl?.includes("otp-verify") ? null : (
                   <>
                     {!userData?.profile_url ? (
                       <Avatar
@@ -203,7 +197,9 @@ function Header(props) {
                     },
                   }}
                 >
-                  {userData?.role !== "reno" && (
+                  {userData?.role === "reno" ||
+                  userData?.contractor_data?.profile_completed ===
+                    "pending" ? null : (
                     <>
                       <MenuItem
                         onClick={() => {

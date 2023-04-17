@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "100%",
     borderRadius: 8,
-    objectFit: "center",
+    objectFit: "cover",
     boxShadow: color.shadow,
   },
   imgContainer: {

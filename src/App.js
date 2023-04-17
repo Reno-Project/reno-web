@@ -85,7 +85,6 @@ function App() {
                         path={"/notifications"}
                         element={<Notifications />}
                       />
-                      <Route exact path={"/"} element={<HowItWorks />} />
                       <Route
                         path="*"
                         element={
@@ -105,6 +104,8 @@ function App() {
                     <>
                       <Route path={"/login"} element={<Login />} />
                       <Route path={"/signup"} element={<Signup />} />
+                      <Route exact path={"/"} element={<HowItWorks />} />
+
                       <Route
                         path={"/reset-password"}
                         element={<ResetPassword />}

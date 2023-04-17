@@ -1417,6 +1417,7 @@ export default function EditProfile() {
                       right: 0,
                       bottom: 0,
                       opacity: 0,
+                      cursor: "pointer",
                     }}
                     onChange={(e) => {
                       const nArr = [...state.portfolio];
@@ -1431,6 +1432,7 @@ export default function EditProfile() {
                     marginTop: 40,
                     overflowY: "scroll",
                     maxHeight: 500,
+                    width: "100%",
                   }}
                 >
                   {isArray(state.portfolio) &&
@@ -1454,9 +1456,11 @@ export default function EditProfile() {
                         >
                           <img
                             style={{
-                              width: "15%",
+                              width: 60,
+                              height: 70,
                               borderRadius: 6,
                               marginRight: 20,
+                              objectFit: "cover",
                             }}
                             src={imgUrl}
                             alt="Portfolio Photos"

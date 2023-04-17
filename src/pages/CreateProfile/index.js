@@ -638,6 +638,7 @@ const CreateProfile = (props) => {
       if (response.success) {
         toast.success(response.message);
         setVisible(true);
+        getUserDetailsByIdApiCall();
       } else {
         toast.error(response.message);
       }
@@ -1374,6 +1375,7 @@ const CreateProfile = (props) => {
                         right: 0,
                         bottom: 0,
                         opacity: 0,
+                        cursor: "pointer",
                       }}
                       onChange={(e) => {
                         const chosenFiles = Array.prototype.slice.call(
@@ -1389,7 +1391,7 @@ const CreateProfile = (props) => {
                       }}
                     />
                   </Grid>
-                  <Grid item style={{ marginTop: 40 }}>
+                  <Grid item style={{ marginTop: 40, width: "100%" }}>
                     {isArray(state.portfolio) &&
                       state.portfolio.length > 0 &&
                       state.portfolio.map((item, index) => {
@@ -1411,7 +1413,8 @@ const CreateProfile = (props) => {
                           >
                             <img
                               style={{
-                                width: "10%",
+                                width: 60,
+                                height: 70,
                                 borderRadius: 6,
                                 marginRight: 20,
                                 objectFit: "cover",
