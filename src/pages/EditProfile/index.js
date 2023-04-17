@@ -18,11 +18,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { PhoneNumberUtil } from "google-libphonenumber";
-import { isArray, isEmpty, isNumber, isObject, isString } from "lodash";
+import { isArray, isEmpty, isNumber, isObject } from "lodash";
 import React, { useEffect, useState } from "react";
 import { isMobile, isTablet } from "react-device-detect";
-import PhoneInput from "react-phone-input-2";
 import { toast } from "react-toastify";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
@@ -39,12 +37,8 @@ const errorObj = {
   cnameMsg: "",
   addErr: false,
   addMsg: "",
-  emailErr: false,
-  emailMsg: "",
   webErr: false,
   webMsg: "",
-  phoneErr: false,
-  phoneMsg: "",
   yearErr: false,
   yearMsg: "",
   employeeErr: false,
@@ -63,7 +57,6 @@ const errorObj = {
 
 export default function EditProfile() {
   const classes = useStyles();
-  const phoneUtil = PhoneNumberUtil.getInstance();
   const { token, userData } = useSelector((state) => state.auth);
   const isEdit = !isEmpty(userData);
   const dispatch = useDispatch();
@@ -146,18 +139,6 @@ export default function EditProfile() {
     getUserDetailsByIdApiCall();
   }, []);
 
-  const expertiseArr = (data) => {
-    !isEmpty(data) &&
-      data.map((item, index) => {
-        let obj = {};
-        obj.id = item.id;
-        obj.label = item.project_name;
-        let arr = [];
-        arr.push(obj);
-        return arr;
-      });
-  };
-
   useEffect(() => {
     if (isEdit) {
       let obj = {};
@@ -233,8 +214,6 @@ export default function EditProfile() {
     let scroll = false;
     let section = null;
     const urlRegex = /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/;
-    const emailRegex =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (isEmpty(state.cname)) {
       valid = false;
@@ -341,10 +320,7 @@ export default function EditProfile() {
       let data = {
         company_name: state?.cname ? state?.cname : "",
         company_address: userLocation ? userLocation : "",
-        // email: state?.email || "",
         website: state?.website ? state?.website : "",
-        // phone_code: "",
-        // phone_no: state?.phone || "",
         no_of_years_in_business: state?.businessYear ? state?.businessYear : "",
         no_of_employees: state?.employees ? state?.employees : "",
         no_of_contracts_annually: state?.annualContract
@@ -459,6 +435,7 @@ export default function EditProfile() {
     }
   }
 
+  //this function a for add portfolio images
   async function addPortfolio() {
     setButtonLoader(true);
     try {
@@ -472,6 +449,7 @@ export default function EditProfile() {
       );
 
       if (response.success) {
+        getUserDetailsByIdApiCall();
         toast.success(response.message);
       } else {
         toast.error(response.message);
@@ -484,6 +462,7 @@ export default function EditProfile() {
     }
   }
 
+  //this function a for delete portfolio images
   async function deletePortfolio(id) {
     try {
       const response = await getApiData(
@@ -649,16 +628,6 @@ export default function EditProfile() {
                     label="Email"
                     placeholder="Enter Email Here..."
                     value={state.email}
-                    // onChange={(e) => {
-                    //   setState({ ...state, email: e.target.value });
-                    //   setErrObj({
-                    //     ...errObj,
-                    //     emailErr: false,
-                    //     emailMsg: "",
-                    //   });
-                    // }}
-                    error={errObj.emailErr}
-                    helpertext={errObj.emailMsg}
                   />
                 </Grid>
 
@@ -692,14 +661,6 @@ export default function EditProfile() {
                       marginBottom: 20,
                     }}
                     value={state.phone}
-                    onChange={(e) => {
-                      setState({ ...state, phone: e.target.value });
-                      setErrObj({
-                        ...errObj,
-                        phoneErr: false,
-                        phoneMsg: "",
-                      });
-                    }}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -707,9 +668,6 @@ export default function EditProfile() {
                         </InputAdornment>
                       ),
                     }}
-                    className={classes.pickerInput}
-                    error={errObj.phoneErr}
-                    helperText={errObj.phoneMsg}
                   />
                 </Grid>
 
