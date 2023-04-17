@@ -235,13 +235,13 @@ function Header(props) {
                 </Popover>
               </>
             ) : currentUrl.includes("login") ? (
-              <NavLink to="/login" className={classes.linkStyle}>
+              <NavLink to="/signup" className={classes.linkStyle}>
                 <Button
                   variant="contained"
                   color="primary"
                   style={{ paddingLeft: "35px", paddingRight: "35px" }}
                 >
-                  Login
+                  Signup
                 </Button>
               </NavLink>
             ) : (
