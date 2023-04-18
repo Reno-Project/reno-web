@@ -213,10 +213,6 @@ const CreateProfile = (props) => {
     }
   };
 
-  const findFromArray = (item) => {
-    return exp?.find((it) => it?.id === item?.project_id);
-  };
-
   // validation function for page 1
   function CheckValidattion() {
     const error = { ...errObj };
@@ -249,15 +245,17 @@ const CreateProfile = (props) => {
         section = document.querySelector("#cname");
       }
     }
-    // if (isEmpty(state.description)) {
-    //   valid = false;
-    //   error.descriptionErr = true;
-    //   error.descriptionMsg = "Please Enter Descri[tion";
-    //   if (!scroll) {
-    //     scroll = true;
-    //     section = document.querySelector("#description");
-    //   }
-    // }
+
+    if (state.description.length > 255) {
+      valid = false;
+      error.descriptionErr = true;
+      error.descriptionMsg =
+        "Description should not be greater than 255 characters";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#description");
+      }
+    }
 
     // if (isEmpty(state.website)) {
     //   valid = false;
