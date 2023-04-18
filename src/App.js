@@ -102,16 +102,15 @@ function App() {
                     </>
                   ) : (
                     <>
+                      <Route exact path={"/"} element={<HowItWorks />} />
                       <Route path={"/login"} element={<Login />} />
                       <Route path={"/signup"} element={<Signup />} />
-                      <Route exact path={"/"} element={<HowItWorks />} />
-
                       <Route
                         path={"/reset-password"}
                         element={<ResetPassword />}
                       />
                       <Route path={"/otp-verify"} element={<OtpInput />} />
-                      <Route path="*" element={<Navigate to={"/login"} />} />
+                      <Route path="*" element={<Navigate to={"/"} />} />
                     </>
                   )}
                 </Routes>

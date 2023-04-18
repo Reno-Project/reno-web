@@ -1,6 +1,8 @@
 const Images = {
   header_logo: "/assets/images/logo.png",
   worksBg: "/assets/images/worksBg.png",
+  canvas: "/assets/images/canvas.svg",
+  Pattern: "/assets/images/Pattern.svg",
   google: "/assets/images/google.png",
   fb: "/assets/images/fb.png",
   apple: "/assets/images/apple.png",
@@ -31,11 +33,24 @@ const Images = {
   twitter: "/assets/images/twitter.svg",
   insta_white: "/assets/images/insta_white.svg",
 
-  icon1: "/assets/images/icon1.png",
-  icon2: "/assets/images/icon2.png",
-  icon3: "/assets/images/icon3.png",
-  icon4: "/assets/images/icon4.png",
-  icon5: "/assets/images/icon5.png",
+  icon1: "/assets/images/icon1.svg",
+  icon2: "/assets/images/icon2.svg",
+  icon3: "/assets/images/icon3.svg",
+  icon4: "/assets/images/icon4.svg",
+  icon5: "/assets/images/icon5.svg",
+  icon6: "/assets/images/icon6.svg",
+  icon7: "/assets/images/icon7.svg",
+  icon8: "/assets/images/icon8.svg",
+  icon9: "/assets/images/icon9.svg",
+  icon10: "/assets/images/icon10.svg",
+  icon11: "/assets/images/icon11.svg",
+  icon12: "/assets/images/icon12.svg",
+  icon13: "/assets/images/icon13.svg",
+  icon14: "/assets/images/icon14.svg",
+  icon15: "/assets/images/icon15.svg",
+  icon16: "/assets/images/icon16.svg",
+  icon17: "/assets/images/icon17.svg",
+  quote: "/assets/images/quote.svg",
 };
 
 export default Images;
