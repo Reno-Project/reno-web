@@ -14,6 +14,7 @@ export const Setting = {
   GOOGLE_CLIENT_SECRET_KEY: "",
 
   endpoints: {
+    me: "api/user/me",
     login: "api/user/login",
     signup: "api/user/signup",
     googleData: "auth/google",

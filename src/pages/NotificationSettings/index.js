@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Grid, Switch, Typography } from "@mui/material";
+import { Grid, Switch, Typography, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { getApiData } from "../../utils/APIHelper";
@@ -7,6 +7,7 @@ import { Setting } from "../../utils/Setting";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
+import _ from "lodash";
 
 const IOSSwitch = styled((props) => (
   <div style={{ display: "flex" }}>
@@ -134,34 +135,55 @@ export default function NotificationSettings() {
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
-  const [nsetting, setNsetting] = useState([]);
-  const data = nsetting;
   const [state, setState] = useState({
     notificationList: [],
   });
+  const [loader, setLoader] = useState(true);
 
   useEffect(() => {
-    getUserDetailsByIdApiCall();
+    getMeApiCall();
     setState({ ...state, notificationList: notificationListArray });
   }, []);
 
-  async function getUserDetailsByIdApiCall() {
+  async function getMeApiCall() {
     try {
-      const response = await getApiData(
-        `${Setting.endpoints.contarctorById}/${userData?.id}`,
-        "GET",
-        {}
-      );
+      const response = await getApiData(Setting.endpoints.me, "GET", {});
       if (response.success) {
         dispatch(setUserData(response?.data));
-        setNsetting(response?.data);
+        setNotificationDetailsPreFillFunc(response?.data);
       } else {
-        setNsetting(userData);
+        setNotificationDetailsPreFillFunc(userData);
       }
+      setLoader(false);
     } catch (error) {
-      console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
-      setNsetting(userData);
+      setNotificationDetailsPreFillFunc(userData);
+      setLoader(false);
+      console.log("🚀 ~ file: index.js:63 ~ me api ~ error:", error);
     }
+  }
+
+  function setNotificationDetailsPreFillFunc(result) {
+    const notiData = result?.user_settings;
+    let dummyArray = notificationListArray;
+    dummyArray?.map((it, ind) => {
+      it?.subArray?.map((it1, ind1) => {
+        if (it1?.title === "push_inbox_messages") {
+          it1.isChecked = notiData?.push_inbox_messages;
+        } else if (it1?.title === "push_account_releted") {
+          it1.isChecked = notiData?.push_account_releted;
+        } else if (it1?.title === "push_project_messages") {
+          it1.isChecked = notiData?.push_project_messages;
+        } else if (it1?.title === "push_promotional") {
+          it1.isChecked = notiData?.push_promotional;
+        } else if (it1?.title === "email_account_releted") {
+          it1.isChecked = notiData?.email_account_releted;
+        } else if (it1?.title === "email_project_messages") {
+          it1.isChecked = notiData?.email_project_messages;
+        } else if (it1?.title === "email_promotional") {
+          it1.isChecked = notiData?.email_promotional;
+        }
+      });
+    });
   }
 
   // this function for change user notification status from api call
@@ -208,66 +230,91 @@ export default function NotificationSettings() {
     >
       <Grid item xs={12}>
         <Typography variant="h5">Notifications Settings</Typography>
-        <Grid
-          item
-          container
-          gap={3}
-          wrap={isMobile ? "wrap" : "nowrap"}
-          style={{
-            border: "1px solid #F2F4F7",
-            marginTop: 20,
-            justifyContent: "space-between",
-          }}
-        >
-          {state?.notificationList.map((item, index) => {
-            return (
-              <Grid
-                item
-                container
-                sm={12}
-                lg={6}
-                flexDirection="column"
-                style={{
-                  padding: 20,
-                  backgroundColor: "#F5F6F8",
-                  borderRadius: 5,
-                }}
-              >
-                <Typography variant="h6" marginBottom={"10px"}>
-                  {item?.title}
-                </Typography>
-                {item?.subArray.map((it, ind) => {
-                  return (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        padding: "10px 0",
-                        borderBottom:
-                          item?.subArray?.length - 1 == ind
-                            ? null
-                            : "1px solid #E8E8E8",
-                      }}
-                    >
-                      <Typography>{it.name}</Typography>
-                      <IOSSwitch
-                        checked={it?.isChecked}
-                        onChange={(event) => {
-                          changePushNotificationStatusApiCall(
-                            it?.title,
-                            event.target.checked,
-                            index,
-                            ind
-                          );
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </Grid>
-            );
-          })}
-        </Grid>
+        {loader ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 10
+            }}
+          >
+            <CircularProgress
+              style={{
+                color: "#274BF1",
+              }}
+              size={30}
+            />
+          </div>
+        ) : (
+          <Grid
+            item
+            container
+            gap={3}
+            wrap={isMobile ? "wrap" : "nowrap"}
+            style={{
+              border: "1px solid #F2F4F7",
+              marginTop: 20,
+              justifyContent: "space-between",
+            }}
+          >
+            {_.isArray(state?.notificationList) &&
+            !_.isEmpty(state?.notificationList) ? (
+              state?.notificationList.map((item, index) => {
+                return (
+                  <Grid
+                    item
+                    container
+                    sm={12}
+                    lg={6}
+                    flexDirection="column"
+                    style={{
+                      padding: 20,
+                      backgroundColor: "#F5F6F8",
+                      borderRadius: 5,
+                    }}
+                  >
+                    <Typography variant="h6" marginBottom={"10px"}>
+                      {item?.title}
+                    </Typography>
+                    {item?.subArray.map((it, ind) => {
+                      return (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            padding: "10px 0",
+                            borderBottom:
+                              item?.subArray?.length - 1 == ind
+                                ? null
+                                : "1px solid #E8E8E8",
+                          }}
+                        >
+                          <Typography>{it.name}</Typography>
+                          <IOSSwitch
+                            checked={it?.isChecked}
+                            onChange={(event) => {
+                              changePushNotificationStatusApiCall(
+                                it?.title,
+                                event.target.checked,
+                                index,
+                                ind
+                              );
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </Grid>
+                );
+              })
+            ) : (
+              <Typography variant="h4" margin={"10px"}>
+                No data found
+              </Typography>
+            )}
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );
