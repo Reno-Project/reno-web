@@ -121,6 +121,7 @@ const Login = (props) => {
         if (response?.is_new_user) {
           navigate("/signup", { state: { socialData } });
         } else if (response?.data?.is_two_factor_verified) {
+          navigate("/otp-verify");
           sendOtpVerifyingApiCall(response?.data);
         } else if (
           response?.data?.contractor_data &&
