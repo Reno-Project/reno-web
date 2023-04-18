@@ -148,7 +148,7 @@ export default function EditProfile() {
       setSelectedLocation(obj);
       setUserLocation(obj?.location);
 
-      const newArray = data?.expertise.map(({ id, project_name }) => ({
+      const newArray = data?.expertise?.map(({ id, project_name }) => ({
         id: id,
         label: project_name,
       }));
@@ -162,9 +162,9 @@ export default function EditProfile() {
         website: data?.website || "",
         pCode: profileData?.phone_code || "",
         phone: profileData?.phone_no || "",
-        businessYear: data?.no_of_years_in_business.toString() || "",
-        employees: data?.no_of_employees.toString() || "",
-        annualContract: data?.no_of_contracts_annually.toString() || "",
+        businessYear: data?.no_of_years_in_business?.toString() || "",
+        employees: data?.no_of_employees?.toString() || "",
+        annualContract: data?.no_of_contracts_annually?.toString() || "",
         expertise: newArray || [],
         certificate: data?.iso_certificate || "",
         license: data?.licenses || "",
@@ -537,7 +537,7 @@ export default function EditProfile() {
               padding: 10,
             }}
           >
-            {btnArr.map((item, index) => {
+            {btnArr?.map((item, index) => {
               return (
                 <Grid
                   item
@@ -568,7 +568,7 @@ export default function EditProfile() {
               sm={8}
               md={8}
               lg={8}
-              padding={isMobile ? "10px 0" : "10px 20px"}
+              padding={isMobile ? "10px 0" : "0px 20px"}
             >
               <Typography variant="h5">Information</Typography>
               <Grid
@@ -1398,8 +1398,8 @@ export default function EditProfile() {
                   }}
                 >
                   {isArray(state.portfolio) &&
-                    state.portfolio.length > 0 &&
-                    state.portfolio.map((item, index) => {
+                    state?.portfolio?.length > 0 &&
+                    state?.portfolio?.map((item, index) => {
                       let imgUrl = "";
                       if (typeof item?.image === "string") {
                         imgUrl = item?.image;

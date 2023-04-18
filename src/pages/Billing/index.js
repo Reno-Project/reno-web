@@ -216,7 +216,7 @@ export default function Billing() {
       ) : (
         <>
           <Grid item container xs={12}>
-            <Grid item padding={isMobile ? "10px 0" : "10px 20px"}>
+            <Grid item padding={isMobile ? "10px 0" : "0px 20px"}>
               <Typography variant="h5">Billing information</Typography>
               <Grid
                 item
@@ -227,7 +227,7 @@ export default function Billing() {
                   marginTop: 20,
                 }}
               >
-                <Grid item xs={12} style={{ marginTop: 20 }} id="beneficiary">
+                <Grid item xs={12} id="beneficiary">
                   <CInput
                     label="Beneficiary Name"
                     placeholder="Enter Beneficiary Name"
