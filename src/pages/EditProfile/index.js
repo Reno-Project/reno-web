@@ -223,6 +223,15 @@ export default function EditProfile() {
         scroll = true;
         section = document.querySelector("#cname");
       }
+    } else if (state?.cname?.length > 30) {
+      valid = false;
+      error.cnameErr = true;
+      error.cnameMsg =
+        "Company Name should not be greater thamn 30 characters  ";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#cname");
+      }
     }
 
     if (isEmpty(userLocation)) {
@@ -740,20 +749,22 @@ export default function EditProfile() {
                   />
                 </Grid>
               </Grid>
-              <Grid item lg={12} padding="10px 20px">
+              <Grid item lg={12} paddingTop="20px">
                 <Typography variant="h5">Expertise Area</Typography>
                 <Grid
                   item
                   container
                   style={{
                     border: "1px solid #F2F4F7",
-                    padding: "5px 15px",
+                    padding: "0 20px",
                     marginTop: 20,
                   }}
                 >
                   <Cselect
                     multiple={true}
-                    placeholder="Select Area of Expertise"
+                    placeholder={
+                      state?.expertise ? "" : "Select Area of Expertise"
+                    }
                     value={state.expertise}
                     handleSelect={(e) => {
                       setState({ ...state, expertise: e });

@@ -106,6 +106,7 @@ export default function ChangePassword() {
 
       if (response.success) {
         toast.success(response.message);
+        reset();
       } else {
         toast.error(response.message);
       }
@@ -115,6 +116,13 @@ export default function ChangePassword() {
       toast.error(error.toString());
       setButtonLoader(false);
     }
+  }
+
+  // function set all fields to blank after successfull submission
+  function reset() {
+    setOldPassword("");
+    setNewPassword("");
+    setPassword("");
   }
 
   return (

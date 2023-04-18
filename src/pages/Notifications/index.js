@@ -124,7 +124,7 @@ export default function Notifications() {
                       <Button
                         variant="outlined"
                         style={{
-                          width: 10,
+                          width: 100,
                           borderRadius: 7,
                           padding: 3,
                           border: "none",

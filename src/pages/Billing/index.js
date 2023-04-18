@@ -284,6 +284,7 @@ export default function Billing() {
 
                 <Grid item xs={12} id="baccount">
                   <CInput
+                    type="number"
                     label="Bank Account"
                     placeholder="Enter Bank Account Number"
                     value={state.acc}

@@ -244,6 +244,15 @@ const CreateProfile = (props) => {
         scroll = true;
         section = document.querySelector("#cname");
       }
+    } else if (state?.cname?.length > 30) {
+      valid = false;
+      error.cnameErr = true;
+      error.cnameMsg =
+        "Company Name should not be greater thamn 30 characters  ";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#cname");
+      }
     }
 
     if (state.description.length > 255) {
