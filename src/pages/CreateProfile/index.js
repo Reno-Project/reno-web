@@ -955,7 +955,11 @@ const CreateProfile = (props) => {
                 </Grid>
 
                 <Grid item xs={10} id="location" marginBottom={2}>
-                  <InputLabel shrink htmlFor="bootstrap-input">
+                  <InputLabel
+                    error={errObj.locationErr}
+                    shrink
+                    htmlFor="bootstrap-input"
+                  >
                     Location
                   </InputLabel>
                   <PlaceAutoComplete

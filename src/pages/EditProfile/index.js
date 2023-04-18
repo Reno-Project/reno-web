@@ -664,7 +664,9 @@ export default function EditProfile() {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Typography>+{state.pCode}</Typography>
+                          <Typography style={{ fontSize: 14 }}>
+                            +{state.pCode}
+                          </Typography>
                         </InputAdornment>
                       ),
                     }}
