@@ -51,7 +51,7 @@ export default function ChangePassword() {
     if (isEmpty(newPassword)) {
       valid = false;
       error.newPasswordErr = true;
-      error.newPasswordMsg = "Please enter password";
+      error.newPasswordMsg = "Please enter new password";
     } else if (newPassword.length < 8) {
       valid = false;
       error.newPasswordErr = true;

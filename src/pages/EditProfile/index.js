@@ -762,9 +762,7 @@ export default function EditProfile() {
                 >
                   <Cselect
                     multiple={true}
-                    placeholder={
-                      state?.expertise ? "" : "Select Area of Expertise"
-                    }
+                    placeholder="Select Area of Expertise"
                     value={state.expertise}
                     handleSelect={(e) => {
                       setState({ ...state, expertise: e });

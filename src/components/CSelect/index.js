@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import {
-  alpha,
   Autocomplete,
   Chip,
   FormControl,
@@ -8,8 +7,9 @@ import {
   InputLabel,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
+
 const Select = styled(Autocomplete)(({ theme }) => ({
   marginTop: 24,
   borderRadius: 5,
@@ -21,7 +21,6 @@ const Select = styled(Autocomplete)(({ theme }) => ({
         "background-color",
         "box-shadow",
       ]),
-      // boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
       borderColor: theme.palette.primary.main,
     },
     "& .MuiAutocomplete-input": {
@@ -65,7 +64,7 @@ export default function Cselect(props) {
         multiple={multiple}
         options={renderTags}
         // getOptionLabel={(item) => item.label}
-        filterSelectedOptions
+        // filterSelectedOptions
         // isOptionEqualToValue={(option, value) => option.id === value.id}
         renderInput={(params) => (
           <TextField {...params} placeholder={placeholder} />
