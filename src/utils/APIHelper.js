@@ -133,7 +133,11 @@ export function getAPIProgressData(
 
       fetch(url, options)
         .then(function (res) {
-          resolve(res.json());
+          if (res.status === 403 || res.status === 401) {
+            store.dispatch(authAction.clearAllData());
+          } else {
+            resolve(res.json());
+          }
         })
         .then(function (result) {})
         .catch((err) => {
