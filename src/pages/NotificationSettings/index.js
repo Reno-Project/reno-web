@@ -236,7 +236,7 @@ export default function NotificationSettings() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              padding: 10
+              padding: 10,
             }}
           >
             <CircularProgress
@@ -253,7 +253,6 @@ export default function NotificationSettings() {
             gap={3}
             wrap={isMobile ? "wrap" : "nowrap"}
             style={{
-              border: "1px solid #F2F4F7",
               marginTop: 20,
               justifyContent: "space-between",
             }}

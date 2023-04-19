@@ -28,7 +28,6 @@ function Header(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const { clearAllData } = authActions;
-  const isAddPadding = useMediaQuery(theme.breakpoints.down(1260));
   const { token, userData } = useSelector((state) => state.auth);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -55,13 +54,7 @@ function Header(props) {
   }
 
   return (
-    <div
-      className={classes.headerMainCon}
-      style={
-        // isAddPadding ? { paddingLeft: "15px", paddingRight: "15px" } : null
-        { padding: "0 15px" }
-      }
-    >
+    <div className={classes.headerMainCon} style={{ padding: "0 15px" }}>
       <Grid container>
         <Grid
           item
