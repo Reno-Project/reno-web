@@ -315,7 +315,7 @@ const CreateProfile = (props) => {
     if (isEmpty(state.businessYear)) {
       valid = false;
       error.yearErr = true;
-      error.yearMsg = "Please Enter No. of Bussiness Years";
+      error.yearMsg = "Please Enter No. of Business Years";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#year");
