@@ -61,7 +61,8 @@ const Signup = (props) => {
   useEffect(() => {
     setState({
       ...state,
-      email: locationState?.socialData?.email,
+      email: locationState?.socialData?.email || locationState?.data?.email || "",
+      uname: locationState?.data?.username ? locationState?.data?.username : "",
     });
   }, []);
 
