@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "Roobert-Regular !important",
     lineHeight: 28,
     cursor: "pointer",
-    fontWeight: 500,
+    fontWeight: "700 !important",
   },
   verifycontainer: {
     backgroundColor: color.fadedblue,
