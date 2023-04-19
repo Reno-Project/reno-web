@@ -948,7 +948,11 @@ const CreateProfile = (props) => {
                   <Cselect
                     multiple={true}
                     label="Expertise Area"
-                    placeholder="Select Area of Expertise"
+                    placeholder={
+                      isArray(state?.expertise) && state?.expertise.length > 0
+                        ? ""
+                        : "Select Area of Expertise"
+                    }
                     value={state.expertise}
                     handleSelect={(e) => {
                       setState({ ...state, expertise: e });
