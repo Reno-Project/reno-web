@@ -157,6 +157,7 @@ export default function EditProfile() {
         ...state,
         businessLogo: profileData?.profile_url,
         cname: data?.company_name || "",
+        description: data?.description || "",
         address: obj.location || "",
         email: profileData?.email || "",
         website: data?.website || "",
@@ -231,6 +232,17 @@ export default function EditProfile() {
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#cname");
+      }
+    }
+
+    if (state.description.length > 255) {
+      valid = false;
+      error.descriptionErr = true;
+      error.descriptionMsg =
+        "Description should not be greater than 255 characters";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#description");
       }
     }
 
@@ -328,6 +340,7 @@ export default function EditProfile() {
       let expertiseCsv = convertToCsv(state?.expertise);
       let data = {
         company_name: state?.cname ? state?.cname : "",
+        description: state?.description ? state?.description : "",
         company_address: userLocation ? userLocation : "",
         website: state?.website ? state?.website : "",
         no_of_years_in_business: state?.businessYear ? state?.businessYear : "",
@@ -604,6 +617,25 @@ export default function EditProfile() {
                     }}
                     error={errObj.cnameErr}
                     helpertext={errObj.cnameMsg}
+                  />
+                </Grid>
+
+                <Grid item xs={12} id="description">
+                  <CInput
+                    multiline={true}
+                    label="Description"
+                    placeholder="Write Description"
+                    value={state.description}
+                    onChange={(e) => {
+                      setState({ ...state, description: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        descriptionErr: false,
+                        descriptionMsg: "",
+                      });
+                    }}
+                    error={errObj.descriptionErr}
+                    helpertext={errObj.descriptionMsg}
                   />
                 </Grid>
 

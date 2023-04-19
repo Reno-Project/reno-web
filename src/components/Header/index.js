@@ -30,7 +30,6 @@ function Header(props) {
   const { clearAllData } = authActions;
   const isAddPadding = useMediaQuery(theme.breakpoints.down(1260));
   const { token, userData } = useSelector((state) => state.auth);
-  console.log("userData====>>>>>", userData);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [anchorEl, setAnchorEl] = React.useState(null);
