@@ -53,40 +53,31 @@ const HowItWorks = (props) => {
       <Grid container className={classes.heroContainer}>
         <Grid container flexDirection={"column"} wrap="nowrap">
           <Grid item sm={12} textAlign={"center"}>
-            <Typography
-              lineHeight={"unset"}
-              fontSize={sm ? 30 : md ? 50 : 60}
-              fontWeight={"bold"}
-              textAlign={"center"}
-              color={color.white}
-            >
+            <Typography className={classes.titleTxt}>
               Manage everything
             </Typography>
           </Grid>
           <Grid item sm={12} textAlign={"center"}>
-            <Typography
-              lineHeight={"unset"}
-              fontSize={sm ? 30 : md ? 50 : 60}
-              fontWeight={"bold"}
-              textAlign={"center"}
-              color={color.white}
-            >
-              the simple way
-            </Typography>
+            <Typography className={classes.titleTxt}>the simple way</Typography>
           </Grid>
           <Grid item sm={12} textAlign={"center"}>
-            <Typography mt={6} fontSize={24} color={color.white}>
+            <Typography
+              mt={sm ? 0 : 3}
+              py={sm ? 3 : 6}
+              fontSize={24}
+              color={color.white}
+            >
               Simplicity, security and safety
             </Typography>
           </Grid>
-          <Grid item mt={3} sm={12} textAlign={"center"}>
+          <Grid item sm={12} textAlign={"center"}>
             <Button
               variant="contained"
               style={{
                 borderRadius: 50,
                 width: md ? 200 : 300,
                 fontWeight: "bold",
-                fontSize: sm ? 16 : md ? 18 : 24,
+                fontSize: sm ? 16 : 18,
                 lineHeight: 1.4,
               }}
               onClick={() => {
@@ -100,15 +91,9 @@ const HowItWorks = (props) => {
         </Grid>
       </Grid>
       <Grid container className={classes.SecContainer}>
-        <Grid container flexDirection={"column"} wrap="nowrap" py={md ? 5 : 10}>
+        <Grid container flexDirection={"column"} wrap="nowrap" py={md ? 5 : 20}>
           <Grid item container md={10} justifyContent={"center"}>
-            <Typography
-              lineHeight={"unset"}
-              fontSize={sm ? 30 : md ? 50 : 60}
-              fontWeight={"bold"}
-              textAlign={"center"}
-              color={color.white}
-            >
+            <Typography className={classes.titleTxt}>
               Contractor value proposition
             </Typography>
           </Grid>
@@ -120,6 +105,7 @@ const HowItWorks = (props) => {
             columnGap={sm ? 2 : 1}
             rowGap={2}
             justifyContent={"center"}
+            xs={10}
           >
             <Grid item lg={2}>
               <CustomCard
@@ -157,14 +143,7 @@ const HowItWorks = (props) => {
       <Grid container>
         <Grid container flexDirection={"column"} wrap="nowrap" py={md ? 5 : 8}>
           <Grid item>
-            <Typography
-              fontFamily={"ElMessiri"}
-              lineHeight={"unset"}
-              fontSize={sm ? 30 : md ? 50 : 60}
-              textAlign={"center"}
-            >
-              How it works
-            </Typography>
+            <Typography className={classes.titleTxt}>How it works</Typography>
           </Grid>
           <Grid
             container
@@ -173,6 +152,7 @@ const HowItWorks = (props) => {
             columnGap={sm ? 2 : 4}
             rowGap={2}
             justifyContent={"center"}
+            xs={10}
           >
             <Grid
               item
@@ -317,6 +297,7 @@ const HowItWorks = (props) => {
             columnGap={sm ? 2 : 1}
             rowGap={2}
             justifyContent={"center"}
+            xs={10}
           >
             <Grid item md={3}>
               <Card
@@ -484,6 +465,7 @@ const HowItWorks = (props) => {
             columnGap={sm ? 2 : 1}
             rowGap={2}
             justifyContent={"center"}
+            xs={10}
           >
             <Grid item lg={2}>
               <CustomCard
@@ -557,6 +539,7 @@ const HowItWorks = (props) => {
             columnGap={sm ? 2 : 1}
             rowGap={2}
             justifyContent={"center"}
+            xs={10}
           >
             <Grid item lg={2}>
               <CustomCard
@@ -610,7 +593,14 @@ const HowItWorks = (props) => {
         maxWidth={"unset"}
         flexDirection={"column"}
       >
-        <Grid item container mt={2} justifyContent={"center"}>
+        <Grid
+          item
+          container
+          mt={2}
+          justifyContent={"center"}
+          flexDirection={"column"}
+          alignItems={"center"}
+        >
           <div style={{ maxWidth: 450, textAlign: "center" }}>
             <Typography
               fontFamily={"ElMessiri"}
@@ -628,8 +618,9 @@ const HowItWorks = (props) => {
             columnGap={sm ? 2 : 1}
             rowGap={2}
             justifyContent={"center"}
+            xs={10}
           >
-            <Grid item sm={10} md={4}>
+            <Grid item sm={12} md={5}>
               <Select
                 value={"Lorem Ipsum is simply dummy text of the?"}
                 fullWidth
@@ -651,7 +642,7 @@ const HowItWorks = (props) => {
                 </MenuItem>
               </Select>
             </Grid>
-            <Grid item sm={10} md={4}>
+            <Grid item sm={12} md={5}>
               <Select
                 value={"Lorem Ipsum is simply dummy text of the?"}
                 fullWidth
@@ -673,7 +664,7 @@ const HowItWorks = (props) => {
                 </MenuItem>
               </Select>
             </Grid>
-            <Grid item sm={10} md={4}>
+            <Grid item sm={12} md={5}>
               <Select
                 value={"Lorem Ipsum is simply dummy text of the?"}
                 fullWidth
@@ -695,7 +686,7 @@ const HowItWorks = (props) => {
                 </MenuItem>
               </Select>
             </Grid>
-            <Grid item sm={10} md={4}>
+            <Grid item sm={12} md={5}>
               <Select
                 value={"Lorem Ipsum is simply dummy text of the?"}
                 fullWidth
@@ -717,7 +708,7 @@ const HowItWorks = (props) => {
                 </MenuItem>
               </Select>
             </Grid>
-            <Grid item sm={10} md={4}>
+            <Grid item sm={12} md={5}>
               <Select
                 value={"Lorem Ipsum is simply dummy text of the?"}
                 fullWidth
@@ -739,7 +730,7 @@ const HowItWorks = (props) => {
                 </MenuItem>
               </Select>
             </Grid>
-            <Grid item sm={10} md={4}>
+            <Grid item sm={12} md={5}>
               <Select
                 value={"Lorem Ipsum is simply dummy text of the?"}
                 fullWidth

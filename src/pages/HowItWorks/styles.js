@@ -56,6 +56,16 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     marginTop: 20,
   },
+  titleTxt: {
+    fontSize: "50px !important",
+    lineHeight: "unset !important",
+    fontWeight: "bold !important",
+    textAlign: "center",
+    color: color.white,
+    [theme.breakpoints.down("md")]: {
+      fontSize: "30px !important",
+    },
+  },
 }));
 
 export default useStyles;
