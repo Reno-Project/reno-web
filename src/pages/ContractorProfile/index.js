@@ -311,7 +311,7 @@ const ContractorProfile = (props) => {
                 style={{ margin: "0px 10px" }}
                 onClick={() => {
                   navigator.clipboard.writeText(userData?.profile_url);
-                  toast.success("Coppied!", { toastId: 1 });
+                  toast.success("Copied!", { toastId: 1 });
                 }}
               >
                 <img src={Images.copy} alt="copy" />
@@ -559,6 +559,7 @@ const ContractorProfile = (props) => {
                                   width: 117,
                                   height: 88,
                                   borderRadius: 8,
+                                  marginTop: 15,
                                 }}
                               />
                             );

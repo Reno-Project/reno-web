@@ -1098,6 +1098,25 @@ export default function EditProfile() {
                         width: 120,
                       }}
                     >
+                      <input
+                        type="file"
+                        accept="image/jpeg, image/png, image/jpg"
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          cursor: "pointer",
+                          opacity: 0,
+                        }}
+                        onChange={(e) => {
+                          setState({
+                            ...state,
+                            businessLogo: e.target.files[0],
+                          });
+                        }}
+                      />
                       {bLogo ? (
                         <img
                           src={bLogo}
@@ -1120,17 +1139,6 @@ export default function EditProfile() {
                         >
                           <CreateOutlined
                             style={{ fontSize: "16px", color: "#FFF" }}
-                          />
-                          <input
-                            type="file"
-                            accept="image/jpeg, image/png, image/jpg"
-                            hidden
-                            onChange={(e) => {
-                              setState({
-                                ...state,
-                                businessLogo: e.target.files[0],
-                              });
-                            }}
                           />
                         </Button>
                       </div>

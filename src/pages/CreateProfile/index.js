@@ -708,6 +708,7 @@ const CreateProfile = (props) => {
                   marginTop: 15,
                   marginBottom: 15,
                   backgroundColor: "transparent",
+                  position: "relative",
                 }}
               >
                 <Button
@@ -721,18 +722,6 @@ const CreateProfile = (props) => {
                     padding: "0px",
                   }}
                 >
-                  <input
-                    type="file"
-                    accept="image/jpeg, image/png, image/jpg"
-                    hidden
-                    multiple={true}
-                    onChange={(e) => {
-                      setState({
-                        ...state,
-                        businessLogo: e.target.files[0],
-                      });
-                    }}
-                  />
                   {bLogo ? (
                     <>
                       <img
@@ -778,6 +767,18 @@ const CreateProfile = (props) => {
                     </div>
                   )}
                 </Button>
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png, image/jpg"
+                  multiple={false}
+                  onChange={(e) => {
+                    setState({
+                      ...state,
+                      businessLogo: e.target.files[0],
+                    });
+                  }}
+                  className={classes.uploadFileStyle}
+                />
               </div>
               <Typography
                 style={{ fontFamily: "Roobert-Regular", color: "#475569" }}

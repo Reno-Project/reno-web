@@ -60,6 +60,15 @@ const useStyles = makeStyles((theme) => ({
   linkStyle: {
     textDecoration: "none",
   },
+  uploadFileStyle: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0,
+    cursor: "pointer",
+  },
 }));
 
 export default useStyles;

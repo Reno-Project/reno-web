@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "Roobert-Regular !important",
     color: "#030F1C",
     marginBottom: "15px !important",
+    textAlign: "center",
   },
 }));
 

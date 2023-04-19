@@ -40,10 +40,11 @@ function ProfileSuccessModal(props) {
             <div className={classes.container}>
               <img src={Images.success} alt="success_img" />
               <Typography className={classes.titleTextStyle}>
-                Congrats!
+                Thank you!
               </Typography>
               <Typography className={classes.descTextStyle}>
-                Your profile has been created successfully.
+                We will review your profile and let you know once your profile
+                is approved
               </Typography>
               <Button
                 variant="contained"
