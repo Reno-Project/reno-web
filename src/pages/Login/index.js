@@ -119,12 +119,14 @@ const Login = (props) => {
         dispatch(setToken(response?.token));
         if (response?.is_new_user) {
           navigate("/signup", { state: { socialData } });
-        } if (response?.data?.is_two_factor_verified) {
+        }
+        if (response?.data?.is_two_factor_verified) {
           sendOtpVerifyingApiCall(response?.data);
         } else if (
           response?.data?.contractor_data &&
           response?.data?.contractor_data?.profile_completed === "pending"
         ) {
+          dispatch(setUserData(response?.data));
           navigate("/create-profile");
         } else if (response?.is_email_verified === false) {
           navigate("/otp-verify");
@@ -183,7 +185,9 @@ const Login = (props) => {
         dispatch(setToken(response?.token));
         if (response?.is_new_user) {
           setGoogleBtnLoad(false);
-          navigate("/signup", { state: { socialData, type, data: response?.data } });
+          navigate("/signup", {
+            state: { socialData, type, data: response?.data },
+          });
         } else if (response?.data?.is_two_factor_verified) {
           dispatch(setUserData(response?.data));
           sendOtpVerifyingApiCall(response?.data);
