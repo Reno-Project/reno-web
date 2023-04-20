@@ -60,13 +60,14 @@ export default function EditProfile() {
   const { token, userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
-  const [profileData, setProfileData] = useState([]);
   const [buttonLoader, setButtonLoader] = useState(false);
+  const [profileData, setProfileData] = useState([]);
   const [pageLoad, setPageLoad] = useState(true);
   const [selectedLocation, setSelectedLocation] = useState({});
   const [userLocation, setUserLocation] = useState("");
   const [active, setActive] = useState(0);
   const [bLogo, setBLogo] = useState(null);
+  const [expertiseList, setExpertiesList] = useState([]);
   const [errObj, setErrObj] = useState(errorObj);
   const data = profileData?.contractor_data;
   const isEdit = !isEmpty(profileData);
@@ -129,13 +130,9 @@ export default function EditProfile() {
     "Social Link",
     "Portfolio",
   ];
-  const exp = [
-    { id: 1, label: "Interior design" },
-    { id: 2, label: "Renovation" },
-    { id: 3, label: "Retouch" },
-  ];
 
   useEffect(() => {
+    getprojectList();
     getUserDetailsByIdApiCall();
   }, []);
 
@@ -148,10 +145,7 @@ export default function EditProfile() {
       setSelectedLocation(obj);
       setUserLocation(obj?.location);
 
-      const newArray = data?.expertise?.map(({ id, project_name }) => ({
-        id: id,
-        label: project_name,
-      }));
+      const newArray = data?.expertise?.map((item) => item?.project_name);
 
       setState({
         ...state,
@@ -186,6 +180,21 @@ export default function EditProfile() {
       setBLogo(state?.businessLogo || "");
     }
   }, [state.businessLogo]);
+
+  async function getprojectList() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.projectlist}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        setExpertiesList(response?.data);
+      }
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
+    }
+  }
 
   async function getUserDetailsByIdApiCall() {
     setPageLoad(true);
@@ -322,22 +331,31 @@ export default function EditProfile() {
     }
   }
 
-  const convertToCsv = (array) => {
-    let tempIds = [];
-    let tempStringIds = "";
-    if (isArray(array) && !isEmpty(array)) {
-      array?.map((it, ind) => {
-        tempIds?.push(it?.id);
-      });
-    }
-    tempStringIds = tempIds?.toString();
-    return tempStringIds;
-  };
+  // const convertToCsv = (array) => {
+  //   let tempIds = [];
+  //   let tempStringIds = "";
+  //   if (isArray(array) && !isEmpty(array)) {
+  //     array?.map((it, ind) => {
+  //       tempIds?.push(it?.id);
+  //     });
+  //   }
+  //   console.log("tempIds=====>>>>>", tempIds);
+  //   tempStringIds = tempIds?.toString();
+  //   return tempStringIds;
+  // };
 
   async function editContractorDetailsApiCall() {
+    const selectedOptions = [];
+    state?.expertise?.map((e) => {
+      expertiseList?.map((options) => {
+        if (options?.project_name === e) {
+          return selectedOptions.push(options.id);
+        }
+      });
+    });
     try {
       setButtonLoader(true);
-      let expertiseCsv = convertToCsv(state?.expertise);
+      // let expertiseCsv = convertToCsv(state?.expertise);
       let data = {
         company_name: state?.cname ? state?.cname : "",
         description: state?.description ? state?.description : "",
@@ -348,7 +366,9 @@ export default function EditProfile() {
         no_of_contracts_annually: state?.annualContract
           ? state?.annualContract
           : "",
-        contractor_expertise: expertiseCsv ? expertiseCsv : "", // pass in CSV form
+        contractor_expertise: selectedOptions
+          ? selectedOptions?.toString()
+          : "", // pass in CSV form
         linkedin_url: state?.linkedin ? state?.linkedin : "",
         fb_url: state?.social ? state?.social : "",
         insta_url: state?.insta ? state?.insta : "",
@@ -804,7 +824,7 @@ export default function EditProfile() {
                         expertiseMsg: "",
                       });
                     }}
-                    renderTags={exp}
+                    renderTags={expertiseList}
                     error={errObj.expertiseErr}
                     helpertext={errObj.expertiseMsg}
                   />

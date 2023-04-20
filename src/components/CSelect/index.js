@@ -62,9 +62,11 @@ export default function Cselect(props) {
         variant="contained"
         id="tags-outlined"
         multiple={multiple}
-        options={renderTags}
+        options={
+          multiple ? renderTags.map((item) => item.project_name) : renderTags
+        }
+        filterSelectedOptions={multiple ? true : false}
         // getOptionLabel={(item) => item.label}
-        // filterSelectedOptions
         // isOptionEqualToValue={(option, value) => option.id === value.id}
         renderInput={(params) => (
           <TextField {...params} placeholder={placeholder} />
@@ -76,8 +78,9 @@ export default function Cselect(props) {
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (
             <Chip
+              {...props}
               variant="outlined"
-              label={option.label}
+              label={option}
               deleteIcon={<CloseIcon />}
               {...getTagProps({ index })}
               sx={{

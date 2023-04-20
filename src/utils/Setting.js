@@ -33,6 +33,7 @@ export const Setting = {
     twoFactorSetting: "api/user/verified-two-factor",
     logoutall: "api/user/logout-all",
     logindeviceslist: "api/user/login-devices-list",
+    projectlist: "api/project/project-list",
   },
 
   JS_Regex: {
