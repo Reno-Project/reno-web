@@ -19,6 +19,7 @@
     "react-detect-offline": "^2.4.5",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
+    "react-facebook-login": "^4.1.1",
     "react-google-autocomplete": "^2.7.3",
     "react-otp-input": "^3.0.0",
     "react-phone-input-2": "^2.15.1",

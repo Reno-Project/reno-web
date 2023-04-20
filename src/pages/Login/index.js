@@ -20,6 +20,7 @@ import authActions from "../../redux/reducers/auth/actions";
 import { Setting } from "../../utils/Setting";
 import CInput from "../../components/CInput";
 import GoogleLoginButton from "../../components/SocialLogin/GoogleLoginButton";
+import FacebookLoginButton from "../../components/SocialLogin/FacebookLoginButton";
 import Images from "../../config/images";
 import { getApiData } from "../../utils/APIHelper";
 import useStyles from "./styles";
@@ -49,7 +50,7 @@ const Login = (props) => {
   const [btnLoad, setBtnLoad] = useState(false);
   const [btnForgotLoad, setBtnForgotLoad] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [googleBtnLoad, setGoogleBtnLoad] = useState(false);
+  const [googleBtnLoad, setSocialBtnLoad] = useState(false);
 
   const [forgotEmail, setForgotEmail] = useState("");
   const theme = useTheme();
@@ -129,7 +130,7 @@ const Login = (props) => {
           dispatch(setUserData(response?.data));
           navigate("/create-profile");
         } else if (response?.is_email_verified === false) {
-          navigate("/otp-verify");
+          // navigate("/otp-verify");
           sendOtpVerifyingApiCall({
             email,
           });
@@ -151,7 +152,7 @@ const Login = (props) => {
   // this function for login user
   async function googleDataApiCall(googleCode) {
     try {
-      setGoogleBtnLoad(true);
+      setSocialBtnLoad("google");
       const response = await getApiData(Setting.endpoints.googleData, "POST", {
         code: googleCode,
       });
@@ -162,17 +163,18 @@ const Login = (props) => {
         }
       } else {
         toast.error(response.message);
-        setGoogleBtnLoad(false);
+        setSocialBtnLoad("");
       }
     } catch (error) {
       console.log("🚀 ~ google data api call ~ error:", error);
       toast.error(error.toString());
-      setGoogleBtnLoad(false);
+      setSocialBtnLoad("");
     }
   }
 
   // social login
   async function socialLoginApiCall(socialData, type) {
+    setSocialBtnLoad(type);
     try {
       const response = await getApiData(Setting.endpoints.login, "POST", {
         email: socialData?.email ? socialData?.email : "",
@@ -184,7 +186,7 @@ const Login = (props) => {
       if (response.success) {
         dispatch(setToken(response?.token));
         if (response?.is_new_user) {
-          setGoogleBtnLoad(false);
+          setSocialBtnLoad("");
           navigate("/signup", {
             state: { socialData, type, data: response?.data },
           });
@@ -195,22 +197,23 @@ const Login = (props) => {
           response?.data?.contractor_data &&
           response?.data?.contractor_data?.profile_completed === "pending"
         ) {
+          dispatch(setUserData(response?.data));
           navigate("/create-profile");
         } else if (response?.is_email_verified === false) {
-          navigate("/otp-verify");
+          // navigate("/otp-verify");
           sendOtpVerifyingApiCall(response?.data);
         } else {
           dispatch(setUserData(response?.data));
-          setGoogleBtnLoad(false);
+          setSocialBtnLoad("");
           navigate("/dashboard");
         }
       } else {
-        setGoogleBtnLoad(false);
+        setSocialBtnLoad("");
         toast.error(response.message);
       }
     } catch (error) {
       console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
-      setGoogleBtnLoad(false);
+      setSocialBtnLoad("");
       toast.error(error.toString());
     }
   }
@@ -228,11 +231,11 @@ const Login = (props) => {
       } else {
         toast.error(response.message);
       }
-      setGoogleBtnLoad(false);
+      setSocialBtnLoad("");
     } catch (error) {
       console.log("🚀 ~ file: index.js:88 ~ resendOtp ~ error:", error);
       toast.error(error.toString() || "Something gone wrong! Please try again");
-      setGoogleBtnLoad(false);
+      setSocialBtnLoad("");
     }
   }
 
@@ -391,20 +394,14 @@ const Login = (props) => {
             <Grid item xs={12} style={{ marginTop: 18 }}>
               <GoogleOAuthProvider clientId={Setting.GOOGLE_CLIENT_ID}>
                 <GoogleLoginButton
-                  loader={googleBtnLoad}
+                  loader={googleBtnLoad === "google"}
                   onGoogleDone={(val) => googleDataApiCall(val?.code)}
                 />
               </GoogleOAuthProvider>
-              <div className={classes.socialContainerStyle}>
-                <img
-                  src={Images.fb}
-                  alt="facebook"
-                  className={classes.socialImgStyle}
-                />
-                <Typography className={classes.socialTextStyle}>
-                  Facebook
-                </Typography>
-              </div>
+              <FacebookLoginButton
+                loader={googleBtnLoad === "fb"}
+                onSuccess={(response) => socialLoginApiCall(response, "fb")}
+              />
               <div className={classes.socialContainerStyle}>
                 <img
                   src={Images.apple}

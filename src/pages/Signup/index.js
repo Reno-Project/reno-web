@@ -43,7 +43,7 @@ const Signup = (props) => {
   const dispatch = useDispatch();
   const { setUserData, setToken } = authActions;
   const passwordRegex =
-  /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%^_&;*:+{}=)-`(<>,./?])((?=.*[A-Z])))(?=.{8,})/;
+    /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%^_&;*:+{}=)-`(<>,./?])((?=.*[A-Z])))(?=.{8,})/;
   const emailRegex =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const [state, setState] = useState({
@@ -61,7 +61,8 @@ const Signup = (props) => {
   useEffect(() => {
     setState({
       ...state,
-      email: locationState?.socialData?.email || locationState?.data?.email || "",
+      email:
+        locationState?.socialData?.email || locationState?.data?.email || "",
       uname: locationState?.data?.username ? locationState?.data?.username : "",
     });
   }, []);
@@ -99,20 +100,27 @@ const Signup = (props) => {
       error.emailMsg = "Please enter valid email";
     }
 
-    // validate password
-    if (isEmpty(password)) {
-      valid = false;
-      error.passwordErr = true;
-      error.passwordMsg = "Please enter password";
-    } else if (password.length < 8) {
-      valid = false;
-      error.passwordErr = true;
-      error.passwordMsg = "Password length must be of 8-15";
-    } else if (!passwordRegex.test(password)) {
-      valid = false;
-      error.passwordErr = true;
-      error.passwordMsg =
-        "Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol";
+    if (
+      locationState?.type === "google" ||
+      locationState?.type === "fb" ||
+      locationState?.type === "apple"
+    ) {
+    } else {
+      // validate password
+      if (isEmpty(password)) {
+        valid = false;
+        error.passwordErr = true;
+        error.passwordMsg = "Please enter password";
+      } else if (password.length < 8) {
+        valid = false;
+        error.passwordErr = true;
+        error.passwordMsg = "Password length must be of 8-15";
+      } else if (!passwordRegex.test(password)) {
+        valid = false;
+        error.passwordErr = true;
+        error.passwordMsg =
+          "Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol";
+      }
     }
 
     // Validate phone
@@ -149,6 +157,15 @@ const Signup = (props) => {
       role: "contractor",
       device_type: "web",
     };
+
+    if (locationState?.type) {
+      data.social_connection = locationState?.type;
+    }
+
+    if (locationState?.data?.social_connection_id) {
+      data.social_connection_id = locationState?.data?.social_connection_id;
+    }
+
     try {
       const response = await getApiData(Setting.endpoints.signup, "POST", data);
       console.log("response =register user====>>> ", response);
@@ -262,38 +279,46 @@ const Signup = (props) => {
                 helperText={errObj.phoneMsg}
               />
             </Grid>
-            <Grid item xs={12}>
-              <CInput
-                outline
-                label="Password"
-                placeholder="Enter password"
-                type={showPassword ? "text" : "password"}
-                value={state.password}
-                onChange={(e) => {
-                  setState({ ...state, password: e.target.value });
-                  setErrObj({ ...errObj, passwordErr: false, passwordMsg: "" });
-                }}
-                onKeyPress={(ev) => {
-                  if (ev.key === "Enter") {
-                    ev.preventDefault();
-                    validation();
+            {locationState?.type === "google" ||
+            locationState?.type === "fb" ||
+            locationState?.type === "apple" ? null : (
+              <Grid item xs={12}>
+                <CInput
+                  outline
+                  label="Password"
+                  placeholder="Enter password"
+                  type={showPassword ? "text" : "password"}
+                  value={state.password}
+                  onChange={(e) => {
+                    setState({ ...state, password: e.target.value });
+                    setErrObj({
+                      ...errObj,
+                      passwordErr: false,
+                      passwordMsg: "",
+                    });
+                  }}
+                  onKeyPress={(ev) => {
+                    if (ev.key === "Enter") {
+                      ev.preventDefault();
+                      validation();
+                    }
+                  }}
+                  white={false}
+                  error={errObj.passwordErr}
+                  helpertext={errObj.passwordMsg}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {!showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
                   }
-                }}
-                white={false}
-                error={errObj.passwordErr}
-                helpertext={errObj.passwordMsg}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {!showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </Grid>
+                />
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Button
                 variant="contained"
