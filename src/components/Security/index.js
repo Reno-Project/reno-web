@@ -183,14 +183,14 @@ export default function Security() {
               paddingTop={isMobile ? 3 : 0}
               fontFamily={"Roobert-Regular"}
             >
-              Allow Login attempts
+              Allow login attempts
             </Typography>
           </Grid>
 
           <Grid item xs={12} sm={4} md={3} lg={3}>
             <CInput
               outline
-              placeholder="Enter Allow ..."
+              placeholder="Enter allow ..."
               white={false}
               type="number"
               controls={false}
@@ -206,7 +206,7 @@ export default function Security() {
                 className={classes.TextStyle}
                 fontFamily={"Roobert-Regular"}
               >
-                Phone Verifications
+                Phone verifications
               </Typography>
               <Typography
                 className={classes.language}
@@ -283,7 +283,7 @@ export default function Security() {
               fontFamily={"Roobert-Regular"}
               marginBottom={2}
             >
-              Connected Devices
+              Connected devices
             </Typography>
           </Grid>
           <Grid
@@ -291,49 +291,47 @@ export default function Security() {
             container
             xs={12}
             wrap="nowrap"
+            justifyContent={"space-between"}
             style={{ marginTop: 10, marginBottom: 10 }}
+            gap={1}
           >
-            <Grid
-              item
-              xs={2}
-              sm={2}
-              md={1}
-              lg={1}
-              style={{
-                marginTop: 10,
-                justifyContent: "center",
-                display: "flex",
-              }}
-            >
-              <img
-                src={Images.laptop}
-                alt="laptop"
-                className={classes.imgStyle}
-              />
+            <Grid item display={"flex"} gap={1}>
+              <Grid
+                item
+                xs={1}
+                style={{
+                  marginTop: 10,
+                  justifyContent: "center",
+                  display: "flex",
+                }}
+              >
+                <img
+                  src={Images.laptop}
+                  alt="laptop"
+                  className={classes.imgStyle}
+                />
+              </Grid>
+              <Grid item>
+                <Typography
+                  fontFamily={"Roobert-Regular"}
+                  className={classes.TextStyle}
+                >
+                  Chrome 109, Windows
+                  <span className={classes.TextDeviceStyle}>THIS DEVICE</span>
+                </Typography>
+                <Typography
+                  fontFamily={"Roobert-Regular"}
+                  className={classes.language}
+                >
+                  Last activity 13 minutes ago • Dubai, United Arab Emirates
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid xs={9} item>
-              <Typography
-                fontFamily={"Roobert-Regular"}
-                className={classes.TextStyle}
-              >
-                Chrome 109, Windows
-                <span className={classes.TextDeviceStyle}>THIS DEVICE</span>
-              </Typography>
-              <Typography
-                fontFamily={"Roobert-Regular"}
-                className={classes.language}
-              >
-                Last Activity 13 minutes ago • Dubai, United Arab Emirates
-              </Typography>
-            </Grid>
-            <Grid item xs={2} style={{ marginTop: 5 }}>
-              <Typography
-                style={{ textAlign: "end" }}
-                className={classes.TextStyle}
-                fontFamily={"Roobert"}
-              >
-                signout
-              </Typography>
+
+            <Grid item>
+              <Button style={{ alignItems: "center" }} variant="outlined">
+                Signout
+              </Button>
             </Grid>
           </Grid>
 
@@ -341,49 +339,44 @@ export default function Security() {
             item
             container
             xs={12}
+            justifyContent={"space-between"}
             wrap="nowrap"
             style={{ marginTop: 10, marginBottom: 10 }}
+            gap={1}
           >
-            <Grid
-              item
-              xs={2}
-              sm={2}
-              md={1}
-              lg={1}
-              style={{
-                marginTop: 10,
-                justifyContent: "center",
-                display: "flex",
-              }}
-            >
-              <img
-                src={Images.Phone}
-                alt="phone"
-                className={classes.imgStyle}
-              />
+            <Grid item display={"flex"} gap={isMobile ? 1 : 2}>
+              <Grid
+                item
+                xs={1}
+                style={{
+                  marginTop: 10,
+                  justifyContent: "flex-end",
+                  display: "flex",
+                }}
+              >
+                <img
+                  src={Images.Phone}
+                  alt="phone"
+                  className={classes.imgStyle}
+                />
+              </Grid>
+              <Grid item>
+                <Typography
+                  className={classes.TextStyle}
+                  fontFamily={"Roobert-Regular"}
+                >
+                  IPhone, iOS App
+                </Typography>
+                <Typography
+                  className={classes.language}
+                  fontFamily={"Roobert-Regular"}
+                >
+                  Last activity 1 hour ago • Cairo, Egypt
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid xs={9} item>
-              <Typography
-                className={classes.TextStyle}
-                fontFamily={"Roobert-Regular"}
-              >
-                iPhone, iOS App
-              </Typography>
-              <Typography
-                className={classes.language}
-                fontFamily={"Roobert-Regular"}
-              >
-                Last Activity 1 hour ago • Cairo, Egypt
-              </Typography>
-            </Grid>
-            <Grid item xs={2} style={{ marginTop: 5 }}>
-              <Typography
-                style={{ textAlign: "end" }}
-                className={classes.TextStyle}
-                fontFamily={"Roobert"}
-              >
-                signout
-              </Typography>
+            <Grid item>
+              <Button variant="outlined">Signout</Button>
             </Grid>
           </Grid>
 
@@ -398,7 +391,7 @@ export default function Security() {
           >
             <Grid item>
               <Typography className={classes.language}>
-                Signout from All devices
+                Signout from all other devices
               </Typography>
             </Grid>
             <Grid item>
