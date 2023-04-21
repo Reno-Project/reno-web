@@ -102,7 +102,11 @@ function App() {
                     </>
                   ) : (
                     <>
-                      <Route exact path={"/"} element={<HowItWorks />} />
+                      <Route
+                        exact
+                        path={"/how-it-works"}
+                        element={<HowItWorks />}
+                      />
                       <Route path={"/login"} element={<Login />} />
                       <Route path={"/signup"} element={<Signup />} />
                       <Route
@@ -110,7 +114,7 @@ function App() {
                         element={<ResetPassword />}
                       />
                       <Route path={"/otp-verify"} element={<OtpInput />} />
-                      <Route path="*" element={<Navigate to={"/"} />} />
+                      <Route path="*" element={<Navigate to={"/login"} />} />
                     </>
                   )}
                 </Routes>
