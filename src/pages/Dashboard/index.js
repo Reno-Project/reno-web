@@ -1,26 +1,15 @@
-import React, { useState } from "react";
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Typography,
-} from "@mui/material";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Grid, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { isEmpty } from "lodash";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
 import { Setting } from "../../utils/Setting";
-import CInput from "../../components/CInput";
-import GoogleLoginButton from "../../components/SocialLogin/GoogleLoginButton";
-import Images from "../../config/images";
 import { getApiData } from "../../utils/APIHelper";
+import { updateUserData } from "../../utils/CommonFunction";
+import ProfileSuccessModal from "../../components/ProfileSuccessModal";
 import useStyles from "./styles";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import AccountSettings from "../AccountSettings";
 
 const errorObj = {
   emailErr: false,
@@ -36,12 +25,25 @@ const Dashboard = (props) => {
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const dispatch = useDispatch();
   const { setUserData, setToken } = authActions;
+  const { userData } = useSelector((state) => state.auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [googleBtnLoad, setGoogleBtnLoad] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    updateUserData();
+    if (userData && !isEmpty(userData?.contractor_data)) {
+      const { profile_completed, is_profile_verified } =
+        userData?.contractor_data;
+      if (profile_completed === "completed" && !is_profile_verified) {
+        setVisible(true);
+      }
+    }
+  }, []);
 
   // this function checks validation of login field
   function validation() {
@@ -165,6 +167,12 @@ const Dashboard = (props) => {
           Welcome to Reno Dashboard
         </Typography>
       </Grid>
+      {visible && (
+        <ProfileSuccessModal
+          msg="Your profile will be reviewed soon. You will informed by email."
+          visible={visible}
+        />
+      )}
     </Grid>
   );
 };

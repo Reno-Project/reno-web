@@ -136,6 +136,17 @@ const CreateProfile = (props) => {
   const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
   useEffect(() => {
+    if (!isEmpty(userData) && !isEmpty(userData?.contractor_data)) {
+      const { is_profile_verified, profile_completed } =
+        userData?.contractor_data;
+
+      if (profile_completed === "completed" && is_profile_verified) {
+        navigate("/dashboard");
+      }
+    }
+  }, [userData]);
+
+  useEffect(() => {
     getUserDetailsByIdApiCall();
   }, [activeStep]);
 

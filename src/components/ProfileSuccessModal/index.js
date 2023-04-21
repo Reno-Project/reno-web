@@ -7,7 +7,11 @@ import Images from "../../config/images";
 import useStyles from "./styles";
 
 function ProfileSuccessModal(props) {
-  const { visible = false } = props;
+  const {
+    visible = false,
+    title = "Thank you!",
+    msg = "We will review your profile and let you know once your profile is approved",
+  } = props;
   const classes = useStyles();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -40,12 +44,9 @@ function ProfileSuccessModal(props) {
             <div className={classes.container}>
               <img src={Images.success} alt="success_img" />
               <Typography className={classes.titleTextStyle}>
-                Thank you!
+                {title}
               </Typography>
-              <Typography className={classes.descTextStyle}>
-                We will review your profile and let you know once your profile
-                is approved
-              </Typography>
+              <Typography className={classes.descTextStyle}>{msg}</Typography>
               <Button
                 variant="contained"
                 fullWidth
