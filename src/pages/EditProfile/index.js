@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import { isArray, isEmpty, isNumber, isObject } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import { toast } from "react-toastify";
 import CInput from "../../components/CInput";
@@ -60,6 +60,8 @@ export default function EditProfile() {
   const { token, userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
+
+  const fileInputRef = useRef();
   const [buttonLoader, setButtonLoader] = useState(false);
   const [profileData, setProfileData] = useState([]);
   const [pageLoad, setPageLoad] = useState(true);
@@ -1168,6 +1170,7 @@ export default function EditProfile() {
                             businessLogo: e.target.files[0],
                           });
                         }}
+                        ref={fileInputRef}
                       />
                       {bLogo ? (
                         <img
@@ -1177,6 +1180,7 @@ export default function EditProfile() {
                             height: "100%",
                             width: "100%",
                             borderRadius: "50%",
+                            objectFit: "cover",
                           }}
                         />
                       ) : (
@@ -1188,6 +1192,7 @@ export default function EditProfile() {
                         <Button
                           component="label"
                           className={classes.uploadIcon}
+                          onClick={() => fileInputRef.current.click()}
                         >
                           <CreateOutlined
                             style={{ fontSize: "16px", color: "#FFF" }}
