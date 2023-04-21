@@ -21,7 +21,7 @@ import { Setting } from "../../utils/Setting";
 import CInput from "../../components/CInput";
 import GoogleLoginButton from "../../components/SocialLogin/GoogleLoginButton";
 import FacebookLoginButton from "../../components/SocialLogin/FacebookLoginButton";
-import Images from "../../config/images";
+import AppleLoginButton from "../../components/SocialLogin/AppleLoginButton";
 import { getApiData } from "../../utils/APIHelper";
 import useStyles from "./styles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -50,7 +50,7 @@ const Login = (props) => {
   const [btnLoad, setBtnLoad] = useState(false);
   const [btnForgotLoad, setBtnForgotLoad] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [googleBtnLoad, setSocialBtnLoad] = useState(false);
+  const [socialBtnLoad, setSocialBtnLoad] = useState(false);
 
   const [forgotEmail, setForgotEmail] = useState("");
   const theme = useTheme();
@@ -394,24 +394,18 @@ const Login = (props) => {
             <Grid item xs={12} style={{ marginTop: 18 }}>
               <GoogleOAuthProvider clientId={Setting.GOOGLE_CLIENT_ID}>
                 <GoogleLoginButton
-                  loader={googleBtnLoad === "google"}
+                  loader={socialBtnLoad === "google"}
                   onGoogleDone={(val) => googleDataApiCall(val?.code)}
                 />
               </GoogleOAuthProvider>
               <FacebookLoginButton
-                loader={googleBtnLoad === "fb"}
+                loader={socialBtnLoad === "fb"}
                 onSuccess={(response) => socialLoginApiCall(response, "fb")}
               />
-              <div className={classes.socialContainerStyle}>
-                <img
-                  src={Images.apple}
-                  alt="apple"
-                  className={classes.socialImgStyle}
-                />
-                <Typography className={classes.socialTextStyle}>
-                  Apple
-                </Typography>
-              </div>
+              <AppleLoginButton
+                loader={socialBtnLoad === "apple"}
+                onSuccess={(response) => socialLoginApiCall(response, "apple")}
+              />
             </Grid>
             <Grid item xs={12} className={classes.needAccountContainer}>
               <Typography className={classes.accountTextStyle}>
