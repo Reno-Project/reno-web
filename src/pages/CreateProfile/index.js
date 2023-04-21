@@ -90,6 +90,7 @@ const CreateProfile = (props) => {
   const { setUserData, clearAllData } = authActions;
 
   const [activeStep, setActiveStep] = useState(0);
+  const [expertiseList, setExpertiesList] = useState([]);
   const [errObj, setErrObj] = useState(errorObj);
   const [state, setState] = useState({
     businessLogo: "",
@@ -125,12 +126,7 @@ const CreateProfile = (props) => {
   const [buttonLoader, setButtonLoader] = useState("");
   const [visible, setVisible] = useState(false);
   const [bLogo, setBLogo] = useState(null);
-  const exp = [
-    { id: 1, label: "Interior design" },
-    { id: 2, label: "Renovation" },
-    { id: 3, label: "Retouch" },
-  ];
-  const price = ["49", "99", "129", "189", "249"];
+
   const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis"];
   const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
   const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
@@ -147,6 +143,7 @@ const CreateProfile = (props) => {
   }, [userData]);
 
   useEffect(() => {
+    getprojectList();
     getUserDetailsByIdApiCall();
   }, [activeStep]);
 
@@ -179,6 +176,21 @@ const CreateProfile = (props) => {
     }
   }
 
+  async function getprojectList() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.projectlist}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        setExpertiesList(response?.data);
+      }
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
+    }
+  }
+
   const setPreFillDataFunction = (mainData) => {
     if (!isEmpty(userData?.contractor_data)) {
       const uData = mainData?.contractor_data;
@@ -190,10 +202,7 @@ const CreateProfile = (props) => {
       setSelectedLocation(obj);
       setUserLocation(uData?.company_address);
 
-      const newArray = uData?.expertise?.map(({ id, project_name }) => ({
-        id: id,
-        label: project_name,
-      }));
+      const newArray = uData?.expertise?.map((item) => item?.project_name);
 
       setState({
         ...state,
@@ -530,9 +539,18 @@ const CreateProfile = (props) => {
   // Step 1 Connect Api integration for api calls ---
   // Step 1 => Pass data in form-data
   async function addContractorDetailsApiCall() {
+    const selectedOptions = [];
+    state?.expertise?.map((e) => {
+      expertiseList?.map((options) => {
+        if (options?.project_name === e) {
+          return selectedOptions.push(options.id);
+        }
+      });
+    });
     try {
       setButtonLoader("step1");
-      let expertiseCsv = convertToCsv(state?.expertise);
+      // let expertiseCsv = convertToCsv(state?.expertise);
+
       let data = {
         // "email": "",
         // "phone_code": "",
@@ -549,7 +567,9 @@ const CreateProfile = (props) => {
         fb_url: state?.social ? state?.social : "",
         insta_url: state?.insta ? state?.insta : "",
         company_address: userLocation ? userLocation : "",
-        contractor_expertise: expertiseCsv ? expertiseCsv : "", // pass in CSV form
+        contractor_expertise: selectedOptions
+          ? selectedOptions?.toString()
+          : "", // pass in CSV form
         lat: selectedLocation?.lat ? selectedLocation?.lat : "",
         long: selectedLocation?.lng ? selectedLocation?.lng : "",
       };
@@ -973,7 +993,7 @@ const CreateProfile = (props) => {
                         expertiseMsg: "",
                       });
                     }}
-                    renderTags={exp}
+                    renderTags={expertiseList}
                     error={errObj.expertiseErr}
                     helpertext={errObj.expertiseMsg}
                   />
