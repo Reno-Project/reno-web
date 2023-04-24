@@ -350,7 +350,10 @@ const Login = (props) => {
               />
             </Grid>
             <Typography
-              onClick={() => setVisibleForgotModal(true)}
+              onClick={() => {
+                setForgotEmail("");
+                setVisibleForgotModal(true);
+              }}
               className={classes.menuTitleStyle}
             >
               Forget password?

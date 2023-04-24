@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Backdrop, Box, Button, Fade, Modal, Typography } from "@mui/material";
@@ -17,6 +17,8 @@ function ProfileSuccessModal(props) {
   const navigate = useNavigate();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [isOpen, setIsOpen] = useState(visible);
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -33,13 +35,13 @@ function ProfileSuccessModal(props) {
   return (
     <div>
       <Modal
-        open={visible}
+        open={isOpen}
         closeAfterTransition
         disableAutoFocus
         slotProps={{ backdrop: Backdrop }}
         style={{ overflowY: "scroll" }}
       >
-        <Fade in={visible}>
+        <Fade in={isOpen}>
           <Box sx={style}>
             <div className={classes.container}>
               <img src={Images.success} alt="success_img" />
@@ -50,7 +52,10 @@ function ProfileSuccessModal(props) {
               <Button
                 variant="contained"
                 fullWidth
-                onClick={() => navigate("/dashboard")}
+                onClick={() => {
+                  navigate("/dashboard");
+                  setIsOpen(!isOpen);
+                }}
               >
                 Start Exploring
               </Button>

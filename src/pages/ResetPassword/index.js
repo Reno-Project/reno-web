@@ -111,7 +111,7 @@ const ResetPassword = (props) => {
     if (isEmpty(password)) {
       valid = false;
       error.passwordErr = true;
-      error.passwordMsg = "Please enter password";
+      error.passwordMsg = "Please enter new password";
     } else if (!passwordRegex.test(password)) {
       valid = false;
       error.passwordErr = true;
@@ -209,13 +209,13 @@ const ResetPassword = (props) => {
   }
 
   return (
-    <div style={{ overflow:"scroll"}}>
+    <div style={{ overflow: "scroll" }}>
       <Grid
         container
         alignItems="center"
         justifyContent="center"
         flexDirection="column"
-        style={{ paddingTop: 40}}
+        style={{ paddingTop: 40 }}
       >
         <Grid item xs={12} marginTop="30px">
           <Typography className={classes.welcomeTextStyle}>

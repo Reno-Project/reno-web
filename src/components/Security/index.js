@@ -295,7 +295,7 @@ export default function Security() {
             style={{ marginTop: 10, marginBottom: 10 }}
             gap={1}
           >
-            <Grid item display={"flex"} gap={1}>
+            <Grid item display={"flex"} container gap={1} wrap="nowrap">
               <Grid
                 item
                 xs={1}
@@ -344,13 +344,13 @@ export default function Security() {
             style={{ marginTop: 10, marginBottom: 10 }}
             gap={1}
           >
-            <Grid item display={"flex"} gap={isMobile ? 1 : 2}>
+            <Grid item display={"flex"} container gap={1} wrap="nowrap">
               <Grid
                 item
                 xs={1}
                 style={{
                   marginTop: 10,
-                  justifyContent: "flex-end",
+                  justifyContent: "center",
                   display: "flex",
                 }}
               >
