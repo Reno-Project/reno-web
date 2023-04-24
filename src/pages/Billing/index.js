@@ -96,7 +96,16 @@ export default function Billing() {
     if (isEmpty(state.beneficiary)) {
       valid = false;
       error.beneficiaryErr = true;
-      error.beneficiaryMsg = "Please Enter Beneficiary Name";
+      error.beneficiaryMsg = "Please enter beneficiary name";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#beneficiary");
+      }
+    } else if (state?.beneficiary.length > 50) {
+      valid = false;
+      error.beneficiaryErr = true;
+      error.beneficiaryMsg =
+        "Beneficiary name should not be greater than 50 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#beneficiary");
@@ -106,7 +115,15 @@ export default function Billing() {
     if (isEmpty(state.iban)) {
       valid = false;
       error.ibanErr = true;
-      error.ibanMsg = "Please Enter IBAN Number";
+      error.ibanMsg = "Please enter IBAN number";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#iban");
+      }
+    } else if (state?.iban.length > 34) {
+      valid = false;
+      error.ibanErr = true;
+      error.ibanMsg = "IBAN number should not be greater than 34 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#iban");
@@ -116,7 +133,15 @@ export default function Billing() {
     if (isEmpty(state.bank)) {
       valid = false;
       error.bankErr = true;
-      error.bankMsg = "Please Select Bank";
+      error.bankMsg = "Please select bank";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#bank");
+      }
+    } else if (state?.bank.length > 50) {
+      valid = false;
+      error.bankErr = true;
+      error.bankMsg = "Bank name should not be greater than 50 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#bank");
@@ -126,7 +151,16 @@ export default function Billing() {
     if (isEmpty(state.acc)) {
       valid = false;
       error.accErr = true;
-      error.accMsg = "Please Enter Bank Account Number";
+      error.accMsg = "Please enter bank account number";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#baccount");
+      }
+    } else if (state?.acc.length > 50) {
+      valid = false;
+      error.accErr = true;
+      error.accMsg =
+        "Bank account number should not be greater than 50 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#baccount");
@@ -136,7 +170,15 @@ export default function Billing() {
     if (isEmpty(state.swift)) {
       valid = false;
       error.swiftErr = true;
-      error.swiftMsg = "Please Enter Swift Code";
+      error.swiftMsg = "Please enter swift code";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#swift");
+      }
+    } else if (state?.swift.length > 11) {
+      valid = false;
+      error.swiftErr = true;
+      error.swiftMsg = "Swift code should not be greater than 11 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#swift");
@@ -146,7 +188,16 @@ export default function Billing() {
     if (isEmpty(state.bankAddress)) {
       valid = false;
       error.bankAddErr = true;
-      error.bankAddMsg = "Please Enter Bank Address";
+      error.bankAddMsg = "Please enter bank address";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#bAddress");
+      }
+    } else if (state.bankAddress.length > 100) {
+      valid = false;
+      error.bankAddErr = true;
+      error.bankAddMsg =
+        "Bank address should not be greater than 100 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#bAddress");
@@ -217,7 +268,7 @@ export default function Billing() {
         <>
           <Grid item container xs={12}>
             <Grid item padding={isMobile ? "10px 0" : "0px 20px"}>
-              <Typography variant="h5">Billing information</Typography>
+              <Typography variant="h5">Billing Information</Typography>
               <Grid
                 item
                 container

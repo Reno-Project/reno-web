@@ -456,7 +456,16 @@ const CreateProfile = (props) => {
     if (isEmpty(bname)) {
       valid = false;
       error.bnameErr = true;
-      error.bnameMsg = "Please Enter Beneficiary Name";
+      error.bnameMsg = "Please enter beneficiary name";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#name");
+      }
+    } else if (bname.length > 50) {
+      valid = false;
+      error.bnameErr = true;
+      error.bnameMsg =
+        "Beneficiary name should not be greater than 50 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#name");
@@ -466,7 +475,15 @@ const CreateProfile = (props) => {
     if (isEmpty(iban)) {
       valid = false;
       error.ibanErr = true;
-      error.ibanMsg = "Please Enter IBAN Number";
+      error.ibanMsg = "Please enter IBAN number";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#iban");
+      }
+    } else if (iban.length > 34) {
+      valid = false;
+      error.ibanErr = true;
+      error.ibanMsg = "IBAN number should not be greater than 34 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#iban");
@@ -476,7 +493,15 @@ const CreateProfile = (props) => {
     if (isEmpty(bank)) {
       valid = false;
       error.bankErr = true;
-      error.bankMsg = "Please Select Bank";
+      error.bankMsg = "Please select bank";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#bank");
+      }
+    } else if (bank.length > 50) {
+      valid = false;
+      error.bankErr = true;
+      error.bankMsg = "Bank name should not be greater than 50 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#bank");
@@ -486,7 +511,16 @@ const CreateProfile = (props) => {
     if (isEmpty(acc)) {
       valid = false;
       error.accErr = true;
-      error.accMsg = "Please Enter Bank Account Number";
+      error.accMsg = "Please enter bank account number";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#baccount");
+      }
+    } else if (acc.length > 50) {
+      valid = false;
+      error.accErr = true;
+      error.accMsg =
+        "Bank account number should not be greater than 50 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#baccount");
@@ -496,7 +530,15 @@ const CreateProfile = (props) => {
     if (isEmpty(swift)) {
       valid = false;
       error.swiftErr = true;
-      error.swiftMsg = "Please Enter Swift Code";
+      error.swiftMsg = "Please enter swift code";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#swift");
+      }
+    } else if (swift.length > 11) {
+      valid = false;
+      error.swiftErr = true;
+      error.swiftMsg = "Swift code should not be greater than 11 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#swift");
@@ -506,7 +548,15 @@ const CreateProfile = (props) => {
     if (isEmpty(address)) {
       valid = false;
       error.addErr = true;
-      error.addMsg = "Please Enter Bank Address";
+      error.addMsg = "Please enter bank address";
+      if (!scroll) {
+        scroll = true;
+        section = document.querySelector("#Address");
+      }
+    } else if (address.length > 100) {
+      valid = false;
+      error.addErr = true;
+      error.addMsg = "Bank address should not be greater than 100 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#Address");
@@ -524,17 +574,17 @@ const CreateProfile = (props) => {
     }
   }
 
-  const convertToCsv = (array) => {
-    let tempIds = [];
-    let tempStringIds = "";
-    if (_.isArray(array) && !_.isEmpty(array)) {
-      array?.map((it, ind) => {
-        tempIds?.push(it?.id);
-      });
-    }
-    tempStringIds = tempIds?.toString();
-    return tempStringIds;
-  };
+  // const convertToCsv = (array) => {
+  //   let tempIds = [];
+  //   let tempStringIds = "";
+  //   if (_.isArray(array) && !_.isEmpty(array)) {
+  //     array?.map((it, ind) => {
+  //       tempIds?.push(it?.id);
+  //     });
+  //   }
+  //   tempStringIds = tempIds?.toString();
+  //   return tempStringIds;
+  // };
 
   // Step 1 Connect Api integration for api calls ---
   // Step 1 => Pass data in form-data
@@ -550,7 +600,6 @@ const CreateProfile = (props) => {
     try {
       setButtonLoader("step1");
       // let expertiseCsv = convertToCsv(state?.expertise);
-
       let data = {
         // "email": "",
         // "phone_code": "",
@@ -1573,9 +1622,6 @@ const CreateProfile = (props) => {
                       setState({ ...state, bname: e.target.value });
                       setErrObj({ ...errObj, bnameErr: false, bnameMsg: "" });
                     }}
-                    inputProps={{
-                      maxLength: 40,
-                    }}
                     error={errObj.bnameErr}
                     helpertext={errObj.bnameMsg}
                   />
@@ -1593,9 +1639,6 @@ const CreateProfile = (props) => {
                         ibanErr: false,
                         ibanMsg: "",
                       });
-                    }}
-                    inputProps={{
-                      maxLength: 34,
                     }}
                     error={errObj.ibanErr}
                     helpertext={errObj.ibanMsg}
@@ -1631,9 +1674,6 @@ const CreateProfile = (props) => {
                         setState({ ...state, acc: e.target.value });
                         setErrObj({ ...errObj, accErr: false, accMsg: "" });
                       }}
-                      inputProps={{
-                        maxLength: 16,
-                      }}
                       error={errObj.accErr}
                       helpertext={errObj.accMsg}
                     />
@@ -1646,9 +1686,6 @@ const CreateProfile = (props) => {
                       onChange={(e) => {
                         setState({ ...state, swift: e.target.value });
                         setErrObj({ ...errObj, swiftErr: false, swiftMsg: "" });
-                      }}
-                      inputProps={{
-                        maxLength: 12,
                       }}
                       error={errObj.swiftErr}
                       helpertext={errObj.swiftMsg}
