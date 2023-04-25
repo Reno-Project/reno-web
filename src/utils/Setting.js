@@ -1,7 +1,7 @@
 const prod = process.env.NODE_ENV === "production";
 const baseUrl = prod
-  ? "https://reno-home.azurewebsites.net/"
-  : "https://reno-home.azurewebsites.net/";
+  ? "https://reno-api.groovyweb.solutions/"
+  : "https://reno-api.groovyweb.solutions/";
 
 export const Setting = {
   baseUrl,
