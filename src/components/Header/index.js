@@ -61,7 +61,7 @@ function Header(props) {
           lg={3}
           md={3}
           sm={3}
-          xs={3}
+          xs={6}
           className={classes.leftContainer}
         >
           <div
@@ -81,7 +81,7 @@ function Header(props) {
             />
           </div>
           {currentUrl?.includes("signup") || currentUrl?.includes("login") ? (
-            <Grid item style={{ paddingLeft: 30 }}>
+            <Grid item style={{ paddingLeft: 10 }}>
               <NavLink to="/how-it-works" className={classes.linkStyle}>
                 <Typography className={classes.menuTitleStyle}>
                   How it works?
@@ -95,7 +95,7 @@ function Header(props) {
           lg={9}
           md={9}
           sm={9}
-          xs={9}
+          xs={6}
           className={classes.rightContainer}
         >
           {location?.pathname === "/" && (

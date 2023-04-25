@@ -814,19 +814,21 @@ const CreateProfile = (props) => {
                           objectFit: "cover",
                         }}
                       />
-                      <div className={classes.buttonAbsoluteDiv}>
-                        <div className={classes.uploadIcon}>
-                          <CreateOutlined
-                            style={{
-                              fontSize: "18px",
-                              color: "#FFF",
-                              position: "absolute",
-                              top: 7,
-                              left: 8,
-                            }}
-                          />
+                      {activeStep === 0 && (
+                        <div className={classes.buttonAbsoluteDiv}>
+                          <div className={classes.uploadIcon}>
+                            <CreateOutlined
+                              style={{
+                                fontSize: "18px",
+                                color: "#FFF",
+                                position: "absolute",
+                                top: 7,
+                                left: 8,
+                              }}
+                            />
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </>
                   ) : (
                     <div className={classes.uploadImgDivStyle}>
@@ -848,6 +850,7 @@ const CreateProfile = (props) => {
                   )}
                 </Button>
                 <input
+                  disabled={activeStep !== 0}
                   type="file"
                   accept="image/jpeg, image/png, image/jpg"
                   multiple={false}

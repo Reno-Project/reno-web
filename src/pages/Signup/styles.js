@@ -69,11 +69,15 @@ const useStyles = makeStyles((theme) => ({
     "& > div > div > div > input": {
       width: "0px !important",
       border: "0px !important",
-      paddingLeft: "38px !important",
+      paddingLeft: "36px !important",
     },
     "& > div > div > div > div": {
       border: "0px !important",
-      backgroundColor: "#0000 !important",
+      // backgroundColor: "#0000 !important",
+    },
+    "& > div ": {
+      border: "0px !important",
+      backgroundColor: "#F5F6F8",
     },
   },
 }));

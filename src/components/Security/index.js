@@ -73,9 +73,9 @@ export default function Security() {
     getUserDetailsByIdApiCall();
   }, [status]);
 
-  useEffect(() => {
-    deviceList();
-  }, []);
+  // useEffect(() => {
+  //   deviceList();
+  // }, []);
 
   async function getUserDetailsByIdApiCall() {
     try {
