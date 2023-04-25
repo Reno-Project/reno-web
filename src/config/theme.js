@@ -65,7 +65,9 @@ theme = createTheme(theme, {
           },
         },
         outlinedPrimary: {
-          border: "1px solid #274BF1",
+          border: "0px",
+          color: color.secondary,
+          backgroundColor: color.LightSurface,
         },
       },
     },
