@@ -16,6 +16,7 @@ export const color = {
   borderColor: "#E8E8E8E8",
   shadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
   captionText: "rgba(100, 111, 134, 1)",
+  LightSurface: "#F5F6F8",
 };
 
 let theme = createTheme();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { isEmpty } from "lodash";
 import { toast } from "react-toastify";
@@ -10,6 +10,7 @@ import { getApiData } from "../../utils/APIHelper";
 import { updateUserData } from "../../utils/CommonFunction";
 import ProfileSuccessModal from "../../components/ProfileSuccessModal";
 import useStyles from "./styles";
+import { color } from "../../config/theme";
 
 const errorObj = {
   emailErr: false,
@@ -160,12 +161,34 @@ const Dashboard = (props) => {
       alignItems="center"
       justifyContent="center"
       flexDirection="column"
-      style={{ paddingTop: 40 }}
+      style={{ padding: 40 }}
+      bgcolor={color.LightSurface}
     >
       <Grid item>
         <Typography className={classes.loginHeaderText}>
           Welcome to Reno Dashboard
         </Typography>
+      </Grid>
+      <Grid container>
+        <Grid item container>
+          <Typography variant="h5" className={classes.titleStyle} mb={2}>
+            Overview
+          </Typography>
+        </Grid>
+        <div className={classes.card}>
+          <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
+            Hi {userData?.name || "Marc"}
+          </Typography>
+          <Typography textAlign={"center"}>
+            Submit proposals to <br /> your customers
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() => navigate("/create-proposal")}
+          >
+            Create Proposal
+          </Button>
+        </div>
       </Grid>
       {visible && (
         <ProfileSuccessModal
