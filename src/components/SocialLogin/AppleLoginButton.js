@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography, CircularProgress } from "@mui/material";
-import AppleLogin from "react-apple-login";
+import AppleSignin from "react-apple-signin-auth";
 import PropTypes from "prop-types";
 import Images from "../../config/images";
 import useStyles from "./styles";
@@ -20,36 +20,39 @@ function AppleLoginButton(props) {
   };
 
   return (
-    <AppleLogin
-      clientId="com.renocontractor.io"
-      redirectURI="https://reno-home-contractor.azurewebsites.net/"
-      usePopup={true}
-      callback={appleResponse}
-      scope="email name"
-      responseMode="query"
-      render={(renderProps) => {
-        return (
-          <div
-            className={classes.socialContainerStyle}
-            onClick={() => renderProps.onClick()}
-          >
-            {loader ? (
-              <CircularProgress style={{ color: "#274BF1" }} size={26} />
-            ) : (
-              <>
-                <img
-                  src={Images.apple}
-                  alt="apple"
-                  className={classes.socialImgStyle}
-                />
-                <Typography className={classes.socialTextStyle}>
-                  Apple
-                </Typography>
-              </>
-            )}
-          </div>
-        );
+    <AppleSignin
+      authOptions={{
+        clientId: "com.renocontractor.io",
+        scope: "email name",
+        redirectURI: "https://reno-home-contractor.azurewebsites.net/",
+        state: "state",
+        nonce: "nonce",
+        usePopup: true,
       }}
+      noDefaultStyle={false}
+      onSuccess={(response) => appleResponse(response)} // default = undefined
+      onError={(error) => console.error(error)} // default = undefined
+      skipScript={false} // default = undefined
+      iconProp={{ style: { marginTop: "10px" } }} // default = undefined
+      render={(props) => (
+        <div
+          className={classes.socialContainerStyle}
+          onClick={() => props.onClick()}
+        >
+          {loader ? (
+            <CircularProgress style={{ color: "#274BF1" }} size={26} />
+          ) : (
+            <>
+              <img
+                src={Images.apple}
+                alt="apple"
+                className={classes.socialImgStyle}
+              />
+              <Typography className={classes.socialTextStyle}>Apple</Typography>
+            </>
+          )}
+        </div>
+      )}
     />
   );
 }

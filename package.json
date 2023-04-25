@@ -16,7 +16,7 @@
     "google-libphonenumber": "^3.2.32",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
-    "react-apple-login": "^1.1.6",
+    "react-apple-signin-auth": "^1.0.9",
     "react-detect-offline": "^2.4.5",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
