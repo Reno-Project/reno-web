@@ -9,8 +9,11 @@ import PhoneVerificationModal from "../../components/PhoneVerificationModal";
 import TwoFectorModal from "../../components/TwoFectorModal";
 import NotificationSettings from "../NotificationSettings";
 import Security from "../../components/Security";
+import { useSelector } from "react-redux";
 export default function AccountSettings() {
   const classes = useStyles();
+
+  const { userData } = useSelector((state) => state.auth);
   const [tabValue, setTabValue] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [show2FModal, setShow2FModal] = useState(false);
@@ -42,14 +45,26 @@ export default function AccountSettings() {
               <Tab label="Edit Profile" />
               <Tab label="Billing" />
               <Tab label="Notifications" />
-              <Tab label="Change password" />
+              {userData?.social_connection === "google" ||
+                userData?.social_connection === "fb" ||
+                (userData?.social_connection === "apple" ? null : (
+                  <Tab label="Change password" />
+                ))}
               <Tab label="Security" />
             </Tabs>
           </Grid>
           {tabValue === 0 ? <EditProfile /> : null}
           {tabValue === 1 ? <Billing /> : null}
           {tabValue === 2 ? <NotificationSettings /> : null}
-          {tabValue === 3 ? <ChangePassword /> : null}
+          {tabValue === 3 ? (
+            userData?.social_connection === "google" ||
+            userData?.social_connection === "fb" ||
+            userData?.social_connection === "apple" ? (
+              <Security />
+            ) : (
+              <ChangePassword />
+            )
+          ) : null}
           {tabValue === 4 ? <Security /> : null}
         </Grid>
       </Grid>
