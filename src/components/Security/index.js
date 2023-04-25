@@ -124,9 +124,7 @@ export default function Security() {
         "POST",
         {}
       );
-      console.log("response=====>>>>>", response);
       if (response?.success) {
-        toast.success(response?.message);
       } else {
         toast.error(response?.message);
       }

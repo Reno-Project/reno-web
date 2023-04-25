@@ -297,15 +297,15 @@ const CreateProfile = (props) => {
     //     section = document.querySelector("#web");
     //   }
     // } else
-    if (isEmpty(state?.website) && !urlRegex.test(state?.website)) {
-      valid = false;
-      error.webErr = true;
-      error.webMsg = "Please Enter Valid Website Name";
-      if (!scroll) {
-        scroll = true;
-        section = document.querySelector("#web");
-      }
-    }
+    // if (isEmpty(state?.website) && !urlRegex.test(state?.website)) {
+    //   valid = false;
+    //   error.webErr = true;
+    //   error.webMsg = "Please Enter Valid Website Name";
+    //   if (!scroll) {
+    //     scroll = true;
+    //     section = document.querySelector("#web");
+    //   }
+    // }
     if (!isEmpty(state?.linkedin) && !linkedinRegex.test(state?.linkedin)) {
       valid = false;
       error.linkedInErr = true;

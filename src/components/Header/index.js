@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
@@ -11,6 +11,7 @@ import {
   InputAdornment,
   IconButton,
   MenuItem,
+  Modal,
 } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +20,7 @@ import Images from "../../config/images";
 import useStyles from "./styles";
 import CInput from "../CInput";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import { isMobile } from "react-device-detect";
 
 function Header(props) {
   const currentUrl = window.location.href;
@@ -27,9 +29,11 @@ function Header(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  console.log("location=====>>>>>", location);
   const { clearAllData } = authActions;
   const { token, userData } = useSelector((state) => state.auth);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const [visible, setVisible] = useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -48,6 +52,7 @@ function Header(props) {
   function logout(type) {
     dispatch(clearAllData());
     handleClose();
+    setVisible(false);
     setTimeout(() => {
       type === "signup" ? navigate("/signup") : navigate("/login");
     }, 500);
@@ -205,7 +210,6 @@ function Header(props) {
                       <MenuItem
                         onClick={() => {
                           handleClose();
-
                           navigate("/account-setting");
                         }}
                         className={classes.logoutTextStyle}
@@ -215,7 +219,8 @@ function Header(props) {
                     </>
                   )}
                   <MenuItem
-                    onClick={() => logout("")}
+                    // onClick={() => logout("")}
+                    onClick={() => setVisible(!visible)}
                     className={classes.logoutTextStyle}
                   >
                     Logout
@@ -246,6 +251,67 @@ function Header(props) {
           </Grid>
         </Grid>
       </Grid>
+
+      <Modal
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        disableAutoFocus
+        open={visible}
+      >
+        <Grid
+          item
+          justifyContent={"center"}
+          style={{
+            backgroundColor: "#FFF",
+            borderRadius: 4,
+            padding: isMobile ? 20 : 30,
+          }}
+        >
+          <Grid item>
+            <Typography
+              style={{
+                fontFamily: "ElMessiri-SemiBold",
+                fontSize: isMobile ? "22px" : "28px",
+                textAlign: "center",
+              }}
+            >
+              Are you sure want to logout ?
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            container
+            justifyContent={"center"}
+            gap={isMobile ? 1 : 2}
+            wrap="nowrap"
+            marginTop={"10px"}
+          >
+            <Grid item xs={isMobile ? 6 : 5}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => setVisible(false)}
+              >
+                no
+              </Button>
+            </Grid>
+            <Grid item xs={isMobile ? 6 : 5}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => {
+                  logout("");
+                }}
+              >
+                Yes
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Modal>
     </div>
   );
 }
