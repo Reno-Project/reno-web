@@ -26,6 +26,7 @@ import AccountSettings from "./pages/AccountSettings";
 import { Box, Grid } from "@mui/material";
 import Notifications from "./pages/Notifications";
 import CreateProposal from "./pages/Proposal";
+import RequestedProposal from "./pages/RequestedProposal";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
@@ -90,6 +91,7 @@ function App() {
                         path={"/create-proposal"}
                         element={<CreateProposal />}
                       />
+                      <Route path={"/request-Proposal"} element={<RequestedProposal/>} />
                       <Route
                         path="*"
                         element={
