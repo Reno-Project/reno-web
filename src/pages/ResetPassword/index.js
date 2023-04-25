@@ -50,7 +50,7 @@ const ResetPassword = (props) => {
   const [resendViewVisible, setResendViewVisible] = useState(false);
 
   const passwordRegex =
-    /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%^&*])((?=.*[A-Z])))(?=.{8,})/;
+    /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%+:^=<()~>_?`|'";,.&*])((?=.*[A-Z])))(?=.{8,})/;
 
   useEffect(() => {
     setOutput("");
