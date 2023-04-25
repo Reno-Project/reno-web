@@ -14,6 +14,7 @@
     "@testing-library/user-event": "^13.5.0",
     "firebase": "^9.18.0",
     "google-libphonenumber": "^3.2.32",
+    "iban": "^0.0.14",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-apple-signin-auth": "^1.0.9",

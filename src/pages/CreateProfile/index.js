@@ -23,6 +23,7 @@ import _, { isArray, isEmpty, isString } from "lodash";
 import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import IBAN from "iban";
 import CStepper from "../../components/CStepper";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
@@ -33,6 +34,7 @@ import PlaceAutoComplete from "../../components/PlaceAutoComplete";
 import useStyles from "./styles";
 import ProfileSuccessModal from "../../components/ProfileSuccessModal";
 import Images from "../../config/images";
+
 const errorObj = {
   cnameErr: false,
   cnameMsg: "",
@@ -448,6 +450,7 @@ const CreateProfile = (props) => {
   // this function checks validation for step 3
   function step3Validation() {
     const { bname, iban, bank, acc, swift, address } = state;
+    const swiftCodeRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
     const error = { ...errObj };
     let valid = true;
     let scroll = false;
@@ -480,10 +483,10 @@ const CreateProfile = (props) => {
         scroll = true;
         section = document.querySelector("#iban");
       }
-    } else if (iban.length > 34) {
+    } else if (!IBAN.isValid(iban)) {
       valid = false;
       error.ibanErr = true;
-      error.ibanMsg = "IBAN number should not be greater than 34 characters";
+      error.ibanMsg = "Please enter valid IBAN number";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#iban");
@@ -535,15 +538,24 @@ const CreateProfile = (props) => {
         scroll = true;
         section = document.querySelector("#swift");
       }
-    } else if (swift.length > 11) {
+    } else if (!swiftCodeRegex.test(swift)) {
       valid = false;
       error.swiftErr = true;
-      error.swiftMsg = "Swift code should not be greater than 11 characters";
+      error.swiftMsg = "Please enter valid swift code";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#swift");
       }
     }
+    // else if (swift.length > 11) {
+    //   valid = false;
+    //   error.swiftErr = true;
+    //   error.swiftMsg = "Swift code should not be greater than 11 characters";
+    //   if (!scroll) {
+    //     scroll = true;
+    //     section = document.querySelector("#swift");
+    //   }
+    // }
 
     if (isEmpty(address)) {
       valid = false;
