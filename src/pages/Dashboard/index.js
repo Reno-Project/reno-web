@@ -163,6 +163,7 @@ const Dashboard = (props) => {
       flexDirection="column"
       style={{ padding: 40 }}
       bgcolor={color.LightSurface}
+      maxWidth={"unset"}
     >
       <Grid item>
         <Typography className={classes.loginHeaderText}>

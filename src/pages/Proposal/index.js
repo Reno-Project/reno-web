@@ -26,19 +26,10 @@ export default function CreateProposal() {
       p={2}
       bgcolor={color.LightSurface}
       flex={1}
+      maxWidth={"unset"}
+      style={{ padding: 40 }}
     >
       <Grid container sm={12} md={8} lg={9}>
-        <Grid item xs={12}>
-          <Typography
-            variant="h4"
-            style={{
-              lineHeight: 3,
-              fontFamily: "ElMessiri-SemiBold",
-            }}
-          >
-            Submit Request
-          </Typography>
-        </Grid>
         <Grid
           item
           container
@@ -65,6 +56,17 @@ export default function CreateProposal() {
       </Grid>
       <Grid container sm={12} md={4} lg={3}>
         <Typography>Component</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography
+          variant="h4"
+          style={{
+            lineHeight: 2,
+            fontFamily: "ElMessiri-SemiBold",
+          }}
+        >
+          Submit Request
+        </Typography>
       </Grid>
     </Grid>
   );
