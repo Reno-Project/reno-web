@@ -498,7 +498,7 @@ const CreateProfile = (props) => {
     if (isEmpty(bank)) {
       valid = false;
       error.bankErr = true;
-      error.bankMsg = "Please select bank";
+      error.bankMsg = "Please enter bank";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#bank");
@@ -1635,6 +1635,7 @@ const CreateProfile = (props) => {
                     label="Beneficiary Name"
                     placeholder="Enter Beneficiary Name"
                     value={state.bname}
+                    required
                     onChange={(e) => {
                       setState({ ...state, bname: e.target.value });
                       setErrObj({ ...errObj, bnameErr: false, bnameMsg: "" });
@@ -1648,6 +1649,7 @@ const CreateProfile = (props) => {
                   <CInput
                     label="IBAN"
                     placeholder="Enter IBAN"
+                    required
                     value={state.iban}
                     onChange={(e) => {
                       setState({ ...state, iban: e.target.value });
@@ -1663,7 +1665,23 @@ const CreateProfile = (props) => {
                 </Grid>
 
                 <Grid item xs={10} id="bank">
-                  <Cselect
+                  <CInput
+                    label="Bank Name"
+                    placeholder="Enter Bank"
+                    required
+                    value={state.bank}
+                    onChange={(e) => {
+                      setState({ ...state, bank: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        bankErr: false,
+                        bankMsg: "",
+                      });
+                    }}
+                    error={errObj.bankErr}
+                    helpertext={errObj.bankMsg}
+                  />
+                  {/* <Cselect
                     label="Bank Name"
                     placeholder="Select Bank"
                     value={state.bank}
@@ -1678,7 +1696,7 @@ const CreateProfile = (props) => {
                     renderTags={bank}
                     error={errObj.bankErr}
                     helpertext={errObj.bankMsg}
-                  />
+                  /> */}
                 </Grid>
 
                 <Grid item container xs={10} justifyContent="space-between">
@@ -1686,6 +1704,7 @@ const CreateProfile = (props) => {
                     <CInput
                       label="Bank Account"
                       placeholder="Enter Bank Account Number"
+                      required
                       value={state.acc}
                       onChange={(e) => {
                         setState({ ...state, acc: e.target.value });
@@ -1699,6 +1718,7 @@ const CreateProfile = (props) => {
                     <CInput
                       label="SWIFT code"
                       placeholder="Enter SWIFT Code"
+                      required
                       value={state.swift}
                       onChange={(e) => {
                         setState({ ...state, swift: e.target.value });
@@ -1715,6 +1735,7 @@ const CreateProfile = (props) => {
                     multiline
                     label="Address"
                     placeholder="Enter Address"
+                    required
                     value={state.address}
                     onChange={(e) => {
                       setState({ ...state, address: e.target.value });
