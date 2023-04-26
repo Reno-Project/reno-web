@@ -155,6 +155,7 @@ export default function ChangePassword() {
             <CInput
               label="Old password"
               placeholder="Enter Old password"
+              required
               type={showOldPassword ? "text" : "password"}
               value={oldPassword}
               onChange={(e) => {
@@ -185,6 +186,7 @@ export default function ChangePassword() {
             <CInput
               label="New password"
               placeholder="Enter new password"
+              required
               value={newPassword}
               passValue={newPassword}
               passwordValidation
@@ -216,6 +218,7 @@ export default function ChangePassword() {
             <CInput
               label="Confirm password"
               placeholder="Enter confirm password"
+              required
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => {

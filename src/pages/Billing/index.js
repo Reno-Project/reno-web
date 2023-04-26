@@ -281,6 +281,7 @@ export default function Billing() {
                 <Grid item xs={12} id="beneficiary">
                   <CInput
                     label="Beneficiary Name"
+                    required
                     placeholder="Enter Beneficiary Name"
                     value={state.beneficiary}
                     onChange={(e) => {
@@ -299,6 +300,7 @@ export default function Billing() {
                 <Grid item xs={12} id="iban">
                   <CInput
                     label="IBAN"
+                    required
                     placeholder="Enter IBAN"
                     value={state.iban}
                     onChange={(e) => {
@@ -317,6 +319,7 @@ export default function Billing() {
                 <Grid item xs={12} id="bank">
                   <Cselect
                     label="Bank Name"
+                    required
                     placeholder="Select Bank"
                     value={state.bank}
                     handleSelect={(e) => {
@@ -336,6 +339,7 @@ export default function Billing() {
                 <Grid item xs={12} id="baccount">
                   <CInput
                     type="number"
+                    required
                     label="Bank Account"
                     placeholder="Enter Bank Account Number"
                     value={state.acc}
@@ -350,6 +354,7 @@ export default function Billing() {
                 <Grid item xs={12} id="swift">
                   <CInput
                     label="SWIFT code"
+                    required
                     placeholder="Enter SWIFT Code"
                     value={state.swift}
                     onChange={(e) => {
@@ -368,6 +373,7 @@ export default function Billing() {
                   <CInput
                     multiline
                     label="Address"
+                    required
                     placeholder="Enter Address"
                     value={state.bankAddress}
                     onChange={(e) => {

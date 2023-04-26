@@ -109,6 +109,8 @@ const Login = (props) => {
         email,
         password,
         device_type: "web",
+        device_name: "MacBook Pro",
+        login_address: "Nadiad",
       });
 
       const socialData = {
@@ -181,6 +183,8 @@ const Login = (props) => {
         password: socialData?.password ? socialData?.password : "",
         device_type: "web",
         social_connection: type ? type : "",
+        device_name: "MacBook Pro",
+        login_address: "Nadiad",
       });
 
       if (response.success) {

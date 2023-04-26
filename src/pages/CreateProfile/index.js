@@ -888,6 +888,7 @@ const CreateProfile = (props) => {
                 <Grid item xs={10} style={{ marginTop: 20 }} id="cname">
                   <CInput
                     label="Company Name"
+                    required
                     placeholder="Enter Company Name..."
                     value={state.cname}
                     onChange={(e) => {
@@ -905,6 +906,7 @@ const CreateProfile = (props) => {
                   <CInput
                     multiline={true}
                     label="Description"
+                    required
                     placeholder="Write Description"
                     value={state.description}
                     onChange={(e) => {
@@ -938,6 +940,7 @@ const CreateProfile = (props) => {
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="year">
                     <Cselect
                       label="Number of Years in Business"
+                      required
                       placeholder="Enter No. of Years"
                       value={state.businessYear}
                       handleSelect={(e) => {
@@ -1002,6 +1005,7 @@ const CreateProfile = (props) => {
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="employee">
                     <Cselect
                       label="Number of Employees"
+                      required
                       placeholder="Enter No. of Employees"
                       value={state.employees}
                       handleSelect={(e) => {
@@ -1024,6 +1028,7 @@ const CreateProfile = (props) => {
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="contract">
                     <CInput
                       label="Number of Contracts Annually"
+                      required
                       placeholder="Enter No. of Contracts"
                       type="number"
                       value={state.annualContract}
@@ -1045,6 +1050,7 @@ const CreateProfile = (props) => {
                   <Cselect
                     multiple={true}
                     label="Expertise Area"
+                    required
                     placeholder={
                       isArray(state?.expertise) && state?.expertise.length > 0
                         ? ""

@@ -627,6 +627,7 @@ export default function EditProfile() {
                 <Grid item xs={12} id="cname">
                   <CInput
                     label="Company Name"
+                    required
                     placeholder="Enter Company Name..."
                     value={state.cname}
                     onChange={(e) => {
@@ -646,6 +647,7 @@ export default function EditProfile() {
                   <CInput
                     multiline={true}
                     label="Description"
+                    required
                     placeholder="Write Description"
                     value={state.description}
                     onChange={(e) => {
@@ -740,6 +742,7 @@ export default function EditProfile() {
                   <Cselect
                     label="Number of Years in Business"
                     placeholder="Enter No. of Years"
+                    required
                     value={state.businessYear}
                     handleSelect={(e) => {
                       console.log("e ===businessyear==>>> ", e);
@@ -763,6 +766,7 @@ export default function EditProfile() {
                   <Cselect
                     label="Number of Employees"
                     placeholder="Enter No. of Employees"
+                    required
                     value={state.employees}
                     handleSelect={(e) => {
                       console.log("e ==employee===>>> ", e);
@@ -785,6 +789,7 @@ export default function EditProfile() {
                   <CInput
                     label="Number of Contracts Annually"
                     placeholder="Enter No. of Contracts"
+                    required
                     type="number"
                     value={state.annualContract}
                     onChange={(e) => {
@@ -817,6 +822,7 @@ export default function EditProfile() {
                   <Cselect
                     multiple={true}
                     placeholder="Select Area of Expertise"
+                    required
                     value={state.expertise}
                     handleSelect={(e) => {
                       setState({ ...state, expertise: e });

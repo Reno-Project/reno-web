@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, Grid, Typography, Divider, Switch } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Typography,
+  Divider,
+  Switch,
+  CircularProgress,
+} from "@mui/material";
 import Images from "../../config/images";
 import CInput from "../../components/CInput";
 import useStyles from "./styles";
@@ -10,6 +17,7 @@ import { Setting } from "../../utils/Setting";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
 import { isMobile } from "react-device-detect";
+import _ from "lodash";
 
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -67,15 +75,17 @@ export default function Security() {
   const { userData, token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
-  const [status, setStatus] = useState("");
+  const [status2FA, setStatus2FA] = useState("");
+  const [loginDeviceList, setLoginDeviceList] = useState([]);
+  const [loaderIndex, setLoaderIndex] = useState(false);
 
   useEffect(() => {
     getUserDetailsByIdApiCall();
-  }, [status]);
+  }, [status2FA]);
 
-  // useEffect(() => {
-  //   deviceList();
-  // }, []);
+  useEffect(() => {
+    deviceListApiCall();
+  }, []);
 
   async function getUserDetailsByIdApiCall() {
     try {
@@ -86,13 +96,13 @@ export default function Security() {
       );
       if (response.success) {
         dispatch(setUserData(response?.data));
-        setStatus(response?.data?.is_two_factor_verified);
+        setStatus2FA(response?.data?.is_two_factor_verified);
       } else {
-        setStatus(userData?.is_two_factor_verified);
+        setStatus2FA(userData?.is_two_factor_verified);
       }
     } catch (error) {
       console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
-      setStatus(userData?.is_two_factor_verified);
+      setStatus2FA(userData?.is_two_factor_verified);
     }
   }
 
@@ -117,14 +127,15 @@ export default function Security() {
     }
   }
 
-  async function deviceList() {
+  async function deviceListApiCall() {
     try {
       const response = await getApiData(
-        `${Setting.endpoints.logindeviceslist}/${userData?.id}`,
+        Setting.endpoints.logindeviceslist,
         "POST",
         {}
       );
       if (response?.success) {
+        setLoginDeviceList(response?.data);
       } else {
         toast.error(response?.message);
       }
@@ -134,6 +145,7 @@ export default function Security() {
   }
 
   async function logoutallApi() {
+    setLoaderIndex("all");
     try {
       const response = await getApiData(
         `${Setting.endpoints.logoutall}`,
@@ -142,13 +154,36 @@ export default function Security() {
         { Authorization: `Bearer ${token}` }
       );
       if (response?.success) {
+        deviceListApiCall();
         toast.success(response?.message);
       } else {
         toast.error(response?.message);
       }
+      setLoaderIndex("");
     } catch (error) {
+      setLoaderIndex("");
       console.log("error=====>>>>>", error);
       toast.error(error.toString() || "Something went wrong try again later");
+    }
+  }
+
+  async function singleDeviceLogoutApiCall(uItem, ind) {
+    setLoaderIndex(ind);
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.singleDeviceLogout}/${uItem?.id || ""}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        deviceListApiCall();
+      } else {
+        toast.error(response?.message);
+      }
+      setLoaderIndex("");
+    } catch (error) {
+      setLoaderIndex("");
+      toast.error("Something went wrong");
     }
   }
 
@@ -255,7 +290,7 @@ export default function Security() {
             >
               <IOSSwitch
                 sx={{ m: 0 }}
-                checked={status}
+                checked={status2FA}
                 onChange={(event) => {
                   twoFectorAuth(event.target.checked);
                 }}
@@ -263,147 +298,142 @@ export default function Security() {
             </Grid>
           </Grid>
         </Grid>
-        <Grid
-          item
-          container
-          style={{
-            border: "1px solid #F2F4F7",
-            padding: 20,
-            marginTop: 20,
-            backgroundColor: "#F9F9FB",
-          }}
-          alignItems="center"
-          justifyContent={"flex-end"}
-        >
-          <Grid item xs={12}>
-            <Typography
-              variant="h5"
-              fontFamily={"Roobert-Regular"}
-              marginBottom={2}
-            >
-              Connected devices
-            </Typography>
-          </Grid>
+
+        {_.isArray(loginDeviceList) && !_.isEmpty(loginDeviceList) ? (
           <Grid
             item
             container
-            xs={12}
-            wrap="nowrap"
-            justifyContent={"space-between"}
-            style={{ marginTop: 10, marginBottom: 10 }}
-            gap={1}
-          >
-            <Grid item display={"flex"} container gap={1} wrap="nowrap">
-              <Grid
-                item
-                xs={1}
-                style={{
-                  marginTop: 10,
-                  justifyContent: "center",
-                  display: "flex",
-                }}
-              >
-                <img
-                  src={Images.laptop}
-                  alt="laptop"
-                  className={classes.imgStyle}
-                />
-              </Grid>
-              <Grid item>
-                <Typography
-                  fontFamily={"Roobert-Regular"}
-                  className={classes.TextStyle}
-                >
-                  Chrome 109, Windows
-                  <span className={classes.TextDeviceStyle}>THIS DEVICE</span>
-                </Typography>
-                <Typography
-                  fontFamily={"Roobert-Regular"}
-                  className={classes.language}
-                >
-                  Last activity 13 minutes ago • Dubai, United Arab Emirates
-                </Typography>
-              </Grid>
-            </Grid>
-
-            <Grid item>
-              <Button style={{ alignItems: "center" }} variant="outlined">
-                Signout
-              </Button>
-            </Grid>
-          </Grid>
-
-          <Grid
-            item
-            container
-            xs={12}
-            justifyContent={"space-between"}
-            wrap="nowrap"
-            style={{ marginTop: 10, marginBottom: 10 }}
-            gap={1}
-          >
-            <Grid item display={"flex"} container gap={1} wrap="nowrap">
-              <Grid
-                item
-                xs={1}
-                style={{
-                  marginTop: 10,
-                  justifyContent: "center",
-                  display: "flex",
-                }}
-              >
-                <img
-                  src={Images.Phone}
-                  alt="phone"
-                  className={classes.imgStyle}
-                />
-              </Grid>
-              <Grid item>
-                <Typography
-                  className={classes.TextStyle}
-                  fontFamily={"Roobert-Regular"}
-                >
-                  IPhone, iOS App
-                </Typography>
-                <Typography
-                  className={classes.language}
-                  fontFamily={"Roobert-Regular"}
-                >
-                  Last activity 1 hour ago • Cairo, Egypt
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Button variant="outlined">Signout</Button>
-            </Grid>
-          </Grid>
-
-          <Divider width={"100%"} />
-          <Grid
-            item
-            container
-            marginTop={2}
-            alignItems={"center"}
+            style={{
+              border: "1px solid #F2F4F7",
+              padding: 20,
+              marginTop: 20,
+              backgroundColor: "#F9F9FB",
+            }}
+            alignItems="center"
             justifyContent={"flex-end"}
-            gap={2}
           >
-            <Grid item>
-              <Typography className={classes.language}>
-                Signout from all other devices
+            <Grid item xs={12}>
+              <Typography
+                variant="h5"
+                fontFamily={"Roobert-Regular"}
+                marginBottom={2}
+              >
+                Connected devices
               </Typography>
             </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ paddingLeft: "10px", paddingRight: "10px" }}
-                onClick={logoutallApi}
-              >
-                Sign out now
-              </Button>
+            {loginDeviceList?.map((it, ind) => {
+              if (
+                _.isEmpty(it?.device_name) ||
+                _.isNull(it?.device_name) ||
+                _.isUndefined(it?.device_name)
+              ) {
+                return null;
+              } else {
+                return (
+                  <>
+                    <Grid
+                      item
+                      container
+                      xs={12}
+                      wrap="nowrap"
+                      justifyContent={"space-between"}
+                      style={{ marginTop: 10, marginBottom: 10 }}
+                      gap={1}
+                    >
+                      <Grid
+                        item
+                        xs={12}
+                        display={"flex"}
+                        container
+                        gap={1}
+                        wrap="nowrap"
+                      >
+                        <Grid
+                          item
+                          xs={1}
+                          style={{
+                            marginTop: 10,
+                            justifyContent: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <img
+                            src={Images.laptop}
+                            alt="laptop"
+                            className={classes.imgStyle}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Typography
+                            fontFamily={"Roobert-Regular"}
+                            className={classes.TextStyle}
+                          >
+                            {it?.device_name}
+                          </Typography>
+                          <Typography
+                            fontFamily={"Roobert-Regular"}
+                            className={classes.language}
+                          >
+                            {it?.address}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+
+                      <Grid item>
+                        <Button
+                          style={{ alignItems: "center" }}
+                          variant="outlined"
+                          disabled={loaderIndex === ind}
+                          onClick={() => singleDeviceLogoutApiCall(it, ind)}
+                        >
+                          {loaderIndex === ind ? (
+                            <CircularProgress
+                              style={{ color: "#274BF1" }}
+                              size={26}
+                            />
+                          ) : (
+                            "Signout"
+                          )}
+                        </Button>
+                      </Grid>
+                    </Grid>
+
+                    <Divider width={"100%"} />
+                  </>
+                );
+              }
+            })}
+
+            <Grid
+              item
+              container
+              marginTop={2}
+              alignItems={"center"}
+              justifyContent={"flex-end"}
+              gap={2}
+            >
+              <Grid item>
+                <Typography className={classes.language}>
+                  Signout from all other devices
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ paddingLeft: "10px", paddingRight: "10px" }}
+                  onClick={logoutallApi}
+                >
+                  {loaderIndex === "all" ? (
+                    <CircularProgress style={{ color: "#FFF" }} size={26} />
+                  ) : (
+                    "Sign out now"
+                  )}
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        ) : null}
       </Grid>
     </Grid>
   );
