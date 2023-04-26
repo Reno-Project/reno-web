@@ -1,4 +1,5 @@
 import { makeStyles } from "@mui/styles";
+import { color } from "../../config/theme";
 
 const useStyles = makeStyles((theme) => ({
   container: {},
@@ -79,6 +80,11 @@ const useStyles = makeStyles((theme) => ({
       border: "0px !important",
       backgroundColor: "#F5F6F8",
     },
+  },
+  countryCodeStyle: {
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "14px !important",
+    color: `${color.secondary} !important`,
   },
 }));
 

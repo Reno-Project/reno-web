@@ -258,7 +258,7 @@ const Signup = (props) => {
                   startAdornment: (
                     <InputAdornment
                       position="start"
-                      style={{ marginLeft: "-13px" }}
+                      style={{ marginLeft: "-13px", marginRight: -5 }}
                     >
                       <PhoneInput
                         country={"ae"}
@@ -273,6 +273,9 @@ const Signup = (props) => {
                           });
                         }}
                       />
+                      <Typography className={classes.countryCodeStyle}>
+                        +{state?.pCode}
+                      </Typography>
                     </InputAdornment>
                   ),
                 }}
