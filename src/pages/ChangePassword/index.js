@@ -186,6 +186,8 @@ export default function ChangePassword() {
               label="New password"
               placeholder="Enter new password"
               value={newPassword}
+              passValue={newPassword}
+              passwordValidation
               type={showNewPassword ? "text" : "password"}
               onChange={(e) => {
                 setNewPassword(e.target.value);

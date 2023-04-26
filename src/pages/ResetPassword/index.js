@@ -249,6 +249,8 @@ const ResetPassword = (props) => {
                 label="New password"
                 placeholder="Enter new password"
                 value={password}
+                passValue={password}
+                passwordValidation
                 type={showNewPassword ? "text" : "password"}
                 onChange={(e) => {
                   setPassword(e.target.value);

@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { isArray, isEmpty, isNumber, isObject } from "lodash";
+import { isArray, isEmpty, isNull, isNumber, isObject } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import { toast } from "react-toastify";
@@ -1582,8 +1582,10 @@ export default function EditProfile() {
                   >
                     {buttonLoader ? (
                       <CircularProgress size={26} style={{ color: "#fff" }} />
-                    ) : (
+                    ) : isEmpty(data?.portfolio) ? (
                       "Save portfolio"
+                    ) : (
+                      "Save changes"
                     )}
                   </Button>
                 </Grid>

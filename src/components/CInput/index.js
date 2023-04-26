@@ -2,6 +2,8 @@ import React from "react";
 import { InputLabel, InputBase, alpha, FormHelperText } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import styled from "@emotion/styled";
+import ShowPasswordValidation from "../CSelect/ShowPasswordValidation";
+import { isEmpty } from "lodash";
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
   padding: 0,
@@ -12,7 +14,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     borderRadius: 4,
     position: "relative",
     // backgroundColor: "#FFF",
-    // border: "1px solid #FFF", 
+    // border: "1px solid #FFF",
     fontSize: 14,
     padding: "10px 12px",
     transition: theme.transitions.create([
@@ -37,7 +39,12 @@ function CInput(props) {
     helpertext = "",
     multiline = false,
     outline = "",
+    passwordValidation = false,
+    passValue = "",
   } = props;
+
+  const passwordRegex =
+    /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%+:^=<()~>_?`|'";,.&*])((?=.*[A-Z])))(?=.{8,})/;
 
   return (
     <FormControl variant="standard" fullWidth required={required} error={error}>
@@ -62,6 +69,11 @@ function CInput(props) {
           borderRadius: 6,
         }}
       />
+      {passwordValidation &&
+      !passwordRegex.test(passValue) &&
+      !isEmpty(passValue) ? (
+        <ShowPasswordValidation password={passValue} />
+      ) : null}
 
       <FormHelperText
         error={error}
