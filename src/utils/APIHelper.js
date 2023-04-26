@@ -60,8 +60,11 @@ export function getApiData(endpoint, method, data, headers) {
         .then((resposeJson) => {
           if (
             _.isObject(resposeJson) &&
-            _.has(resposeJson, "http_status_code") &&
-            _.toNumber(resposeJson.http_status_code) === 401
+            _.has(resposeJson, "code") &&
+            (_.toNumber(resposeJson.code) === 403 ||
+              _.toNumber(resposeJson.code) === 401 ||
+              _.toNumber(resposeJson.status) === 403 ||
+              _.toNumber(resposeJson.status) === 401)
           ) {
             store.dispatch(authAction.clearAllData());
           } else {
@@ -133,7 +136,12 @@ export function getAPIProgressData(
 
       fetch(url, options)
         .then(function (res) {
-          if (res.status === 403 || res.status === 401) {
+          if (
+            res.status === 403 ||
+            res.status === 401 ||
+            res.code === 403 ||
+            res.code === 401
+          ) {
             store.dispatch(authAction.clearAllData());
           } else {
             resolve(res.json());
