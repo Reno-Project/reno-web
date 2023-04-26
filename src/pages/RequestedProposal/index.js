@@ -12,6 +12,7 @@ import Images from "../../config/images";
 import { NavLink } from "react-router-dom";
 import BlueAbout from "../../components/BlueAbout";
 import theme from "../../config/theme";
+import Milestone from "../Proposal/Milestone";
 
 export default function RequestedProposal() {
   const classes = useStyles();
@@ -321,7 +322,11 @@ export default function RequestedProposal() {
                     </Grid> */}
                 </>
               ) : null}
-              {tabValue === 1 ? <></> : null}
+              {tabValue === 1 ? (
+                <>
+                  <Milestone />
+                </>
+              ) : null}
             </Grid>
           </Grid>
         </Grid>
