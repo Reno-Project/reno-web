@@ -46,10 +46,10 @@ export default function AccountSettings() {
               <Tab label="Billing" />
               <Tab label="Notifications" />
               {userData?.social_connection === "google" ||
-                userData?.social_connection === "fb" ||
-                (userData?.social_connection === "apple" ? null : (
-                  <Tab label="Change password" />
-                ))}
+              userData?.social_connection === "fb" ||
+              userData?.social_connection === "apple" ? null : (
+                <Tab label="Change password" />
+              )}
               <Tab label="Security" />
             </Tabs>
           </Grid>

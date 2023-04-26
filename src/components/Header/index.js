@@ -29,7 +29,6 @@ function Header(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("location=====>>>>>", location);
   const { clearAllData } = authActions;
   const { token, userData } = useSelector((state) => state.auth);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));

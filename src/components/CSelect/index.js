@@ -74,11 +74,6 @@ export default function Cselect(props) {
           <TextField
             {...params}
             placeholder={placeholder}
-            inputProps={{
-              style: {
-                padding: "2px",
-              },
-            }}
           />
         )}
         value={val}
