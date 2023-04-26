@@ -12,7 +12,11 @@ import {
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { isEmpty } from "lodash";
 import PhoneInput from "react-phone-input-2";
-import { PhoneNumberUtil } from "google-libphonenumber";
+import {
+  PhoneNumberFormat,
+  PhoneNumberType,
+  PhoneNumberUtil,
+} from "google-libphonenumber";
 import "react-phone-input-2/lib/style.css";
 import CInput from "../../components/CInput";
 import { getApiData } from "../../utils/APIHelper";
@@ -57,6 +61,7 @@ const Signup = (props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
+  const [phonePlaceholder, setPhonePlaceholder] = useState("");
 
   useEffect(() => {
     setState({
@@ -65,6 +70,18 @@ const Signup = (props) => {
         locationState?.socialData?.email || locationState?.data?.email || "",
       uname: locationState?.data?.username ? locationState?.data?.username : "",
     });
+  }, []);
+
+  useEffect(() => {
+    const exampleNumber1 = phoneUtil.getExampleNumberForType(
+      "ae",
+      PhoneNumberType.MOBILE
+    );
+    const formattedExampleNumber1 = phoneUtil.format(
+      exampleNumber1,
+      PhoneNumberFormat.NATIONAL
+    );
+    setPhonePlaceholder(formattedExampleNumber1);
   }, []);
 
   // check username is valid or not
@@ -134,7 +151,7 @@ const Signup = (props) => {
       if (!isValid) {
         valid = false;
         error.phoneErr = true;
-        error.phoneMsg = "Please enter valid phone number";
+        error.phoneMsg = `Please enter valid phone number Ex: ${phonePlaceholder}`;
       }
     }
 
@@ -247,7 +264,9 @@ const Signup = (props) => {
               </InputLabel>
               <TextField
                 fullWidth
-                placeholder="Enter phone number"
+                placeholder={
+                  state.pCode ? phonePlaceholder : "Enter phone number"
+                }
                 style={{ marginBottom: 20 }}
                 value={state.phone}
                 onChange={(e) => {
@@ -270,7 +289,18 @@ const Signup = (props) => {
                             ...state,
                             pCode: code,
                             countryCode: countryUpperCase,
+                            phone: "",
                           });
+                          const exampleNumber1 =
+                            phoneUtil.getExampleNumberForType(
+                              country?.countryCode,
+                              PhoneNumberType.MOBILE
+                            );
+                          const formattedExampleNumber1 = phoneUtil.format(
+                            exampleNumber1,
+                            PhoneNumberFormat.NATIONAL
+                          );
+                          setPhonePlaceholder(formattedExampleNumber1);
                         }}
                       />
                       <Typography className={classes.countryCodeStyle}>
