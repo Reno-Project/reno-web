@@ -27,6 +27,12 @@ const OtpInput = (props) => {
   }, []);
 
   useEffect(() => {
+    if (output?.length === 5) {
+      OTPVerify(output);
+    }
+  }, [output]);
+
+  useEffect(() => {
     if (timerCount === 0) {
       setResendViewVisible(true);
     }
@@ -61,6 +67,7 @@ const OtpInput = (props) => {
         }
       } else {
         toast.error(response?.message);
+        setOutput("");
       }
       setBtnLoad("");
     } catch (error) {

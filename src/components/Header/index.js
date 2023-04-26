@@ -295,7 +295,7 @@ function Header(props) {
                 variant="outlined"
                 onClick={() => setVisible(false)}
               >
-                no
+                No
               </Button>
             </Grid>
             <Grid item xs={isMobile ? 6 : 5}>
