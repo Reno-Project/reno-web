@@ -91,7 +91,10 @@ function App() {
                         path={"/create-proposal"}
                         element={<CreateProposal />}
                       />
-                      <Route path={"/request-Proposal"} element={<RequestedProposal/>} />
+                      <Route
+                        path={"/request-proposal"}
+                        element={<RequestedProposal />}
+                      />
                       <Route
                         path="*"
                         element={

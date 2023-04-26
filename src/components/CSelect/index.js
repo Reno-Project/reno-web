@@ -58,7 +58,9 @@ export default function Cselect(props) {
         {label}
       </InputLabel>
       <Select
-        style={{ border: error ? "1px solid red" : "none" }}
+        style={{
+          border: error ? "1px solid red" : "none",
+        }}
         variant="contained"
         id="tags-outlined"
         multiple={multiple}
@@ -69,7 +71,15 @@ export default function Cselect(props) {
         // getOptionLabel={(item) => item.label}
         // isOptionEqualToValue={(option, value) => option.id === value.id}
         renderInput={(params) => (
-          <TextField {...params} placeholder={placeholder} />
+          <TextField
+            {...params}
+            placeholder={placeholder}
+            inputProps={{
+              style: {
+                padding: "2px",
+              },
+            }}
+          />
         )}
         value={val}
         onChange={(a, b, c, e) => {
