@@ -146,7 +146,9 @@ const CreateProfile = (props) => {
 
   useEffect(() => {
     getprojectList();
-    getUserDetailsByIdApiCall();
+    if (!isEmpty(userData) && userData?.id) {
+      getUserDetailsByIdApiCall();
+    }
   }, [activeStep]);
 
   useEffect(() => {

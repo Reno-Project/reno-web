@@ -164,6 +164,7 @@ const Signup = (props) => {
 
     if (locationState?.data?.social_connection_id) {
       data.social_connection_id = locationState?.data?.social_connection_id;
+      data.token = locationState?.socialData?.password;
     }
 
     try {
@@ -172,10 +173,11 @@ const Signup = (props) => {
 
       if (response.success) {
         toast.success(response?.message || "");
-        if (!response?.is_email_verified) {
+        if (response?.is_email_verified === false) {
           navigate("/otp-verify", { state: { data } });
         } else {
           dispatch(setToken(response?.token));
+          dispatch(setUserData(response?.data));
           navigate("/create-profile");
         }
       } else {
