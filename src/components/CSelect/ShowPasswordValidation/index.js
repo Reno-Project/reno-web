@@ -23,7 +23,7 @@ export default function ShowPasswordValidation(props) {
       hasUppercase: /[A-Z]/.test(text),
       hasLowercase: /[a-z]/.test(text),
       hasSymbol: /^(?=.*[!@#$%+:^=<()~>_?`|'";,.&*])/.test(text),
-      hasMinLength: text.length >= 8 && text?.length <= 15,
+      hasMinLength: text.length >= 8,
     });
   }
 

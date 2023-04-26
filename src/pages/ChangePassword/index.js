@@ -199,6 +199,7 @@ export default function ChangePassword() {
                   newPasswordMsg: "",
                 });
               }}
+              inputProps={{ maxLength: 15 }}
               white={false}
               error={errObj.newPasswordErr}
               helpertext={errObj.newPasswordMsg}

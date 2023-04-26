@@ -257,6 +257,7 @@ const ResetPassword = (props) => {
                   setErrObj({ ...errObj, passwordErr: false, passwordMsg: "" });
                 }}
                 white={false}
+                inputProps={{ maxLength: 15 }}
                 error={errObj.passwordErr}
                 helpertext={errObj.passwordMsg}
                 endAdornment={
