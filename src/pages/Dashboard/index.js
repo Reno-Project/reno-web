@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Button, Grid, Typography } from "@mui/material";
+import {
+  Badge,
+  Button,
+  Grid,
+  Rating,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { isEmpty } from "lodash";
+import { isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
@@ -11,6 +18,9 @@ import { updateUserData } from "../../utils/CommonFunction";
 import ProfileSuccessModal from "../../components/ProfileSuccessModal";
 import useStyles from "./styles";
 import { color } from "../../config/theme";
+import ProjectCard from "../../components/ProjectCard/ProjectCard";
+import Images from "../../config/images";
+import { useTheme } from "@emotion/react";
 
 const errorObj = {
   emailErr: false,
@@ -18,6 +28,66 @@ const errorObj = {
   emailMsg: "",
   passwordMsg: "",
 };
+
+const villaDetails = [
+  {
+    name: "Villa MM-renovation",
+    code: "#CH019221002900",
+    created: "21.01.2023",
+    bedrooms: 3,
+    bathrooms: 4,
+    size: "300 sqm",
+    company: "Luxury Home Solutions",
+    budget: "$1,000.00",
+    moveInDate: "01.05.2023",
+    image: Images.building,
+    logo: Images.profile_logo,
+    is_email_verified: true,
+  },
+  {
+    name: "Beachfront Villa",
+    code: "#CH019221003000",
+    created: "15.02.2023",
+    bedrooms: 4,
+    bathrooms: 5,
+    size: "450 sqm",
+    company: "Coastal Luxury Properties",
+    budget: "$2,500.00",
+    moveInDate: "01.06.2023",
+    image: Images.building,
+    logo: Images.profile_logo,
+    is_email_verified: false,
+  },
+  {
+    name: "Modern Mountain Retreat",
+    code: "#CH019221003100",
+    created: "10.03.2023",
+    bedrooms: 2,
+    bathrooms: 3,
+    size: "250 sqm",
+    company: "Alpine Homes & Resorts",
+    budget: "$1,800.00",
+    moveInDate: "01.07.2023",
+    image: Images.building,
+    logo: Images.profile_logo,
+    is_email_verified: false,
+  },
+];
+
+const villaDetails1 = [
+  {
+    name: "Villa MM-renovation",
+    code: "#CH019221002900",
+    created: "21.01.2023",
+    bedrooms: 3,
+    bathrooms: 4,
+    size: "300 sqm",
+    company: "Luxury Home Solutions",
+    image: Images.building,
+    logo: Images.profile_logo,
+    is_email_verified: true,
+  },
+];
 
 const Dashboard = (props) => {
   const classes = useStyles();
@@ -34,6 +104,10 @@ const Dashboard = (props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [googleBtnLoad, setGoogleBtnLoad] = useState(false);
   const [visible, setVisible] = useState(false);
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const md = useMediaQuery(theme.breakpoints.down("md"));
+  const lg = useMediaQuery(theme.breakpoints.down("lg"));
 
   useEffect(() => {
     updateUserData();
@@ -44,6 +118,10 @@ const Dashboard = (props) => {
         setVisible(true);
       }
     }
+
+    return () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
   }, []);
 
   // this function checks validation of login field
@@ -164,6 +242,7 @@ const Dashboard = (props) => {
       style={{ padding: 40 }}
       bgcolor={color.LightSurface}
       maxWidth={"unset"}
+      mb={"70px"}
     >
       <Grid item>
         <Typography className={classes.loginHeaderText}>
@@ -176,20 +255,266 @@ const Dashboard = (props) => {
             Overview
           </Typography>
         </Grid>
-        <div className={classes.card}>
-          <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
-            Hi {userData?.name || "Marc"}
-          </Typography>
-          <Typography textAlign={"center"}>
-            Submit proposals to <br /> your customers
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={() => navigate("/create-proposal")}
+        <Grid
+          item
+          container
+          justifyContent={!lg && "space-between"}
+          rowGap={2}
+          columnGap={lg ? 2 : 0}
+        >
+          <Grid item className={classes.card} flexDirection={"column"} lg={2}>
+            <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
+              Hi {userData?.name || "Marc"}
+            </Typography>
+            <Typography textAlign={"center"}>
+              Submit proposals to <br /> your customers
+            </Typography>
+            <Button
+              variant="contained"
+              // onClick={() => navigate("/request-proposal")}
+            >
+              Create Proposal
+            </Button>
+          </Grid>
+          <Grid
+            item
+            className={classes.card}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            lg={2}
           >
-            Create Proposal
-          </Button>
+            <img
+              alt="Annual contracts value"
+              src={Images.dollar}
+              style={{
+                height: 24,
+                width: 24,
+                padding: 8,
+                backgroundColor: "rgba(39, 75, 241, 0.12)",
+                borderRadius: 30,
+              }}
+            />
+            <Typography textAlign={"center"}>Active Contracts</Typography>
+            <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
+              $20,000
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            className={classes.card}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            lg={2}
+          >
+            <img
+              alt="Annual contracts value"
+              src={Images.verify_green}
+              style={{
+                height: 24,
+                width: 24,
+                padding: 8,
+                backgroundColor: "rgba(92, 196, 133, 0.12)",
+                borderRadius: 30,
+              }}
+            />
+            <Typography textAlign={"center"}>Active Contracts</Typography>
+            <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
+              $12
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            className={classes.card}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            lg={2}
+          >
+            <img
+              alt="Annual contracts value"
+              src={Images.eye}
+              style={{
+                height: 24,
+                width: 24,
+                padding: 8,
+                backgroundColor: "rgba(242, 107, 89, 0.12)",
+                borderRadius: 30,
+              }}
+            />
+            <Typography textAlign={"center"}>Profile Views today</Typography>
+            <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
+              $4,384
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            className={classes.card}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            lg={2}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "rgba(233, 181, 92, 0.12)",
+                padding: 8,
+                borderRadius: 25,
+              }}
+            >
+              <Rating name="rating" value={4.5} max={1} readOnly />
+            </div>
+            <Typography textAlign={"center"}>455 Reviews</Typography>
+            <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
+              4.5/5
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid
+        container
+        my={3}
+        bgcolor={color.white}
+        p={md ? 2 : 4}
+        borderRadius={2}
+      >
+        <Grid item container mb={2} alignItems={"center"}>
+          <Typography variant="h5" className={classes.titleStyle}>
+            Ongoing projects
+          </Typography>
+          <div
+            style={{
+              padding: "2px 10px",
+              margin: "0px 8px",
+              backgroundColor: color.primary,
+              color: color.white,
+              fontWeight: "bold",
+              borderRadius: 22,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {villaDetails.length}
+          </div>
+        </Grid>
+        {/* <div className={classes.card}> */}
+        <div
+          style={{
+            display: "flex",
+            overflowY: "scroll",
+            width: "100%",
+            padding: sm ? 8 : "20px 10px",
+          }}
+        >
+          {isArray(villaDetails) &&
+            !isEmpty(villaDetails) &&
+            villaDetails.map((villa, index) => {
+              return <ProjectCard villa={villa} />;
+            })}
         </div>
+        {/* </div> */}
+      </Grid>
+      <Grid
+        container
+        my={3}
+        bgcolor={color.white}
+        p={md ? 2 : 4}
+        borderRadius={2}
+      >
+        <Grid item container mb={2} alignItems={"center"}>
+          <Typography variant="h5" className={classes.titleStyle}>
+            Requested proposals
+          </Typography>
+          <div
+            style={{
+              padding: "2px 10px",
+              margin: "0px 8px",
+              backgroundColor: "#E9B55C",
+              color: color.white,
+              fontWeight: "bold",
+              borderRadius: 22,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {villaDetails1.length}
+          </div>
+        </Grid>
+        {/* <div className={classes.card}> */}
+        <div
+          style={{
+            display: "flex",
+            overflowY: "scroll",
+            width: "100%",
+            padding: sm ? 8 : "20px 10px",
+          }}
+        >
+          {isArray(villaDetails1) &&
+            !isEmpty(villaDetails1) &&
+            villaDetails1.map((villa, index) => {
+              return (
+                <ProjectCard
+                  villa={villa}
+                  requested
+                  onClick={() => {
+                    navigate("/request-proposal", { data: villa });
+                  }}
+                />
+              );
+            })}
+        </div>
+        {/* </div> */}
+      </Grid>
+
+      <Grid
+        container
+        my={3}
+        bgcolor={color.white}
+        p={md ? 2 : 4}
+        borderRadius={2}
+      >
+        <Grid item container mb={2} alignItems={"center"}>
+          <Typography variant="h5" className={classes.titleStyle}>
+            Submitted proposals
+          </Typography>
+          <div
+            style={{
+              padding: "2px 10px",
+              margin: "0px 8px",
+              backgroundColor: "#5CC385",
+              color: color.white,
+              fontWeight: "bold",
+              borderRadius: 22,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {villaDetails.length}
+          </div>
+        </Grid>
+        {/* <div className={classes.card}> */}
+        <div
+          style={{
+            display: "flex",
+            overflowY: "scroll",
+            width: "100%",
+            padding: sm ? 8 : "20px 10px",
+          }}
+        >
+          {isArray(villaDetails) &&
+            !isEmpty(villaDetails) &&
+            villaDetails.map((villa, index) => {
+              return <ProjectCard villa={villa} />;
+            })}
+        </div>
+        {/* </div> */}
       </Grid>
       {visible && (
         <ProfileSuccessModal

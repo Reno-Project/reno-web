@@ -14,6 +14,12 @@ const Images = {
   share: "/assets/images/share.svg",
   copy: "/assets/images/copy.svg",
   Location: "/assets/images/Location.svg",
+  LocationBlue: "/assets/images/LocationBlue.svg",
+  badroom: "/assets/images/badroom.svg",
+  bathroom: "/assets/images/bathroom.svg",
+  size: "/assets/images/size.svg",
+  profile_logo: "/assets/images/profile_logo.svg",
+
   Heart: "/assets/images/Heart.svg",
   reply: "/assets/images/reply.svg",
   building: "/assets/images/building.png",
@@ -51,6 +57,10 @@ const Images = {
   icon16: "/assets/images/icon16.svg",
   icon17: "/assets/images/icon17.svg",
   quote: "/assets/images/quote.svg",
+
+  eye: "/assets/images/eye.svg",
+  dollar: "/assets/images/dollar.svg",
+  verify_green: "/assets/images/verify_green.png",
 };
 
 export default Images;

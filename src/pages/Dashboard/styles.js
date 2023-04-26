@@ -18,6 +18,19 @@ const useStyles = makeStyles((theme) => ({
     padding: "23px 36px",
     gap: "10px",
     borderRadius: 8,
+    boxSizing: "border-box",
+    [theme.breakpoints.down("xl")]: {
+      width: "100%",
+    },
+    [theme.breakpoints.down("lg")]: {
+      width: "31%",
+    },
+    [theme.breakpoints.down("md")]: {
+      width: "31.7%",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
   },
 }));
 

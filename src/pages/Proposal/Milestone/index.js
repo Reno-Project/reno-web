@@ -192,7 +192,7 @@ export default function Milestone() {
           />
         </Grid>
         <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} mb={2}>
             <FormControl
               variant="standard"
               fullWidth
