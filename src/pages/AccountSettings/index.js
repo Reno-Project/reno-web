@@ -1,6 +1,7 @@
 import { Grid, Tab, Tabs, Typography } from "@mui/material";
-import React, { useState } from "react";
-import useStyles from "./styles";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import authActions from "../../redux/reducers/auth/actions";
 import About from "../../components/About";
 import EditProfile from "../EditProfile";
 import Billing from "../Billing";
@@ -9,14 +10,18 @@ import PhoneVerificationModal from "../../components/PhoneVerificationModal";
 import TwoFectorModal from "../../components/TwoFectorModal";
 import NotificationSettings from "../NotificationSettings";
 import Security from "../../components/Security";
-import { useSelector } from "react-redux";
-export default function AccountSettings() {
-  const classes = useStyles();
 
-  const { userData } = useSelector((state) => state.auth);
+export default function AccountSettings() {
+  const dispatch = useDispatch();
+  const { setAccountTab } = authActions;
+  const { userData, accountTab } = useSelector((state) => state.auth);
   const [tabValue, setTabValue] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [show2FModal, setShow2FModal] = useState(false);
+
+  useEffect(() => {
+    setTabValue(accountTab);
+  }, [accountTab]);
 
   return (
     <>
@@ -39,6 +44,7 @@ export default function AccountSettings() {
               value={tabValue}
               onChange={(v, b) => {
                 setTabValue(b);
+                dispatch(setAccountTab(b));
               }}
               variant="scrollable"
             >

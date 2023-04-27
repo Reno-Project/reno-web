@@ -2,6 +2,7 @@ const actions = {
   SET_USER_DATA: "auth/SET_USER_DATA",
   CLEAR_ALL_STORAGE_DATA: "auth/CLEAR_ALL_STORAGE_DATA",
   SET_TOKEN: "auth/SET_TOKEN",
+  SET_ACCOUNT_TAB: "auth/SET_ACCOUNT_TAB",
 
   setUserData: (userdata) => (dispatch) =>
     dispatch({
@@ -13,6 +14,12 @@ const actions = {
     dispatch({
       type: actions.SET_TOKEN,
       token,
+    }),
+
+  setAccountTab: (accountTab) => (dispatch) =>
+    dispatch({
+      type: actions.SET_ACCOUNT_TAB,
+      accountTab,
     }),
 
   clearAllData: () => (dispatch) =>

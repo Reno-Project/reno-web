@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
@@ -29,12 +29,17 @@ function Header(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { clearAllData } = authActions;
-  const { token, userData } = useSelector((state) => state.auth);
+  const { clearAllData, setAccountTab } = authActions;
+  const { token, userData, accountTab } = useSelector((state) => state.auth);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const [visible, setVisible] = useState(false);
-
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  useEffect(() => {
+    if (!currentUrl.includes("account-setting") && accountTab !== 0) {
+      dispatch(setAccountTab(0));
+    }
+  }, [location]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

@@ -3,6 +3,7 @@ import types from "./actions";
 const initialState = {
   userData: {},
   token: "",
+  accountTab: 0,
 };
 
 export default function reducer(state = initialState, action) {
@@ -20,6 +21,12 @@ export default function reducer(state = initialState, action) {
         token: action.token,
       };
 
+    case types.SET_ACCOUNT_TAB:
+      return {
+        ...state,
+        accountTab: action.accountTab,
+      };
+
     case types.CLEAR_ALL_STORAGE_DATA:
       // localStorage.clear();
       localStorage.removeItem("userData", "token");
@@ -27,6 +34,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         userData: {},
         token: "",
+        accountTab: 0,
       };
 
     default:
