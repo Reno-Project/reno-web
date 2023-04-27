@@ -62,6 +62,7 @@ const Signup = (props) => {
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
   const [phonePlaceholder, setPhonePlaceholder] = useState("");
+  const [locationData, setLocationData] = useState({});
 
   useEffect(() => {
     setState({
@@ -82,6 +83,14 @@ const Signup = (props) => {
       PhoneNumberFormat.NATIONAL
     );
     setPhonePlaceholder(formattedExampleNumber1);
+  }, []);
+
+  // this function for to get location detail
+  useEffect(() => {
+    fetch("https://ipapi.co/json/")
+      .then((response) => response.json())
+      .then((data) => setLocationData(data))
+      .catch((error) => console.error(error));
   }, []);
 
   // check username is valid or not
@@ -165,6 +174,10 @@ const Signup = (props) => {
   async function registerUser() {
     setBtnLoad(true);
     const { uname, email, phone, password, pCode } = state;
+    const address = `${locationData?.city ? locationData?.city + "," : ""} ${
+      locationData?.region ? locationData?.region + "," : ""
+    } ${locationData?.country_name || ""}`;
+
     let data = {
       username: uname,
       email,
@@ -173,6 +186,8 @@ const Signup = (props) => {
       password,
       role: "contractor",
       device_type: "web",
+      device_name: locationData?.ip || "",
+      login_address: address,
     };
 
     if (locationState?.type) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   CircularProgress,
@@ -51,7 +51,7 @@ const Login = (props) => {
   const [btnForgotLoad, setBtnForgotLoad] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [socialBtnLoad, setSocialBtnLoad] = useState(false);
-
+  const [locationData, setLocationData] = useState({});
   const [forgotEmail, setForgotEmail] = useState("");
   const theme = useTheme();
   const [visibleForgotModal, setVisibleForgotModal] = useState(false);
@@ -67,6 +67,14 @@ const Login = (props) => {
     boxShadow: 24,
     p: 4,
   };
+
+  // this function for to get location detail
+  useEffect(() => {
+    fetch("https://ipapi.co/json/")
+      .then((response) => response.json())
+      .then((data) => setLocationData(data))
+      .catch((error) => console.error(error));
+  }, []);
 
   // this function checks validation of login field
   function validation() {
@@ -104,13 +112,16 @@ const Login = (props) => {
   // this function for login user
   async function loginUser() {
     setBtnLoad(true);
+    const address = `${locationData?.city ? locationData?.city + "," : ""} ${
+      locationData?.region ? locationData?.region + "," : ""
+    } ${locationData?.country_name || ""}`;
     try {
       const response = await getApiData(Setting.endpoints.login, "POST", {
         email,
         password,
         device_type: "web",
-        device_name: "MacBook Pro",
-        login_address: "Nadiad",
+        device_name: locationData?.ip || "",
+        login_address: address,
       });
 
       const socialData = {
@@ -177,14 +188,17 @@ const Login = (props) => {
   // social login
   async function socialLoginApiCall(socialData, type) {
     setSocialBtnLoad(type);
+    const address = `${locationData?.city ? locationData?.city + "," : ""} ${
+      locationData?.region ? locationData?.region + "," : ""
+    } ${locationData?.country_name || ""}`;
     try {
       const response = await getApiData(Setting.endpoints.login, "POST", {
         email: socialData?.email ? socialData?.email : "",
         password: socialData?.password ? socialData?.password : "",
         device_type: "web",
         social_connection: type ? type : "",
-        device_name: "MacBook Pro",
-        login_address: "Nadiad",
+        device_name: locationData?.ip || "",
+        login_address: address,
       });
 
       if (response.success) {
