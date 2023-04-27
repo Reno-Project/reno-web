@@ -272,7 +272,7 @@ const CreateProfile = (props) => {
       valid = false;
       error.cnameErr = true;
       error.cnameMsg =
-        "Company Name should not be greater thamn 30 characters  ";
+        "Company Name should not be greater than 30 characters  ";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#cname");

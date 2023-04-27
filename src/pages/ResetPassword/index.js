@@ -29,8 +29,6 @@ const errorObj = {
 
 const ResetPassword = (props) => {
   const classes = useStyles();
-  const emailRegex =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -42,19 +40,12 @@ const ResetPassword = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location?.state?.data ? location?.state?.data : {};
-  const dispatch = useDispatch();
-  const { setUserData, setToken } = authActions;
-  const [output, setOutput] = useState("");
   const [timerCount, setTimer] = useState(60);
   const [btnLoad, setBtnLoad] = useState("");
   const [resendViewVisible, setResendViewVisible] = useState(false);
 
   const passwordRegex =
     /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%+:^=<()~>_?`|'";,.&*])((?=.*[A-Z])))(?=.{8,})/;
-
-  useEffect(() => {
-    setOutput("");
-  }, []);
 
   useEffect(() => {
     if (timerCount === 0) {
@@ -76,14 +67,13 @@ const ResetPassword = (props) => {
     setBtnLoad("resend");
     try {
       const response = await getApiData(Setting.endpoints.resendOtp, "POST", {
-        email: locationState?.email,
+        email: locationState,
       });
 
       console.log("response ====resend otp=>>> ", response);
       if (response.success) {
         setTimer(60);
         setResendViewVisible(false);
-        setOutput("");
       } else {
         toast.error(response.message);
       }

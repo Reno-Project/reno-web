@@ -239,7 +239,7 @@ export default function EditProfile() {
       valid = false;
       error.cnameErr = true;
       error.cnameMsg =
-        "Company Name should not be greater thamn 30 characters  ";
+        "Company Name should not be greater than 30 characters  ";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#cname");
@@ -647,7 +647,6 @@ export default function EditProfile() {
                   <CInput
                     multiline={true}
                     label="Description"
-                    required
                     placeholder="Write Description"
                     value={state.description}
                     onChange={(e) => {
@@ -809,7 +808,7 @@ export default function EditProfile() {
                 </Grid>
               </Grid>
               <Grid item lg={12} paddingTop="20px">
-                <Typography variant="h5">Expertise Area</Typography>
+                <Typography variant="h5">Expertise Area *</Typography>
                 <Grid
                   item
                   container
@@ -821,8 +820,11 @@ export default function EditProfile() {
                 >
                   <Cselect
                     multiple={true}
-                    placeholder="Select Area of Expertise"
-                    required
+                    placeholder={
+                      isArray(state?.expertise) && state?.expertise.length > 0
+                        ? ""
+                        : "Select Area of Expertise"
+                    }
                     value={state.expertise}
                     handleSelect={(e) => {
                       setState({ ...state, expertise: e });
