@@ -64,7 +64,9 @@ export function getApiData(endpoint, method, data, headers) {
             (_.toNumber(resposeJson.code) === 403 ||
               _.toNumber(resposeJson.code) === 401 ||
               _.toNumber(resposeJson.status) === 403 ||
-              _.toNumber(resposeJson.status) === 401)
+              _.toNumber(resposeJson.status) === 401 ||
+              _.toNumber(resposeJson.code) === 404 ||
+              _.toNumber(resposeJson.status) === 404)
           ) {
             store.dispatch(authAction.clearAllData());
           } else {
@@ -139,8 +141,10 @@ export function getAPIProgressData(
           if (
             res.status === 403 ||
             res.status === 401 ||
+            res.status === 404 ||
             res.code === 403 ||
-            res.code === 401
+            res.code === 401 ||
+            res.code === 404
           ) {
             store.dispatch(authAction.clearAllData());
           } else {
