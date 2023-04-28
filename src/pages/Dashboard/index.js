@@ -239,7 +239,7 @@ const Dashboard = (props) => {
       alignItems="center"
       justifyContent="center"
       flexDirection="column"
-      style={{ padding: 40 }}
+      style={{ padding: sm ? 20 : 40 }}
       bgcolor={color.LightSurface}
       maxWidth={"unset"}
       mb={"70px"}
@@ -463,7 +463,7 @@ const Dashboard = (props) => {
                   villa={villa}
                   requested
                   onClick={() => {
-                    navigate("/request-proposal", { data: villa });
+                    navigate("/request-proposal", { state: villa });
                   }}
                 />
               );

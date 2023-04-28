@@ -34,9 +34,6 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
       alignItems: "flex-start",
-      "& > *": {
-        padding: "4px 0px",
-      },
     },
   },
   row: {
