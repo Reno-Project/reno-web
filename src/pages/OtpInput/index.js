@@ -56,7 +56,9 @@ const OtpInput = (props) => {
 
       console.log("response ====sasdasds=>>> ", response);
       if (response.success) {
-        toast.success(response?.message);
+        if (!response?.data?.is_two_factor_verified) {
+          toast.success(response?.message);
+        }
         dispatch(setUserData(response?.data));
         dispatch(setToken(response?.token));
         // move to create profile screen

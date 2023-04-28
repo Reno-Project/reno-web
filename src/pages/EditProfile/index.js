@@ -550,8 +550,6 @@ export default function EditProfile() {
     }
   }
 
-  console.log("logo=====>>>>>>", typeof state.businessLogo);
-
   return (
     <Grid
       container
