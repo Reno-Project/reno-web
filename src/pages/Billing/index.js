@@ -2,6 +2,7 @@ import { Button, CircularProgress, Grid, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import React, { useEffect, useState } from "react";
 import { isMobile, isTablet } from "react-device-detect";
+import IBAN from "iban";
 import CInput from "../../components/CInput";
 import Cselect from "../../components/CSelect";
 import { getApiData } from "../../utils/APIHelper";
@@ -89,6 +90,7 @@ export default function Billing() {
 
   function validation() {
     const error = { ...errObj };
+    const swiftCodeRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
     let valid = true;
     let scroll = false;
     let section = null;
@@ -120,10 +122,10 @@ export default function Billing() {
         scroll = true;
         section = document.querySelector("#iban");
       }
-    } else if (state?.iban.length > 34) {
+    } else if (!IBAN.isValid(state.iban)) {
       valid = false;
       error.ibanErr = true;
-      error.ibanMsg = "IBAN number should not be greater than 34 characters";
+      error.ibanMsg = "Please enter valid IBAN number";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#iban");
@@ -175,10 +177,10 @@ export default function Billing() {
         scroll = true;
         section = document.querySelector("#swift");
       }
-    } else if (state?.swift.length > 11) {
+    } else if (!swiftCodeRegex.test(state.swift)) {
       valid = false;
       error.swiftErr = true;
-      error.swiftMsg = "Swift code should not be greater than 11 characters";
+      error.swiftMsg = "Please enter valid swift code";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#swift");
