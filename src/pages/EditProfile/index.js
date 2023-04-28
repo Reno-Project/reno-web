@@ -418,6 +418,7 @@ export default function EditProfile() {
         } else if (active === 4) {
           continueStep(5);
         }
+        dispatch(setUserData(response?.data));
       } else {
         toast.error(response.message);
       }
@@ -548,6 +549,9 @@ export default function EditProfile() {
       }
     }
   }
+
+  console.log("logo=====>>>>>>", typeof state.businessLogo);
+
   return (
     <Grid
       container
