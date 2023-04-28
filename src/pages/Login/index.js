@@ -286,6 +286,7 @@ const Login = (props) => {
         "POST",
         {
           email: forgotEmail ? forgotEmail : "",
+          device_type: "web",
         }
       );
 

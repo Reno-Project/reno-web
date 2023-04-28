@@ -339,6 +339,9 @@ const Signup = (props) => {
                   placeholder="Enter password"
                   type={showPassword ? "text" : "password"}
                   value={state.password}
+                  passValue={state?.password}
+                  passwordValidation
+                  inputProps={{ maxLength: 15 }}
                   onChange={(e) => {
                     setState({ ...state, password: e.target.value });
                     setErrObj({
