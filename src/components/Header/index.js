@@ -11,7 +11,6 @@ import {
   InputAdornment,
   IconButton,
   MenuItem,
-  Modal,
 } from "@mui/material";
 import { isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +19,12 @@ import Images from "../../config/images";
 import useStyles from "./styles";
 import CInput from "../CInput";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import { isMobile } from "react-device-detect";
+import ConfirmModel from "../ConfirmModel";
+import {
+  LogoutOutlined,
+  Person2Outlined,
+  SettingsOutlined,
+} from "@mui/icons-material";
 
 function Header(props) {
   const currentUrl = window.location.href;
@@ -63,260 +67,213 @@ function Header(props) {
   }
 
   return (
-    <div className={classes.headerMainCon} style={{ padding: "0 15px" }}>
-      <Grid container>
-        <Grid
-          item
-          lg={3}
-          md={3}
-          sm={3}
-          xs={6}
-          className={classes.leftContainer}
-        >
-          <div
-            className={classes.imgContainer}
-            onClick={() => {
-              if (userData?.contractor_data?.profile_completed === "pending") {
-                return;
-              } else {
-                navigate("/dashboard");
-              }
-            }}
+    <>
+      <div className={classes.headerMainCon} style={{ padding: "0 15px" }}>
+        <Grid container>
+          <Grid
+            item
+            lg={3}
+            md={3}
+            sm={3}
+            xs={6}
+            className={classes.leftContainer}
           >
-            <img
-              alt="logo"
-              src={Images.header_logo}
-              className={classes.imgStyle}
-            />
-          </div>
-          {currentUrl?.includes("signup") || currentUrl?.includes("login") ? (
-            <Grid item style={{ paddingLeft: 10 }}>
-              <NavLink to="/how-it-works" className={classes.linkStyle}>
-                <Typography className={classes.menuTitleStyle}>
-                  How it works?
-                </Typography>
-              </NavLink>
-            </Grid>
-          ) : null}
-        </Grid>
-        <Grid
-          item
-          lg={9}
-          md={9}
-          sm={9}
-          xs={6}
-          className={classes.rightContainer}
-        >
-          {location?.pathname === "/" && (
-            <Grid item className={classes.PR25}>
-              <NavLink to="/signup" className={classes.linkStyle}>
-                <Typography className={classes.menuTitleStyle}>
-                  Become a contractor
-                </Typography>
-              </NavLink>
-            </Grid>
-          )}
-
-          <Grid item className={classes.rightLogoContainer} columnGap={1}>
-            {!isEmpty(token) ? (
-              <>
-                {!sm && (
-                  <>
-                    {userData?.contractor_data?.profile_completed ===
-                      "pending" || currentUrl?.includes("otp-verify") ? null : (
-                      <CInput
-                        placeholder="Search..."
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton>
-                              <SearchRoundedIcon />
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                      />
-                    )}
-                    {userData?.contractor_data?.profile_completed ===
-                    "pending" ? null : ( // </Button> //   Become contarctor // > //   style={{ padding: "6px 6px", fontSize: "14px" }} //   color="primary" //   variant="contained" //   }} //     logout("signup"); //   onClick={() => { // <Button
-                      <>
-                        <Grid item>
-                          <Button variant="contained">Projects</Button>
-                        </Grid>
-                        <Grid item>
-                          <IconButton>
-                            <img src={Images.chatico} alt="chat" />
-                          </IconButton>
-                        </Grid>
-                      </>
-                    )}
-                  </>
-                )}
-                {currentUrl?.includes("notifications") ||
-                currentUrl?.includes("otp-verify") ||
-                userData?.contractor_data?.profile_completed ===
-                  "pending" ? null : (
-                  <Grid item>
-                    <IconButton onClick={() => navigate("/notifications")}>
-                      <img src={Images.BellSimple} alt="notification" />
-                    </IconButton>
-                  </Grid>
-                )}
-                {currentUrl?.includes("otp-verify") ? null : (
-                  <>
-                    {!userData?.profile_url ? (
-                      <Avatar
-                        style={{ color: "#FFF", cursor: "pointer" }}
-                        onClick={handleClick}
-                      />
-                    ) : (
-                      <img
-                        alt="logo"
-                        src={userData?.profile_url}
-                        className={classes.logoStyle}
-                        aria-describedby={id}
-                        variant="contained"
-                        onClick={handleClick}
-                      />
-                    )}
-                  </>
-                )}
-                <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  PaperProps={{
-                    style: {
-                      padding: 10,
-                    },
-                  }}
-                >
-                  {userData?.role === "reno" ||
-                  userData?.contractor_data?.profile_completed ===
-                    "pending" ? null : (
-                    <>
-                      <MenuItem
-                        onClick={() => {
-                          handleClose();
-                          navigate("/contractor-profile");
-                        }}
-                        className={classes.logoutTextStyle}
-                      >
-                        View Profile
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          handleClose();
-                          navigate("/account-setting");
-                        }}
-                        className={classes.logoutTextStyle}
-                      >
-                        Account Settings
-                      </MenuItem>
-                    </>
-                  )}
-                  <MenuItem
-                    // onClick={() => logout("")}
-                    onClick={() => setVisible(!visible)}
-                    className={classes.logoutTextStyle}
-                  >
-                    Logout
-                  </MenuItem>
-                </Popover>
-              </>
-            ) : currentUrl.includes("login") ? (
-              <NavLink to="/signup" className={classes.linkStyle}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ paddingLeft: "35px", paddingRight: "35px" }}
-                >
-                  Signup
-                </Button>
-              </NavLink>
-            ) : (
-              <NavLink to="/login" className={classes.linkStyle}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ paddingLeft: "35px", paddingRight: "35px" }}
-                >
-                  Login
-                </Button>
-              </NavLink>
-            )}
-          </Grid>
-        </Grid>
-      </Grid>
-
-      <Modal
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        disableAutoFocus
-        open={visible}
-      >
-        <Grid
-          item
-          justifyContent={"center"}
-          style={{
-            backgroundColor: "#FFF",
-            borderRadius: 4,
-            padding: isMobile ? 20 : 30,
-          }}
-        >
-          <Grid item>
-            <Typography
-              style={{
-                fontFamily: "ElMessiri-SemiBold",
-                fontSize: isMobile ? "22px" : "28px",
-                textAlign: "center",
+            <div
+              className={classes.imgContainer}
+              onClick={() => {
+                if (
+                  userData?.contractor_data?.profile_completed === "pending"
+                ) {
+                  return;
+                } else {
+                  navigate("/dashboard");
+                }
               }}
             >
-              Are you sure want to logout ?
-            </Typography>
+              <img
+                alt="logo"
+                src={Images.header_logo}
+                className={classes.imgStyle}
+              />
+            </div>
+            {currentUrl?.includes("signup") || currentUrl?.includes("login") ? (
+              <Grid item style={{ paddingLeft: 10 }}>
+                <NavLink to="/how-it-works" className={classes.linkStyle}>
+                  <Typography className={classes.menuTitleStyle}>
+                    How it works?
+                  </Typography>
+                </NavLink>
+              </Grid>
+            ) : null}
           </Grid>
           <Grid
             item
-            container
-            justifyContent={"center"}
-            gap={isMobile ? 1 : 2}
-            wrap="nowrap"
-            marginTop={"10px"}
+            lg={9}
+            md={9}
+            sm={9}
+            xs={6}
+            className={classes.rightContainer}
           >
-            <Grid item xs={isMobile ? 6 : 5}>
-              <Button
-                fullWidth
-                variant="outlined"
-                onClick={() => setVisible(false)}
-              >
-                No
-              </Button>
-            </Grid>
-            <Grid item xs={isMobile ? 6 : 5}>
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={() => {
-                  logout("");
-                }}
-              >
-                Yes
-              </Button>
+            {location?.pathname === "/" && (
+              <Grid item className={classes.PR25}>
+                <NavLink to="/signup" className={classes.linkStyle}>
+                  <Typography className={classes.menuTitleStyle}>
+                    Become a contractor
+                  </Typography>
+                </NavLink>
+              </Grid>
+            )}
+
+            <Grid item className={classes.rightLogoContainer} columnGap={1}>
+              {!isEmpty(token) ? (
+                <>
+                  {!sm && (
+                    <>
+                      {userData?.contractor_data?.profile_completed ===
+                        "pending" ||
+                      currentUrl?.includes("otp-verify") ? null : (
+                        <CInput
+                          placeholder="Search..."
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton>
+                                <SearchRoundedIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                      )}
+                      {userData?.contractor_data?.profile_completed ===
+                      "pending" ? null : ( // </Button> //   Become contarctor // > //   style={{ padding: "6px 6px", fontSize: "14px" }} //   color="primary" //   variant="contained" //   }} //     logout("signup"); //   onClick={() => { // <Button
+                        <>
+                          <Grid item>
+                            <Button variant="contained">Projects</Button>
+                          </Grid>
+                          <Grid item>
+                            <IconButton>
+                              <img src={Images.chatico} alt="chat" />
+                            </IconButton>
+                          </Grid>
+                        </>
+                      )}
+                    </>
+                  )}
+                  {currentUrl?.includes("notifications") ||
+                  currentUrl?.includes("otp-verify") ||
+                  userData?.contractor_data?.profile_completed ===
+                    "pending" ? null : (
+                    <Grid item>
+                      <IconButton onClick={() => navigate("/notifications")}>
+                        <img src={Images.BellSimple} alt="notification" />
+                      </IconButton>
+                    </Grid>
+                  )}
+                  {currentUrl?.includes("otp-verify") ? null : (
+                    <>
+                      {!userData?.profile_url ? (
+                        <Avatar
+                          style={{ color: "#FFF", cursor: "pointer" }}
+                          onClick={handleClick}
+                        />
+                      ) : (
+                        <img
+                          alt="logo"
+                          src={userData?.profile_url}
+                          className={classes.logoStyle}
+                          aria-describedby={id}
+                          variant="contained"
+                          onClick={handleClick}
+                        />
+                      )}
+                    </>
+                  )}
+                  <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    PaperProps={{
+                      style: {
+                        padding: 10,
+                      },
+                    }}
+                  >
+                    {userData?.role === "reno" ||
+                    userData?.contractor_data?.profile_completed ===
+                      "pending" ? null : (
+                      <>
+                        <MenuItem
+                          onClick={() => {
+                            handleClose();
+                            navigate("/contractor-profile");
+                          }}
+                          className={classes.logoutTextStyle}
+                        >
+                          <Person2Outlined style={{ marginRight: 10 }} />
+                          View Profile
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            handleClose();
+                            navigate("/account-setting");
+                          }}
+                          className={classes.logoutTextStyle}
+                        >
+                          <SettingsOutlined style={{ marginRight: 10 }} />
+                          Account Settings
+                        </MenuItem>
+                      </>
+                    )}
+                    <MenuItem
+                      onClick={() => setVisible(!visible)}
+                      className={classes.logoutTextStyle}
+                    >
+                      <LogoutOutlined style={{ marginRight: 10 }} />
+                      Sign out
+                    </MenuItem>
+                  </Popover>
+                </>
+              ) : currentUrl.includes("login") ? (
+                <NavLink to="/signup" className={classes.linkStyle}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ paddingLeft: "35px", paddingRight: "35px" }}
+                  >
+                    Signup
+                  </Button>
+                </NavLink>
+              ) : (
+                <NavLink to="/login" className={classes.linkStyle}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ paddingLeft: "35px", paddingRight: "35px" }}
+                  >
+                    Login
+                  </Button>
+                </NavLink>
+              )}
             </Grid>
           </Grid>
         </Grid>
-      </Modal>
-    </div>
+      </div>
+
+      <ConfirmModel
+        visible={visible}
+        handleClose={() => setVisible(false)}
+        confirmation={() => logout("")}
+        message="Are you sure you want to sign out ?"
+      />
+    </>
   );
 }
 

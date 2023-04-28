@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
 import { isMobile } from "react-device-detect";
 import _ from "lodash";
+import ConfirmModel from "../ConfirmModel";
 
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -72,12 +73,13 @@ const IOSSwitch = styled((props) => (
 
 export default function Security() {
   const classes = useStyles();
-  const { userData, token } = useSelector((state) => state.auth);
+  const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
   const [status2FA, setStatus2FA] = useState("");
   const [loginDeviceList, setLoginDeviceList] = useState([]);
   const [loaderIndex, setLoaderIndex] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     getUserDetailsByIdApiCall();
@@ -128,6 +130,7 @@ export default function Security() {
   }
 
   async function deviceListApiCall() {
+    setLoaderIndex(true);
     try {
       const response = await getApiData(
         Setting.endpoints.logindeviceslist,
@@ -139,29 +142,30 @@ export default function Security() {
       } else {
         toast.error(response?.message);
       }
+      setLoaderIndex(false);
     } catch (error) {
       console.log("error=====>>>>>", error);
+      setLoaderIndex(false);
     }
   }
 
   async function logoutallApi() {
-    setLoaderIndex("all");
+    setLoaderIndex(true);
     try {
       const response = await getApiData(
         `${Setting.endpoints.logoutall}`,
         "post",
-        {},
-        { Authorization: `Bearer ${token}` }
+        {}
       );
       if (response?.success) {
+        setVisible(false);
         deviceListApiCall();
         toast.success(response?.message);
       } else {
         toast.error(response?.message);
       }
-      setLoaderIndex("");
     } catch (error) {
-      setLoaderIndex("");
+      setLoaderIndex(false);
       console.log("error=====>>>>>", error);
       toast.error(error.toString() || "Something went wrong try again later");
     }
@@ -188,253 +192,287 @@ export default function Security() {
   }
 
   return (
-    <Grid
-      container
-      padding={"20px 0"}
-      wrap={"nowrap"}
-      justifyContent={"center"}
-    >
-      <Grid item xs={12}>
-        <Typography variant="h5" fontFamily={"'Roobert-Regular'"}>
-          Logging in Settings
-        </Typography>
-        <Grid
-          item
-          container
-          style={{
-            border: "1px solid #F2F4F7",
-            padding: "0 20px 20px",
-            marginTop: 20,
-            backgroundColor: "#F9F9FB",
-          }}
-          alignItems="center"
-          justifyContent={"flex-end"}
-        >
-          <Grid item xs={12} sm={8} md={9} lg={9}>
-            <Typography
-              className={classes.TextStyle}
-              paddingTop={isMobile ? 3 : 0}
-              fontFamily={"Roobert-Regular"}
-            >
-              Allow login attempts
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={4} md={3} lg={3}>
-            <CInput
-              outline
-              placeholder="Enter allow ..."
-              white={false}
-              type="number"
-              controls={false}
-              inputProps={{
-                className: classes.myOtpInput,
-              }}
-            />
-          </Grid>
-          <Divider width={"100%"} />
-          <Grid item container style={{ marginBottom: 15 }}>
-            <Grid item xs={12} md={9} sm={12} lg={9} style={{ marginTop: 20 }}>
-              <Typography
-                className={classes.TextStyle}
-                fontFamily={"Roobert-Regular"}
-              >
-                Phone verifications
-              </Typography>
-              <Typography
-                className={classes.language}
-                fontFamily={"Roobert-Regular"}
-                paddingRight={2}
-              >
-                Your phone is not verified with Reno. Click Verify Now to
-                complete phone verification
-              </Typography>
-            </Grid>
-
-            <Grid item xs={12} sm={12} md={3} lg={3} style={{ marginTop: 20 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                style={{
-                  paddingLeft: "20px",
-                  paddingRight: "20px",
-                  width: "100%",
-                }}
-              >
-                Verify now
-              </Button>
-            </Grid>
-          </Grid>
-          <Divider width={"100%"} />
-          <Grid item container justifyContent={"space-between"}>
-            <Grid item xs={10} sm={9} md={8} style={{ marginTop: 20 }}>
-              <Typography
-                className={classes.TextStyle}
-                fontFamily={"Roobert-Regular"}
-              >
-                Two factors authentications
-              </Typography>
-              <Typography
-                className={classes.language}
-                fontFamily={"Roobert-Regular"}
-              >
-                We will send an authentication code via SMS, email or fiverr
-                notification when using an unrecognised device.
-              </Typography>
-            </Grid>
-            <Grid
-              item
-              xs={1}
-              style={{ marginTop: 20 }}
-              justifyContent={"flex-end"}
-            >
-              <IOSSwitch
-                sx={{ m: 0 }}
-                checked={status2FA}
-                onChange={(event) => {
-                  twoFectorAuth(event.target.checked);
-                }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        {_.isArray(loginDeviceList) && !_.isEmpty(loginDeviceList) ? (
+    <>
+      <Grid
+        container
+        padding={"20px 0"}
+        wrap={"nowrap"}
+        justifyContent={"center"}
+      >
+        <Grid item xs={12}>
+          <Typography variant="h5" fontFamily={"'Roobert-Regular'"}>
+            Logging in Settings
+          </Typography>
           <Grid
             item
             container
             style={{
               border: "1px solid #F2F4F7",
-              padding: 20,
+              padding: "0 20px 20px",
               marginTop: 20,
               backgroundColor: "#F9F9FB",
             }}
             alignItems="center"
             justifyContent={"flex-end"}
           >
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={8} md={9} lg={9}>
               <Typography
-                variant="h5"
+                className={classes.TextStyle}
+                paddingTop={isMobile ? 3 : 0}
                 fontFamily={"Roobert-Regular"}
-                marginBottom={2}
               >
-                Connected devices
+                Allow login attempts
               </Typography>
             </Grid>
-            {loginDeviceList?.map((it, ind) => {
-              if (
-                _.isEmpty(it?.device_name) ||
-                _.isNull(it?.device_name) ||
-                _.isUndefined(it?.device_name)
-              ) {
-                return null;
-              } else {
-                return (
-                  <>
-                    <Grid
-                      item
-                      container
-                      xs={12}
-                      wrap="nowrap"
-                      justifyContent={"space-between"}
-                      style={{ marginTop: 10, marginBottom: 10 }}
-                      gap={1}
-                    >
-                      <Grid
-                        item
-                        xs={12}
-                        display={"flex"}
-                        container
-                        gap={1}
-                        wrap="nowrap"
-                      >
-                        <Grid
-                          item
-                          xs={1}
-                          style={{
-                            marginTop: 10,
-                            justifyContent: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <img
-                            src={Images.laptop}
-                            alt="laptop"
-                            className={classes.imgStyle}
-                          />
-                        </Grid>
-                        <Grid item>
-                          <Typography
-                            fontFamily={"Roobert-Regular"}
-                            className={classes.TextStyle}
-                          >
-                            {it?.device_name}
-                          </Typography>
-                          <Typography
-                            fontFamily={"Roobert-Regular"}
-                            className={classes.language}
-                          >
-                            {it?.address}
-                          </Typography>
-                        </Grid>
-                      </Grid>
 
-                      <Grid item>
-                        <Button
-                          style={{ alignItems: "center" }}
-                          variant="outlined"
-                          disabled={loaderIndex === ind}
-                          onClick={() => singleDeviceLogoutApiCall(it, ind)}
-                        >
-                          {loaderIndex === ind ? (
-                            <CircularProgress
-                              style={{ color: "#274BF1" }}
-                              size={26}
-                            />
-                          ) : (
-                            "Signout"
-                          )}
-                        </Button>
-                      </Grid>
-                    </Grid>
-
-                    <Divider width={"100%"} />
-                  </>
-                );
-              }
-            })}
-
-            <Grid
-              item
-              container
-              marginTop={2}
-              alignItems={"center"}
-              justifyContent={"flex-end"}
-              gap={2}
-            >
-              <Grid item>
-                <Typography className={classes.language}>
-                  Signout from all other devices
+            <Grid item xs={12} sm={4} md={3} lg={3}>
+              <CInput
+                outline
+                placeholder="Enter allow ..."
+                white={false}
+                type="number"
+                controls={false}
+                inputProps={{
+                  className: classes.myOtpInput,
+                }}
+              />
+            </Grid>
+            <Divider width={"100%"} />
+            <Grid item container style={{ marginBottom: 15 }}>
+              <Grid
+                item
+                xs={12}
+                md={9}
+                sm={12}
+                lg={9}
+                style={{ marginTop: 20 }}
+              >
+                <Typography
+                  className={classes.TextStyle}
+                  fontFamily={"Roobert-Regular"}
+                >
+                  Phone verifications
+                </Typography>
+                <Typography
+                  className={classes.language}
+                  fontFamily={"Roobert-Regular"}
+                  paddingRight={2}
+                >
+                  Your phone is not verified with Reno. Click Verify Now to
+                  complete phone verification
                 </Typography>
               </Grid>
-              <Grid item>
+
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={3}
+                lg={3}
+                style={{ marginTop: 20 }}
+              >
                 <Button
                   variant="contained"
                   color="primary"
-                  style={{ paddingLeft: "10px", paddingRight: "10px" }}
-                  onClick={logoutallApi}
+                  style={{
+                    paddingLeft: "20px",
+                    paddingRight: "20px",
+                    width: "100%",
+                  }}
                 >
-                  {loaderIndex === "all" ? (
-                    <CircularProgress style={{ color: "#FFF" }} size={26} />
-                  ) : (
-                    "Sign out now"
-                  )}
+                  Verify now
                 </Button>
               </Grid>
             </Grid>
+            <Divider width={"100%"} />
+            <Grid item container justifyContent={"space-between"}>
+              <Grid item xs={10} sm={9} md={8} style={{ marginTop: 20 }}>
+                <Typography
+                  className={classes.TextStyle}
+                  fontFamily={"Roobert-Regular"}
+                >
+                  Two factors authentications
+                </Typography>
+                <Typography
+                  className={classes.language}
+                  fontFamily={"Roobert-Regular"}
+                >
+                  We will send an authentication code via SMS, email or fiverr
+                  notification when using an unrecognised device.
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={1}
+                style={{ marginTop: 20 }}
+                justifyContent={"flex-end"}
+              >
+                <IOSSwitch
+                  sx={{ m: 0 }}
+                  checked={status2FA}
+                  onChange={(event) => {
+                    twoFectorAuth(event.target.checked);
+                  }}
+                />
+              </Grid>
+            </Grid>
           </Grid>
-        ) : null}
+          {loaderIndex ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 30,
+              }}
+            >
+              <CircularProgress style={{ color: "#274BF1" }} size={30} />
+            </div>
+          ) : _.isArray(loginDeviceList) && !_.isEmpty(loginDeviceList) ? (
+            <Grid
+              item
+              container
+              style={{
+                border: "1px solid #F2F4F7",
+                padding: 20,
+                marginTop: 20,
+                backgroundColor: "#F9F9FB",
+              }}
+              alignItems="center"
+              justifyContent={"flex-end"}
+            >
+              <Grid item xs={12}>
+                <Typography
+                  variant="h5"
+                  fontFamily={"Roobert-Regular"}
+                  marginBottom={2}
+                >
+                  Connected devices
+                </Typography>
+              </Grid>
+              {loginDeviceList?.map((it, ind) => {
+                if (
+                  _.isEmpty(it?.device_name) ||
+                  _.isNull(it?.device_name) ||
+                  _.isUndefined(it?.device_name)
+                ) {
+                  return null;
+                } else {
+                  return (
+                    <>
+                      <Grid
+                        item
+                        container
+                        xs={12}
+                        wrap="nowrap"
+                        justifyContent={"space-between"}
+                        style={{ marginTop: 10, marginBottom: 10 }}
+                        gap={1}
+                      >
+                        <Grid
+                          item
+                          xs={12}
+                          display={"flex"}
+                          container
+                          gap={1}
+                          wrap="nowrap"
+                        >
+                          <Grid
+                            item
+                            xs={1}
+                            style={{
+                              marginTop: 10,
+                              justifyContent: "center",
+                              display: "flex",
+                            }}
+                          >
+                            <img
+                              src={Images.laptop}
+                              alt="laptop"
+                              className={classes.imgStyle}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <Typography
+                              fontFamily={"Roobert-Regular"}
+                              className={classes.TextStyle}
+                            >
+                              {it?.device_name}
+                            </Typography>
+                            <Typography
+                              fontFamily={"Roobert-Regular"}
+                              className={classes.language}
+                            >
+                              {it?.address}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+
+                        <Grid item>
+                          <Button
+                            style={{ alignItems: "center" }}
+                            variant="outlined"
+                            disabled={loaderIndex === ind}
+                            onClick={() => singleDeviceLogoutApiCall(it, ind)}
+                          >
+                            {loaderIndex === ind ? (
+                              <CircularProgress
+                                style={{ color: "#274BF1" }}
+                                size={26}
+                              />
+                            ) : (
+                              "Signout"
+                            )}
+                          </Button>
+                        </Grid>
+                      </Grid>
+
+                      <Divider width={"100%"} />
+                    </>
+                  );
+                }
+              })}
+
+              <Grid
+                item
+                container
+                marginTop={2}
+                alignItems={"center"}
+                justifyContent={"flex-end"}
+                gap={2}
+              >
+                <Grid item>
+                  <Typography className={classes.language}>
+                    Signout from all other devices
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ paddingLeft: "10px", paddingRight: "10px" }}
+                    onClick={setVisible}
+                  >
+                    {loaderIndex === "all" ? (
+                      <CircularProgress style={{ color: "#FFF" }} size={26} />
+                    ) : (
+                      "Sign out now"
+                    )}
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          ) : null}
+        </Grid>
       </Grid>
-    </Grid>
+
+      <ConfirmModel
+        message="Are you sure you want to sign out from all devices ?"
+        visible={visible}
+        handleClose={() => setVisible(false)}
+        confirmation={() => logoutallApi()}
+        loader={loaderIndex}
+      />
+    </>
   );
 }
