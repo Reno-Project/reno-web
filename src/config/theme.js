@@ -126,6 +126,10 @@ theme = createTheme(theme, {
           fontFamily: "PoppinsMedium",
           letterSpacing: 1,
         },
+        h6: {
+          fontWeight: "700",
+          letterSpacing: "0.075em",
+        },
       },
     },
     MuiSelect: {
