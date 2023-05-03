@@ -91,6 +91,7 @@ export default function Billing() {
   function validation() {
     const error = { ...errObj };
     const swiftCodeRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
+    const accNumberRegex = /^[0-9]{8,30}$/;
     let valid = true;
     let scroll = false;
     let section = null;
@@ -135,7 +136,7 @@ export default function Billing() {
     if (isEmpty(state.bank)) {
       valid = false;
       error.bankErr = true;
-      error.bankMsg = "Please select bank";
+      error.bankMsg = "Please enter bank name";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#bank");
@@ -158,11 +159,10 @@ export default function Billing() {
         scroll = true;
         section = document.querySelector("#baccount");
       }
-    } else if (state?.acc.length > 50) {
+    } else if (!accNumberRegex.test(state?.acc)) {
       valid = false;
       error.accErr = true;
-      error.accMsg =
-        "Bank account number should not be greater than 50 characters";
+      error.accMsg = "Please enter valid bank account number";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#baccount");
@@ -319,20 +319,19 @@ export default function Billing() {
                 </Grid>
 
                 <Grid item xs={12} id="bank">
-                  <Cselect
+                  <CInput
                     label="Bank Name"
+                    placeholder="Enter Bank"
                     required
-                    placeholder="Select Bank"
                     value={state.bank}
-                    handleSelect={(e) => {
-                      setState({ ...state, bank: e });
+                    onChange={(e) => {
+                      setState({ ...state, bank: e.target.value });
                       setErrObj({
                         ...errObj,
                         bankErr: false,
                         bankMsg: "",
                       });
                     }}
-                    renderTags={bank}
                     error={errObj.bankErr}
                     helpertext={errObj.bankMsg}
                   />
@@ -344,6 +343,7 @@ export default function Billing() {
                     required
                     label="Bank Account"
                     placeholder="Enter Bank Account Number"
+                    inputProps={{ maxLength: 30 }}
                     value={state.acc}
                     onChange={(e) => {
                       setState({ ...state, acc: e.target.value });

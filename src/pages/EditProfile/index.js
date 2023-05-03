@@ -280,7 +280,7 @@ export default function EditProfile() {
     if (isEmpty(state.businessYear)) {
       valid = false;
       error.yearErr = true;
-      error.yearMsg = "Please Enter No. of Business Years";
+      error.yearMsg = "Please Select No. of Business Years";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#year");
@@ -289,7 +289,7 @@ export default function EditProfile() {
     if (isEmpty(state.employees)) {
       valid = false;
       error.employeeErr = true;
-      error.employeeMsg = "Please Enter No. of Employees";
+      error.employeeMsg = "Please Select No. of Employees";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#employee");
@@ -742,7 +742,7 @@ export default function EditProfile() {
                 <Grid item xs={12} id="year">
                   <Cselect
                     label="Number of Years in Business"
-                    placeholder="Enter No. of Years"
+                    placeholder="Select No. of Years"
                     required
                     value={state.businessYear}
                     handleSelect={(e) => {
@@ -766,7 +766,7 @@ export default function EditProfile() {
                 <Grid item xs={12} id="employee">
                   <Cselect
                     label="Number of Employees"
-                    placeholder="Enter No. of Employees"
+                    placeholder="Select No. of Employees"
                     required
                     value={state.employees}
                     handleSelect={(e) => {

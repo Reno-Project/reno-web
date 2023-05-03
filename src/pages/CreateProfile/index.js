@@ -339,7 +339,7 @@ const CreateProfile = (props) => {
     if (isEmpty(state.businessYear)) {
       valid = false;
       error.yearErr = true;
-      error.yearMsg = "Please Enter No. of Business Years";
+      error.yearMsg = "Please Select No. of Business Years";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#year");
@@ -348,7 +348,7 @@ const CreateProfile = (props) => {
     if (isEmpty(state.employees)) {
       valid = false;
       error.employeeErr = true;
-      error.employeeMsg = "Please Enter No. of Employees";
+      error.employeeMsg = "Please Select No. of Employees";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#employee");
@@ -453,6 +453,8 @@ const CreateProfile = (props) => {
   function step3Validation() {
     const { bname, iban, bank, acc, swift, address } = state;
     const swiftCodeRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
+    const accNumberRegex = /^[0-9]{8,30}$/;
+
     const error = { ...errObj };
     let valid = true;
     let scroll = false;
@@ -521,11 +523,11 @@ const CreateProfile = (props) => {
         scroll = true;
         section = document.querySelector("#baccount");
       }
-    } else if (acc.length > 50) {
+    } else if (!accNumberRegex.test(acc)) {
       valid = false;
       error.accErr = true;
       error.accMsg =
-        "Bank account number should not be greater than 50 characters";
+        "Please enter valid bank account number";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#baccount");
@@ -906,7 +908,7 @@ const CreateProfile = (props) => {
                   <CInput
                     multiline={true}
                     label="Description"
-                    required
+                    // required
                     placeholder="Write Description"
                     value={state.description}
                     onChange={(e) => {
@@ -941,7 +943,7 @@ const CreateProfile = (props) => {
                     <Cselect
                       label="Number of Years in Business"
                       required
-                      placeholder="Enter No. of Years"
+                      placeholder="Select No. of Years"
                       value={state.businessYear}
                       handleSelect={(e) => {
                         console.log("e ===businessyear==>>> ", e);
@@ -1006,7 +1008,7 @@ const CreateProfile = (props) => {
                     <Cselect
                       label="Number of Employees"
                       required
-                      placeholder="Enter No. of Employees"
+                      placeholder="Select No. of Employees"
                       value={state.employees}
                       handleSelect={(e) => {
                         console.log("e ==employee===>>> ", e);
@@ -1709,6 +1711,8 @@ const CreateProfile = (props) => {
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="baccount">
                     <CInput
                       label="Bank Account"
+                      type="number"
+                      inputProps={{ maxLength: 30 }}
                       placeholder="Enter Bank Account Number"
                       required
                       value={state.acc}
