@@ -89,6 +89,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 8,
     objectFit: "cover",
     boxShadow: color.shadow,
+    cursor: "pointer",
   },
   imgContainer: {
     position: "relative",

@@ -148,40 +148,30 @@ const ContractorProfile = (props) => {
   const [replyContent, setReplyContent] = useState("");
   const [showMoreR, setShowMoreR] = useState(false);
   const reviewList = showMoreR ? RList : RList.slice(0, 2);
-
-  const [isOpenGalleryView, setIsOpenGalleryView] = useState(false);
+  const [isOpenGalleryView, setIsOpenGalleryView] = useState({
+    visible: false,
+    index: null,
+  });
 
   useEffect(() => {
     getUserDetailsByIdApiCall();
   }, []);
 
   useEffect(() => {
-    if (isArray(displayedImages) && displayedImages.length > 0) {
-      const imageUrls = displayedImages.map(obj => obj.image);
-      console.log("imageUrls ====>>>", imageUrls);
+    if (
+      isArray(displayedImages) &&
+      displayedImages.length > 0 &&
+      displaySliderImage.length === 0
+    ) {
+      const imageUrls = displayedImages.map((obj) => obj.image);
       setDisplaySliderImage(imageUrls);
     }
   }, [displayedImages]);
 
   // It is for handling gallery view mode to be open or not
-  const handleImageClick = () => {
-    setIsOpenGalleryView(!isOpenGalleryView);
+  const handleImageClick = (index) => {
+    setIsOpenGalleryView({ visible: !isOpenGalleryView.visible, index });
   };
-
-  const images = [
-    {
-      original: "https://picsum.photos/id/1018/1000/600/",
-      thumbnail: "https://picsum.photos/id/1018/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1015/1000/600/",
-      thumbnail: "https://picsum.photos/id/1015/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1019/1000/600/",
-      thumbnail: "https://picsum.photos/id/1019/250/150/",
-    },
-  ];
 
   async function getUserDetailsByIdApiCall() {
     setPageLoad(true);
@@ -341,7 +331,9 @@ const ContractorProfile = (props) => {
                 className={classes.btnStyle}
                 style={{ margin: "0px 10px" }}
                 onClick={() => {
-                  navigator.clipboard.writeText(userData?.profile_url);
+                  navigator.clipboard.writeText(
+                    `https://renohome.io/share_contractor/share=${userData?.id}`
+                  );
                   toast.success("Copied!", { toastId: 1 });
                 }}
               >
@@ -493,12 +485,9 @@ const ContractorProfile = (props) => {
                           <img
                             src={e?.image}
                             alt={`img_${i}`}
-                            onClick={handleImageClick}
+                            onClick={() => handleImageClick(i)}
                             className={classes.portfolioImg}
                           />
-                          {isOpenGalleryView && (
-                            <ImageGallery items={displayedImages} />
-                          )}
                         </Grid>
                       </Fade>
                     )
@@ -848,10 +837,14 @@ const ContractorProfile = (props) => {
       </Grid>
       <BlueAbout />
 
-      {isOpenGalleryView ? (
+      {isOpenGalleryView?.visible ? (
         <Grid item>
-          {/* <Lightbox images={displayedImages} /> */}
-          <Lightbox images={displaySliderImage} />
+          <Lightbox
+            images={displaySliderImage}
+            onClose={() => handleImageClick(null)}
+            startIndex={isOpenGalleryView?.index}
+            buttonAlign="center"
+          />
         </Grid>
       ) : null}
     </div>
