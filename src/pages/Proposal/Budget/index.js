@@ -66,8 +66,6 @@ const errorObj = {
 };
 
 export default function Budget(props) {
-  console.log("Budget Rendering");
-
   const { handleClick = () => null } = props;
   const classes = useStyles();
   const dispatch = useDispatch();

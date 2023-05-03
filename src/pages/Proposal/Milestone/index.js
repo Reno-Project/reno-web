@@ -1,6 +1,7 @@
 import {
   Button,
   Card,
+  CircularProgress,
   Collapse,
   Divider,
   FormControl,
@@ -33,6 +34,8 @@ import ConfirmModel from "../../../components/ConfirmModel";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
+import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
+import { Setting } from "../../../utils/Setting";
 
 const errorObj = {
   nameErr: false,
@@ -47,7 +50,6 @@ const errorObj = {
   amountMsg: "",
 };
 export default function Milestone(props) {
-  console.log("milestone Rendering");
   const { handleClick = () => null, from } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -55,34 +57,81 @@ export default function Milestone(props) {
   const { setProposalDetails } = authActions;
 
   const [state, setState] = useState({
-    name: "",
+    milestone_name: "",
     description: "",
-    startdate: null,
-    enddate: null,
-    amount: "",
+    start_date: null,
+    end_date: null,
   });
   const [milestones, setMilestones] = useState([]);
+  const [milestoneLoader, setmilestoneLoader] = useState(false);
+
+  const [buttonLoader, setButtonLoader] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);
 
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState({});
+  console.log("selectedBudget====>>>>>", selectedBudget);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     setState(
       proposalDetails?.milestone_details?.formvalues || {
-        name: "",
+        milestone_name: "",
         description: "",
-        startdate: null,
-        enddate: null,
-        amount: "",
+        start_date: null,
+        end_date: null,
       }
     );
-    setMilestones(proposalDetails?.milestone_details?.milestones || []);
+    // setMilestones(proposalDetails?.milestone_details?.milestones || []);
+    getMilestoneList();
   }, []);
+
+  async function getMilestoneList() {
+    setmilestoneLoader(true);
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.milestoneProposalList}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        setMilestones(response?.data);
+      }
+      setmilestoneLoader(false);
+    } catch (error) {
+      setmilestoneLoader(false);
+      console.log("err===>", error);
+    }
+  }
+
+  async function addMilestone() {
+    setButtonLoader("step2");
+    try {
+      const response = await getAPIProgressData(
+        Setting.endpoints.addPortfolio,
+        "POST",
+        {
+          portfolio: state.portfolio,
+        },
+        true
+      );
+
+      if (response.success) {
+        toast.success(response.message);
+        // setActiveStep((step) => step + 1);
+      } else {
+        toast.error(response.message);
+      }
+      setButtonLoader("");
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
+      toast.error(error.toString());
+      setButtonLoader("");
+    }
+  }
 
   const handleRowClick = (event, budget, index) => {
     setAnchorEl(event.currentTarget);
@@ -115,7 +164,7 @@ export default function Milestone(props) {
     const error = { ...errObj };
     let valid = true;
 
-    if (isEmpty(state.name)) {
+    if (isEmpty(state.milestone_name)) {
       valid = false;
       error.nameErr = true;
       error.nameMsg = "Please enter the name";
@@ -127,26 +176,26 @@ export default function Milestone(props) {
       error.descriptionMsg = "Please enter description";
     }
 
-    if (isNull(state?.startdate)) {
+    if (isNull(state?.start_date)) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please select the start date";
     } else if (
-      !isNull(state?.startdate) &&
-      state?.startdate?.toString() == "Invalid date"
+      !isNull(state?.start_date) &&
+      state?.start_date?.toString() == "Invalid date"
     ) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
     }
 
-    if (isNull(state.enddate)) {
+    if (isNull(state.end_date)) {
       valid = false;
       error.endErr = true;
       error.endMsg = "Please select the end date";
     } else if (
-      !isNull(state.enddate) &&
-      state.enddate?.toString() == "Invalid date"
+      !isNull(state.end_date) &&
+      state.end_date?.toString() == "Invalid date"
     ) {
       valid = false;
       error.endErr = true;
@@ -183,11 +232,10 @@ export default function Milestone(props) {
 
   function clearData() {
     setState({
-      name: "",
+      milestone_name: "",
       description: "",
-      startdate: null,
-      enddate: null,
-      amount: "",
+      start_date: null,
+      end_date: null,
     });
     setErrObj(errorObj);
   }
@@ -226,9 +274,9 @@ export default function Milestone(props) {
           <CInput
             label="Milestone Name"
             placeholder="Enter Milestone Name..."
-            value={state.name}
+            value={state.milestone_name}
             onChange={(e) => {
-              setState({ ...state, name: e.target.value });
+              setState({ ...state, milestone_name: e.target.value });
               setErrObj({
                 ...errObj,
                 nameErr: false,
@@ -271,11 +319,11 @@ export default function Milestone(props) {
               </InputLabel>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
-                  value={state.startdate ? new Date(state?.startdate) : null}
+                  value={state.start_date ? new Date(state?.start_date) : null}
                   onChange={(e, v) => {
                     setState({
                       ...state,
-                      startdate: moment(e).format("MMMM DD, yyyy"),
+                      start_date: moment(e).format("MMMM DD, yyyy"),
                       enddate: null,
                     });
                     setErrObj({
@@ -312,12 +360,12 @@ export default function Milestone(props) {
               </InputLabel>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
-                  minDate={new Date(state?.startdate)}
-                  value={state?.enddate ? new Date(state?.enddate) : null}
+                  minDate={new Date(state?.start_date)}
+                  value={state?.end_date ? new Date(state?.end_date) : null}
                   onChange={(e) => {
                     setState({
                       ...state,
-                      enddate: moment(e).format("MMMM DD, yyyy"),
+                      end_date: moment(e).format("MMMM DD, yyyy"),
                     });
                     setErrObj({
                       ...errObj,
@@ -388,166 +436,199 @@ export default function Milestone(props) {
             Add Milestone
           </Typography>
         </Grid>
-        {isArray(milestones) && !isEmpty(milestones) && (
-          <Grid container>
-            {milestones.map((milestone, index) => (
-              <Card
-                sx={{
-                  width: "100%",
-                  my: 2,
-                  p: 2,
-                  boxShadow: "none",
-                  border: `1px solid ${color.borderColor}`,
-                  borderRadius: "8px",
-                }}
-              >
-                <Grid item container justifyContent={"space-between"}>
-                  <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
-                    {milestone.name}
-                  </Typography>
-                  <IconButton
-                    onClick={(e) => handleRowClick(e, milestone, index)}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    id={`budget-menu`}
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                    PaperProps={{
-                      elevation: 0,
-                      sx: {
-                        overflow: "visible",
-                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                        mt: 1.5,
-                        "& .MuiAvatar-root": {
-                          width: 32,
-                          height: 32,
-                          ml: -0.5,
-                          mr: 1,
-                        },
-                        "&:before": {
-                          content: '""',
-                          display: "block",
-                          position: "absolute",
-                          top: 0,
-                          right: 14,
-                          width: 10,
-                          height: 10,
-                          bgcolor: "background.paper",
-                          transform: "translateY(-50%) rotate(45deg)",
-                          zIndex: 0,
-                        },
-                      },
-                    }}
-                    transformOrigin={{
-                      horizontal: "right",
-                      vertical: "top",
-                    }}
-                    anchorOrigin={{
-                      horizontal: "right",
-                      vertical: "bottom",
-                    }}
-                  >
-                    <MenuItem onClick={handleEdit}>Edit</MenuItem>
-                    <MenuItem
+        {milestoneLoader ? (
+          <Grid
+            item
+            container
+            justifyContent={"center"}
+            alignItems={"center"}
+            sx={12}
+            minHeight={220}
+          >
+            <CircularProgress style={{ color: "#274BF1" }} size={26} />
+          </Grid>
+        ) : (
+          isArray(milestones) &&
+          !isEmpty(milestones) && (
+            <Grid container>
+              {milestones.map((milestone, index) => (
+                <Card
+                  sx={{
+                    width: "100%",
+                    my: 2,
+                    p: 2,
+                    boxShadow: "none",
+                    border: `1px solid ${color.borderColor}`,
+                    borderRadius: "8px",
+                  }}
+                >
+                  <Grid item container justifyContent={"space-between"}>
+                    <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
+                      {milestone?.milestone_name}
+                    </Typography>
+                    <IconButton
+                      onClick={(e) => handleRowClick(e, milestone, index)}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                    {selectedBudget?.index === index && (
+                      <Menu
+                        id={`budget-menu_${index}`}
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                        PaperProps={{
+                          elevation: 0,
+                          sx: {
+                            overflow: "visible",
+                            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                            mt: 1.5,
+                            "& .MuiAvatar-root": {
+                              width: 32,
+                              height: 32,
+                              ml: -0.5,
+                              mr: 1,
+                            },
+                            "&:before": {
+                              content: '""',
+                              display: "block",
+                              position: "absolute",
+                              top: 0,
+                              right: 14,
+                              width: 10,
+                              height: 10,
+                              bgcolor: "background.paper",
+                              transform: "translateY(-50%) rotate(45deg)",
+                              zIndex: 0,
+                            },
+                          },
+                        }}
+                        transformOrigin={{
+                          horizontal: "right",
+                          vertical: "top",
+                        }}
+                        anchorOrigin={{
+                          horizontal: "right",
+                          vertical: "bottom",
+                        }}
+                      >
+                        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            setVisible(true);
+                          }}
+                        >
+                          Delete
+                        </MenuItem>
+                      </Menu>
+                    )}
+                  </Grid>
+                  <Grid item container justifyContent={"space-between"} py={2}>
+                    <Grid item xl={6}>
+                      <Typography variant="caption" color={"#8C92A4"}>
+                        End date
+                      </Typography>
+                      <Typography fontFamily={"ElMessiri-SemiBold"}>
+                        {milestone.end_date
+                          ? moment(milestone.end_date).format("MMMM DD, YYYY")
+                          : "-"}
+                      </Typography>
+                    </Grid>
+                    <Grid item xl={6} textAlign={"end"}>
+                      <Typography variant="caption" color={"#8C92A4"}>
+                        Amount
+                      </Typography>
+                      <Typography fontFamily={"ElMessiri-SemiBold"}>
+                        {milestone.amount ? `$ ${milestone.amount}` : `$ 0`}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <div style={{ width: "100%", paddingBottom: 16 }}>
+                    <Divider />
+                  </div>
+                  <Grid item container xl={12}>
+                    <Typography
+                      style={{
+                        color: color.primary,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "100%",
+                        cursor: "pointer",
+                      }}
                       onClick={() => {
-                        setVisible(true);
+                        handleChange(milestone, index);
                       }}
                     >
-                      Delete
-                    </MenuItem>
-                  </Menu>
-                </Grid>
-                <Grid item container justifyContent={"space-between"} py={2}>
-                  <Grid item xl={6}>
-                    <Typography variant="caption" color={"#8C92A4"}>
-                      End date
-                    </Typography>
-                    <Typography fontFamily={"ElMessiri-SemiBold"}>
-                      {milestone?.enddate}
+                      View Details
+                      {milestone?.expanded ? (
+                        <ExpandLessIcon sx={{ ml: 1 }} />
+                      ) : (
+                        <ExpandMoreIcon sx={{ ml: 1 }} />
+                      )}
                     </Typography>
                   </Grid>
-                  <Grid item xl={6} textAlign={"end"}>
-                    <Typography variant="caption" color={"#8C92A4"}>
-                      Amount
-                    </Typography>
-                    <Typography fontFamily={"ElMessiri-SemiBold"}>
-                      {milestone.amount ? `$ ${milestone.amount}` : `$ 0`}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <div style={{ width: "100%", paddingBottom: 16 }}>
-                  <Divider />
-                </div>
-                <Grid item container xl={12}>
-                  <Typography
-                    style={{
-                      color: color.primary,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "100%",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      handleChange(milestone, index);
-                    }}
+                  <Collapse
+                    in={milestone?.expanded}
+                    timeout="auto"
+                    unmountOnExit
                   >
-                    View Details
-                    {milestone?.expanded ? (
-                      <ExpandLessIcon sx={{ ml: 1 }} />
-                    ) : (
-                      <ExpandMoreIcon sx={{ ml: 1 }} />
-                    )}
-                  </Typography>
-                </Grid>
-                <Collapse in={milestone?.expanded} timeout="auto" unmountOnExit>
-                  <List>
-                    <ListItem>
-                      <ListItemText
-                        primary="Description"
-                        secondary={milestone.description}
-                        primaryTypographyProps={{
-                          variant: "caption",
-                          color: "#8C92A4",
-                        }}
-                        secondaryTypographyProps={{
-                          fontFamily: "ElMessiri-SemiBold",
-                          color: "rgba(0, 0, 0, 0.87)",
-                        }}
-                      />
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                      <ListItemText
-                        primary="Start Date"
-                        secondary={milestone.startdate?.toString()}
-                        primaryTypographyProps={{
-                          variant: "caption",
-                          color: "#8C92A4",
-                        }}
-                        secondaryTypographyProps={{
-                          fontFamily: "ElMessiri-SemiBold",
-                          color: "rgba(0, 0, 0, 0.87)",
-                        }}
-                      />
-                      <ListItemText
-                        style={{ textAlign: "end" }}
-                        primary="End Date"
-                        secondary={milestone.enddate?.toString()}
-                        primaryTypographyProps={{
-                          variant: "caption",
-                          color: "#8C92A4",
-                        }}
-                        secondaryTypographyProps={{
-                          fontFamily: "ElMessiri-SemiBold",
-                          color: "rgba(0, 0, 0, 0.87)",
-                        }}
-                      />
-                    </ListItem>
-                    {/*  <Divider />
+                    <List>
+                      <ListItem>
+                        <ListItemText
+                          primary="Description"
+                          secondary={milestone.description}
+                          primaryTypographyProps={{
+                            variant: "caption",
+                            color: "#8C92A4",
+                          }}
+                          secondaryTypographyProps={{
+                            fontFamily: "ElMessiri-SemiBold",
+                            color: "rgba(0, 0, 0, 0.87)",
+                          }}
+                        />
+                      </ListItem>
+                      <Divider />
+                      <ListItem>
+                        <ListItemText
+                          primary="Start Date"
+                          secondary={
+                            milestone.start_date
+                              ? moment(milestone.start_date).format(
+                                  "MMMM DD, YYYY"
+                                )
+                              : "-"
+                          }
+                          primaryTypographyProps={{
+                            variant: "caption",
+                            color: "#8C92A4",
+                          }}
+                          secondaryTypographyProps={{
+                            fontFamily: "ElMessiri-SemiBold",
+                            color: "rgba(0, 0, 0, 0.87)",
+                          }}
+                        />
+                        <ListItemText
+                          style={{ textAlign: "end" }}
+                          primary="End Date"
+                          secondary={
+                            milestone.end_date
+                              ? moment(milestone.end_date).format(
+                                  "MMMM DD, YYYY"
+                                )
+                              : "-"
+                          }
+                          primaryTypographyProps={{
+                            variant: "caption",
+                            color: "#8C92A4",
+                          }}
+                          secondaryTypographyProps={{
+                            fontFamily: "ElMessiri-SemiBold",
+                            color: "rgba(0, 0, 0, 0.87)",
+                          }}
+                        />
+                      </ListItem>
+                      {/*  <Divider />
                   <ListItem>
                     <ListItemText
                       primary="Amount"
@@ -556,11 +637,12 @@ export default function Milestone(props) {
                       }`}
                     />
                   </ListItem> */}
-                  </List>
-                </Collapse>
-              </Card>
-            ))}
-          </Grid>
+                    </List>
+                  </Collapse>
+                </Card>
+              ))}
+            </Grid>
+          )
         )}
         <Grid
           pt={2}
@@ -613,7 +695,11 @@ export default function Milestone(props) {
                 }
               }}
             >
-              Continue
+              {buttonLoader ? (
+                <CircularProgress size={26} style={{ color: "#fff" }} />
+              ) : (
+                "Continue"
+              )}
             </Button>
           </Grid>
         </Grid>

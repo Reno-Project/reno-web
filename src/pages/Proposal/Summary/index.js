@@ -11,7 +11,7 @@ import useStyles from "./styles";
 import Images from "../../../config/images";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import BlueAbout from "../../../components/BlueAbout";
-import theme from "../../../config/theme";
+import theme, { color } from "../../../config/theme";
 import Milestone from "../../Proposal/Milestone";
 import Budget from "../../Proposal/Budget";
 import CInput from "../../../components/CInput";
@@ -93,23 +93,32 @@ export default function Summary() {
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
       <Grid
-        item
         container
-        xs={12}
-        sm={11}
-        md={11}
-        lg={11}
-        flexDirection="row"
-        style={{ padding: "40px 0 40px" }}
+        columnGap={1}
+        rowGap={1}
+        flexDirection="row-reverse"
+        style={{ padding: md ? 20 : 40 }}
+        justifyContent={!md ? "space-between" : "center"}
+        boxSizing={"border-box"}
       >
         <Grid
           item
-          xs={12}
-          sm={9}
-          md={9}
-          lg={9}
+          container
+          xs={10}
+          md={4}
+          xl={3}
           className={classes.MainContainer}
-          padding={"30px"}
+        >
+          <ProposalCard />
+        </Grid>
+        <Grid
+          item
+          container
+          xs={10}
+          md={7.8}
+          xl={8.8}
+          className={classes.MainContainer}
+          padding={"20px"}
         >
           <Grid
             item
@@ -415,7 +424,6 @@ export default function Summary() {
             ) : null}
           </Grid>
         </Grid>
-        <ProposalCard />
       </Grid>
       <BlueAbout />
 

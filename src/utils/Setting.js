@@ -34,6 +34,7 @@ export const Setting = {
     logoutall: "api/user/logout-all",
     logindeviceslist: "api/user/login-devices-list",
     projectlist: "api/project/project-list",
+    milestoneProposalList: "api/project/milestone-project-list",
     singleDeviceLogout: "api/user/other-devices-logout/",
   },
 

@@ -11,7 +11,7 @@ import useStyles from "./styles";
 import Images from "../../config/images";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
-import theme from "../../config/theme";
+import theme, { color } from "../../config/theme";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -49,15 +49,7 @@ export default function ProposalCard() {
   ];
 
   return (
-    <Grid
-      item
-      xs={12}
-      sm={9}
-      md={9}
-      lg={3}
-      className={classes.MainContainer}
-      padding={"30px"}
-    >
+    <Grid item container xs={12}>
       <Grid
         item
         container
@@ -169,7 +161,7 @@ export default function ProposalCard() {
                     $300-$400
                   </Typography>
                 </Grid>
-                <Grid item lg={9} sm={9} md={9} xs={9}>
+                <Grid item lg={4} sm={4} md={4} xs={4}>
                   <Typography className={classes.acctext}>
                     Project Location:
                   </Typography>
@@ -177,10 +169,11 @@ export default function ProposalCard() {
                 <Grid
                   item
                   container
-                  lg={3}
-                  sm={3}
-                  md={3}
-                  xs={3}
+                  lg={8}
+                  sm={8}
+                  md={8}
+                  xs={8}
+                  textAlign={"end"}
                   justifyContent={"flex-end"}
                   wrap="nowrap"
                 >
@@ -198,7 +191,7 @@ export default function ProposalCard() {
               </Grid>
             </AccordionDetails>
           </Accordion>
-          <Accordion style={{ marginTop: 10 }}>
+          <Accordion style={{ marginTop: 10, width: "100%" }}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
@@ -231,9 +224,12 @@ export default function ProposalCard() {
             </AccordionDetails>
           </Accordion>
         </>
-      ) : (
-        <></>
-      )}
+      ) : null}
+      {tabValueforcard === 1 ? (
+        <>
+          <Grid item xs={12}></Grid>
+        </>
+      ) : null}
     </Grid>
   );
 }
