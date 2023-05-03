@@ -1,5 +1,11 @@
 import styled from "@emotion/styled";
-import { Grid, Switch, Typography, CircularProgress } from "@mui/material";
+import {
+  Grid,
+  Switch,
+  Typography,
+  CircularProgress,
+  Divider,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { getApiData } from "../../utils/APIHelper";
@@ -230,6 +236,11 @@ export default function NotificationSettings() {
     >
       <Grid item xs={12}>
         <Typography variant="h5">Notifications Settings</Typography>
+        <Typography>
+          Customize Your Notifications: Manage Your Alerts and Stay in Control
+        </Typography>
+        <Divider light style={{ width: "100%", margin: "15px 0 30px" }} />
+
         {loader ? (
           <div
             style={{
@@ -253,7 +264,6 @@ export default function NotificationSettings() {
             gap={3}
             wrap={isMobile ? "wrap" : "nowrap"}
             style={{
-              marginTop: 20,
               justifyContent: "space-between",
             }}
           >

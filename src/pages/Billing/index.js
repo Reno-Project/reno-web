@@ -1,10 +1,9 @@
 import { Button, CircularProgress, Grid, Typography } from "@mui/material";
 import { isEmpty } from "lodash";
 import React, { useEffect, useState } from "react";
-import { isMobile, isTablet } from "react-device-detect";
+import { isMobile } from "react-device-detect";
 import IBAN from "iban";
 import CInput from "../../components/CInput";
-import Cselect from "../../components/CSelect";
 import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import { toast } from "react-toastify";

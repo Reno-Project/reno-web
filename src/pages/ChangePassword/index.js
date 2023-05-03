@@ -2,6 +2,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
   CircularProgress,
+  Divider,
   Grid,
   IconButton,
   InputAdornment,
@@ -9,11 +10,9 @@ import {
 } from "@mui/material";
 import { isEmpty } from "lodash";
 import React, { useState } from "react";
-import { isMobile } from "react-device-detect";
 import CInput from "../../components/CInput";
-import { getAPIProgressData, getApiData } from "../../utils/APIHelper";
+import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 const errorObj = {
@@ -34,7 +33,6 @@ export default function ChangePassword() {
   const [password, setPassword] = useState("");
   const [errObj, setErrObj] = useState(errorObj);
   const [buttonLoader, setButtonLoader] = useState(false);
-  const { token } = useSelector((state) => state.auth);
 
   function validatePassword() {
     const error = { ...errObj };
@@ -126,134 +124,118 @@ export default function ChangePassword() {
   }
 
   return (
-    <Grid
-      container
-      padding={"20px 0"}
-      wrap={"wrap"}
-      gap={2}
-      justifyContent={"center"}
-    >
+    <Grid container padding={"20px 0"} wrap={"wrap"} gap={2}>
       <Grid item xs={12}>
         <Typography variant="h5">Change Password</Typography>
+        <Typography>
+          Secure Your Account: How to Change Your Password and Keep Your Data
+          Safe
+        </Typography>
       </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={11}
-        md={9}
-        padding={isMobile ? "10px 0" : "10px 20px"}
-      >
-        <Grid
-          item
-          container
-          style={{
-            border: "1px solid #F2F4F7",
-            padding: isMobile ? 10 : 20,
-          }}
-        >
-          <Grid item xs={12}>
-            <CInput
-              label="Old password"
-              placeholder="Enter Old password"
-              required
-              type={showOldPassword ? "text" : "password"}
-              value={oldPassword}
-              onChange={(e) => {
-                setOldPassword(e.target.value);
-                setErrObj({
-                  ...errObj,
-                  oldPasswordErr: false,
-                  oldPasswordMsg: "",
-                });
-              }}
-              white={false}
-              error={errObj.oldPasswordErr}
-              helpertext={errObj.oldPasswordMsg}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowOldPassword(!showOldPassword)}
-                  >
-                    {!showOldPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </Grid>
+      <Divider light style={{ width: "100%", marginBottom: "15px" }} />
+      <Grid item xs={12} sm={10} md={8} lg={7}>
+        <Grid item xs={12}>
+          <CInput
+            label="Old password"
+            placeholder="Enter Old password"
+            required
+            type={showOldPassword ? "text" : "password"}
+            value={oldPassword}
+            onChange={(e) => {
+              setOldPassword(e.target.value);
+              setErrObj({
+                ...errObj,
+                oldPasswordErr: false,
+                oldPasswordMsg: "",
+              });
+            }}
+            white={false}
+            error={errObj.oldPasswordErr}
+            helpertext={errObj.oldPasswordMsg}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowOldPassword(!showOldPassword)}
+                >
+                  {!showOldPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </Grid>
 
-          <Grid item xs={12}>
-            <CInput
-              label="New password"
-              placeholder="Enter new password"
-              required
-              value={newPassword}
-              passValue={newPassword}
-              passwordValidation
-              type={showNewPassword ? "text" : "password"}
-              onChange={(e) => {
-                setNewPassword(e.target.value);
-                setErrObj({
-                  ...errObj,
-                  newPasswordErr: false,
-                  newPasswordMsg: "",
-                });
-              }}
-              inputProps={{ maxLength: 15 }}
-              white={false}
-              error={errObj.newPasswordErr}
-              helpertext={errObj.newPasswordMsg}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                  >
-                    {!showNewPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <CInput
-              label="Confirm password"
-              placeholder="Enter confirm password"
-              required
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setErrObj({
-                  ...errObj,
-                  passwordErr: false,
-                  passwordMsg: "",
-                });
-              }}
-              white={false}
-              error={errObj.passwordErr}
-              helpertext={errObj.passwordMsg}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {!showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button fullWidth variant="contained" onClick={validatePassword}>
-              {buttonLoader ? (
-                <CircularProgress size={26} style={{ color: "#fff" }} />
-              ) : (
-                "Update Password"
-              )}
-            </Button>
-          </Grid>
+        <Grid item xs={12}>
+          <CInput
+            label="New password"
+            placeholder="Enter new password"
+            required
+            value={newPassword}
+            passValue={newPassword}
+            passwordValidation
+            type={showNewPassword ? "text" : "password"}
+            onChange={(e) => {
+              setNewPassword(e.target.value);
+              setErrObj({
+                ...errObj,
+                newPasswordErr: false,
+                newPasswordMsg: "",
+              });
+            }}
+            inputProps={{ maxLength: 15 }}
+            white={false}
+            error={errObj.newPasswordErr}
+            helpertext={errObj.newPasswordMsg}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                >
+                  {!showNewPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <CInput
+            label="Confirm password"
+            placeholder="Enter confirm password"
+            required
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setErrObj({
+                ...errObj,
+                passwordErr: false,
+                passwordMsg: "",
+              });
+            }}
+            white={false}
+            error={errObj.passwordErr}
+            helpertext={errObj.passwordMsg}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {!showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Button fullWidth variant="contained" onClick={validatePassword}>
+            {buttonLoader ? (
+              <CircularProgress size={26} style={{ color: "#fff" }} />
+            ) : (
+              "Update Password"
+            )}
+          </Button>
         </Grid>
       </Grid>
     </Grid>
