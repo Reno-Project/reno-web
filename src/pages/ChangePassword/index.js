@@ -129,7 +129,7 @@ export default function ChangePassword() {
         <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
           Change Password
         </Typography>
-        <Typography>
+        <Typography style={{ fontFamily: "Roobert-Regular" }}>
           Secure Your Account: How to Change Your Password and Keep Your Data
           Safe
         </Typography>

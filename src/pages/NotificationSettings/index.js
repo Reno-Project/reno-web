@@ -238,7 +238,7 @@ export default function NotificationSettings() {
         <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
           Notifications Settings
         </Typography>
-        <Typography>
+        <Typography style={{ fontFamily: "Roobert-Regular" }}>
           Customize Your Notifications: Manage Your Alerts and Stay in Control
         </Typography>
         <Divider light style={{ width: "100%", margin: "15px 0 30px" }} />

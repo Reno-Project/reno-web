@@ -130,6 +130,9 @@ theme = createTheme(theme, {
           fontWeight: "700",
           letterSpacing: "0.075em",
         },
+        h5: {
+          fontFamily: "Roobert-Regular",
+        },
       },
     },
     MuiSelect: {

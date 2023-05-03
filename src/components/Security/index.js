@@ -200,8 +200,12 @@ export default function Security() {
         justifyContent={"center"}
       >
         <Grid item xs={12}>
-          <Typography variant="h5" fontFamily={"'Roobert-Regular'"}>
+          <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
             Logging in Settings
+          </Typography>
+          <Typography style={{ fontFamily: "Roobert-Regular" }}>
+            Login settings allow you to customize your login experience and
+            enhance the security of your account.
           </Typography>
           <Grid
             item

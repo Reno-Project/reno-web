@@ -272,7 +272,7 @@ export default function Billing() {
               <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
                 Billing Information
               </Typography>
-              <Typography>
+              <Typography style={{ fontFamily: "Roobert-Regular" }}>
                 Manage Your Payments: View, Edit and Update Your Billing
                 Information
               </Typography>
