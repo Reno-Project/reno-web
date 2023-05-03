@@ -50,6 +50,7 @@ export default function RequestedProposal() {
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
       <Grid
+        item
         container
         xs={12}
         sm={9}
@@ -86,7 +87,7 @@ export default function RequestedProposal() {
                 <div className={classes.activeStatus}></div>
               </div>
             </Grid>
-            <Grid container>
+            <Grid item container>
               <Grid item lg={9} md={9} sm={9} xs={9}>
                 <Typography className={classes.titleText}>
                   Albert Flores
@@ -97,7 +98,7 @@ export default function RequestedProposal() {
                   Request Date
                 </Typography>
               </Grid>
-              <Grid lg={9} md={9} sm={6} xs={6}>
+              <Grid item lg={9} md={9} sm={6} xs={6}>
                 <Button
                   variant="contained"
                   style={{
@@ -120,12 +121,13 @@ export default function RequestedProposal() {
             </Grid>
           </Grid>
           <Grid item container className={classes.contentContainer}>
-            <Grid lg={12} sm={12} md={12} xs={12}>
+            <Grid item lg={12} sm={12} md={12} xs={12}>
               <Typography className={classes.MainTitle}>
                 Project Informations
               </Typography>
             </Grid>
             <Grid
+              item
               container
               alignItems="center"
               justifyContent={"flex-end"}
@@ -142,7 +144,12 @@ export default function RequestedProposal() {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid container alignItems="center" justifyContent={"flex-end"}>
+            <Grid
+              item
+              container
+              alignItems="center"
+              justifyContent={"flex-end"}
+            >
               <Grid item lg={12} sm={12} md={12} xs={12}>
                 <Typography className={classes.titleStyle}>
                   Project Descriptions:
@@ -171,6 +178,7 @@ export default function RequestedProposal() {
               </Grid>
             </Grid>
             <Grid
+              item
               container
               alignItems="center"
               justifyContent={"flex-end"}
@@ -253,11 +261,12 @@ export default function RequestedProposal() {
                 />
               </Grid>
             </Grid>
-            <Grid container alignContent={"center"}>
+            <Grid item container alignContent={"center"}>
               <Grid item lg={12}>
                 {imageArray.map((item, index) => {
                   return (
                     <img
+                      key={index}
                       alt="logo"
                       src={item.image}
                       style={{

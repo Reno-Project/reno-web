@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
 import ConfirmModel from "../../../components/ConfirmModel";
 import ProfileSuccessModal from "../../../components/ProfileSuccessModal";
+import ProposalCard from "../../../components/ProposalCard";
 
 const errorObj = {
   scpErr: false,
@@ -95,19 +96,17 @@ export default function Summary() {
         item
         container
         xs={12}
-        sm={9}
-        md={9}
-        lg={9}
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
+        sm={11}
+        md={11}
+        lg={11}
+        flexDirection="row"
         style={{ padding: "40px 0 40px" }}
       >
         <Grid
           item
           xs={12}
-          sm={12}
-          md={12}
+          sm={9}
+          md={9}
           lg={9}
           className={classes.MainContainer}
           padding={"30px"}
@@ -337,7 +336,7 @@ export default function Summary() {
                     />
                   </Grid>
                 </Grid>
-                <Grid container alignContent={"center"}>
+                <Grid item container alignContent={"center"}>
                   <Grid item lg={12}>
                     {imageArray.map((item, index) => {
                       return (
@@ -416,6 +415,7 @@ export default function Summary() {
             ) : null}
           </Grid>
         </Grid>
+        <ProposalCard />
       </Grid>
       <BlueAbout />
 
