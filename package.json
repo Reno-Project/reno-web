@@ -21,6 +21,7 @@
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-apple-signin-auth": "^1.0.9",
+    "react-awesome-lightbox": "^1.8.1",
     "react-detect-offline": "^2.4.5",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",

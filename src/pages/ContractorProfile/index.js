@@ -17,7 +17,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
-import { clone, cloneDeep, isArray, isEmpty } from "lodash";
+import { clone, cloneDeep, filter, isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -25,6 +25,9 @@ import authActions from "../../redux/reducers/auth/actions";
 import { Setting } from "../../utils/Setting";
 import CInput from "../../components/CInput";
 import GoogleLoginButton from "../../components/SocialLogin/GoogleLoginButton";
+import Lightbox from "react-awesome-lightbox";
+// You need to import the CSS only once
+import "react-awesome-lightbox/build/style.css";
 import Images from "../../config/images";
 import { getApiData } from "../../utils/APIHelper";
 import useStyles from "./styles";
@@ -138,6 +141,7 @@ const ContractorProfile = (props) => {
   const portfolioList =
     cloneDeep(profileData?.contractor_data?.portfolio) || [];
   const displayedImages = showAll ? portfolioList : portfolioList.slice(0, 5);
+  const [displaySliderImage, setDisplaySliderImage] = useState([]);
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyName, setReplyName] = useState("");
   const [activeInd, setActiveInd] = useState(null);
@@ -145,19 +149,46 @@ const ContractorProfile = (props) => {
   const [showMoreR, setShowMoreR] = useState(false);
   const reviewList = showMoreR ? RList : RList.slice(0, 2);
 
+  const [isOpenGalleryView, setIsOpenGalleryView] = useState(false);
+
   useEffect(() => {
     getUserDetailsByIdApiCall();
   }, []);
 
+  useEffect(() => {
+    if (isArray(displayedImages) && displayedImages.length > 0) {
+      const imageUrls = displayedImages.map(obj => obj.image);
+      console.log("imageUrls ====>>>", imageUrls);
+      setDisplaySliderImage(imageUrls);
+    }
+  }, [displayedImages]);
+
+  // It is for handling gallery view mode to be open or not
+  const handleImageClick = () => {
+    setIsOpenGalleryView(!isOpenGalleryView);
+  };
+
+  const images = [
+    {
+      original: "https://picsum.photos/id/1018/1000/600/",
+      thumbnail: "https://picsum.photos/id/1018/250/150/",
+    },
+    {
+      original: "https://picsum.photos/id/1015/1000/600/",
+      thumbnail: "https://picsum.photos/id/1015/250/150/",
+    },
+    {
+      original: "https://picsum.photos/id/1019/1000/600/",
+      thumbnail: "https://picsum.photos/id/1019/250/150/",
+    },
+  ];
+
   async function getUserDetailsByIdApiCall() {
     setPageLoad(true);
     try {
-      const response = await getApiData(
-        `${Setting.endpoints.contarctorById}/${userData?.id}`,
-        "GET",
-        {}
-      );
+      const response = await getApiData(`${Setting.endpoints.me}`, "GET", {});
       if (response.success) {
+        console.log("response ==Meeee===>>> ", response);
         dispatch(setUserData(response?.data));
         setProfileData(response?.data);
       } else {
@@ -462,8 +493,12 @@ const ContractorProfile = (props) => {
                           <img
                             src={e?.image}
                             alt={`img_${i}`}
+                            onClick={handleImageClick}
                             className={classes.portfolioImg}
                           />
+                          {isOpenGalleryView && (
+                            <ImageGallery items={displayedImages} />
+                          )}
                         </Grid>
                       </Fade>
                     )
@@ -812,6 +847,13 @@ const ContractorProfile = (props) => {
         )}
       </Grid>
       <BlueAbout />
+
+      {isOpenGalleryView ? (
+        <Grid item>
+          {/* <Lightbox images={displayedImages} /> */}
+          <Lightbox images={displaySliderImage} />
+        </Grid>
+      ) : null}
     </div>
   );
 };
