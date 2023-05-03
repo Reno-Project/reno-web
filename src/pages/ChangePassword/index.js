@@ -124,9 +124,11 @@ export default function ChangePassword() {
   }
 
   return (
-    <Grid container padding={"20px 0"} wrap={"wrap"} gap={2}>
+    <Grid container padding={"20px"} wrap={"wrap"} gap={2}>
       <Grid item xs={12}>
-        <Typography variant="h5">Change Password</Typography>
+        <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+          Change Password
+        </Typography>
         <Typography>
           Secure Your Account: How to Change Your Password and Keep Your Data
           Safe

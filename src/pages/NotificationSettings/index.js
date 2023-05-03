@@ -229,13 +229,15 @@ export default function NotificationSettings() {
   return (
     <Grid
       container
-      padding={"20px 0"}
+      padding={"20px"}
       wrap={"nowrap"}
       gap={2}
       justifyContent={"center"}
     >
       <Grid item xs={12}>
-        <Typography variant="h5">Notifications Settings</Typography>
+        <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+          Notifications Settings
+        </Typography>
         <Typography>
           Customize Your Notifications: Manage Your Alerts and Stay in Control
         </Typography>

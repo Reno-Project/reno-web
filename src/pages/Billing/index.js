@@ -269,7 +269,13 @@ export default function Billing() {
         <>
           <Grid item container xs={12}>
             <Grid item padding={isMobile ? "10px 0" : "0px 20px"}>
-              <Typography variant="h5">Billing Information</Typography>
+              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+                Billing Information
+              </Typography>
+              <Typography>
+                Manage Your Payments: View, Edit and Update Your Billing
+                Information
+              </Typography>
               <Grid
                 item
                 container

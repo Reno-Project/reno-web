@@ -454,7 +454,7 @@ export default function EditProfile() {
     if (!isEmpty(state?.social) && !facebookRegex.test(state?.social)) {
       valid = false;
       error.socialErr = true;
-      error.socialMsg = "Please Enter Valid Social URL";
+      error.socialMsg = "Please Enter Valid Facebook URL";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#social");
@@ -1306,7 +1306,7 @@ export default function EditProfile() {
 
                 <Grid item xs={12} id="social">
                   <InputLabel shrink htmlFor="bootstrap-input">
-                    Social Media
+                    Facebook
                   </InputLabel>
                   <TextField
                     fullWidth
