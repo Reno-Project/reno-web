@@ -1,35 +1,39 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
+  Button,
   Card,
   Collapse,
   Divider,
   FormControl,
-  FormHelperText,
   Grid,
   IconButton,
   InputLabel,
   List,
   ListItem,
   ListItemText,
+  Menu,
+  MenuItem,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
 import { color } from "../../../config/theme";
 import CInput from "../../../components/CInput";
 import { useTheme } from "@emotion/react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import moment from "moment";
-import { isArray, isEmpty, isNull } from "lodash";
+import _, { isArray, isEmpty, isNull } from "lodash";
+import ConfirmModel from "../../../components/ConfirmModel";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import authActions from "../../../redux/reducers/auth/actions";
+
 const errorObj = {
   nameErr: false,
   nameMsg: "",
@@ -42,10 +46,14 @@ const errorObj = {
   amountErr: false,
   amountMsg: "",
 };
-export default function Milestone() {
+export default function Milestone(props) {
+  console.log("milestone Rendering");
+  const { handleClick = () => null, from } = props;
   const classes = useStyles();
-  const [start, setStart] = useState(null);
-  const [end, setEnd] = useState(null);
+  const dispatch = useDispatch();
+  const { proposalDetails } = useSelector((state) => state.auth);
+  const { setProposalDetails } = authActions;
+
   const [state, setState] = useState({
     name: "",
     description: "",
@@ -58,6 +66,50 @@ export default function Milestone() {
 
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedBudget, setSelectedBudget] = useState({});
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setState(
+      proposalDetails?.milestone_details?.formvalues || {
+        name: "",
+        description: "",
+        startdate: null,
+        enddate: null,
+        amount: "",
+      }
+    );
+    setMilestones(proposalDetails?.milestone_details?.milestones || []);
+  }, []);
+
+  const handleRowClick = (event, budget, index) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedBudget({
+      data: budget,
+      index: index,
+    });
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    // setSelectedBudget(null);
+  };
+
+  const handleEdit = (data, index) => {
+    setState(selectedBudget.data);
+    handleClose();
+  };
+
+  const handleDelete = () => {
+    const newItems = [...milestones]; // Create a copy of the array
+    newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
+    setMilestones(newItems);
+    setVisible(false);
+    setSelectedBudget(null);
+    handleClose();
+  };
 
   const validate = () => {
     const error = { ...errObj };
@@ -75,35 +127,51 @@ export default function Milestone() {
       error.descriptionMsg = "Please enter description";
     }
 
-    if (isNull(start)) {
+    if (isNull(state?.startdate)) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please select the start date";
-    } else if (!isNull(start) && start?.toString() === "Invalid Date") {
+    } else if (
+      !isNull(state?.startdate) &&
+      state?.startdate?.toString() == "Invalid date"
+    ) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
     }
 
-    if (isNull(end)) {
+    if (isNull(state.enddate)) {
       valid = false;
       error.endErr = true;
       error.endMsg = "Please select the end date";
-    } else if (!isNull(end) && end?.toString() === "Invalid Date") {
+    } else if (
+      !isNull(state.enddate) &&
+      state.enddate?.toString() == "Invalid date"
+    ) {
       valid = false;
       error.endErr = true;
       error.endMsg = "Please enter valid date";
     }
 
-    if (isEmpty(state.amount.toString())) {
-      valid = false;
-      error.amountErr = true;
-      error.amountMsg = "Please enter ammount";
-    }
+    // if (isEmpty(state.amount.toString())) {
+    //   valid = false;
+    //   error.amountErr = true;
+    //   error.amountMsg = "Please enter ammount";
+    // }
 
     setErrObj(error);
     if (valid) {
-      setMilestones((arr) => [...arr, state]);
+      if (
+        _.isObject(selectedBudget?.data) &&
+        !_.isEmpty(selectedBudget?.data)
+      ) {
+        const newArray = [...milestones]; // create a copy of the array
+        newArray[selectedBudget?.index] = state; // modify the copy
+        setMilestones(newArray);
+        setSelectedBudget({});
+      } else {
+        setMilestones((arr) => [...arr, state]);
+      }
       clearData();
     }
   };
@@ -121,15 +189,14 @@ export default function Milestone() {
       enddate: null,
       amount: "",
     });
-    setStart(null);
-    setEnd(null);
     setErrObj(errorObj);
   }
   return (
     <>
       <Grid container>
-        <Grid item xs={12} py={2}>
+        <Grid item xs={12} pb={2} pt={"25px"}>
           <Typography
+            variant="h5"
             style={{
               fontFamily: "ElMessiri-SemiBold",
             }}
@@ -137,7 +204,7 @@ export default function Milestone() {
             Total Milestones Amount
           </Typography>
           <Typography
-            variant="h6"
+            variant="h5"
             style={{
               fontFamily: "ElMessiri-SemiBold",
             }}
@@ -202,15 +269,14 @@ export default function Milestone() {
               <InputLabel shrink htmlFor="start-date">
                 Start Date:
               </InputLabel>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
-                  value={start}
+                  value={state.startdate ? new Date(state?.startdate) : null}
                   onChange={(e, v) => {
-                    setEnd(null);
-                    setStart(e);
                     setState({
                       ...state,
-                      startdate: moment(e).format("MMMM DD,YYYY"),
+                      startdate: moment(e).format("MMMM DD, yyyy"),
+                      enddate: null,
                     });
                     setErrObj({
                       ...errObj,
@@ -222,7 +288,7 @@ export default function Milestone() {
                     width: "100%",
                     marginTop: "24px",
                   }}
-                  format="MMMM DD, YYYY"
+                  format="MMMM dd, yyyy"
                   slotProps={{
                     textField: {
                       helperText: errObj.startMsg,
@@ -244,15 +310,14 @@ export default function Milestone() {
               <InputLabel shrink htmlFor="end-date">
                 End Date:
               </InputLabel>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
-                  minDate={start}
-                  value={end}
+                  minDate={new Date(state?.startdate)}
+                  value={state?.enddate ? new Date(state?.enddate) : null}
                   onChange={(e) => {
-                    setEnd(e);
                     setState({
                       ...state,
-                      enddate: moment(e).format("MMMM DD,YYYY"),
+                      enddate: moment(e).format("MMMM DD, yyyy"),
                     });
                     setErrObj({
                       ...errObj,
@@ -271,13 +336,13 @@ export default function Milestone() {
                       id: "end-date",
                     },
                   }}
-                  format="MMMM DD, YYYY"
+                  format="MMMM dd, yyyy"
                 />
               </LocalizationProvider>
             </FormControl>
           </Grid>
         </Grid>
-        <Grid item xs={12} id="amount">
+        {/* <Grid item xs={12} id="amount">
           <CInput
             type={"number"}
             label="Milestone Amount:"
@@ -297,7 +362,7 @@ export default function Milestone() {
             error={errObj.amountErr}
             helpertext={errObj.amountMsg}
           />
-        </Grid>
+        </Grid> */}
         <Grid item container alignItems={"center"}>
           <IconButton
             id="add-icon"
@@ -337,10 +402,63 @@ export default function Milestone() {
                 }}
               >
                 <Grid item container justifyContent={"space-between"}>
-                  <Typography variant="h6">{milestone.name}</Typography>
-                  <IconButton>
+                  <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
+                    {milestone.name}
+                  </Typography>
+                  <IconButton
+                    onClick={(e) => handleRowClick(e, milestone, index)}
+                  >
                     <MoreVertIcon />
                   </IconButton>
+                  <Menu
+                    id={`budget-menu`}
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                    PaperProps={{
+                      elevation: 0,
+                      sx: {
+                        overflow: "visible",
+                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                        mt: 1.5,
+                        "& .MuiAvatar-root": {
+                          width: 32,
+                          height: 32,
+                          ml: -0.5,
+                          mr: 1,
+                        },
+                        "&:before": {
+                          content: '""',
+                          display: "block",
+                          position: "absolute",
+                          top: 0,
+                          right: 14,
+                          width: 10,
+                          height: 10,
+                          bgcolor: "background.paper",
+                          transform: "translateY(-50%) rotate(45deg)",
+                          zIndex: 0,
+                        },
+                      },
+                    }}
+                    transformOrigin={{
+                      horizontal: "right",
+                      vertical: "top",
+                    }}
+                    anchorOrigin={{
+                      horizontal: "right",
+                      vertical: "bottom",
+                    }}
+                  >
+                    <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        setVisible(true);
+                      }}
+                    >
+                      Delete
+                    </MenuItem>
+                  </Menu>
                 </Grid>
                 <Grid item container justifyContent={"space-between"} py={2}>
                   <Grid item xl={6}>
@@ -356,7 +474,7 @@ export default function Milestone() {
                       Amount
                     </Typography>
                     <Typography fontFamily={"ElMessiri-SemiBold"}>
-                      {milestone.amount && `$ ${milestone.amount}`}
+                      {milestone.amount ? `$ ${milestone.amount}` : `$ 0`}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -444,7 +562,70 @@ export default function Milestone() {
             ))}
           </Grid>
         )}
+        <Grid
+          pt={2}
+          item
+          container
+          columnGap={1}
+          rowGap={1}
+          justifyContent={"space-between"}
+        >
+          <Grid item sm={5.9} xs={12}>
+            <Button
+              variant="outlined"
+              fullWidth
+              sx={{ boxShadow: "none" }}
+              onClick={() => {
+                const milestone_details = {
+                  formvalues: state,
+                  milestones: milestones,
+                };
+                dispatch(
+                  setProposalDetails({ ...proposalDetails, milestone_details })
+                );
+
+                handleClick("back");
+              }}
+            >
+              Previous Step
+            </Button>
+          </Grid>
+          <Grid item sm={5.9} xs={12}>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => {
+                if (isArray(milestones) && !isEmpty(milestones)) {
+                  handleClick("next");
+                  const milestone_details = {
+                    formvalues: state,
+                    milestones: milestones,
+                  };
+                  dispatch(
+                    setProposalDetails({
+                      ...proposalDetails,
+                      milestone_details,
+                    })
+                  );
+                } else {
+                  validate();
+                  // toast.warning("Please add atleast one milestone");
+                }
+              }}
+            >
+              Continue
+            </Button>
+          </Grid>
+        </Grid>
       </Grid>
+      <ConfirmModel
+        visible={visible}
+        handleClose={() => setVisible(false)}
+        confirmation={() => {
+          handleDelete();
+        }}
+        message={`Are you sure you want to delete ${selectedBudget?.data?.name} milestone?`}
+      />
     </>
   );
 }

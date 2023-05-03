@@ -69,7 +69,7 @@ export default function BlueAbout() {
           </Grid>
           {quickLinks.map((item, index) => {
             return (
-              <div>
+              <div key={`quickLinks_${index}`}>
                 <ListItemText className={classes.text}>{item}</ListItemText>
               </div>
             );
@@ -97,7 +97,7 @@ export default function BlueAbout() {
           </Grid>
           {contactus.map((item, index) => {
             return (
-              <div>
+              <div key={`contactus_${index}`}>
                 <ListItemText className={classes.text}>{item}</ListItemText>
               </div>
             );
@@ -123,7 +123,7 @@ export default function BlueAbout() {
               Follow Us
             </Typography>
           </Grid>
-          <Grid item xs={12} wrap="nowrap" rowGap={2}>
+          <Grid item xs={12} rowGap={2}>
             <IconButton sx={{ py: 1, pr: 1, pl: 0 }}>
               <img src={Images.fb_white} alt="fb_logo" />
             </IconButton>

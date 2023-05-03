@@ -15,6 +15,7 @@ export default function ConfirmModel(props) {
     handleClose = () => null,
     confirmation = () => null,
     loader = false,
+    title = "",
   } = props;
 
   return (
@@ -68,8 +69,10 @@ export default function ConfirmModel(props) {
             <Button fullWidth variant="contained" onClick={confirmation}>
               {loader ? (
                 <CircularProgress style={{ color: "#fff" }} size={26} />
+              ) : title ? (
+                title
               ) : (
-                "Sign out"
+                "Confirm"
               )}
             </Button>
           </Grid>

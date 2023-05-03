@@ -4,6 +4,7 @@ const initialState = {
   userData: {},
   token: "",
   accountTab: 0,
+  proposalDetails: {},
 };
 
 export default function reducer(state = initialState, action) {
@@ -13,6 +14,12 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         userData: action.userdata,
+      };
+
+    case types.PROPOSAL_DETAILS:
+      return {
+        ...state,
+        proposalDetails: action.proposalDetails,
       };
 
     case types.SET_TOKEN:

@@ -244,14 +244,13 @@ const Dashboard = (props) => {
       maxWidth={"unset"}
       mb={"70px"}
     >
-      <Grid item>
-        <Typography className={classes.loginHeaderText}>
-          Welcome to Reno Dashboard
-        </Typography>
-      </Grid>
       <Grid container>
         <Grid item container>
-          <Typography variant="h5" className={classes.titleStyle} mb={2}>
+          <Typography
+            variant={sm ? "h6" : "h5"}
+            className={classes.titleStyle}
+            mb={2}
+          >
             Overview
           </Typography>
         </Grid>
@@ -383,7 +382,7 @@ const Dashboard = (props) => {
         borderRadius={2}
       >
         <Grid item container mb={2} alignItems={"center"}>
-          <Typography variant="h5" className={classes.titleStyle}>
+          <Typography variant={sm ? "h6" : "h5"} className={classes.titleStyle}>
             Ongoing projects
           </Typography>
           <div
@@ -414,7 +413,11 @@ const Dashboard = (props) => {
           {isArray(villaDetails) &&
             !isEmpty(villaDetails) &&
             villaDetails.map((villa, index) => {
-              return <ProjectCard villa={villa} />;
+              return (
+                <div key={`Ongoing_projects_${index}`}>
+                  <ProjectCard villa={villa} />
+                </div>
+              );
             })}
         </div>
         {/* </div> */}
@@ -427,7 +430,7 @@ const Dashboard = (props) => {
         borderRadius={2}
       >
         <Grid item container mb={2} alignItems={"center"}>
-          <Typography variant="h5" className={classes.titleStyle}>
+          <Typography variant={sm ? "h6" : "h5"} className={classes.titleStyle}>
             Requested proposals
           </Typography>
           <div
@@ -459,13 +462,15 @@ const Dashboard = (props) => {
             !isEmpty(villaDetails1) &&
             villaDetails1.map((villa, index) => {
               return (
-                <ProjectCard
-                  villa={villa}
-                  requested
-                  onClick={() => {
-                    navigate("/request-proposal", { state: villa });
-                  }}
-                />
+                <div key={`Requested_Proposal_${index}`}>
+                  <ProjectCard
+                    villa={villa}
+                    requested
+                    onClick={() => {
+                      navigate("/request-proposal", { state: villa });
+                    }}
+                  />
+                </div>
               );
             })}
         </div>
@@ -480,7 +485,7 @@ const Dashboard = (props) => {
         borderRadius={2}
       >
         <Grid item container mb={2} alignItems={"center"}>
-          <Typography variant="h5" className={classes.titleStyle}>
+          <Typography variant={sm ? "h6" : "h5"} className={classes.titleStyle}>
             Submitted proposals
           </Typography>
           <div
@@ -511,7 +516,11 @@ const Dashboard = (props) => {
           {isArray(villaDetails) &&
             !isEmpty(villaDetails) &&
             villaDetails.map((villa, index) => {
-              return <ProjectCard villa={villa} />;
+              return (
+                <div key={`Submitted_Proposal_${index}`}>
+                  <ProjectCard villa={villa} />
+                </div>
+              );
             })}
         </div>
         {/* </div> */}

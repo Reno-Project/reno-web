@@ -8,38 +8,36 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 8,
     boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.04)",
     border: "1px solid #F2F4F7",
-    padding: "20px 20px 20px 20px"
+    padding: "20px 20px 20px 20px",
   },
-  imageStyle:
-  {
-    height: '80px',
-    width: '80px',
+  imageStyle: {
+    height: "80px",
+    width: "80px",
     borderRadius: "50%",
     objectFit: "cover",
     "@media (max-width:1832px)": {
-      height: '70px',
-      width: '70px',
+      height: "70px",
+      width: "70px",
     },
     "@media (max-width:1832px)": {
-      height: '65px',
-      width: '65px',
+      height: "65px",
+      width: "65px",
     },
     "@media (max-width:1538px)": {
-      height: '60px',
-      width: '60px',
+      height: "60px",
+      width: "60px",
     },
     "@media (max-width:1384px)": {
-      height: '55px',
-      width: '55px',
+      height: "55px",
+      width: "55px",
     },
     "@media (max-width:1194px)": {
-      height: '80px',
-      width: '80px',
+      height: "80px",
+      width: "80px",
     },
   },
-  activeContainer:
-  {
-    position: 'relative',
+  activeContainer: {
+    position: "relative",
     top: -30,
     left: 65,
     "@media (max-width:1832px)": {
@@ -48,11 +46,11 @@ const useStyles = makeStyles((theme) => ({
     },
     "@media (max-width:1538px)": {
       left: 50,
-      top: -25
+      top: -25,
     },
     "@media (max-width:1440px)": {
       left: 50,
-      top: -22
+      top: -22,
     },
     "@media (max-width:1384px)": {
       left: 44,
@@ -64,93 +62,95 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   activeStatus: {
-    width: 16, height: 16, borderRadius: 16, backgroundColor: '#32D583', border: '1.5px solid #FFFFF',
+    width: 16,
+    height: 16,
+    borderRadius: 16,
+    backgroundColor: "#32D583",
+    border: "1.5px solid #FFFFF",
     "@media (max-width:1832px)": {
-      width: 14, height: 14, borderRadius: 14
+      width: 14,
+      height: 14,
+      borderRadius: 14,
     },
     "@media (max-width:1538px)": {
-      width: 12, height: 12, borderRadius: 12
+      width: 12,
+      height: 12,
+      borderRadius: 12,
     },
     "@media (max-width:1440px)": {
-      width: 10, height: 10, borderRadius: 10
+      width: 10,
+      height: 10,
+      borderRadius: 10,
     },
     "@media (max-width:1194px)": {
-      width: 16, height: 16, borderRadius: 16,
+      width: 16,
+      height: 16,
+      borderRadius: 16,
     },
   },
-  titleText:
-  {
+  titleText: {
     fontSize: "16px !important",
     lineHeight: "25px !important",
     fontFamily: "Roobert-Regular !important",
     fontWeight: "500 !important",
   },
-  requestDate:
-  {
+  requestDate: {
     fontSize: "14px !important",
     lineHeight: "20px !important",
     fontFamily: "Roobert-Regular !important",
     fontWeight: "500 !important",
-    color: '#646F86',
+    color: "#646F86",
   },
-  dateStyle:
-  {
+  dateStyle: {
     fontSize: "14px !important",
     lineHeight: "24px !important",
     fontFamily: "Roobert-Regular !important",
-    color: '#202939',
-    textAlign: 'end',
-    fontWeight: 'bold'
+    color: "#202939",
+    textAlign: "end",
+    fontWeight: "bold",
   },
-  acctext:
-  {
+  acctext: {
     fontFamily: "Roobert-Regular !important",
-    fontSize: '14px !important',
-    lineHeight: '20px !important',
+    fontSize: "14px !important",
+    lineHeight: "20px !important",
     fontWeight: "400 !important",
   },
-  accRightText:
-  {
+  accRightText: {
     fontFamily: "Roobert !important",
-    fontSize: '14px !important',
-    lineHeight: '24px !important',
+    fontSize: "14px !important",
+    lineHeight: "24px !important",
     fontWeight: "500 !important",
   },
-  linkText:
-  {
+  linkText: {
     fontFamily: "Roobert !important",
-    fontSize: '14px !important',
-    lineHeight: '24px !important',
+    fontSize: "14px !important",
+    lineHeight: "24px !important",
     fontWeight: "500 !important",
   },
-  titleStyle:
-  {
+  titleStyle: {
     fontFamily: "Roobert-Regular !important",
-    fontSize: '16px !important',
-    lineHeight: '20px !important',
+    fontSize: "16px !important",
+    lineHeight: "20px !important",
     fontWeight: "400 !important",
   },
-  titleStyleRight:
-  {
-    fontFamily: "Roobert !important",
-    fontSize: '16px !important',
-    lineHeight: '24px !important',
+  titleStyleRight: {
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "16px !important",
+    lineHeight: "24px !important",
     fontWeight: "500 !important",
-
   },
-  MainTitle:
-  {
-    fontFamily: "Roobert !important",
-    fontSize: '22px !important',
-    lineHeight: '32px !important',
+  MainTitle: {
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "22px !important",
+    lineHeight: "32px !important",
     fontWeight: "500 !important",
   },
   paraStyle: {
     fontFamily: "Roobert-Regular !important",
-    fontSize: '14px !important',
-    lineHeight: '20px !important',
+    fontSize: "14px !important",
+    lineHeight: "20px !important",
     fontWeight: "400 !important",
-    letterSpacing: '0.25px !important'
+    letterSpacing: "0.25px !important",
   },
 }));
 

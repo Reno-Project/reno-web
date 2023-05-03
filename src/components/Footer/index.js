@@ -47,7 +47,7 @@ function Footer(props) {
               alignItems="center"
               justifyContent={"flex-end"}
             >
-              <Grid xs={4} sm={1} md={1} lg={1}>
+              <Grid item xs={4} sm={1} md={1} lg={1}>
                 <img
                   src={Images.globe}
                   alt="globe"
@@ -58,7 +58,7 @@ function Footer(props) {
               <Grid item xs={6} sm={5} md={4} lg={3}>
                 <Typography className={classes.language}>ENG</Typography>
               </Grid>
-              <Grid xs={4} sm={1} md={1} lg={1}>
+              <Grid item xs={4} sm={1} md={1} lg={1}>
                 <img
                   src={Images.doller}
                   alt="doller"

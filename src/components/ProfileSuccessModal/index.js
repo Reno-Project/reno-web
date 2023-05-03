@@ -13,6 +13,7 @@ function ProfileSuccessModal(props) {
     visible = false,
     title = "Thank you!",
     msg = "We will review your profile and let you know once your profile is approved",
+    btnTitle = "Start Exploring",
   } = props;
   const { userData } = useSelector((state) => state.auth);
   const classes = useStyles();
@@ -71,7 +72,7 @@ function ProfileSuccessModal(props) {
                   setIsOpen(!isOpen);
                 }}
               >
-                Start Exploring
+                {btnTitle}
               </Button>
             </div>
           </Box>

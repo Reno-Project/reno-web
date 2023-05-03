@@ -13,7 +13,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "dayjs": "^1.11.7",
+    "date-fns": "^2.29.1",
     "firebase": "^9.18.0",
     "google-libphonenumber": "^3.2.32",
     "iban": "^0.0.14",

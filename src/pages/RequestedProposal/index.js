@@ -6,22 +6,29 @@ import {
   Button,
   useMediaQuery,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
 import Images from "../../config/images";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import BlueAbout from "../../components/BlueAbout";
 import theme from "../../config/theme";
-import Milestone from "../Proposal/Milestone";
+import { useDispatch, useSelector } from "react-redux";
+import authActions from "../../redux/reducers/auth/actions";
 
 export default function RequestedProposal() {
   const classes = useStyles();
+  const { proposalDetails } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+  const { setProposalDetails } = authActions;
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  const Location = useLocation();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
-  const md = useMediaQuery(theme.breakpoints.down("md"));
-  const lg = useMediaQuery(theme.breakpoints.down("lg"));
-  const [tabValue, setTabValue] = useState(0);
-  const [showModal, setShowModal] = useState(false);
-  const [show2FModal, setShow2FModal] = useState(false);
   const imageArray = [
     {
       id: 1,
@@ -62,8 +69,14 @@ export default function RequestedProposal() {
           className={classes.MainContainer}
           padding={"30px"}
         >
-          <Grid container alignItems="center" justifyContent={"flex-end"}>
-            <Grid item lg={1} md={12} sm={12} xs={12}>
+          <Grid
+            item
+            container
+            wrap={sm ? "wrap" : "nowrap"}
+            alignItems={"center"}
+            columnGap={2}
+          >
+            <Grid item>
               <img
                 src="https://www.wonderplugin.com/wp-content/uploads/2016/06/blue-grape-hyacinths.jpg"
                 alt="chat"
@@ -73,7 +86,7 @@ export default function RequestedProposal() {
                 <div className={classes.activeStatus}></div>
               </div>
             </Grid>
-            <Grid container lg={11} md={12} sm={12} xs={12}>
+            <Grid container>
               <Grid item lg={9} md={9} sm={9} xs={9}>
                 <Typography className={classes.titleText}>
                   Albert Flores
@@ -84,7 +97,7 @@ export default function RequestedProposal() {
                   Request Date
                 </Typography>
               </Grid>
-              <Grid lg={9} md={9} sm={9} xs={9}>
+              <Grid lg={9} md={9} sm={6} xs={6}>
                 <Button
                   variant="contained"
                   style={{
@@ -99,234 +112,195 @@ export default function RequestedProposal() {
                   REQUEST
                 </Button>
               </Grid>
-              <Grid item lg={3} md={3} sm={3} xs={3}>
+              <Grid item lg={3} md={3} sm={6} xs={6}>
                 <Typography className={classes.dateStyle}>
                   March 01, 2023
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item container className={classes.contentContainer}>
-              <Grid item xs={12} style={{ borderBottom: "1px solid #F2F3F4" }}>
-                <Tabs
-                  value={tabValue}
-                  onChange={(v, b) => {
-                    setTabValue(b);
-                  }}
-                  variant="scrollable"
-                >
-                  <Tab label="Summary" />
-                  <Tab label="Milestone" />
-                </Tabs>
+          </Grid>
+          <Grid item container className={classes.contentContainer}>
+            <Grid lg={12} sm={12} md={12} xs={12}>
+              <Typography className={classes.MainTitle}>
+                Project Informations
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              alignItems="center"
+              justifyContent={"flex-end"}
+              style={{ paddingTop: 25, paddingBottom: 25 }}
+            >
+              <Grid item lg={9} sm={9} md={9} xs={12} textAlign={"start"}>
+                <Typography className={classes.titleStyle}>
+                  Project Name:
+                </Typography>
               </Grid>
-              {tabValue === 0 ? (
-                <>
-                  <Grid lg={12} sm={12} md={12} xs={12}>
-                    <Typography
-                      className={classes.MainTitle}
-                      style={{ paddingTop: 25 }}
-                    >
-                      Project Informations
-                    </Typography>
-                  </Grid>
-                  <Grid
-                    container
-                    alignItems="center"
-                    justifyContent={"flex-end"}
-                    style={{ paddingTop: 25, paddingBottom: 25 }}
-                  >
-                    <Grid item lg={9} sm={9} md={9} xs={12} textAlign={"start"}>
-                      <Typography className={classes.titleStyle}>
-                        Project Name:
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3} sm={3} md={3} xs={12} textAlign={"end"}>
-                      <Typography className={classes.titleStyleRight}>
-                        Villa MM-Renovation
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid
-                    container
-                    alignItems="center"
-                    justifyContent={"flex-end"}
-                  >
-                    <Grid item lg={12} sm={12} md={12} xs={12}>
-                      <Typography className={classes.titleStyle}>
-                        Project Descriptions:
-                      </Typography>
-                    </Grid>
-                    <Grid
-                      item
-                      lg={12}
-                      sm={12}
-                      md={12}
-                      xs={12}
+              <Grid item lg={3} sm={3} md={3} xs={12} textAlign={"end"}>
+                <Typography className={classes.titleStyleRight}>
+                  Villa MM-Renovation
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container alignItems="center" justifyContent={"flex-end"}>
+              <Grid item lg={12} sm={12} md={12} xs={12}>
+                <Typography className={classes.titleStyle}>
+                  Project Descriptions:
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                lg={12}
+                sm={12}
+                md={12}
+                xs={12}
+                style={{
+                  backgroundColor: "#F5F6F8",
+                  padding: "11px 15px",
+                  gap: "10px",
+                  margin: "10px 0px",
+                }}
+              >
+                <Typography className={classes.paraStyle}>
+                  Lorem Ipsum has been the industry's standard dummy text ever
+                  since. When an unknown printer took a galley of type and
+                  scrambled it to make a type specimen book. It has survived not
+                  only five centuries, but also the leap into electronic
+                  typesetting, remaining essentially.
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              alignItems="center"
+              justifyContent={"flex-end"}
+              rowSpacing={2}
+            >
+              <Grid item lg={3} sm={3} md={3} xs={3}>
+                <Typography className={classes.acctext}>
+                  Property Type:
+                </Typography>
+              </Grid>
+              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+                <Typography className={classes.accRightText}>
+                  Duplex Building
+                </Typography>
+              </Grid>
+              <Grid item lg={3} sm={3} md={3} xs={3}>
+                <Typography className={classes.acctext}>Bathroom:</Typography>
+              </Grid>
+              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+                <Typography className={classes.accRightText}>04</Typography>
+              </Grid>
+              <Grid item lg={3} sm={3} md={3} xs={3}>
+                <Typography className={classes.acctext}>Bedroom:</Typography>
+              </Grid>
+              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+                <Typography className={classes.accRightText}>03</Typography>
+              </Grid>
+              <Grid item lg={3} sm={3} md={3} xs={3}>
+                <Typography className={classes.acctext}>
+                  Indoor Space:
+                </Typography>
+              </Grid>
+              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+                <Typography className={classes.accRightText}>
+                  1600 Sqm
+                </Typography>
+              </Grid>
+              <Grid item lg={3} sm={3} md={3} xs={3}>
+                <Typography className={classes.acctext}>
+                  Outdoor Space:
+                </Typography>
+              </Grid>
+              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+                <Typography className={classes.accRightText}>
+                  450 Sqm
+                </Typography>
+              </Grid>
+              <Grid item lg={3} sm={3} md={3} xs={3}>
+                <Typography className={classes.acctext}>
+                  Project Budget:
+                </Typography>
+              </Grid>
+              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+                <Typography className={classes.accRightText}>
+                  $3000-$4000
+                </Typography>
+              </Grid>
+              <Grid item lg={9} sm={9} md={9} xs={9}>
+                <Typography className={classes.acctext}>
+                  Project Location:
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                container
+                lg={3}
+                sm={3}
+                md={3}
+                xs={3}
+                justifyContent={"flex-end"}
+                wrap="nowrap"
+              >
+                <NavLink>
+                  <Typography className={classes.linkText}>View Map</Typography>
+                </NavLink>
+                <img
+                  alt="logo"
+                  src={Images.Location}
+                  // style={{ width: '12%' }}
+                />
+              </Grid>
+            </Grid>
+            <Grid container alignContent={"center"}>
+              <Grid item lg={12}>
+                {imageArray.map((item, index) => {
+                  return (
+                    <img
+                      alt="logo"
+                      src={item.image}
                       style={{
-                        backgroundColor: "#F5F6F8",
-                        padding: "11px 15px",
-                        gap: "10px",
-                        margin: "10px 0px",
+                        width: "190px",
+                        height: "129px",
+                        borderRadius: "7px",
+                        margin: "15px 5px",
                       }}
-                    >
-                      <Typography className={classes.paraStyle}>
-                        Lorem Ipsum has been the industry's standard dummy text
-                        ever since. When an unknown printer took a galley of
-                        type and scrambled it to make a type specimen book. It
-                        has survived not only five centuries, but also the leap
-                        into electronic typesetting, remaining essentially.
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid
-                    container
-                    alignItems="center"
-                    justifyContent={"flex-end"}
-                    rowSpacing={2}
-                  >
-                    <Grid item lg={3} sm={3} md={3} xs={3}>
-                      <Typography className={classes.acctext}>
-                        Property Type:
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                      <Typography className={classes.accRightText}>
-                        Duplex Building
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3} sm={3} md={3} xs={3}>
-                      <Typography className={classes.acctext}>
-                        Bathroom:
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                      <Typography className={classes.accRightText}>
-                        04
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3} sm={3} md={3} xs={3}>
-                      <Typography className={classes.acctext}>
-                        Bedroom:
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                      <Typography className={classes.accRightText}>
-                        03
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3} sm={3} md={3} xs={3}>
-                      <Typography className={classes.acctext}>
-                        Indoor Space:
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                      <Typography className={classes.accRightText}>
-                        1600 Sqm
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3} sm={3} md={3} xs={3}>
-                      <Typography className={classes.acctext}>
-                        Outdoor Space:
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                      <Typography className={classes.accRightText}>
-                        450 Sqm
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3} sm={3} md={3} xs={3}>
-                      <Typography className={classes.acctext}>
-                        Project Budget:
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                      <Typography className={classes.accRightText}>
-                        $3000-$4000
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={9} sm={9} md={9} xs={9}>
-                      <Typography className={classes.acctext}>
-                        Project Location:
-                      </Typography>
-                    </Grid>
-                    <Grid
-                      item
-                      container
-                      lg={3}
-                      sm={3}
-                      md={3}
-                      xs={3}
-                      justifyContent={"flex-end"}
-                      wrap="nowrap"
-                    >
-                      <NavLink>
-                        <Typography className={classes.linkText}>
-                          View Map
-                        </Typography>
-                      </NavLink>
-                      <img
-                        alt="logo"
-                        src={Images.Location}
-                        // style={{ width: '12%' }}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container alignContent={"center"}>
-                    <Grid item lg={12}>
-                      {imageArray.map((item, index) => {
-                        return (
-                          <img
-                            alt="logo"
-                            src={item.image}
-                            style={{
-                              width: "190px",
-                              height: "129px",
-                              borderRadius: "7px",
-                              margin: "15px 5px",
-                            }}
-                          />
-                        );
-                      })}
-                    </Grid>
-                  </Grid>
-                  {/* <Grid
-                        xs={12}
-                        item
-                        container
-                        gap={0}
-                        style={{
-                            marginTop: 20,
-                            justifyContent: "center",
-                            marginBottom: 20
-                        }}
-                    >
-                        <Grid item xs={12} sm={12} md={12} lg={5}>
-                            <Typography
-                                style={{
-                                    width: "100%",
-                                    cursor: "pointer",
-                                    marginTop: 5,
-                                    textAlign: 'center'
-                                }}
-                            >
-                                Request clarifications
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={7}>
-                            <Button
-                                style={{ width: "100%" }}
-                                variant="contained"
-                            >
-                                Submit proposal
-                            </Button>
-                        </Grid>
-                    </Grid> */}
-                </>
-              ) : null}
-              {tabValue === 1 ? (
-                <>
-                  <Milestone />
-                </>
-              ) : null}
+                    />
+                  );
+                })}
+              </Grid>
+            </Grid>
+
+            <Grid
+              item
+              container
+              columnGap={1}
+              rowGap={1}
+              justifyContent={"space-between"}
+            >
+              <Grid item sm={5.9} xs={12}>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  sx={{ boxShadow: "none" }}
+                  disabled={true}
+                >
+                  Request clarifications
+                </Button>
+              </Grid>
+              <Grid item sm={5.9} xs={12}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    navigate("/create-proposal");
+                  }}
+                >
+                  Submit proposal
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

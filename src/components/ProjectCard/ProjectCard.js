@@ -21,7 +21,7 @@ const ProjectCard = (props) => {
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
-    <Card key={villa?.name} className={classes.card} onClick={onClick}>
+    <Card key={villa?.id} className={classes.card} onClick={onClick}>
       <CardMedia
         component="img"
         height="140"
@@ -115,7 +115,11 @@ const ProjectCard = (props) => {
               </Typography>
             </div>
             <Typography className={classes.rowJustified}>
-              <Typography variant="subtitle2" fontFamily={"Roobert-Regular"}>
+              <Typography
+                component={"span"}
+                variant="subtitle2"
+                fontFamily={"Roobert-Regular"}
+              >
                 Your move-in date:
               </Typography>
               {!md && <EastOutlined />}

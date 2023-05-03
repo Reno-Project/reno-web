@@ -54,7 +54,6 @@ function CInput(props) {
 
       <BootstrapInput
         {...props}
-        maxCount={5}
         multiline={multiline}
         placeholder={placeholder}
         id="bootstrap-input"
