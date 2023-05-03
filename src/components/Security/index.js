@@ -14,6 +14,7 @@ import { styled } from "@mui/material/styles";
 import { toast } from "react-toastify";
 import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
+import Cselect from "../CSelect";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
 import { isMobile } from "react-device-detect";
@@ -80,6 +81,7 @@ export default function Security() {
   const [loginDeviceList, setLoginDeviceList] = useState([]);
   const [loaderIndex, setLoaderIndex] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [attempts, setAttempts] = useState("Unset");
 
   useEffect(() => {
     getUserDetailsByIdApiCall();
@@ -99,6 +101,9 @@ export default function Security() {
       if (response.success) {
         dispatch(setUserData(response?.data));
         setStatus2FA(response?.data?.is_two_factor_verified);
+        setAttempts(
+          response?.data?.user_settings?.allow_login_attempts || "Unset"
+        );
       } else {
         setStatus2FA(userData?.is_two_factor_verified);
       }
@@ -191,6 +196,26 @@ export default function Security() {
     }
   }
 
+  // this function for handle login attempts
+  async function updateAttempts(val) {
+    try {
+      const response = await getApiData(
+        Setting.endpoints.updateUserSetting,
+        "post",
+        {
+          security_type: "allow_login_attempts",
+          action: val === "Unset" ? 0 : Number(val),
+        }
+      );
+
+      if (!response?.success) {
+        toast.error(response?.message || "");
+      }
+    } catch (error) {
+      toast.error(error.toString() || "Something went wrong try again later");
+    }
+  }
+
   return (
     <>
       <Grid
@@ -230,15 +255,14 @@ export default function Security() {
             </Grid>
 
             <Grid item xs={12} sm={4} md={3} lg={3}>
-              <CInput
-                outline
-                placeholder="Enter allow ..."
-                white={false}
-                type="number"
-                controls={false}
-                inputProps={{
-                  className: classes.myOtpInput,
+              <Cselect
+                placeholder="Select attempt"
+                value={attempts}
+                handleSelect={(e) => {
+                  setAttempts(e);
+                  updateAttempts(e);
                 }}
+                renderTags={["Unset", "1", "2", "3", "4", "5"]}
               />
             </Grid>
             <Divider width={"100%"} />
