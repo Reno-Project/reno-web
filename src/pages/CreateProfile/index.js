@@ -526,8 +526,7 @@ const CreateProfile = (props) => {
     } else if (!accNumberRegex.test(acc)) {
       valid = false;
       error.accErr = true;
-      error.accMsg =
-        "Please enter valid bank account number";
+      error.accMsg = "Please enter valid bank account number";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#baccount");
@@ -1032,10 +1031,15 @@ const CreateProfile = (props) => {
                       label="Number of Contracts Annually"
                       required
                       placeholder="Enter No. of Contracts"
-                      type="number"
                       value={state.annualContract}
                       onChange={(e) => {
-                        setState({ ...state, annualContract: e.target.value });
+                        const bool = /^[0-9]+$/.test(Number(e.target.value));
+                        if (bool) {
+                          setState({
+                            ...state,
+                            annualContract: e.target.value,
+                          });
+                        }
                         setErrObj({
                           ...errObj,
                           contractErr: false,

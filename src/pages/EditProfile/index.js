@@ -791,13 +791,15 @@ export default function EditProfile() {
                     label="Number of Contracts Annually"
                     placeholder="Enter No. of Contracts"
                     required
-                    type="number"
                     value={state.annualContract}
                     onChange={(e) => {
-                      setState({
-                        ...state,
-                        annualContract: e.target.value,
-                      });
+                      const bool = /^[0-9]+$/.test(Number(e.target.value));
+                      if (bool) {
+                        setState({
+                          ...state,
+                          annualContract: e.target.value,
+                        });
+                      }
                       setErrObj({
                         ...errObj,
                         contractErr: false,
