@@ -11,8 +11,9 @@ const useStyles = makeStyles((theme) => ({
   },
   text: {
     color: "#475569",
-    paddingTop: isMobile ? 0 : "10px",
+    paddingTop: isMobile ? 0 : "12px",
     cursor: "pointer",
+    fontFamily: "Roobert-Regular !important",
   },
 }));
 export default useStyles;

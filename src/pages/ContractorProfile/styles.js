@@ -182,6 +182,12 @@ const useStyles = makeStyles((theme) => ({
       padding: "4px 8px",
     },
   },
+  overallRateText: {
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "20px !important",
+    fontWeight: "500 !important",
+    marginBottom: "10px !important",
+  },
 }));
 
 export default useStyles;

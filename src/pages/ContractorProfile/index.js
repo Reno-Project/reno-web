@@ -3,43 +3,31 @@ import {
   Avatar,
   Button,
   CircularProgress,
-  Divider,
   Fade,
   Grid,
-  Grow,
-  IconButton,
-  InputAdornment,
   MenuItem,
   Rating,
   Select,
-  TextField,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { NavLink, useNavigate } from "react-router-dom";
-import { clone, cloneDeep, filter, isArray, isEmpty } from "lodash";
+import { useNavigate } from "react-router-dom";
+import { cloneDeep, isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import authActions from "../../redux/reducers/auth/actions";
 import { Setting } from "../../utils/Setting";
 import CInput from "../../components/CInput";
-import GoogleLoginButton from "../../components/SocialLogin/GoogleLoginButton";
 import Lightbox from "react-awesome-lightbox";
 // You need to import the CSS only once
 import "react-awesome-lightbox/build/style.css";
 import Images from "../../config/images";
 import { getApiData } from "../../utils/APIHelper";
 import useStyles from "./styles";
-import {
-  Favorite,
-  FavoriteBorder,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
+import { FavoriteBorder } from "@mui/icons-material";
+import StarIcon from "@mui/icons-material/Star";
 import { useTheme } from "@mui/material/styles";
 import { color } from "../../config/theme";
-import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import BlueAbout from "../../components/BlueAbout";
 const reviews = [
   {
@@ -388,6 +376,7 @@ const ContractorProfile = (props) => {
                   defaultValue={4}
                   precision={0.5}
                   readOnly
+                  emptyIcon={<StarIcon style={{ color: "#E8E8E8" }} />}
                 />
                 <Typography className={classes.review}>
                   {`(${totalReview} Reviews)`}
@@ -403,7 +392,9 @@ const ContractorProfile = (props) => {
               marginTop={sm ? "20px" : 0}
             >
               <Grid item xs={12}>
-                <Typography>Overall rating</Typography>
+                <Typography className={classes.overallRateText}>
+                  Overall rating
+                </Typography>
               </Grid>
               <Grid
                 item
@@ -412,7 +403,13 @@ const ContractorProfile = (props) => {
                 className={classes.row}
               >
                 <span>Service quality</span>
-                <Rating name="half-rating" value={1} max={5} readOnly />
+                <Rating
+                  name="half-rating"
+                  value={1}
+                  max={5}
+                  readOnly
+                  emptyIcon={<StarIcon style={{ color: "#E8E8E8" }} />}
+                />
               </Grid>
               <Grid
                 item
@@ -421,7 +418,13 @@ const ContractorProfile = (props) => {
                 justifyContent="space-between"
               >
                 <span>Timing</span>
-                <Rating name="half-rating" value={1} max={5} readOnly />
+                <Rating
+                  name="half-rating"
+                  value={1}
+                  max={5}
+                  readOnly
+                  emptyIcon={<StarIcon style={{ color: "#E8E8E8" }} />}
+                />
               </Grid>
               <Grid
                 item
@@ -430,7 +433,13 @@ const ContractorProfile = (props) => {
                 justifyContent="space-between"
               >
                 <span>communication</span>
-                <Rating name="half-rating" value={1} max={5} readOnly />
+                <Rating
+                  name="half-rating"
+                  value={1}
+                  max={5}
+                  readOnly
+                  emptyIcon={<StarIcon style={{ color: "#E8E8E8" }} />}
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -558,6 +567,7 @@ const ContractorProfile = (props) => {
                           readOnly
                           max={5}
                           sx={{ py: 1 }}
+                          emptyIcon={<StarIcon style={{ color: "#E8E8E8" }} />}
                         />
                         <Typography
                           sx={{ mt: 1 }}
