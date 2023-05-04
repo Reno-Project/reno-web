@@ -523,10 +523,11 @@ const CreateProfile = (props) => {
         scroll = true;
         section = document.querySelector("#baccount");
       }
-    } else if (!accNumberRegex.test(acc)) {
+    } else if (acc.length > 30 || acc.length < 8) {
       valid = false;
       error.accErr = true;
-      error.accMsg = "Please enter valid bank account number";
+      error.accMsg =
+        "Bank account number should not be greater than 30 and less than 8 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#baccount");
@@ -1715,7 +1716,6 @@ const CreateProfile = (props) => {
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="baccount">
                     <CInput
                       label="Bank Account"
-                      type="number"
                       inputProps={{ maxLength: 30 }}
                       placeholder="Enter Bank Account Number"
                       required

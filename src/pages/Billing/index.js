@@ -158,10 +158,11 @@ export default function Billing() {
         scroll = true;
         section = document.querySelector("#baccount");
       }
-    } else if (!accNumberRegex.test(state?.acc)) {
+    } else if (state?.acc?.length > 30 || state?.acc?.length < 8) {
       valid = false;
       error.accErr = true;
-      error.accMsg = "Please enter valid bank account number";
+      error.accMsg =
+        "Bank account number should not be greater than 30 and less than 8 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#baccount");
@@ -344,7 +345,6 @@ export default function Billing() {
 
                 <Grid item xs={12} id="baccount">
                   <CInput
-                    type="number"
                     required
                     label="Bank Account"
                     placeholder="Enter Bank Account Number"
