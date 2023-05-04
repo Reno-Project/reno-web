@@ -10,6 +10,7 @@ import PhoneVerificationModal from "../../components/PhoneVerificationModal";
 import TwoFectorModal from "../../components/TwoFectorModal";
 import NotificationSettings from "../NotificationSettings";
 import Security from "../../components/Security";
+import { isMobile } from "react-device-detect";
 
 export default function AccountSettings() {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ export default function AccountSettings() {
             style={{
               lineHeight: 3,
               fontFamily: "ElMessiri-SemiBold",
+              paddingLeft: isMobile ? "25px" : 0,
             }}
           >
             Account Settings

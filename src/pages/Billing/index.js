@@ -250,9 +250,8 @@ export default function Billing() {
   return (
     <Grid
       container
-      padding={"20px 0"}
+      padding={isMobile ? "10px" : "20px 0"}
       wrap={"nowrap"}
-      gap={2}
       justifyContent={"center"}
     >
       {pageLoad ? (

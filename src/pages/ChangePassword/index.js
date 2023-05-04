@@ -14,6 +14,7 @@ import CInput from "../../components/CInput";
 import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import { toast } from "react-toastify";
+import { isMobile } from "react-device-detect";
 
 const errorObj = {
   oldPasswordErr: false,
@@ -124,7 +125,7 @@ export default function ChangePassword() {
   }
 
   return (
-    <Grid container padding={"20px"} wrap={"wrap"} gap={2}>
+    <Grid container padding={isMobile ? "10px" : "20px"} wrap={"wrap"} gap={2}>
       <Grid item xs={12}>
         <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
           Change Password

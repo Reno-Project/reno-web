@@ -229,7 +229,7 @@ export default function NotificationSettings() {
   return (
     <Grid
       container
-      padding={"20px"}
+      padding={isMobile ? "10px" : "20px"}
       wrap={"nowrap"}
       gap={2}
       justifyContent={"center"}

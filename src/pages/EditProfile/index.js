@@ -616,7 +616,12 @@ export default function EditProfile() {
               lg={8}
               padding={isMobile ? "10px 0" : "0px 20px"}
             >
-              <Typography variant="h5">Information</Typography>
+              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+                Information
+              </Typography>
+              <Typography style={{ fontFamily: "Roobert-Regular" }}>
+                Business Profile & Organization Details
+              </Typography>
               <Grid
                 item
                 container
@@ -812,7 +817,12 @@ export default function EditProfile() {
                 </Grid>
               </Grid>
               <Grid item lg={12} paddingTop="20px">
-                <Typography variant="h5">Expertise Area *</Typography>
+                <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+                  Expertise Area *
+                </Typography>
+                <Typography style={{ fontFamily: "Roobert-Regular" }}>
+                  Core Competencies and Specialization of Company
+                </Typography>
                 <Grid
                   item
                   container
@@ -883,9 +893,14 @@ export default function EditProfile() {
               sm={8}
               md={8}
               lg={8}
-              padding={isMobile ? "10px 0" : "10px 20px"}
+              padding={isMobile ? "10px 0" : "0px 20px"}
             >
-              <Typography variant="h5">Documents</Typography>
+              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+                Documents
+              </Typography>
+              <Typography style={{ fontFamily: "Roobert-Regular" }}>
+                Attach Relevant Documents
+              </Typography>
               <Grid
                 item
                 container
@@ -1135,9 +1150,14 @@ export default function EditProfile() {
               sm={8}
               md={8}
               lg={8}
-              padding={isMobile ? "10px 0" : "10px 20px"}
+              padding={isMobile ? "10px 0" : "0px 20px"}
             >
-              <Typography variant="h5">Profile Image</Typography>
+              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+                Profile Image
+              </Typography>
+              <Typography style={{ fontFamily: "Roobert-Regular" }}>
+                Attach Your Profile Thumbnail
+              </Typography>
               <Grid
                 item
                 container
@@ -1262,9 +1282,14 @@ export default function EditProfile() {
               sm={8}
               md={8}
               lg={8}
-              padding={isMobile ? "10px 0" : "10px 20px"}
+              padding={isMobile ? "10px 0" : "0px 20px"}
             >
-              <Typography variant="h5">Social Link</Typography>
+              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+                Social Link
+              </Typography>
+              <Typography style={{ fontFamily: "Roobert-Regular" }}>
+                Share Your Social Links Here
+              </Typography>
               <Grid
                 item
                 container
@@ -1409,9 +1434,14 @@ export default function EditProfile() {
               sm={8}
               md={8}
               lg={8}
-              padding={isMobile ? "10px 0" : "10px 20px"}
+              padding={isMobile ? "10px 0" : "0px 20px"}
             >
-              <Typography variant="h5">Portfolio</Typography>
+              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+                Portfolio
+              </Typography>
+              <Typography style={{ fontFamily: "Roobert-Regular" }}>
+                Upload Your Project Samples
+              </Typography>
               <Grid
                 item
                 container
