@@ -36,6 +36,7 @@ export const Setting = {
     projectlist: "api/project/project-list",
     milestoneProposalList: "api/project/milestone-project-list",
     singleDeviceLogout: "api/user/other-devices-logout/",
+    createproposal: "api/contractor/create-proposal",
   },
 
   JS_Regex: {

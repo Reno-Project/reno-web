@@ -21,6 +21,9 @@ import authActions from "../../../redux/reducers/auth/actions";
 import ConfirmModel from "../../../components/ConfirmModel";
 import ProfileSuccessModal from "../../../components/ProfileSuccessModal";
 import ProposalCard from "../../../components/ProposalCard";
+import { getApiData } from "../../../utils/APIHelper";
+import { Setting } from "../../../utils/Setting";
+import { toast } from "react-toastify";
 
 const errorObj = {
   scpErr: false,
@@ -30,7 +33,7 @@ const errorObj = {
 export default function Summary() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { proposalDetails } = useSelector((state) => state.auth);
+  const { proposalDetails, userData } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const { setProposalDetails } = authActions;
@@ -86,7 +89,32 @@ export default function Summary() {
       const scope_of_work = scope;
       dispatch(setProposalDetails({ ...proposalDetails, scope_of_work }));
       setDisableMilestone(false);
-      setTabValue(1);
+      createproposalApicall();
+    }
+  }
+
+  async function createproposalApicall() {
+    const data = {
+      project_id: 2,
+      user_id: userData?.id,
+      status: "pending",
+      scope_of_work: scope,
+    };
+    try {
+      const response = await getApiData(
+        Setting.endpoints.createproposal,
+        "POST",
+        data
+      );
+      if (response?.success) {
+        toast.success(response?.message);
+        setTabValue(1);
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error.toString() || "Something went wrong try again later");
     }
   }
 
