@@ -24,6 +24,32 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <script type="text/javascript">
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("firebase-messaging-sw.js").then(
+            function (registration) {
+              console.log(
+                "firebase messaging service working success",
+                registration
+              );
+            },
+            function (error) {
+              console.log(error);
+            }
+          );
+
+          navigator.serviceWorker.register("service-worker.js").then(
+            function (registration) {
+              console.log("service worker registration success", registration);
+            },
+            function (error) {
+              console.log(error);
+            }
+          );
+        });
+      }
+    </script>
     <title>Reno-Home</title>
   </head>
   <body>
