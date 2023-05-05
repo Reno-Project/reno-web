@@ -32,10 +32,12 @@ const errorObj = {
   emailErr: false,
   phoneErr: false,
   passwordErr: false,
+  confirmPasswordErr: false,
   unameMsg: "",
   emailMsg: "",
   phoneMsg: "",
   passwordMsg: "",
+  confirmPasswordMsg: "",
 };
 
 const Signup = (props) => {
@@ -57,8 +59,10 @@ const Signup = (props) => {
     countryCode: "AE",
     phone: "",
     password: "",
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showCPassword, setShowCPassword] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
   const [phonePlaceholder, setPhonePlaceholder] = useState("");
@@ -100,7 +104,8 @@ const Signup = (props) => {
 
   // this function checks validation of login field
   function validation() {
-    const { uname, email, phone, password, countryCode } = state;
+    const { uname, email, phone, password, countryCode, confirmPassword } =
+      state;
     const error = { ...errObj };
     let valid = true;
 
@@ -146,6 +151,26 @@ const Signup = (props) => {
         error.passwordErr = true;
         error.passwordMsg =
           "Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol";
+      }
+
+      // validate confirm password
+      if (isEmpty(confirmPassword)) {
+        valid = false;
+        error.confirmPasswordErr = true;
+        error.confirmPasswordMsg = "Please enter confirm password";
+      } else if (!passwordRegex.test(confirmPassword)) {
+        valid = false;
+        error.confirmPasswordErr = true;
+        error.confirmPasswordMsg =
+          "Confirm Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol";
+      } else if (confirmPassword.length < 8) {
+        valid = false;
+        error.confirmPasswordErr = true;
+        error.confirmPasswordMsg = "Confirm password length must be of 8-15";
+      } else if (confirmPassword !== password) {
+        valid = false;
+        error.confirmPasswordErr = true;
+        error.confirmPasswordMsg = "Password and confirm password must be same";
       }
     }
 
@@ -332,45 +357,78 @@ const Signup = (props) => {
             {locationState?.type === "google" ||
             locationState?.type === "fb" ||
             locationState?.type === "apple" ? null : (
-              <Grid item xs={12}>
-                <CInput
-                  outline
-                  label="Password"
-                  placeholder="Enter password"
-                  type={showPassword ? "text" : "password"}
-                  value={state.password}
-                  passValue={state?.password}
-                  passwordValidation
-                  inputProps={{ maxLength: 15 }}
-                  onChange={(e) => {
-                    setState({ ...state, password: e.target.value });
-                    setErrObj({
-                      ...errObj,
-                      passwordErr: false,
-                      passwordMsg: "",
-                    });
-                  }}
-                  onKeyPress={(ev) => {
-                    if (ev.key === "Enter") {
-                      ev.preventDefault();
-                      validation();
+              <>
+                <Grid item xs={12}>
+                  <CInput
+                    outline
+                    label="Password"
+                    placeholder="Enter password"
+                    type={showPassword ? "text" : "password"}
+                    value={state.password}
+                    passValue={state?.password}
+                    passwordValidation
+                    inputProps={{ maxLength: 15 }}
+                    onChange={(e) => {
+                      setState({ ...state, password: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        passwordErr: false,
+                        passwordMsg: "",
+                      });
+                    }}
+                    onKeyPress={(ev) => {
+                      if (ev.key === "Enter") {
+                        ev.preventDefault();
+                        validation();
+                      }
+                    }}
+                    white={false}
+                    error={errObj.passwordErr}
+                    helpertext={errObj.passwordMsg}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {!showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
                     }
-                  }}
-                  white={false}
-                  error={errObj.passwordErr}
-                  helpertext={errObj.passwordMsg}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {!showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </Grid>
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <CInput
+                    outline
+                    label="Confirm password"
+                    placeholder="Enter confirm password"
+                    required
+                    type={showCPassword ? "text" : "password"}
+                    value={state.confirmPassword}
+                    onChange={(e) => {
+                      setState({ ...state, confirmPassword: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        confirmPasswordErr: false,
+                        confirmPasswordMsg: "",
+                      });
+                    }}
+                    white={false}
+                    error={errObj.confirmPasswordErr}
+                    helpertext={errObj.confirmPasswordMsg}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => setShowCPassword(!showCPassword)}
+                        >
+                          {!showCPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </Grid>
+              </>
             )}
             <Grid item xs={12}>
               <Button
