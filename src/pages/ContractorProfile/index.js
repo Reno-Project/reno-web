@@ -310,11 +310,16 @@ const ContractorProfile = (props) => {
               <Button
                 variant="outlined"
                 className={classes.btnStyle}
-                onClick={handleShare}
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `https://renohome.io/share_contractor/share=${userData?.id}`
+                  );
+                  toast.success("Copied!", { toastId: 1 });
+                }}
               >
                 <img src={Images.share} alt="share" />
               </Button>
-              <Button
+              {/* <Button
                 variant="outlined"
                 className={classes.btnStyle}
                 style={{ margin: "0px 10px" }}
@@ -326,7 +331,7 @@ const ContractorProfile = (props) => {
                 }}
               >
                 <img src={Images.copy} alt="copy" />
-              </Button>
+              </Button> */}
               <Button
                 variant="outlined"
                 className={classes.btnStyle}

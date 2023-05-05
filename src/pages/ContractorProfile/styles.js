@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
     height: 32,
     borderRadius: "8px !important",
     minWidth: "unset !important",
+    margin: "0px 10px !important",
   },
   address: {
     fontSize: 16,
