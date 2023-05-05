@@ -268,7 +268,7 @@ const Dashboard = (props) => {
         >
           <Grid item className={classes.card} flexDirection={"column"} lg={2}>
             <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
-              Hi {userData?.name || "Marc"}
+              Hi {userData?.contractor_data?.company_name}
             </Typography>
             <Typography textAlign={"center"}>
               Submit proposals to <br /> your customers
