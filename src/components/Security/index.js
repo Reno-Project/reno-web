@@ -81,7 +81,7 @@ export default function Security() {
   const [loginDeviceList, setLoginDeviceList] = useState([]);
   const [loaderIndex, setLoaderIndex] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [attempts, setAttempts] = useState("Unset");
+  const [attempts, setAttempts] = useState("");
 
   useEffect(() => {
     getUserDetailsByIdApiCall();
@@ -93,11 +93,7 @@ export default function Security() {
 
   async function getUserDetailsByIdApiCall() {
     try {
-      const response = await getApiData(
-        `${Setting.endpoints.contarctorById}/${userData?.id}`,
-        "GET",
-        {}
-      );
+      const response = await getApiData(Setting.endpoints.me, "GET", {});
       if (response.success) {
         dispatch(setUserData(response?.data));
         setStatus2FA(response?.data?.is_two_factor_verified);
@@ -106,10 +102,12 @@ export default function Security() {
         );
       } else {
         setStatus2FA(userData?.is_two_factor_verified);
+        setAttempts("Unset");
       }
     } catch (error) {
       console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
       setStatus2FA(userData?.is_two_factor_verified);
+      setAttempts("Unset");
     }
   }
 

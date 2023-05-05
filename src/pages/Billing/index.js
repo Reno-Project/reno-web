@@ -68,11 +68,7 @@ export default function Billing() {
   async function getUserDetailsByIdApiCall() {
     setPageLoad(true);
     try {
-      const response = await getApiData(
-        `${Setting.endpoints.contarctorById}/${userData?.id}`,
-        "GET",
-        {}
-      );
+      const response = await getApiData(Setting.endpoints.me, "GET", {});
       if (response.success) {
         dispatch(setUserData(response?.data));
         setBillingData(response?.data);

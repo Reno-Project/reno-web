@@ -163,11 +163,7 @@ const CreateProfile = (props) => {
   // get user details by id
   async function getUserDetailsByIdApiCall() {
     try {
-      const response = await getApiData(
-        `${Setting.endpoints.contarctorById}/${userData?.id}`,
-        "GET",
-        {}
-      );
+      const response = await getApiData(Setting.endpoints.me, "GET", {});
       if (response.success) {
         dispatch(setUserData(response?.data));
         setPreFillDataFunction(response?.data);
