@@ -661,6 +661,7 @@ const CreateProfile = (props) => {
 
       if (response.success) {
         continueStep(1);
+        dispatch(setUserData(response?.data));
         toast.done(response.message);
       } else {
         toast.error(response.message);
