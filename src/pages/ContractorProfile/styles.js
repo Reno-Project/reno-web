@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   titleStyle: {
     color: "#202939",
     fontSize: "22px !important",
-    fontFamily: "Roobert !important",
+    fontFamily: "Roobert-Regular !important",
     lineHeight: 28,
     cursor: "pointer",
     fontWeight: "500 !important",
@@ -188,7 +188,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   overallRateText: {
-    fontFamily: "Roobert !important",
+    fontFamily: "Roobert-Regular !important",
     fontSize: "20px !important",
     fontWeight: "400 !important",
     marginBottom: "10px !important",

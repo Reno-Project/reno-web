@@ -116,13 +116,13 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "400 !important",
   },
   accRightText: {
-    fontFamily: "Roobert !important",
+    fontFamily: "Roobert-Regular !important",
     fontSize: "14px !important",
     lineHeight: "24px !important",
     fontWeight: "500 !important",
   },
   linkText: {
-    fontFamily: "Roobert !important",
+    fontFamily: "Roobert-Regular !important",
     fontSize: "14px !important",
     lineHeight: "24px !important",
     fontWeight: "500 !important",
