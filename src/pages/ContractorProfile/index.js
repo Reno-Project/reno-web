@@ -348,7 +348,7 @@ const ContractorProfile = (props) => {
         <Grid container>
           <Grid item md={6}>
             <Grid item>
-              <Typography className={classes.titleStyle}>
+              <Typography className={classes.titleStyle} marginBottom={"20px"}>
                 Description
               </Typography>
             </Grid>
@@ -371,7 +371,12 @@ const ContractorProfile = (props) => {
           >
             <Grid item xs={12} sm={6} md={6}>
               <Grid item xs={12}>
-                <Typography className={classes.titleStyle}>Rating</Typography>
+                <Typography
+                  marginBottom={"10px"}
+                  className={classes.titleStyle}
+                >
+                  Rating
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 <Typography className={classes.rating}>
@@ -396,7 +401,7 @@ const ContractorProfile = (props) => {
               xs={12}
               sm={6}
               md={6}
-              alignItems="center"
+              alignItems="flex-end"
               marginTop={sm ? "20px" : 0}
             >
               <Grid item xs={12}>
@@ -410,7 +415,7 @@ const ContractorProfile = (props) => {
                 justifyContent="space-between"
                 className={classes.row}
               >
-                <span style={{ color: "#202939" }}>Service quality</span>
+                <span className={classes.overallRate}>Service quality</span>
                 <Rating
                   name="half-rating"
                   value={1}
@@ -425,7 +430,7 @@ const ContractorProfile = (props) => {
                 className={classes.row}
                 justifyContent="space-between"
               >
-                <span style={{ color: "#202939" }}>Timing</span>
+                <span className={classes.overallRate}>Timing</span>
                 <Rating
                   name="half-rating"
                   value={1}
@@ -440,7 +445,7 @@ const ContractorProfile = (props) => {
                 className={classes.row}
                 justifyContent="space-between"
               >
-                <span style={{ color: "#202939" }}>communication</span>
+                <span className={classes.overallRate}>communication</span>
                 <Rating
                   name="half-rating"
                   value={1}
@@ -563,8 +568,10 @@ const ContractorProfile = (props) => {
                       <Avatar src={review.profile_url} />
                     </Grid>
                     <Grid item>
-                      <Typography fontSize={"18px"}>{review.name}</Typography>
-                      <Typography variant="subtitle2" color={"#475569"}>
+                      <Typography className={classes.reviewName}>
+                        {review.name}
+                      </Typography>
+                      <Typography className={classes.reviewPosition}>
                         {review.position}
                       </Typography>
                       <div style={{ display: "flex", alignItems: "center" }}>
@@ -578,19 +585,16 @@ const ContractorProfile = (props) => {
                         <Typography
                           sx={{ mt: 1 }}
                           variant="caption"
-                          color={color.captionText}
+                          className={classes.reviewDate}
                         >
                           | {review.date}
                         </Typography>
                       </div>
-                      <Typography fontWeight={"bold"} my={1}>
+                      <Typography className={classes.reviewTitle} my={1}>
                         {review.title}
                       </Typography>
                       <Grid item xs={12} md={9} lg={6}>
-                        <Typography
-                          fontFamily={"Roobert-Regular !important"}
-                          fontSize={14}
-                        >
+                        <Typography className={classes.overallRate}>
                           {review.content}
                         </Typography>
                       </Grid>
@@ -627,8 +631,8 @@ const ContractorProfile = (props) => {
                           <img src={Images.reply} style={{ width: 14 }} />
                           <Typography
                             variant="caption"
-                            color={color.captionText}
                             ml={0.5}
+                            className={classes.replay}
                           >
                             Reply
                           </Typography>
@@ -677,7 +681,7 @@ const ContractorProfile = (props) => {
                                 className={classes.reply}
                                 style={{ flexWrap: sm ? "wrap" : "unset" }}
                               >
-                                <Typography fontWeight={"bold"}>
+                                <Typography className={classes.replayFrom}>
                                   <img
                                     src={Images.reply}
                                     alt="reply"
@@ -706,7 +710,7 @@ const ContractorProfile = (props) => {
                                 <span
                                   style={{
                                     fontSize: 13,
-                                    fontFamily: "Roobert-Regular",
+                                    fontFamily: "Roobert-Regular !importanat",
                                   }}
                                 >
                                   {reply?.content}

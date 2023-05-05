@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   loginHeaderText: {
-    fontFamily: "ElMessiri !important",
+    fontFamily: "ElMessiri-Regular !important",
     fontSize: "36px !important",
   },
   coverStyle: {
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#202939",
     fontSize: "22px !important",
     fontFamily: "Roobert-Regular !important",
-    lineHeight: 28,
+    lineHeight: "28px !important",
     cursor: "pointer",
     fontWeight: "500 !important",
   },
@@ -61,6 +61,8 @@ const useStyles = makeStyles((theme) => ({
     margin: "0px 10px !important",
   },
   address: {
+    color: "#202939",
+    fontFamily: "Roobert-Regular !important",
     fontSize: 16,
     fontWeight: 400,
     lineHeight: 24,
@@ -70,6 +72,8 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   review: {
+    color: "#202939",
+    fontFamily: "Roobert-Regular !important",
     fontSize: `14px !important`,
     lineHeight: 20,
     letterSpacing: 0,
@@ -119,9 +123,6 @@ const useStyles = makeStyles((theme) => ({
   reviewMain: {
     marginTop: 10,
     padding: "20px 0px",
-  },
-  reviewTitle: {
-    marginTop: "0",
   },
   reviewContent: {
     marginBottom: "10px",
@@ -188,10 +189,61 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   overallRateText: {
+    color: "#202939",
     fontFamily: "Roobert-Regular !important",
-    fontSize: "20px !important",
+    fontSize: "16px !important",
+    fontWeight: "500 !important",
+    lineHeight: "24px !important",
+    marginBottom: "15px !important",
+  },
+  overallRate: {
+    color: "#202939",
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "14px !important",
     fontWeight: "400 !important",
-    marginBottom: "10px !important",
+    lineHeight: "20px !important",
+  },
+  reviewTitle: {
+    color: "#202939",
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "15px !important",
+    fontWeight: "700 !important",
+    lineHeight: "21px !important",
+  },
+  replayFrom: {
+    color: "#202939",
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "14px !important",
+    fontWeight: "700 !important",
+    lineHeight: "20px !important",
+  },
+  reviewDate: {
+    color: "#646F86",
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "13px !important",
+    fontWeight: "400 !important",
+    lineHeight: "20px !important",
+  },
+  reviewPosition: {
+    color: "#475569",
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "12px !important",
+    fontWeight: "400 !important",
+    lineHeight: "16px !important",
+  },
+  reviewName: {
+    color: "#202939",
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "16px !important",
+    fontWeight: "500 !important",
+    lineHeight: "24px !important",
+  },
+  replay: {
+    color: "#646F86",
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "14px !important",
+    fontWeight: "500 !important",
+    lineHeight: "20px !important",
   },
 }));
 
