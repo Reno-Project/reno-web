@@ -10,6 +10,7 @@ export const updateUserData = async () => {
     const response = await getApiData(Setting.endpoints.me, "GET", {});
     if (response.success) {
       store.dispatch(setUserData(response?.data));
+      return response?.data;
     }
   } catch (error) {
     console.log("error ===>>>", error);

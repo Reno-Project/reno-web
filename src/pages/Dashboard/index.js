@@ -110,19 +110,24 @@ const Dashboard = (props) => {
   const lg = useMediaQuery(theme.breakpoints.down("lg"));
 
   useEffect(() => {
-    updateUserData();
-    if (userData && !isEmpty(userData?.contractor_data)) {
-      const { profile_completed, is_profile_verified } =
-        userData?.contractor_data;
-      if (profile_completed === "completed" && !is_profile_verified) {
-        setVisible(true);
-      }
-    }
+    handleUserData();
 
     return () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
   }, []);
+
+  // this function for check is user profile approved or not
+  async function handleUserData() {
+    const response = await updateUserData();
+    if (response && !isEmpty(response?.contractor_data)) {
+      const { profile_completed, is_profile_verified } =
+        response?.contractor_data;
+      if (profile_completed === "completed" && !is_profile_verified) {
+        setVisible(true);
+      }
+    }
+  }
 
   // this function checks validation of login field
   function validation() {
