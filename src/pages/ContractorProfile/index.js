@@ -230,7 +230,7 @@ const ContractorProfile = (props) => {
     <div className={classes.main}>
       <Grid item>
         <img
-          src={profileData?.profile_url || ""}
+          src={profileData?.contractor_data?.portfolio[0].image || ""}
           className={classes.coverStyle}
         />
       </Grid>
@@ -268,14 +268,14 @@ const ContractorProfile = (props) => {
                   <img
                     src={Images.verified}
                     alt={"verify"}
-                    style={{ width: 20, height: 20 }}
+                    style={{ width: 18, height: 15 }}
                   />
                   <Typography style={{ marginLeft: 4 }}>Verified</Typography>
                 </div>
               )}
             </div>
             <div>
-              <Typography style={{}} className={classes.address}>
+              <Typography className={classes.address}>
                 {userData?.contractor_data?.company_address}
                 <img src={Images.Location} alt="Location" />
               </Typography>
@@ -348,7 +348,10 @@ const ContractorProfile = (props) => {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography style={{ paddingRight: 20 }}>
+              <Typography
+                style={{ paddingRight: 20 }}
+                className={classes.description}
+              >
                 {profileData?.contractor_data?.description}
               </Typography>
             </Grid>
@@ -402,7 +405,7 @@ const ContractorProfile = (props) => {
                 justifyContent="space-between"
                 className={classes.row}
               >
-                <span>Service quality</span>
+                <span style={{ color: "#202939" }}>Service quality</span>
                 <Rating
                   name="half-rating"
                   value={1}
@@ -417,7 +420,7 @@ const ContractorProfile = (props) => {
                 className={classes.row}
                 justifyContent="space-between"
               >
-                <span>Timing</span>
+                <span style={{ color: "#202939" }}>Timing</span>
                 <Rating
                   name="half-rating"
                   value={1}
@@ -432,7 +435,7 @@ const ContractorProfile = (props) => {
                 className={classes.row}
                 justifyContent="space-between"
               >
-                <span>communication</span>
+                <span style={{ color: "#202939" }}>communication</span>
                 <Rating
                   name="half-rating"
                   value={1}
@@ -555,10 +558,8 @@ const ContractorProfile = (props) => {
                       <Avatar src={review.profile_url} />
                     </Grid>
                     <Grid item>
-                      <Typography variant="h6" fontWeight={"bold"}>
-                        {review.name}
-                      </Typography>
-                      <Typography variant="subtitle2">
+                      <Typography fontSize={"18px"}>{review.name}</Typography>
+                      <Typography variant="subtitle2" color={"#475569"}>
                         {review.position}
                       </Typography>
                       <div style={{ display: "flex", alignItems: "center" }}>
@@ -580,9 +581,14 @@ const ContractorProfile = (props) => {
                       <Typography fontWeight={"bold"} my={1}>
                         {review.title}
                       </Typography>
-                      <Typography fontFamily={"Roobert-Regular !important"}>
-                        {review.content}
-                      </Typography>
+                      <Grid item xs={12} md={9} lg={6}>
+                        <Typography
+                          fontFamily={"Roobert-Regular !important"}
+                          fontSize={14}
+                        >
+                          {review.content}
+                        </Typography>
+                      </Grid>
                       <Grid item container columnGap={2} rowGap={1}>
                         {isArray(review.images) &&
                           !isEmpty(review.images) &&
@@ -680,7 +686,7 @@ const ContractorProfile = (props) => {
                                 </Typography>
                                 <Typography
                                   style={{
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     lineHeight: 1.5,
                                     letterSpacing: "0.00938em",
                                     marginLeft: 8,
@@ -691,7 +697,16 @@ const ContractorProfile = (props) => {
                                   | {reply.date}
                                 </Typography>
                               </div>
-                              <span>{reply?.content}</span>
+                              <Grid item xs={12} md={9} lg={6}>
+                                <span
+                                  style={{
+                                    fontSize: 13,
+                                    fontFamily: "Roobert-Regular",
+                                  }}
+                                >
+                                  {reply?.content}
+                                </span>
+                              </Grid>
                             </div>
                           ))}
                         </div>
@@ -746,7 +761,7 @@ const ContractorProfile = (props) => {
               profileData?.contractor_data?.expertise.map((ele, ind) => {
                 return (
                   <Grid item className={classes.chip}>
-                    <Typography textTransform={"uppercase"}>
+                    <Typography fontSize={14} textTransform={"uppercase"}>
                       {ele.project_name}
                     </Typography>
                   </Grid>

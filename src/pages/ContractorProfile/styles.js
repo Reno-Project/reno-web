@@ -12,8 +12,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   loginHeaderText: {
-    fontFamily: "ElMessiri-Bold !important",
-    fontSize: "30px !important",
+    fontFamily: "ElMessiri !important",
+    fontSize: "36px !important",
   },
   coverStyle: {
     maxHeight: 240,
@@ -29,10 +29,14 @@ const useStyles = makeStyles((theme) => ({
   titleStyle: {
     color: "#202939",
     fontSize: "22px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Roobert !important",
     lineHeight: 28,
     cursor: "pointer",
-    fontWeight: "700 !important",
+    fontWeight: "500 !important",
+  },
+  description: {
+    fontFamily: "Roobert-Regular !important",
+    color: "#475569",
   },
   verifycontainer: {
     backgroundColor: color.fadedblue,
@@ -168,7 +172,7 @@ const useStyles = makeStyles((theme) => ({
   },
   chip: {
     cursor: "pointer",
-    padding: "10px 12px",
+    padding: "8px 12px",
     borderRadius: 4,
     backgroundColor: color.offWhite,
     display: "flex",
@@ -183,9 +187,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   overallRateText: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Roobert !important",
     fontSize: "20px !important",
-    fontWeight: "500 !important",
+    fontWeight: "400 !important",
     marginBottom: "10px !important",
   },
 }));

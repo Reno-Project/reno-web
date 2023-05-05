@@ -553,7 +553,7 @@ export default function EditProfile() {
   return (
     <Grid
       container
-      padding={"20px 0"}
+      padding={isMobile ? "10px" : "20px 0"}
       wrap={isMobile && !isTablet ? "wrap" : "nowrap"}
       gap={2}
       justifyContent={"center"}

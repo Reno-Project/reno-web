@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0 20px",
   },
   text: {
-    color: color.white,
+    color: "#E7E7E7",
     paddingTop: isMobile ? 0 : "10px",
     cursor: "pointer",
     "&:hover": {

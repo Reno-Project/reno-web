@@ -5,6 +5,7 @@ import {
   Typography,
   Button,
   useMediaQuery,
+  CircularProgress,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
@@ -24,6 +25,7 @@ import ProposalCard from "../../../components/ProposalCard";
 import { getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import { toast } from "react-toastify";
+import { isMobile } from "react-device-detect";
 
 const errorObj = {
   scpErr: false,
@@ -54,6 +56,7 @@ export default function Summary() {
   const [disableBudget, setDisableBudget] = useState(true);
   const [visible, setVisible] = useState(false);
   const [visiblesucess, setVisibleSuccess] = useState(false);
+  const [loader, setloader] = useState(false);
 
   const imageArray = [
     {
@@ -94,6 +97,7 @@ export default function Summary() {
   }
 
   async function createproposalApicall() {
+    setloader(true);
     const data = {
       project_id: 2,
       user_id: userData?.id,
@@ -112,9 +116,11 @@ export default function Summary() {
       } else {
         toast.error(response?.message);
       }
+      setloader(false);
     } catch (error) {
       console.log("ERROR=====>>>>>", error);
       toast.error(error.toString() || "Something went wrong try again later");
+      setloader(false);
     }
   }
 
@@ -125,14 +131,14 @@ export default function Summary() {
         columnGap={1}
         rowGap={1}
         flexDirection="row-reverse"
-        style={{ padding: md ? 20 : 40 }}
+        style={{ padding: isMobile ? "20px 0" : md ? 20 : 40 }}
         justifyContent={!md ? "space-between" : "center"}
         boxSizing={"border-box"}
       >
         <Grid
           item
           container
-          xs={10}
+          xs={isMobile ? 11 : 10}
           md={4}
           xl={3}
           className={classes.MainContainer}
@@ -142,7 +148,7 @@ export default function Summary() {
         <Grid
           item
           container
-          xs={10}
+          xs={isMobile ? 11 : 10}
           md={7.8}
           xl={8.8}
           className={classes.MainContainer}
@@ -415,7 +421,11 @@ export default function Summary() {
                   </Grid>
                   <Grid item sm={5.9} xs={12}>
                     <Button variant="contained" fullWidth onClick={validation}>
-                      Continue
+                      {loader ? (
+                        <CircularProgress style={{ color: "#fff" }} size={26} />
+                      ) : (
+                        "Continue"
+                      )}
                     </Button>
                   </Grid>
                 </Grid>

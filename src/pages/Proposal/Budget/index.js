@@ -290,7 +290,7 @@ export default function Budget(props) {
   function getMilestones() {
     return (
       proposalDetails?.milestone_details?.milestones?.map(
-        (milestone) => milestone.name
+        (milestone) => milestone.milestone_name
       ) || []
     );
   }
