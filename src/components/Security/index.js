@@ -223,30 +223,30 @@ export default function Security() {
         justifyContent={"center"}
       >
         <Grid item xs={12}>
-          <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
-            Logging in Settings
-          </Typography>
-          <Typography style={{ fontFamily: "Roobert-Regular" }}>
-            Login settings allow you to customize your login experience and
-            enhance the security of your account.
-          </Typography>
           <Grid
             item
             container
             style={{
               border: "1px solid #F2F4F7",
-              padding: "0 20px 20px",
-              marginTop: 20,
+              padding: "20px",
               backgroundColor: "#F9F9FB",
             }}
             alignItems="center"
             justifyContent={"flex-end"}
           >
+            <Grid item xs={12}>
+              <Typography className={classes.title}>
+                Logging in Settings
+              </Typography>
+              <Typography className={classes.subtitle}>
+                Login settings allow you to customize your login experience and
+                enhance the security of your account.
+              </Typography>
+            </Grid>
             <Grid item xs={12} sm={8} md={9} lg={9}>
               <Typography
                 className={classes.TextStyle}
                 paddingTop={isMobile ? 3 : 0}
-                fontFamily={"Roobert-Regular"}
               >
                 Allow login attempts
               </Typography>
@@ -275,13 +275,11 @@ export default function Security() {
               >
                 <Typography
                   className={classes.TextStyle}
-                  fontFamily={"Roobert-Regular"}
                 >
                   Phone verifications
                 </Typography>
                 <Typography
                   className={classes.language}
-                  fontFamily={"Roobert-Regular"}
                   paddingRight={2}
                 >
                   Your phone is not verified with Reno. Click Verify Now to
@@ -313,16 +311,10 @@ export default function Security() {
             <Divider width={"100%"} />
             <Grid item container justifyContent={"space-between"}>
               <Grid item xs={10} sm={9} md={8} style={{ marginTop: 20 }}>
-                <Typography
-                  className={classes.TextStyle}
-                  fontFamily={"Roobert-Regular"}
-                >
+                <Typography className={classes.TextStyle}>
                   Two factors authentications
                 </Typography>
-                <Typography
-                  className={classes.language}
-                  fontFamily={"Roobert-Regular"}
-                >
+                <Typography className={classes.language}>
                   We will send an authentication code via SMS, email or fiverr
                   notification when using an unrecognised device.
                 </Typography>
@@ -368,12 +360,11 @@ export default function Security() {
               justifyContent={"flex-end"}
             >
               <Grid item xs={12}>
-                <Typography
-                  variant="h5"
-                  fontFamily={"Roobert-Regular"}
-                  marginBottom={2}
-                >
+                <Typography className={classes.title}>
                   Connected devices
+                </Typography>
+                <Typography className={classes.subtitle}>
+                  You are sign in on these devices
                 </Typography>
               </Grid>
               {loginDeviceList?.map((it, ind) => {
@@ -419,16 +410,10 @@ export default function Security() {
                             />
                           </Grid>
                           <Grid item>
-                            <Typography
-                              fontFamily={"Roobert-Regular"}
-                              className={classes.TextStyle}
-                            >
+                            <Typography className={classes.TextStyle}>
                               {it?.device_name}
                             </Typography>
-                            <Typography
-                              fontFamily={"Roobert-Regular"}
-                              className={classes.language}
-                            >
+                            <Typography className={classes.language}>
                               {it?.address}
                             </Typography>
                           </Grid>
@@ -468,7 +453,7 @@ export default function Security() {
                 gap={2}
               >
                 <Grid item>
-                  <Typography className={classes.language}>
+                  <Typography className={classes.signOut}>
                     Signout from all other devices
                   </Typography>
                 </Grid>

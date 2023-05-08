@@ -1,16 +1,27 @@
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
-  pickerInput: {
-    "& > div > div > div > input": {
-      width: "0px !important",
-      border: "0px !important",
-      paddingLeft: "38px !important",
-    },
-    "& > div > div > div > div": {
-      border: "0px !important",
-      backgroundColor: "#0000 !important",
-    },
+  tag: {
+    color: "#202939",
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "16px !important",
+    lineHeight: "24px !important",
+    fontWeight: "500 !important",
+  },
+  title: {
+    color: "#030F1C",
+    fontFamily: "Roobert-Regular !important",
+    fontWeight: "500 !important",
+    fontSize: "22px !important",
+    lineHeight: "32px !important",
+  },
+  subtitle: {
+    color: "#030F1C",
+    fontFamily: "Roobert-Regular !important",
+    fontWeight: "400 !important",
+    fontSize: "16px !important",
+    lineHeight: "24px !important",
+    marginTop: "8px !important",
   },
   buttonAbsoluteDiv: {
     position: "absolute",
@@ -33,18 +44,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "100% !important",
     padding: "0px !important",
     border: "1px solid #FFF",
-  },
-  uploadStyle: {
-    backgroundColor: "#F9F9FA",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    height: 170,
-    "&:hover": {
-      cursor: "pointer",
-    },
   },
 }));
 export default useStyles;

@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
 import { color } from "../../config/theme";
+import useStyles from "./styles";
 
 const errorObj = {
   beneficiaryErr: false,
@@ -27,6 +28,8 @@ const errorObj = {
 };
 
 export default function Billing() {
+  const classes = useStyles();
+
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
@@ -265,10 +268,10 @@ export default function Billing() {
         <>
           <Grid item container xs={12}>
             <Grid item padding={isMobile ? "10px 0" : "0px 20px"}>
-              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+              <Typography className={classes.title}>
                 Billing Information
               </Typography>
-              <Typography style={{ fontFamily: "Roobert-Regular" }}>
+              <Typography className={classes.subtitle}>
                 Manage Your Payments: View, Edit and Update Your Billing
                 Information
               </Typography>

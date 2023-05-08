@@ -10,9 +10,10 @@ import PhoneVerificationModal from "../../components/PhoneVerificationModal";
 import TwoFectorModal from "../../components/TwoFectorModal";
 import NotificationSettings from "../NotificationSettings";
 import Security from "../../components/Security";
-import { isMobile } from "react-device-detect";
+import useStyles from "./styles";
 
 export default function AccountSettings() {
+  const classes = useStyles();
   const dispatch = useDispatch();
   const { setAccountTab } = authActions;
   const { userData, accountTab } = useSelector((state) => state.auth);
@@ -28,16 +29,7 @@ export default function AccountSettings() {
     <>
       <Grid container xs={12} sm={9} md={8} lg={6}>
         <Grid item xs={12}>
-          <Typography
-            variant="h4"
-            style={{
-              lineHeight: 3,
-              fontFamily: "ElMessiri-SemiBold",
-              paddingLeft: isMobile ? "25px" : 0,
-            }}
-          >
-            Account Settings
-          </Typography>
+          <Typography className={classes.header}>Account Settings</Typography>
         </Grid>
 
         <Grid item container border="1px solid #F2F4F7" padding={"20px"}>

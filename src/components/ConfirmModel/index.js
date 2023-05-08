@@ -38,15 +38,21 @@ export default function ConfirmModel(props) {
         style={{
           backgroundColor: "#FFF",
           borderRadius: 4,
-          padding: isMobile ? 20 : 30,
+          padding: isMobile ? 30 : 40,
         }}
       >
         <Grid item>
           <Typography
             style={{
-              fontFamily: "ElMessiri-SemiBold",
-              fontSize: isMobile ? "22px" : "28px",
+              color: "#0D1522 ",
+              fontFamily: "Roobert-Regular",
+              fontSize: "18px",
+              letterSpacing: "0.5px",
+              lineHeight: "24px",
+              fontWeight: "500",
               textAlign: "center",
+              marginBottom: "24px",
+              padding: isMobile ? 0 : "0 30px",
             }}
           >
             {message}
@@ -60,12 +66,12 @@ export default function ConfirmModel(props) {
           wrap="nowrap"
           marginTop={"10px"}
         >
-          <Grid item xs={isMobile ? 6 : 5}>
+          <Grid item xs={6}>
             <Button fullWidth variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
           </Grid>
-          <Grid item xs={isMobile ? 6 : 5}>
+          <Grid item xs={6}>
             <Button fullWidth variant="contained" onClick={confirmation}>
               {loader ? (
                 <CircularProgress style={{ color: "#fff" }} size={26} />

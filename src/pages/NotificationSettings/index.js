@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
 import _ from "lodash";
+import useStyles from "./styles";
 
 const IOSSwitch = styled((props) => (
   <div style={{ display: "flex" }}>
@@ -22,7 +23,18 @@ const IOSSwitch = styled((props) => (
       disableRipple
       {...props}
     />
-    <Typography paddingLeft={"5px"}>Push</Typography>
+    <Typography
+      style={{
+        color: "#202939",
+        fontFamily: "Roobert-Regular",
+        fontWeight: "500",
+        fontSize: "16px",
+        lineHeight: "24px",
+        marginLeft: "5px",
+      }}
+    >
+      Push
+    </Typography>
   </div>
 ))(({ theme }) => ({
   width: 42,
@@ -138,6 +150,8 @@ const notificationListArray = [
 ];
 
 export default function NotificationSettings() {
+  const classes = useStyles();
+
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { setUserData } = authActions;
@@ -235,10 +249,10 @@ export default function NotificationSettings() {
       justifyContent={"center"}
     >
       <Grid item xs={12}>
-        <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+        <Typography className={classes.title}>
           Notifications Settings
         </Typography>
-        <Typography style={{ fontFamily: "Roobert-Regular" }}>
+        <Typography className={classes.subtitle}>
           Customize Your Notifications: Manage Your Alerts and Stay in Control
         </Typography>
         <Divider light style={{ width: "100%", margin: "15px 0 30px" }} />
@@ -285,7 +299,16 @@ export default function NotificationSettings() {
                       borderRadius: 5,
                     }}
                   >
-                    <Typography variant="h6" marginBottom={"10px"}>
+                    <Typography
+                      style={{
+                        color: "#030F1C",
+                        fontFamily: "Roobert-Regular",
+                        fontWeight: "500",
+                        fontSize: "18px",
+                        lineHeight: "24px",
+                        paddingBottom: "20px",
+                      }}
+                    >
                       {item?.title}
                     </Typography>
                     {item?.subArray.map((it, ind) => {
@@ -301,7 +324,17 @@ export default function NotificationSettings() {
                                 : "1px solid #E8E8E8",
                           }}
                         >
-                          <Typography>{it.name}</Typography>
+                          <Typography
+                            style={{
+                              color: "#202939",
+                              fontFamily: "Roobert-Regular",
+                              fontWeight: "500",
+                              fontSize: "16px",
+                              lineHeight: "24px",
+                            }}
+                          >
+                            {it.name}
+                          </Typography>
                           <IOSSwitch
                             checked={it?.isChecked}
                             onChange={(event) => {

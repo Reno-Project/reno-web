@@ -97,12 +97,12 @@ export default function Notifications() {
                   </Grid>
                   <Grid item container xs={10.5} alignItems={"center"}>
                     <Grid item xs={12}>
-                      <Typography style={{ fontFamily: "'Roobert'-Regular" }}>
+                      <Typography style={{ fontFamily: "Roobert-Regular" }}>
                         {item?.label}
                       </Typography>
                       <Typography
                         style={{
-                          fontFamily: "'Roobert'-Regular",
+                          fontFamily: "Roobert-Regular",
                           color: "#274BF1",
                         }}
                       >

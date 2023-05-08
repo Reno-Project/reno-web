@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { isArray, isEmpty, isNull, isNumber, isObject } from "lodash";
+import { isArray, isEmpty, isNumber, isObject } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import { toast } from "react-toastify";
@@ -586,7 +586,7 @@ export default function EditProfile() {
                   xs={12}
                   style={{
                     backgroundColor: active === index ? "#fff" : "transparent",
-                    padding: "15px 10px",
+                    padding: "12px 10px",
                     borderBottom: "1px solid #F2F3F4",
                     borderRadius: 6,
                     cursor: "pointer",
@@ -594,8 +594,9 @@ export default function EditProfile() {
                   onClick={() => setActive(index)}
                 >
                   <Typography
-                    variant="outlined"
-                    style={{ fontFamily: "Roobert-Regular" }}
+                    fontWeight={active !== index && "400 !important"}
+                    color={active !== index && "#646F86"}
+                    className={classes.tag}
                   >
                     {item}
                   </Typography>
@@ -612,10 +613,8 @@ export default function EditProfile() {
               lg={8}
               padding={isMobile ? "10px 0" : "0px 20px"}
             >
-              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
-                Information
-              </Typography>
-              <Typography style={{ fontFamily: "Roobert-Regular" }}>
+              <Typography className={classes.title}>Information</Typography>
+              <Typography className={classes.subtitle}>
                 Business Profile & Organization Details
               </Typography>
               <Grid
@@ -813,10 +812,10 @@ export default function EditProfile() {
                 </Grid>
               </Grid>
               <Grid item lg={12} paddingTop="20px">
-                <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
+                <Typography className={classes.title}>
                   Expertise Area *
                 </Typography>
-                <Typography style={{ fontFamily: "Roobert-Regular" }}>
+                <Typography className={classes.subtitle}>
                   Core Competencies and Specialization of Company
                 </Typography>
                 <Grid
@@ -891,10 +890,8 @@ export default function EditProfile() {
               lg={8}
               padding={isMobile ? "10px 0" : "0px 20px"}
             >
-              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
-                Documents
-              </Typography>
-              <Typography style={{ fontFamily: "Roobert-Regular" }}>
+              <Typography className={classes.title}>Documents</Typography>
+              <Typography className={classes.subtitle}>
                 Attach Relevant Documents
               </Typography>
               <Grid
@@ -1148,10 +1145,8 @@ export default function EditProfile() {
               lg={8}
               padding={isMobile ? "10px 0" : "0px 20px"}
             >
-              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
-                Profile Image
-              </Typography>
-              <Typography style={{ fontFamily: "Roobert-Regular" }}>
+              <Typography className={classes.title}>Profile Image</Typography>
+              <Typography className={classes.subtitle}>
                 Attach Your Profile Thumbnail
               </Typography>
               <Grid
@@ -1280,10 +1275,8 @@ export default function EditProfile() {
               lg={8}
               padding={isMobile ? "10px 0" : "0px 20px"}
             >
-              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
-                Social Link
-              </Typography>
-              <Typography style={{ fontFamily: "Roobert-Regular" }}>
+              <Typography className={classes.title}>Social Link</Typography>
+              <Typography className={classes.subtitle}>
                 Share Your Social Links Here
               </Typography>
               <Grid
@@ -1432,10 +1425,8 @@ export default function EditProfile() {
               lg={8}
               padding={isMobile ? "10px 0" : "0px 20px"}
             >
-              <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
-                Portfolio
-              </Typography>
-              <Typography style={{ fontFamily: "Roobert-Regular" }}>
+              <Typography className={classes.title}>Portfolio</Typography>
+              <Typography className={classes.subtitle}>
                 Upload Your Project Samples
               </Typography>
               <Grid

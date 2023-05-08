@@ -245,6 +245,13 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "500 !important",
     lineHeight: "20px !important",
   },
+  expertise: {
+    color: "#202939",
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "14px !important",
+    fontWeight: "500 !important",
+    lineHeight: "16px !important",
+  },
 }));
 
 export default useStyles;

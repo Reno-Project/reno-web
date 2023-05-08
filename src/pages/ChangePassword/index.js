@@ -15,6 +15,7 @@ import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import { toast } from "react-toastify";
 import { isMobile } from "react-device-detect";
+import useStyles from "./styles";
 
 const errorObj = {
   oldPasswordErr: false,
@@ -26,6 +27,8 @@ const errorObj = {
 };
 
 export default function ChangePassword() {
+  const classes = useStyles();
+
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -127,10 +130,8 @@ export default function ChangePassword() {
   return (
     <Grid container padding={isMobile ? "10px" : "20px"} wrap={"wrap"} gap={2}>
       <Grid item xs={12}>
-        <Typography variant="h5" fontSize={"22px"} lineHeight={2}>
-          Change Password
-        </Typography>
-        <Typography style={{ fontFamily: "Roobert-Regular" }}>
+        <Typography className={classes.title}>Change Password</Typography>
+        <Typography className={classes.subtitle}>
           Secure Your Account: How to Change Your Password and Keep Your Data
           Safe
         </Typography>

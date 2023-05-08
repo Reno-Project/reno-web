@@ -770,7 +770,7 @@ const ContractorProfile = (props) => {
               profileData?.contractor_data?.expertise.map((ele, ind) => {
                 return (
                   <Grid item className={classes.chip}>
-                    <Typography fontSize={14} textTransform={"uppercase"}>
+                    <Typography className={classes.expertise}>
                       {ele.project_name}
                     </Typography>
                   </Grid>
@@ -801,7 +801,12 @@ const ContractorProfile = (props) => {
                       style={{ marginRight: 8 }}
                       alt="fbico"
                     />
-                    <Typography>Facebook</Typography>
+                    <Typography
+                      fontWeight={"500 !important"}
+                      className={classes.replayFrom}
+                    >
+                      Facebook
+                    </Typography>
                   </>
                 </Grid>
               )}
@@ -822,7 +827,12 @@ const ContractorProfile = (props) => {
                       style={{ marginRight: 8 }}
                       alt="instaico"
                     />
-                    <Typography>Instagram</Typography>
+                    <Typography
+                      fontWeight={"500 !important"}
+                      className={classes.replayFrom}
+                    >
+                      Instagram
+                    </Typography>
                   </>
                 </Grid>
               )}
@@ -840,7 +850,12 @@ const ContractorProfile = (props) => {
                       style={{ marginRight: 8 }}
                       alt="ytico"
                     />
-                    <Typography>Youtube</Typography>
+                    <Typography
+                      fontWeight={"500 !important"}
+                      className={classes.replayFrom}
+                    >
+                      Youtube
+                    </Typography>
                   </>
                 </Grid>
               )}
@@ -861,7 +876,12 @@ const ContractorProfile = (props) => {
                       style={{ marginRight: 8 }}
                       alt="linkedinico"
                     />
-                    <Typography>Linkedin</Typography>
+                    <Typography
+                      fontWeight={"500 !important"}
+                      className={classes.replayFrom}
+                    >
+                      Linkedin
+                    </Typography>
                   </>
                 </Grid>
               )}
