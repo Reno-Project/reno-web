@@ -60,8 +60,11 @@ const useStyles = makeStyles((theme) => ({
   },
   logoutTextStyle: {
     cursor: "pointer",
-    padding: "0px 10px",
+    color: "#646F86",
     fontFamily: "Roobert-Regular !important",
+    fontWeight: "400 !important",
+    fontSize: "14px !important",
+    lineHeight: "20px !important",
   },
   uploadImgDivStyle: {
     height: "100%",

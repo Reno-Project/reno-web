@@ -21,10 +21,15 @@ import CInput from "../CInput";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import ConfirmModel from "../ConfirmModel";
 import {
+  AccountBalanceWalletOutlined,
+  AttachMoneyOutlined,
+  FmdGoodOutlined,
   LogoutOutlined,
   Person2Outlined,
   SettingsOutlined,
+  TranslateOutlined,
 } from "@mui/icons-material";
+import Cmodal from "../Cmodel";
 
 function Header(props) {
   const currentUrl = window.location.href;
@@ -36,6 +41,7 @@ function Header(props) {
   const { clearAllData, setAccountTab } = authActions;
   const { token, userData, accountTab } = useSelector((state) => state.auth);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const [mopen, setMopen] = useState("");
   const [visible, setVisible] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -202,7 +208,10 @@ function Header(props) {
                     }}
                     PaperProps={{
                       style: {
-                        padding: 10,
+                        paddingBottom: 10,
+                      },
+                      hover: {
+                        backgroundColor: "#F2F4F7",
                       },
                     }}
                   >
@@ -210,6 +219,75 @@ function Header(props) {
                     userData?.contractor_data?.profile_completed ===
                       "pending" ? null : (
                       <>
+                        <Grid
+                          container
+                          gap={1}
+                          wrap="nowrap"
+                          marginBottom={"14px"}
+                          padding={"16px 16px 0"}
+                        >
+                          <Grid item display={"flex"} alignItems={"center"}>
+                            <div
+                              style={{
+                                borderRadius: 25,
+                                overflow: "hidden",
+                              }}
+                            >
+                              <img src={userData?.profile_url} width={"40px"} />
+                            </div>
+                          </Grid>
+                          <Grid item>
+                            <Typography
+                              style={{
+                                color: "#030F1C",
+                                fontFamily: "Roobert-Regular",
+                                fontWeight: "500",
+                                fontSize: "14px",
+                                lineHeight: "20px",
+                              }}
+                            >
+                              {userData?.username}
+                            </Typography>
+                            <Typography
+                              style={{
+                                color: "#646F86",
+                                fontFamily: "Roobert-Regular",
+                                fontWeight: "400",
+                                fontSize: "12px",
+                                lineHeight: "16px",
+                                marginTop: "4px",
+                              }}
+                            >
+                              <FmdGoodOutlined fontSize={"200px"} />{" "}
+                              {userData?.contractor_data?.company_address}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid
+                          item
+                          style={{
+                            backgroundColor: "#E5F1FF",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            border: "1px solid #ACD2FF",
+                            borderRadius: "8px",
+                            margin: "14px 16px",
+                          }}
+                        >
+                          <Typography
+                            style={{
+                              color: "#0075FF",
+                              fontFamily: "Roobert-Regular",
+                              fontWeight: "500",
+                              fontSize: "14px",
+                              lineHeight: "20px",
+                              padding: "7px 10px",
+                            }}
+                          >
+                            Balance: $500.00
+                          </Typography>
+                        </Grid>
                         <MenuItem
                           onClick={() => {
                             handleClose();
@@ -230,10 +308,31 @@ function Header(props) {
                           <SettingsOutlined style={{ marginRight: 10 }} />
                           Account Settings
                         </MenuItem>
+                        <MenuItem
+                          className={classes.logoutTextStyle}
+                          onClick={() => setMopen("currency")}
+                        >
+                          <AttachMoneyOutlined style={{ marginRight: 10 }} />
+                          Currency
+                        </MenuItem>
+                        <MenuItem
+                          className={classes.logoutTextStyle}
+                          onClick={() => setMopen("language")}
+                        >
+                          <TranslateOutlined style={{ marginRight: 10 }} />
+                          Language
+                        </MenuItem>
+                        <MenuItem className={classes.logoutTextStyle}>
+                          <AccountBalanceWalletOutlined
+                            style={{ marginRight: 10 }}
+                          />
+                          Billing History
+                        </MenuItem>
                       </>
                     )}
                     <MenuItem
                       onClick={() => setVisible(!visible)}
+                      style={{ color: "#F26B59" }}
                       className={classes.logoutTextStyle}
                     >
                       <LogoutOutlined style={{ marginRight: 10 }} />
@@ -266,6 +365,14 @@ function Header(props) {
           </Grid>
         </Grid>
       </div>
+
+      <Cmodal
+        visible={
+          mopen === "currency" ? true : mopen === "language" ? true : false
+        }
+        handleClose={() => setMopen("")}
+        currency={mopen}
+      />
 
       <ConfirmModel
         visible={visible}
