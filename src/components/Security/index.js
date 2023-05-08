@@ -263,7 +263,7 @@ export default function Security() {
                 renderTags={["Unset", "1", "2", "3", "4", "5"]}
               />
             </Grid>
-            <Divider width={"100%"} />
+            {/* <Divider width={"100%"} />
             <Grid item container style={{ marginBottom: 15 }}>
               <Grid
                 item
@@ -309,7 +309,7 @@ export default function Security() {
                   Verify now
                 </Button>
               </Grid>
-            </Grid>
+            </Grid> */}
             <Divider width={"100%"} />
             <Grid item container justifyContent={"space-between"}>
               <Grid item xs={10} sm={9} md={8} style={{ marginTop: 20 }}>
