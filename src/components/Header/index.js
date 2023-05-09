@@ -210,9 +210,6 @@ function Header(props) {
                       style: {
                         paddingBottom: 10,
                       },
-                      hover: {
-                        backgroundColor: "#F2F4F7",
-                      },
                     }}
                   >
                     {userData?.role === "reno" ||

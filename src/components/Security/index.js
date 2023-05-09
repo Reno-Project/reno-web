@@ -230,9 +230,10 @@ export default function Security() {
               border: "1px solid #F2F4F7",
               padding: "20px",
               backgroundColor: "#F9F9FB",
+              borderRadius: 8,
+              alignItems: "center",
+              justifyContent: "flex-end",
             }}
-            alignItems="center"
-            justifyContent={"flex-end"}
           >
             <Grid item xs={12}>
               <Typography className={classes.title}>
@@ -353,11 +354,12 @@ export default function Security() {
               style={{
                 border: "1px solid #F2F4F7",
                 padding: 20,
-                marginTop: 20,
+                marginTop: 28,
                 backgroundColor: "#F9F9FB",
+                borderRadius: 8,
+                alignItems: "center",
+                justifyContent: "flex-end",
               }}
-              alignItems="center"
-              justifyContent={"flex-end"}
             >
               <Grid item xs={12}>
                 <Typography className={classes.title}>

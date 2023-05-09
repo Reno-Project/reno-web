@@ -274,15 +274,7 @@ export default function NotificationSettings() {
             />
           </div>
         ) : (
-          <Grid
-            item
-            container
-            gap={3}
-            wrap={isMobile ? "wrap" : "nowrap"}
-            style={{
-              justifyContent: "space-between",
-            }}
-          >
+          <Grid item container gap={3} wrap={isMobile ? "wrap" : "nowrap"}>
             {_.isArray(state?.notificationList) &&
             !_.isEmpty(state?.notificationList) ? (
               state?.notificationList.map((item, index) => {
@@ -296,7 +288,7 @@ export default function NotificationSettings() {
                     style={{
                       padding: 20,
                       backgroundColor: "#F5F6F8",
-                      borderRadius: 5,
+                      borderRadius: "12px",
                     }}
                   >
                     <Typography

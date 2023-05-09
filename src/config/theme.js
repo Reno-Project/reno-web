@@ -56,6 +56,7 @@ theme = createTheme(theme, {
           fontFamily: "Roobert-Regular !important",
           fontSize: "15px",
           textTransform: "inherit",
+          borderRadius: "7px !important",
         },
         containedPrimary: {
           color: `${color.white}`,
@@ -253,8 +254,7 @@ theme = createTheme(theme, {
           color: "#3A5B7E",
           fontSize: "15px !important",
           "&:hover": {
-            color: color.white,
-            backgroundColor: `${color.primary} !important`,
+            backgroundColor: `#F2F4F7 !important`,
           },
         },
       },

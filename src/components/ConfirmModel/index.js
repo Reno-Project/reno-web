@@ -37,7 +37,7 @@ export default function ConfirmModel(props) {
         justifyContent={"center"}
         style={{
           backgroundColor: "#FFF",
-          borderRadius: 4,
+          borderRadius: 12,
           padding: isMobile ? 30 : 40,
         }}
       >

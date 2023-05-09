@@ -1,12 +1,5 @@
-import {
-  Grid,
-  Tab,
-  Tabs,
-  Typography,
-  Button,
-  useMediaQuery,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Grid, Typography, Button, useMediaQuery } from "@mui/material";
+import React, { useEffect } from "react";
 import useStyles from "./styles";
 import Images from "../../config/images";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -216,27 +209,70 @@ export default function RequestedProposal() {
                   1600 Sqm
                 </Typography>
               </Grid>
-              <Grid item lg={3} sm={3} md={3} xs={3}>
+              <Grid
+                item
+                lg={3}
+                sm={3}
+                md={3}
+                xs={3}
+                paddingBottom={"14px"}
+                borderBottom={"1px solid #F2F3F4"}
+              >
                 <Typography className={classes.acctext}>
                   Outdoor Space:
                 </Typography>
               </Grid>
-              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+              <Grid
+                item
+                lg={9}
+                sm={9}
+                md={9}
+                xs={9}
+                textAlign={"end"}
+                paddingBottom={"14px"}
+                borderBottom={"1px solid #F2F3F4"}
+              >
                 <Typography className={classes.accRightText}>
                   450 Sqm
                 </Typography>
               </Grid>
-              <Grid item lg={3} sm={3} md={3} xs={3}>
+
+              <Grid
+                item
+                lg={3}
+                sm={3}
+                md={3}
+                xs={3}
+                paddingBottom={"14px"}
+                borderBottom={"1px solid #F2F3F4"}
+              >
                 <Typography className={classes.acctext}>
                   Project Budget:
                 </Typography>
               </Grid>
-              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+              <Grid
+                item
+                lg={9}
+                sm={9}
+                md={9}
+                xs={9}
+                textAlign={"end"}
+                paddingBottom={"14px"}
+                borderBottom={"1px solid #F2F3F4"}
+              >
                 <Typography className={classes.accRightText}>
                   $3000-$4000
                 </Typography>
               </Grid>
-              <Grid item lg={9} sm={9} md={9} xs={9}>
+              <Grid
+                item
+                lg={9}
+                sm={9}
+                md={9}
+                xs={9}
+                paddingBottom={"14px"}
+                borderBottom={"1px solid #F2F3F4"}
+              >
                 <Typography className={classes.acctext}>
                   Project Location:
                 </Typography>
@@ -250,6 +286,8 @@ export default function RequestedProposal() {
                 xs={3}
                 justifyContent={"flex-end"}
                 wrap="nowrap"
+                paddingBottom={"14px"}
+                borderBottom={"1px solid #F2F3F4"}
               >
                 <NavLink>
                   <Typography className={classes.linkText}>View Map</Typography>

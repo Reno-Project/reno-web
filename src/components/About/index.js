@@ -49,9 +49,7 @@ export default function About() {
           style={{ display: "flex", flexDirection: "column" }}
         >
           <Grid item>
-            <Typography variant="h5" style={{ marginBottom: 20 }}>
-              About
-            </Typography>
+            <Typography className={classes.title}>About</Typography>
           </Grid>
           {aboutArr.map((item, index) => {
             return (
@@ -71,9 +69,7 @@ export default function About() {
           style={{ display: "flex", flexDirection: "column" }}
         >
           <Grid item>
-            <Typography variant="h5" style={{ marginBottom: 20 }}>
-              Support
-            </Typography>
+            <Typography className={classes.title}>Support</Typography>
           </Grid>
           {supportArr.map((item, index) => {
             return (
@@ -93,9 +89,7 @@ export default function About() {
           style={{ display: "flex", flexDirection: "column" }}
         >
           <Grid item>
-            <Typography variant="h5" style={{ marginBottom: 20 }}>
-              Community
-            </Typography>
+            <Typography className={classes.title}>Community</Typography>
           </Grid>
           {communityArr.map((item, index) => {
             return (
@@ -115,9 +109,7 @@ export default function About() {
           style={{ display: "flex", flexDirection: "column" }}
         >
           <Grid item>
-            <Typography variant="h5" style={{ marginBottom: 20 }}>
-              Account
-            </Typography>
+            <Typography className={classes.title}>Account</Typography>
           </Grid>
           {AccountArr.map((item, index) => {
             return (
