@@ -138,7 +138,7 @@ const CreateProfile = (props) => {
       const { is_profile_verified, profile_completed } =
         userData?.contractor_data;
 
-      if (profile_completed === "completed" && is_profile_verified) {
+      if (profile_completed === "completed") {
         navigate("/dashboard");
       }
     }
@@ -739,7 +739,7 @@ const CreateProfile = (props) => {
       if (response.success) {
         toast.success(response.message);
         setVisible(true);
-        getUserDetailsByIdApiCall();
+        // getUserDetailsByIdApiCall();
       } else {
         toast.error(response.message);
       }
