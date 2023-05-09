@@ -42,7 +42,7 @@ export default function AccountSettings() {
               }}
               variant="scrollable"
             >
-              <Tab label="Edit Profile" />
+              <Tab label="Profile" />
               <Tab label="Billing" />
               <Tab label="Notifications" />
               {userData?.social_connection === "google" ||
