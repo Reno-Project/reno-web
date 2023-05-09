@@ -38,7 +38,7 @@ function PlaceAutoComplete(props) {
     },
     options: {
       types: ["geocode"],
-      // componentRestrictions: { country: 'au' },
+      componentRestrictions: { country: "ae" },
     },
   });
 
