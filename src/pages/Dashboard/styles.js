@@ -2,13 +2,14 @@ import { makeStyles } from "@mui/styles";
 import { color } from "../../config/theme";
 
 const useStyles = makeStyles((theme) => ({
-  container: {},
   titleStyle: {
     color: "#202939",
     fontFamily: "Roobert-Regular !important",
-    lineHeight: 28,
+    fontSize: "28px !important",
+    lineHeight: "36px !important",
     cursor: "pointer",
     fontWeight: "700 !important",
+    marginBottom: "28px !important",
   },
   card: {
     backgroundColor: color.white,
@@ -26,11 +27,49 @@ const useStyles = makeStyles((theme) => ({
       width: "31%",
     },
     [theme.breakpoints.down("md")]: {
-      width: "31.7%",
+      width: "40%",
     },
     [theme.breakpoints.down("sm")]: {
       width: "100%",
     },
+  },
+  cardTxt: {
+    color: "#030F1C",
+    fontFamily: "ElMessiri-Regular !important",
+    fontWeight: "700 !important",
+    fontSize: "28px !important",
+    lineHeight: "100% !important",
+    textAlign: "center",
+  },
+  cardSubTxt: {
+    color: "#475569",
+    fontFamily: "Robbert-Regular !important",
+    fontWeight: "400 !important",
+    fontSize: "16px !important",
+    lineHeight: "110% !important",
+    textAlign: "center",
+  },
+  annualC: {
+    color: "#475569",
+    fontFamily: "Robbert-Regular !important",
+    fontWeight: "500 !important",
+    fontSize: "16px !important",
+    lineHeight: "100% !important",
+    margin: "10px 0 !important",
+  },
+  ptitle: {
+    color: "#030F1C",
+    fontFamily: "Roobert-Regular !important",
+    fontSize: "24px !important",
+    lineHeight: "32px !important",
+    cursor: "pointer",
+    fontWeight: "600 !important",
+  },
+  container: {
+    borderRadius: "8px !important",
+    backgroundColor: color.white,
+    padding: "30px 24px !important",
+    marginTop: "28px !important",
   },
 }));
 

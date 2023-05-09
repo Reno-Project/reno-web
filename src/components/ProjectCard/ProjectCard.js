@@ -34,15 +34,10 @@ const ProjectCard = (props) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            marginBottom: "8px",
           }}
         >
-          <Typography
-            gutterBottom
-            variant="h6"
-            component="div"
-            fontFamily={"ElMessiri-Regular"}
-            margin={0}
-          >
+          <Typography className={classes.name} gutterBottom component="div">
             {villa.name}
           </Typography>
           <IconButton>
@@ -50,23 +45,14 @@ const ProjectCard = (props) => {
           </IconButton>
         </div>
         <div className={classes.rowJustified}>
-          <Typography
-            className={classes.row}
-            variant="subtitle2"
-            mr={2}
-            fontFamily={"Roobert-Regular"}
-          >
+          <Typography className={classes.code}>
             <img src={Images.LocationBlue} alt="Location" /> {villa.code}
           </Typography>
 
-          <Typography fontFamily={"Roobert-Regular"}>
-            <Typography
-              component="span"
-              color="text.secondary"
-              variant="subtitle2"
-            >
+          <Typography className={classes.code1}>
+            <Typography className={classes.code1} color={"#8C92A4"}>
               Created:{" "}
-            </Typography>
+            </Typography>{" "}
             {villa.created}
           </Typography>
         </div>
@@ -81,14 +67,10 @@ const ProjectCard = (props) => {
             <img src={Images.size} alt="size" /> {villa.size}
           </Typography>
         </div>
-        <div style={{ width: "100%", margin: "8px 0px" }}>
-          <Divider />
+        <div style={{ width: "100%", margin: "10px 0px" }}>
+          <Divider style={{ color: "#F2F3F4" }} />
         </div>
-        <Typography
-          className={classes.row}
-          fontFamily={"Roobert-Regular"}
-          fontWeight={500}
-        >
+        <Typography className={classes.company}>
           <img
             src={Images.profile_logo}
             alt="profile_logo"
@@ -107,26 +89,18 @@ const ProjectCard = (props) => {
         {!requested && (
           <>
             <div className={classes.rowJustified}>
-              <Typography variant="subtitle2" fontFamily={"Roobert-Regular"}>
-                Budget:
-              </Typography>
-              <Typography fontFamily={"ElMessiri-Regular"}>
-                {villa.budget}
-              </Typography>
+              <Typography className={classes.row}>Budget:</Typography>
+              <Typography className={classes.budget}>{villa.budget}</Typography>
             </div>
-            <Typography className={classes.rowJustified}>
-              <Typography
-                component={"span"}
-                variant="subtitle2"
-                fontFamily={"Roobert-Regular"}
-              >
+            <div className={classes.rowJustified}>
+              <Typography className={classes.row}>
                 Your move-in date:
               </Typography>
-              {!md && <EastOutlined />}
-              <Typography fontFamily={"ElMessiri-Regular"}>
+              {!md && <EastOutlined style={{ color: "#475569" }} />}
+              <Typography className={classes.budget}>
                 {villa.moveInDate}
               </Typography>
-            </Typography>
+            </div>
           </>
         )}
       </CardContent>

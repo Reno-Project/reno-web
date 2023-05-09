@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Badge,
-  Button,
-  Grid,
-  Rating,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Button, Grid, Rating, Typography, useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
@@ -251,26 +244,14 @@ const Dashboard = (props) => {
     >
       <Grid container>
         <Grid item container>
-          <Typography
-            variant={sm ? "h6" : "h5"}
-            className={classes.titleStyle}
-            mb={2}
-          >
-            Overview
-          </Typography>
+          <Typography className={classes.titleStyle}>Overview</Typography>
         </Grid>
-        <Grid
-          item
-          container
-          justifyContent={!lg && "space-between"}
-          rowGap={2}
-          columnGap={lg ? 2 : 0}
-        >
-          <Grid item className={classes.card} flexDirection={"column"} lg={2}>
-            <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
+        <Grid item container gap={2}>
+          <Grid item className={classes.card} flexDirection={"column"} lg={2.3}>
+            <Typography className={classes.cardTxt}>
               Hi {userData?.contractor_data?.company_name}
             </Typography>
-            <Typography textAlign={"center"}>
+            <Typography className={classes.cardSubTxt}>
               Submit proposals to <br /> your customers
             </Typography>
             <Button
@@ -299,10 +280,10 @@ const Dashboard = (props) => {
                 borderRadius: 30,
               }}
             />
-            <Typography textAlign={"center"}>Active Contracts</Typography>
-            <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
-              $20,000
+            <Typography className={classes.annualC}>
+              Annual contracts value
             </Typography>
+            <Typography className={classes.cardTxt}>$20,000</Typography>
           </Grid>
           <Grid
             item
@@ -323,10 +304,10 @@ const Dashboard = (props) => {
                 borderRadius: 30,
               }}
             />
-            <Typography textAlign={"center"}>Active Contracts</Typography>
-            <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
-              $12
+            <Typography className={classes.annualC}>
+              Active Contracts
             </Typography>
+            <Typography className={classes.cardTxt}>$12</Typography>
           </Grid>
           <Grid
             item
@@ -347,10 +328,10 @@ const Dashboard = (props) => {
                 borderRadius: 30,
               }}
             />
-            <Typography textAlign={"center"}>Profile Views today</Typography>
-            <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
-              $4,384
+            <Typography className={classes.annualC}>
+              Profile Views today
             </Typography>
+            <Typography className={classes.cardTxt}>$4,384</Typography>
           </Grid>
           <Grid
             item
@@ -372,24 +353,15 @@ const Dashboard = (props) => {
             >
               <Rating name="rating" value={4.5} max={1} readOnly />
             </div>
-            <Typography textAlign={"center"}>455 Reviews</Typography>
-            <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
-              4.5/5
-            </Typography>
+            <Typography className={classes.annualC}>455 Reviews</Typography>
+            <Typography className={classes.cardTxt}>4.5/5</Typography>
           </Grid>
         </Grid>
       </Grid>
-      <Grid
-        container
-        my={3}
-        bgcolor={color.white}
-        p={md ? 2 : 4}
-        borderRadius={2}
-      >
-        <Grid item container mb={2} alignItems={"center"}>
-          <Typography variant={sm ? "h6" : "h5"} className={classes.titleStyle}>
-            Ongoing projects
-          </Typography>
+
+      <Grid container className={classes.container}>
+        <Grid item container mb={"18px"} alignItems={"center"}>
+          <Typography className={classes.ptitle}>Ongoing projects</Typography>
           <div
             style={{
               padding: "2px 10px",
@@ -411,8 +383,7 @@ const Dashboard = (props) => {
           style={{
             display: "flex",
             overflowY: "scroll",
-            width: "100%",
-            padding: sm ? 8 : "20px 10px",
+            padding: "10px 0",
           }}
         >
           {isArray(villaDetails) &&
@@ -427,15 +398,10 @@ const Dashboard = (props) => {
         </div>
         {/* </div> */}
       </Grid>
-      <Grid
-        container
-        my={3}
-        bgcolor={color.white}
-        p={md ? 2 : 4}
-        borderRadius={2}
-      >
-        <Grid item container mb={2} alignItems={"center"}>
-          <Typography variant={sm ? "h6" : "h5"} className={classes.titleStyle}>
+
+      <Grid container className={classes.container}>
+        <Grid item container mb={"18px"} alignItems={"center"}>
+          <Typography className={classes.ptitle}>
             Requested proposals
           </Typography>
           <div
@@ -459,8 +425,7 @@ const Dashboard = (props) => {
           style={{
             display: "flex",
             overflowY: "scroll",
-            width: "100%",
-            padding: sm ? 8 : "20px 10px",
+            padding: "10px 0",
           }}
         >
           {isArray(villaDetails1) &&
@@ -482,15 +447,9 @@ const Dashboard = (props) => {
         {/* </div> */}
       </Grid>
 
-      <Grid
-        container
-        my={3}
-        bgcolor={color.white}
-        p={md ? 2 : 4}
-        borderRadius={2}
-      >
-        <Grid item container mb={2} alignItems={"center"}>
-          <Typography variant={sm ? "h6" : "h5"} className={classes.titleStyle}>
+      <Grid container className={classes.container}>
+        <Grid item container mb={"18px"} alignItems={"center"}>
+          <Typography className={classes.ptitle}>
             Submitted proposals
           </Typography>
           <div
@@ -514,8 +473,7 @@ const Dashboard = (props) => {
           style={{
             display: "flex",
             overflowY: "scroll",
-            width: "100%",
-            padding: sm ? 8 : "20px 10px",
+            padding: "10px 0",
           }}
         >
           {isArray(villaDetails) &&

@@ -1,11 +1,10 @@
 import { makeStyles } from "@mui/styles";
-import { isMobile } from "react-device-detect";
 
 const useStyles = makeStyles((theme) => ({
   card: {
     height: "100%",
     minWidth: 380,
-    margin: "0px 8px",
+    marginRight: "24px",
     boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.04)",
     cursor: "pointer",
     transition: "transform 0.3s ease-out !important",
@@ -26,22 +25,72 @@ const useStyles = makeStyles((theme) => ({
       width: "95% ",
     },
   },
+  name: {
+    color: "#202939",
+    fontFamily: "ElMessiri-Regular !important",
+    fontWeight: "600 !important",
+    fontSize: "21px !important",
+    lineHeight: "28px !important",
+  },
   rowJustified: {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    margin: "4px 0px",
+    marginBottom: "8px",
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
       alignItems: "flex-start",
     },
   },
-  row: {
+  code: {
     display: "flex",
     alignItems: "center",
     "& > img": {
       paddingRight: 8,
     },
+    color: "#202939",
+    fontFamily: "Robbert-Regular !important",
+    fontWeight: "400 !important",
+    fontSize: "12px !important",
+    lineHeight: "16px !important",
+  },
+  code1: {
+    color: "#202939",
+    display: "flex",
+    alignItems: "center",
+    fontFamily: "Robbert-Regular !important",
+    fontWeight: "400 !important",
+    fontSize: "12px !important",
+    lineHeight: "16px !important",
+  },
+  row: {
+    "& > img": {
+      paddingRight: 8,
+    },
+    color: "#202939",
+    display: "flex",
+    alignItems: "center",
+    fontFamily: "Robbert-Regular !important",
+    fontWeight: "400 !important",
+    fontSize: "16px !important",
+    lineHeight: "24px !important",
+  },
+  company: {
+    display: "flex",
+    alignItems: "center",
+    color: "#202939",
+    fontFamily: "Robbert-Regular !important",
+    fontWeight: "500 !important",
+    fontSize: "15px !important",
+    lineHeight: "21px !important",
+    marginBottom: "8px !important",
+  },
+  budget: {
+    color: "#202939",
+    fontFamily: "ElMessiri-Regular !important",
+    fontWeight: "500 !important",
+    fontSize: "18px !important",
+    lineHeight: "24px !important",
   },
 }));
 export default useStyles;
