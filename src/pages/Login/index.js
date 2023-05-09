@@ -27,6 +27,10 @@ import useStyles from "./styles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import {
+  askForPermissionToReceiveNotifications,
+  onMessageListener,
+} from "../../push-notification";
 
 const errorObj = {
   emailErr: false,
@@ -74,6 +78,11 @@ const Login = (props) => {
       .then((response) => response.json())
       .then((data) => setLocationData(data))
       .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    askForPermissionToReceiveNotifications();
+    onMessageListener();
   }, []);
 
   // this function checks validation of login field

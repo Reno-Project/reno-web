@@ -1,34 +1,35 @@
-importScripts('https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/9.6.10/firebase-messaging-compat.js');
+importScripts(
+  "https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"
+);
+importScripts(
+  "https://www.gstatic.com/firebasejs/9.6.10/firebase-messaging-compat.js"
+);
 
-var firebaseConfig = {
-  apiKey: "AIzaSyDqH08yiOS38sgbVMGCVf-nyQP9-D88hKo",
-  authDomain: "direct-expertise-56038.firebaseapp.com",
-  projectId: "direct-expertise-56038",
-  storageBucket: "direct-expertise-56038.appspot.com",
-  messagingSenderId: "232985582305",
-  appId: "1:232985582305:web:c6ac37e2ca547365e635a0",
-  measurementId: "G-WGTDHDNNZ2"
+const firebaseConfig = {
+  apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
+  authDomain: "reno-home.firebaseapp.com",
+  projectId: "reno-home",
+  storageBucket: "reno-home.appspot.com",
+  messagingSenderId: "271291217173",
+  appId: "1:271291217173:web:7a4260dcb3527e5869651c",
+  measurementId: "G-FL6WQC501W",
 };
 
 firebase.initializeApp(firebaseConfig);
 
 if (firebase.messaging.isSupported()) {
-	const messaging = firebase.messaging();
+  const messaging = firebase.messaging();
 
-	messaging.onBackgroundMessage(function(payload) {
-		console.log('Received background message ', payload);
+  messaging.onBackgroundMessage(function (payload) {
+    console.log("Received background message ", payload);
 
-		const notificationTitle = payload.notification.title;
-		const notificationOptions = {
-			body: payload.notification.body,
-		};
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+      body: payload.notification.body,
+    };
 
-		self.registration.showNotification(
-			notificationTitle,
-			notificationOptions
-		);
-	});
+    self.registration.showNotification(notificationTitle, notificationOptions);
+  });
 }
 
 this.addEventListener("fetch", (event) => {

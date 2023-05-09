@@ -5,6 +5,9 @@ const initialState = {
   token: "",
   accountTab: 0,
   proposalDetails: {},
+  useruuid: "",
+  isNotify: false,
+  notiData: {},
 };
 
 export default function reducer(state = initialState, action) {
@@ -34,6 +37,24 @@ export default function reducer(state = initialState, action) {
         accountTab: action.accountTab,
       };
 
+    case types.SET_USER_UUID:
+      return {
+        ...state,
+        useruuid: action.useruuid,
+      };
+
+    case types.SET_DISPLAY_NOTIFICATION_POP_UP:
+      return {
+        ...state,
+        isNotify: action.isNotify,
+      };
+
+    case types.SET_NOTI_DATA:
+      return {
+        ...state,
+        notiData: action.notiData,
+      };
+
     case types.CLEAR_ALL_STORAGE_DATA:
       // localStorage.clear();
       localStorage.removeItem("userData", "token");
@@ -42,6 +63,7 @@ export default function reducer(state = initialState, action) {
         userData: {},
         token: "",
         accountTab: 0,
+        useruuid: "",
       };
 
     default:

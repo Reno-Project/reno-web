@@ -30,6 +30,8 @@ import {
   TranslateOutlined,
 } from "@mui/icons-material";
 import Cmodal from "../Cmodel";
+import { getApiData } from "../../utils/APIHelper";
+import { Setting } from "../../utils/Setting";
 
 function Header(props) {
   const currentUrl = window.location.href;
@@ -63,13 +65,18 @@ function Header(props) {
   const id = open ? "simple-popover" : undefined;
 
   // this function for logout
-  function logout(type) {
-    dispatch(clearAllData());
-    handleClose();
-    setVisible(false);
-    setTimeout(() => {
-      type === "signup" ? navigate("/signup") : navigate("/login");
-    }, 500);
+  async function logout(type) {
+    try {
+      await getApiData(Setting.endpoints.logout, "POST");
+      dispatch(clearAllData());
+      handleClose();
+      setVisible(false);
+      setTimeout(() => {
+        type === "signup" ? navigate("/signup") : navigate("/login");
+      }, 500);
+    } catch (error) {
+      console.log("🚀 logout ~ error:", error);
+    }
   }
 
   return (

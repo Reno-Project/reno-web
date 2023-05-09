@@ -9,6 +9,10 @@ import { Setting } from "../../utils/Setting";
 import { getApiData } from "../../utils/APIHelper";
 import { updateUserData } from "../../utils/CommonFunction";
 import ProfileSuccessModal from "../../components/ProfileSuccessModal";
+import {
+  askForPermissionToReceiveNotifications,
+  onMessageListener,
+} from "../../push-notification";
 import useStyles from "./styles";
 import { color } from "../../config/theme";
 import ProjectCard from "../../components/ProjectCard/ProjectCard";
@@ -104,6 +108,8 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     handleUserData();
+    askForPermissionToReceiveNotifications();
+    onMessageListener();
 
     return () => {
       window.scrollTo({ top: 0, behavior: "smooth" });

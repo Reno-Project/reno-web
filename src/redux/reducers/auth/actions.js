@@ -4,6 +4,9 @@ const actions = {
   SET_TOKEN: "auth/SET_TOKEN",
   SET_ACCOUNT_TAB: "auth/SET_ACCOUNT_TAB",
   PROPOSAL_DETAILS: "auth/PROPOSAL_DETAILS",
+  SET_USER_UUID: "auth/SET_USER_UUID",
+  SET_NOTI_DATA: "auth/SET_NOTI_DATA",
+  SET_DISPLAY_NOTIFICATION_POP_UP: "auth/SET_DISPLAY_NOTIFICATION_POP_UP",
 
   setUserData: (userdata) => (dispatch) =>
     dispatch({
@@ -21,6 +24,24 @@ const actions = {
     dispatch({
       type: actions.SET_TOKEN,
       token,
+    }),
+
+  setUserUUID: (useruuid) => (dispatch) =>
+    dispatch({
+      type: actions.SET_USER_UUID,
+      useruuid,
+    }),
+
+  displayNotificationPopUp: (isNotify) => (dispatch) =>
+    dispatch({
+      type: actions.SET_DISPLAY_NOTIFICATION_POP_UP,
+      isNotify,
+    }),
+
+  setNotiData: (notiData) => (dispatch) =>
+    dispatch({
+      type: actions.SET_NOTI_DATA,
+      notiData,
     }),
 
   setAccountTab: (accountTab) => (dispatch) =>

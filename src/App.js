@@ -20,6 +20,7 @@ import OtpInput from "./pages/OtpInput";
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import NotificationPopup from "./components/NotificationPopUp";
 import "./App.css";
 import ContractorProfile from "./pages/ContractorProfile";
 import AccountSettings from "./pages/AccountSettings";
@@ -127,6 +128,7 @@ function App() {
                 </Routes>
               </div>
               <Footer />
+              <NotificationPopup />
             </div>
             <ToastContainer
               autoClose={3000}

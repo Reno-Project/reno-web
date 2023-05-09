@@ -1,32 +1,55 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import authActions from "./Redux/reducers/auth/actions";
-import { store } from "./Redux/store/configureStore";
+import authActions from "./redux/reducers/auth/actions";
+import { store } from "./redux/store/configureStore";
+import { getApiData } from "./utils/APIHelper";
+import { Setting } from "./utils/Setting";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDqH08yiOS38sgbVMGCVf-nyQP9-D88hKo",
-  authDomain: "direct-expertise-56038.firebaseapp.com",
-  projectId: "direct-expertise-56038",
-  storageBucket: "direct-expertise-56038.appspot.com",
-  messagingSenderId: "232985582305",
-  appId: "1:232985582305:web:c6ac37e2ca547365e635a0",
-  measurementId: "G-WGTDHDNNZ2"
+  apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
+  authDomain: "reno-home.firebaseapp.com",
+  projectId: "reno-home",
+  storageBucket: "reno-home.appspot.com",
+  messagingSenderId: "271291217173",
+  appId: "1:271291217173:web:7a4260dcb3527e5869651c",
+  measurementId: "G-FL6WQC501W",
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
 const messaging = getMessaging(firebaseApp);
 
 export const askForPermissionToReceiveNotifications = () => {
-  return getToken(messaging, {vapidKey: 'BJ28czxUHXBHuPldrlYyJFXswPydeZdeOXhjHVYU4s9t7Gab1d-pxXVppr9EhFJWDwJst5Cs0TqCqMG3p0CDk2k'}).then((currentToken) => {
-    if (currentToken) {
-      console.log('current token for client: ', currentToken);
-      store.dispatch(authActions.setUserUUID(currentToken));
-    } else {
-      console.log('No registration token available. Request permission to generate one.');
-    }
-  }).catch((err) => {
-    console.log('An error occurred while retrieving token. ', err);
-  });
+  return getToken(messaging, {
+    vapidKey:
+      "BFtqHYNuVLvddxFYwPjx-cFTCYC3K0vC4npL6v1QAKvPaFsd0Lip3rlsJ6oWhMIvdnMW8LBlHBiLpqSTofUHSHI",
+  })
+    .then((currentToken) => {
+      if (currentToken) {
+        // console.log("current token for client: ", currentToken);
+        const { useruuid, token } = store.getState().auth;
+        if (useruuid !== currentToken && token !== "") {
+          store.dispatch(authActions.setUserUUID(currentToken));
+          updateUUID(currentToken);
+        }
+      } else {
+        console.log(
+          "No registration token available. Request permission to generate one."
+        );
+      }
+    })
+    .catch((err) => {
+      console.log("An error occurred while retrieving token.", err);
+    });
+};
+
+async function updateUUID(token) {
+  try {
+    await getApiData(Setting.endpoints.addFCMToken, "POST", {
+      token,
+    });
+  } catch (error) {
+    console.log("🚀 updateUUID ~ error:", error);
+  }
 }
 
 export function onMessageListener() {
