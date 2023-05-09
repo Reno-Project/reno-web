@@ -633,6 +633,7 @@ const CreateProfile = (props) => {
           : "", // pass in CSV form
         lat: selectedLocation?.lat ? selectedLocation?.lat : "",
         long: selectedLocation?.lng ? selectedLocation?.lng : "",
+        city: selectedLocation?.city ? selectedLocation?.city : "",
       };
       if (typeof state?.certificate !== "string") {
         data.iso_certificate = state?.certificate ? state?.certificate : "";

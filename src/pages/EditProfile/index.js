@@ -372,6 +372,7 @@ export default function EditProfile() {
         insta_url: state?.insta ? state?.insta : "",
         lat: selectedLocation?.lat ? selectedLocation?.lat : "",
         long: selectedLocation?.long || "",
+        city: selectedLocation?.city || "",
       };
       if (active === 1) {
         if (typeof state?.certificate !== "string") {
