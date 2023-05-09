@@ -144,7 +144,8 @@ const Login = (props) => {
           navigate("/signup", { state: { socialData } });
         }
         if (response?.data?.is_two_factor_verified) {
-          sendOtpVerifyingApiCall(response?.data);
+          navigate("/otp-verify", { state: { data: response?.data } });
+          // sendOtpVerifyingApiCall(response?.data);
         } else if (
           response?.data?.contractor_data &&
           response?.data?.contractor_data?.profile_completed === "pending"
@@ -153,9 +154,10 @@ const Login = (props) => {
           navigate("/create-profile");
         } else if (response?.is_email_verified === false) {
           // navigate("/otp-verify");
-          sendOtpVerifyingApiCall({
-            email,
-          });
+          navigate("/otp-verify", { state: { data: response?.data } });
+          // sendOtpVerifyingApiCall({
+          //   email,
+          // });
         } else {
           dispatch(setUserData(response?.data));
           navigate("/dashboard");
@@ -219,7 +221,8 @@ const Login = (props) => {
           });
         } else if (response?.data?.is_two_factor_verified) {
           dispatch(setUserData(response?.data));
-          sendOtpVerifyingApiCall(response?.data);
+          navigate("/otp-verify", { state: { data: response?.data } });
+          // sendOtpVerifyingApiCall(response?.data);
         } else if (
           response?.data?.contractor_data &&
           response?.data?.contractor_data?.profile_completed === "pending"
@@ -228,7 +231,8 @@ const Login = (props) => {
           navigate("/create-profile");
         } else if (response?.is_email_verified === false) {
           // navigate("/otp-verify");
-          sendOtpVerifyingApiCall(response?.data);
+          navigate("/otp-verify", { state: { data: response?.data } });
+          // sendOtpVerifyingApiCall(response?.data);
         } else {
           dispatch(setUserData(response?.data));
           setSocialBtnLoad("");
