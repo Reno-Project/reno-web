@@ -17,6 +17,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "8px !important",
     marginBottom: "16px !important",
   },
+  container: {
+    border: "1px solid #F2F4F7 !important",
+    padding: "22px !important",
+    backgroundColor: "#F9F9FB !important",
+    borderRadius: "8px !important",
+    justifyContent: "flex-end !important",
+  },
   TextStyle: {
     color: "#202939 ",
     fontFamily: "Roobert-Regular !important",
@@ -25,14 +32,7 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: "24px !important",
     fontWeight: "500 !important",
   },
-  TextDeviceStyle: {
-    color: "#5CC385",
-    fontSize: "15px !important",
-    letterSpacing: "0.5px !important",
-    lineHeight: "26px !important",
-    fontFamily: "Roobert-medium !important",
-    marginLeft: "4px !important",
-  },
+
   language: {
     fontFamily: "Roobert-Regular !important",
     color: "#646F86",
@@ -40,16 +40,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "400 !important",
     letterSpacing: "0.5px !important",
     lineHeight: "24px !important",
-  },
-  myOtpInput: {
-    "&::-webkit-inner-spin-button": {
-      WebkitAppearance: "none",
-      margin: 0,
-    },
-    "&::-webkit-outer-spin-button": {
-      WebkitAppearance: "none",
-      margin: 0,
-    },
   },
   imgStyle: { height: "16px" },
   signOut: {

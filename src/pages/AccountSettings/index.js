@@ -32,7 +32,13 @@ export default function AccountSettings() {
           <Typography className={classes.header}>Account Settings</Typography>
         </Grid>
 
-        <Grid item container border="1px solid #F2F4F7" padding={"20px"}>
+        <Grid
+          item
+          container
+          borderRadius={"8px"}
+          border="1px solid #F2F4F7"
+          padding={"20px"}
+        >
           <Grid item xs={12} style={{ borderBottom: "1px solid #F2F3F4" }}>
             <Tabs
               value={tabValue}

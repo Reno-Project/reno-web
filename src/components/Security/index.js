@@ -223,18 +223,7 @@ export default function Security() {
         justifyContent={"center"}
       >
         <Grid item xs={12}>
-          <Grid
-            item
-            container
-            style={{
-              border: "1px solid #F2F4F7",
-              padding: "20px",
-              backgroundColor: "#F9F9FB",
-              borderRadius: 8,
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-          >
+          <Grid item container className={classes.container}>
             <Grid item xs={12}>
               <Typography className={classes.title}>
                 Logging in Settings
@@ -351,15 +340,8 @@ export default function Security() {
             <Grid
               item
               container
-              style={{
-                border: "1px solid #F2F4F7",
-                padding: 20,
-                marginTop: 28,
-                backgroundColor: "#F9F9FB",
-                borderRadius: 8,
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
+              className={classes.container}
+              marginTop={"28px"}
             >
               <Grid item xs={12}>
                 <Typography className={classes.title}>
@@ -384,16 +366,15 @@ export default function Security() {
                         container
                         xs={12}
                         wrap="nowrap"
-                        justifyContent={"space-between"}
-                        style={{ marginTop: 10, marginBottom: 10 }}
-                        gap={1}
+                        margin="16px 0"
+                        gap={2}
                       >
                         <Grid
                           item
                           xs={12}
                           display={"flex"}
                           container
-                          gap={1}
+                          gap={isMobile ? 2 : 1}
                           wrap="nowrap"
                         >
                           <Grid

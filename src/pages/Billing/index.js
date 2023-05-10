@@ -275,15 +275,7 @@ export default function Billing() {
                 Manage Your Payments: View, Edit and Update Your Billing
                 Information
               </Typography>
-              <Grid
-                item
-                container
-                style={{
-                  border: "1px solid #F2F4F7",
-                  padding: isMobile ? 10 : 20,
-                  marginTop: 20,
-                }}
-              >
+              <Grid item container className={classes.container}>
                 <Grid item xs={12} id="beneficiary">
                   <CInput
                     label="Beneficiary Name"

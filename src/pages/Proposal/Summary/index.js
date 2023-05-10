@@ -25,7 +25,7 @@ import ProposalCard from "../../../components/ProposalCard";
 import { getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import { toast } from "react-toastify";
-import { isMobile } from "react-device-detect";
+import { isMobile, isTablet } from "react-device-detect";
 
 const errorObj = {
   scpErr: false,
@@ -131,7 +131,7 @@ export default function Summary() {
         columnGap={1}
         rowGap={1}
         flexDirection="row-reverse"
-        style={{ padding: isMobile ? "20px 0" : md ? 20 : 40 }}
+        style={{ padding: isMobile && !isTablet ? "20px 0" : md ? 20 : 40 }}
         justifyContent={!md ? "space-between" : "center"}
         boxSizing={"border-box"}
       >

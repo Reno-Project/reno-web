@@ -550,9 +550,9 @@ export default function EditProfile() {
   return (
     <Grid
       container
-      padding={isMobile ? "10px" : "20px 0"}
+      padding={isMobile && !isTablet ? "10px" : "20px 0"}
       wrap={isMobile && !isTablet ? "wrap" : "nowrap"}
-      gap={2}
+      gap={isMobile && !isTablet ? 2 : 4}
       justifyContent={"center"}
     >
       {pageLoad ? (
@@ -576,7 +576,7 @@ export default function EditProfile() {
             lg={4}
             style={{
               backgroundColor: "#F5F6F8",
-              borderRadius: 6,
+              borderRadius: "8px",
               padding: 10,
             }}
           >
@@ -589,7 +589,6 @@ export default function EditProfile() {
                     backgroundColor: active === index ? "#fff" : "transparent",
                     padding: "12px 10px",
                     borderBottom: "1px solid #F2F3F4",
-                    borderRadius: 6,
                     cursor: "pointer",
                   }}
                   onClick={() => setActive(index)}
@@ -623,8 +622,9 @@ export default function EditProfile() {
                 container
                 style={{
                   border: "1px solid #F2F4F7",
-                  padding: isMobile ? 10 : 20,
+                  padding: isMobile && !isTablet ? 10 : 20,
                   marginTop: 20,
+                  borderRadius: "8px",
                 }}
               >
                 <Grid item xs={12} id="cname">
@@ -826,6 +826,7 @@ export default function EditProfile() {
                     border: "1px solid #F2F4F7",
                     padding: "0 20px",
                     marginTop: 20,
+                    borderRadius: "8px",
                   }}
                 >
                   <Cselect
@@ -900,8 +901,9 @@ export default function EditProfile() {
                 container
                 style={{
                   border: "1px solid #F2F4F7",
-                  padding: isMobile ? 10 : 20,
+                  padding: isMobile && !isTablet ? 10 : 20,
                   marginTop: 20,
+                  borderRadius: "8px",
                 }}
               >
                 <Grid item xs={12} id="certi">
@@ -1157,6 +1159,7 @@ export default function EditProfile() {
                   border: "1px solid #F2F4F7",
                   padding: isMobile ? 10 : 20,
                   marginTop: 20,
+                  borderRadius: "8px",
                 }}
               >
                 <Grid
@@ -1285,8 +1288,9 @@ export default function EditProfile() {
                 container
                 style={{
                   border: "1px solid #F2F4F7",
-                  padding: isMobile ? 10 : 20,
+                  padding: isMobile && !isTablet ? 10 : 20,
                   marginTop: 20,
+                  borderRadius: "8px",
                 }}
               >
                 <Grid item xs={12} id="linkedIn">
@@ -1435,8 +1439,9 @@ export default function EditProfile() {
                 container
                 style={{
                   border: "1px solid #F2F4F7",
-                  padding: isMobile ? 10 : 20,
+                  padding: isMobile && !isTablet ? 10 : 20,
                   marginTop: 20,
+                  borderRadius: "8px",
                 }}
               >
                 <Grid
@@ -1455,6 +1460,7 @@ export default function EditProfile() {
                       alignItems: "center",
                       width: "100%",
                       height: 170,
+                      borderRadius: 8,
                     }}
                   >
                     <ImageOutlined

@@ -16,5 +16,20 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: "24px !important",
     marginTop: "8px !important",
   },
+  notiTitle: {
+    color: "#030F1C",
+    fontFamily: "Roobert-Regular !important",
+    fontWeight: "500 !important",
+    fontSize: "18px !important",
+    lineHeight: "24px !important",
+    paddingBottom: "20px !important",
+  },
+  name: {
+    color: "#202939",
+    fontFamily: "Roobert-Regular !important",
+    fontWeight: "500 !important",
+    fontSize: "16px !important",
+    lineHeight: "24px !important",
+  },
 }));
 export default useStyles;

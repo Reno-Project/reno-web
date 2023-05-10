@@ -14,7 +14,7 @@ import CInput from "../../components/CInput";
 import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import { toast } from "react-toastify";
-import { isMobile } from "react-device-detect";
+import { isMobile, isTablet } from "react-device-detect";
 import useStyles from "./styles";
 
 const errorObj = {
@@ -128,7 +128,10 @@ export default function ChangePassword() {
   }
 
   return (
-    <Grid container padding={isMobile ? "10px" : "20px"} wrap={"wrap"} gap={2}>
+    <Grid
+      container
+      padding={isTablet ? "20px 10px" : isMobile ? "10px" : "20px"}
+    >
       <Grid item xs={12}>
         <Typography className={classes.title}>Change Password</Typography>
         <Typography className={classes.subtitle}>
@@ -136,9 +139,9 @@ export default function ChangePassword() {
           Safe
         </Typography>
       </Grid>
-      <Divider light style={{ width: "100%", marginBottom: "15px" }} />
+      <Divider light style={{ width: "100%", margin: "16px 0 28px" }} />
       <Grid item xs={12} sm={10} md={8} lg={7}>
-        <Grid item xs={12}>
+        <Grid item>
           <CInput
             label="Old password"
             placeholder="Enter Old password"
@@ -168,8 +171,7 @@ export default function ChangePassword() {
             }
           />
         </Grid>
-
-        <Grid item xs={12}>
+        <Grid item>
           <CInput
             label="New password"
             placeholder="Enter new password"
@@ -202,7 +204,7 @@ export default function ChangePassword() {
             }
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item>
           <CInput
             label="Confirm password"
             placeholder="Enter confirm password"
@@ -232,7 +234,7 @@ export default function ChangePassword() {
             }
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item>
           <Button fullWidth variant="contained" onClick={validatePassword}>
             {buttonLoader ? (
               <CircularProgress size={26} style={{ color: "#fff" }} />

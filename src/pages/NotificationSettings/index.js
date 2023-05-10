@@ -7,7 +7,7 @@ import {
   Divider,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { isMobile } from "react-device-detect";
+import { isMobile, isTablet } from "react-device-detect";
 import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import { toast } from "react-toastify";
@@ -243,7 +243,7 @@ export default function NotificationSettings() {
   return (
     <Grid
       container
-      padding={isMobile ? "10px" : "20px"}
+      padding={isTablet ? "20px 10px" : isMobile ? "10px" : "20px"}
       wrap={"nowrap"}
       gap={2}
       justifyContent={"center"}
@@ -255,7 +255,7 @@ export default function NotificationSettings() {
         <Typography className={classes.subtitle}>
           Customize Your Notifications: Manage Your Alerts and Stay in Control
         </Typography>
-        <Divider light style={{ width: "100%", margin: "15px 0 30px" }} />
+        <Divider light style={{ width: "100%", margin: "16px 0 28px" }} />
 
         {loader ? (
           <div
@@ -274,7 +274,12 @@ export default function NotificationSettings() {
             />
           </div>
         ) : (
-          <Grid item container gap={3} wrap={isMobile ? "wrap" : "nowrap"}>
+          <Grid
+            item
+            container
+            gap={3}
+            wrap={isMobile && !isTablet ? "wrap" : "nowrap"}
+          >
             {_.isArray(state?.notificationList) &&
             !_.isEmpty(state?.notificationList) ? (
               state?.notificationList.map((item, index) => {
@@ -291,16 +296,7 @@ export default function NotificationSettings() {
                       borderRadius: "12px",
                     }}
                   >
-                    <Typography
-                      style={{
-                        color: "#030F1C",
-                        fontFamily: "Roobert-Regular",
-                        fontWeight: "500",
-                        fontSize: "18px",
-                        lineHeight: "24px",
-                        paddingBottom: "20px",
-                      }}
-                    >
+                    <Typography className={classes.notiTitle}>
                       {item?.title}
                     </Typography>
                     {item?.subArray.map((it, ind) => {
@@ -309,22 +305,14 @@ export default function NotificationSettings() {
                           style={{
                             display: "flex",
                             justifyContent: "space-between",
-                            padding: "10px 0",
+                            padding: "14px 0",
                             borderBottom:
                               item?.subArray?.length - 1 == ind
                                 ? null
                                 : "1px solid #E8E8E8",
                           }}
                         >
-                          <Typography
-                            style={{
-                              color: "#202939",
-                              fontFamily: "Roobert-Regular",
-                              fontWeight: "500",
-                              fontSize: "16px",
-                              lineHeight: "24px",
-                            }}
-                          >
+                          <Typography className={classes.name}>
                             {it.name}
                           </Typography>
                           <IOSSwitch
