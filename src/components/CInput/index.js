@@ -44,7 +44,7 @@ function CInput(props) {
   } = props;
 
   const passwordRegex =
-    /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%+:^=<()~>_?`|'";,.&*])((?=.*[A-Z])))(?=.{8,})/;
+    /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%+:^=<(){}[\]~>_?`|'";,.&*€₹£])((?=.*[A-Z])))(?=.{8,})/;
 
   return (
     <FormControl variant="standard" fullWidth required={required} error={error}>

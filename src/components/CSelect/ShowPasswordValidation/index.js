@@ -22,7 +22,7 @@ export default function ShowPasswordValidation(props) {
       hasNumber: /\d/.test(text),
       hasUppercase: /[A-Z]/.test(text),
       hasLowercase: /[a-z]/.test(text),
-      hasSymbol: /^(?=.*[!@#$%+:^=<()~>_?`|'";,.&*])/.test(text),
+      hasSymbol: /^(?=.*[!@#$%+:^=<(){}[\]~>_?`|'";,.&*€₹£])/.test(text),
       hasMinLength: text.length >= 8,
     });
   }

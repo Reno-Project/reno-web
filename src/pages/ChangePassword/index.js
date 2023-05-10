@@ -42,7 +42,7 @@ export default function ChangePassword() {
     const error = { ...errObj };
     let valid = true;
     const passwordRegex =
-      /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%+:^=<()~>_?`|'";,.&*])((?=.*[A-Z])))(?=.{8,})/;
+      /^(((?=.*[a-z])(?=.*[A-Z]))((?=.*[a-z]))(?=.*[!@#$%+:^=<(){}[\]~>_?`|'";,.&*€₹£])((?=.*[A-Z])))(?=.{8,})/;
 
     if (isEmpty(oldPassword)) {
       valid = false;
