@@ -198,7 +198,7 @@ export default function Summary() {
           <Grid
             item
             container
-            xs={11}
+            xs={isMobile ? 11 : 10}
             sm={10}
             md={4}
             xl={3}
@@ -209,13 +209,11 @@ export default function Summary() {
         )}
         <Grid
           item
-          container
-          xs={11}
+          xs={isMobile ? 11 : 10}
           sm={10}
           md={7.8}
-          xl={8.8}
+          xl={8}
           className={classes.MainContainer}
-          padding={"20px"}
         >
           <Grid
             item

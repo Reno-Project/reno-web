@@ -58,16 +58,12 @@ export default function ProposalCard() {
         justifyContent={"center"}
         columnGap={2}
       >
-        <Grid item lg={4} md={4} sm={4} xs={12}></Grid>
         <Grid item lg={4} md={4} sm={4} xs={12}>
           <img
             src="https://www.wonderplugin.com/wp-content/uploads/2016/06/blue-grape-hyacinths.jpg"
             alt="chat"
             className={classes.imageStyle}
           />
-          <div className={classes.activeContainer}>
-            <div className={classes.activeStatus}></div>
-          </div>
         </Grid>
         <Grid item container>
           <Grid item lg={9} md={9} sm={9} xs={9}>
