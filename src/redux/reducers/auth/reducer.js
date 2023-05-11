@@ -64,6 +64,7 @@ export default function reducer(state = initialState, action) {
         token: "",
         accountTab: 0,
         useruuid: "",
+        proposalDetails: {},
       };
 
     default:

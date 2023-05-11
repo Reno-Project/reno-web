@@ -1,9 +1,8 @@
 import {
   Button,
-  CardContent,
+  CircularProgress,
   Collapse,
   Divider,
-  FormControl,
   FormHelperText,
   Grid,
   IconButton,
@@ -11,36 +10,33 @@ import {
   ListItemButton,
   Menu,
   MenuItem,
-  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
-  Tabs,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import useStyles from "./styles";
 import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { color } from "../../../config/theme";
 import CInput from "../../../components/CInput";
-import Cselect from "../../../components/CSelect";
 import { useTheme } from "@emotion/react";
 import Images from "../../../config/images";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import _, { isArray, isEmpty, isNull } from "lodash";
+import _, { isArray, isEmpty } from "lodash";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import moment from "moment";
 import { Setting } from "../../../utils/Setting";
 import { toast } from "react-toastify";
-import { getApiData } from "../../../utils/APIHelper";
+import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
+import ConfirmModel from "../../../components/ConfirmModel";
+import CAutocomplete from "../../../components/CAutocomplete";
 
 const errorObj = {
   bNameErr: false,
@@ -51,8 +47,10 @@ const errorObj = {
   materialUnitPriceMsg: "",
   quantityErr: false,
   quantityMsg: "",
-  materialMilestoneErr: false,
-  materialMilestoneMsg: "",
+  // materialMilestoneErr: false,
+  // materialMilestoneMsg: "",
+  unitErr: false,
+  unitMsg: "",
   daysErr: false,
   daysMsg: "",
   manpowerRateErr: false,
@@ -66,40 +64,47 @@ const errorObj = {
 };
 
 export default function Budget(props) {
-  const { handleClick = () => null } = props;
+  const { handleClick = () => null, villa } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
   const { setProposalDetails } = authActions;
-  const [state, setState] = useState({
-    budgetName: "",
-    photo: [],
-    materialType: "",
-    materialUnitPrice: "",
-    quantity: "",
-    manpowerRate: "",
+  const initialFormvalues = {
+    name: "",
+    photo_url: [],
+    photo_origin: [],
+    material_type: "",
+    material_unit: "",
+    material_unit_price: "",
+    qty: "",
+    manpower_rate: "",
     days: "",
-    materialMilestone: "",
-    manpowerMilestone: "",
-    specifications: "",
-    manpowerLastChange: moment().format("MMMM DD, YYYY")?.toString(),
-    materialLastChange: moment().format("MMMM DD, YYYY")?.toString(),
-    manpowerStatus: "Pending",
-    materialStatus: "pending",
-  });
+    milestone: null,
+    specification: "",
+    // manpowerLastChange: moment().format("MMMM DD, YYYY")?.toString(),
+    // materialLastChange: moment().format("MMMM DD, YYYY")?.toString(),
+    // manpowerStatus: "Pending",
+    // materialStatus: "pending",
+  };
+  const [state, setState] = useState(initialFormvalues);
+  console.log("state====>>>>>", state);
 
   const [budgetDetails, setBudgetDetails] = useState([]);
+  console.log("budgetDetails====>>>>>", budgetDetails);
+  const [budgetLoader, setBudgetLoader] = useState(false);
+  const [milestones, setMilestones] = useState([]);
+  const [visible, setVisible] = useState(false);
   // const budgetlist = [
   //   {
-  //     budgetName: "Milestone 1",
-  //     materialType: "marble",
-  //     materialUnitPrice: "20",
-  //     quantity: "2",
+  //     name: "Milestone 1",
+  //     material_type: "marble",
+  //     material_unit_price: "20",
+  //     qty: "2",
   //     materialMilestone: "N/A",
-  //     manpowerRate: "20",
+  //     manpower_rate: "20",
   //     days: "",
   //     manpowerMilestone: "N/A",
-  //     specifications: "",
+  //     specification: "",
   //     photo: Images.building,
   //     manpowerLastChange: moment().format("MMMM DD, YYYY")?.toString(),
   //     materialLastChange: moment().format("MMMM DD, YYYY")?.toString(),
@@ -108,15 +113,15 @@ export default function Budget(props) {
   //   },
   //   {
   //     photo: Images.building,
-  //     budgetName: "Milestone 2",
-  //     materialType: "wood",
-  //     materialUnitPrice: "20",
-  //     quantity: "2",
+  //     name: "Milestone 2",
+  //     material_type: "wood",
+  //     material_unit_price: "20",
+  //     qty: "2",
   //     materialMilestone: "Polish",
-  //     manpowerRate: "20",
+  //     manpower_rate: "20",
   //     days: "",
   //     manpowerMilestone: "Procurement",
-  //     specifications: "",
+  //     specification: "",
   //     manpowerLastChange: moment().format("MMMM DD, YYYY")?.toString(),
   //     materialLastChange: moment().format("MMMM DD, YYYY")?.toString(),
   //     manpowerStatus: "Pending",
@@ -126,38 +131,46 @@ export default function Budget(props) {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState(null);
+  const [buttonLoader, setButtonLoader] = useState(false);
+  const [uploadLoader, setUploadLoader] = useState(false);
 
   const [errObj, setErrObj] = useState(errorObj);
 
   const fileInputRef = useRef();
-  const quantityRef = useRef();
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
-    setState(
-      proposalDetails?.budget_details?.formvalues || {
-        budgetName: "",
-        photo: [],
-        materialType: "",
-        materialUnitPrice: "",
-        quantity: "",
-        manpowerRate: "",
-        days: "",
-        materialMilestone: "",
-        manpowerMilestone: "",
-        specifications: "",
-        manpowerLastChange: moment().format("MMMM DD, YYYY")?.toString(),
-        materialLastChange: moment().format("MMMM DD, YYYY")?.toString(),
-        manpowerStatus: "Pending",
-        materialStatus: "pending",
-      }
-    );
-    proposalDetails?.budget_details?.budgets
-      ? setBudgetDetails(proposalDetails?.budget_details?.budgets)
-      : setBudgetDetails([]);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (proposalDetails?.budget_details?.previous) {
+      setState(
+        proposalDetails?.budget_details?.formvalues || initialFormvalues
+      );
+      setBudgetDetails(proposalDetails?.budget_details?.budgets || []);
+    } else {
+      getBudgetList();
+    }
+    getMilestoneList();
   }, []);
+
+  async function getBudgetList() {
+    setBudgetLoader(true);
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.budgetList}/${villa?.proposal_id}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        setBudgetDetails(response?.data);
+      }
+      setBudgetLoader(false);
+    } catch (error) {
+      setBudgetLoader(false);
+      console.log("err===>", error);
+    }
+  }
 
   const handleChange = (e, i) => {
     let dummyarr = [...budgetDetails];
@@ -169,69 +182,79 @@ export default function Budget(props) {
     const error = { ...errObj };
     let valid = true;
 
-    if (!isArray(state.photo) || isEmpty(state.photo)) {
+    if (!isArray(state.photo_url) || isEmpty(state.photo_url)) {
       valid = false;
       error.photoErr = true;
       error.photoMsg = "Please upload photo";
     }
 
-    if (isEmpty(state.budgetName)) {
+    if (isEmpty(state.name?.trim())) {
       valid = false;
       error.bNameErr = true;
       error.bNameMsg = "Please enter the name";
     }
 
-    if (isEmpty(state.materialType)) {
+    if (isEmpty(state.material_type?.trim())) {
       valid = false;
       error.materialTypeErr = true;
       error.materialTypeMsg = "Please enter the material type";
     }
 
     const regex = /^\d+(\.\d+)?$/;
-    if (isEmpty(state.materialUnitPrice)) {
+    if (!state.material_unit_price) {
       valid = false;
       error.materialUnitPriceErr = true;
       error.materialUnitPriceMsg = "Please enter the material unit price";
-    } else if (!regex.test(state.materialUnitPrice)) {
+    } else if (!regex.test(state.material_unit_price)) {
       valid = false;
       error.materialUnitPriceErr = true;
       error.materialUnitPriceMsg = "Please enter valid material unit price";
     }
 
-    if (isEmpty(state.quantity?.toString())) {
+    if (!state?.qty) {
       valid = false;
       error.quantityErr = true;
-      error.quantityMsg = "Please select the material quantity";
+      error.quantityMsg = "Please select the material qty";
     }
 
-    if (isEmpty(state.materialMilestone?.toString())) {
+    // if (isEmpty(state.materialMilestone?.toString())) {
+    //   valid = false;
+    //   error.materialMilestoneErr = true;
+    //   error.materialMilestoneMsg = "Please select the milestone";
+    // }
+
+    if (!state.material_unit) {
       valid = false;
-      error.materialMilestoneErr = true;
-      error.materialMilestoneMsg = "Please select the milestone";
+      error.unitErr = true;
+      error.unitMsg = "Please enter material unit";
     }
 
-    if (isEmpty(state.manpowerRate)) {
+    if (!state?.manpower_rate) {
       valid = false;
       error.manpowerRateErr = true;
       error.manpowerRateMsg = "Please enter the manpower rate";
     }
 
-    if (isEmpty(state.days?.toString())) {
+    if (!state?.days) {
       valid = false;
       error.daysErr = true;
       error.daysMsg = "Please select the days";
     }
 
-    if (isEmpty(state.manpowerMilestone?.toString())) {
+    if (
+      isEmpty(state?.milestone?.id?.toString()) ||
+      state?.milestone === undefined ||
+      state?.milestone === ""
+    ) {
       valid = false;
       error.manpowerMilestoneErr = true;
       error.manpowerMilestoneMsg = "Please select the milestone";
     }
 
-    if (isEmpty(state.specifications)) {
+    if (isEmpty(state?.specification)) {
       valid = false;
       error.specificationsErr = true;
-      error.specificationsMsg = "Please enter the specifications";
+      error.specificationsMsg = "Please enter the specification";
     }
     setErrObj(error);
 
@@ -279,35 +302,104 @@ export default function Budget(props) {
   };
 
   const handleEdit = (data, index) => {
-    setState(selectedBudget.data);
-    handleClose();
-  };
-  const handleDelete = () => {
-    console.log(`Deleting ${selectedBudget.name}`);
+    if (!selectedBudget) {
+      return; // or handle the error in some other way
+    }
+
+    const { data: selectedData } = selectedBudget;
+
+    const milestoneObj = milestones?.find(
+      (item) => selectedData?.milestone_id?.toString() === item?.id?.toString()
+    );
+
+    const nextState = {
+      ...selectedData,
+      milestone: milestoneObj,
+      photo_origin: selectedData?.photo_url?.image
+        ? [selectedData.photo_url]
+        : [],
+    };
+
+    setState(nextState);
     handleClose();
   };
 
-  function getMilestones() {
-    return (
-      proposalDetails?.milestone_details?.milestones?.map(
-        (milestone) => milestone.milestone_name
-      ) || []
-    );
+  const handleDelete = () => {
+    const newItems = [...budgetDetails]; // Create a copy of the array
+    newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
+    setBudgetDetails(newItems);
+    setVisible(false);
+    setSelectedBudget(null);
+    handleClose();
+  };
+
+  async function getMilestoneList() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.milestoneProposalList}/${villa?.proposal_id}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        isArray(response?.data) &&
+          !isEmpty(response?.data) &&
+          setMilestones(response?.data);
+      }
+    } catch (error) {
+      console.log("err===>", error);
+    }
   }
 
+  async function addBudget() {
+    setButtonLoader(true);
+    const data = {
+      project_id: 1,
+      budget_details: budgetDetails,
+    };
+    try {
+      const response = await getAPIProgressData(
+        Setting.endpoints.createBudget,
+        "POST",
+        data,
+        true
+      );
+
+      if (response.success) {
+        toast.success(response.message);
+        const budget_details = {
+          formvalues: initialFormvalues,
+          milestones: [],
+          previous: false,
+        };
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            budget_details,
+          })
+        );
+        handleClick("next");
+      } else {
+        toast.error(response.message);
+      }
+      setButtonLoader("");
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
+      toast.error(error.toString());
+      setButtonLoader("");
+    }
+  }
+
+  const handleSubmit = () => {
+    if (isArray(budgetDetails) && !isEmpty(budgetDetails)) {
+      addBudget();
+    } else {
+      validate();
+      // toast.warning("Please add atleast one milestone");
+    }
+  };
+
   function clearData() {
-    setState({
-      budgetName: "",
-      photo: [],
-      materialType: "",
-      materialUnitPrice: "",
-      quantity: "",
-      manpowerRate: "",
-      days: "",
-      materialMilestone: "",
-      manpowerMilestone: "",
-      specifications: "",
-    });
+    setState(initialFormvalues);
     setErrObj(errorObj);
   }
 
@@ -328,6 +420,66 @@ export default function Budget(props) {
           alt=""
         />
       );
+    }
+  }
+
+  async function UploadFile(img) {
+    setUploadLoader(true);
+    const data = {
+      image: img,
+    };
+    try {
+      const response = await getAPIProgressData(
+        Setting.endpoints.uploadTemplate,
+        "POST",
+        data,
+        true
+      );
+      if (response.success) {
+        const nArr = state.photo_url ? [...state.photo_url] : [];
+        response?.data?.map((item) => nArr.push(item));
+
+        const nArr1 = state.photo_origin ? [...state.photo_origin] : [];
+        img.map((item) => nArr1.push(item));
+        setState({ ...state, photo_url: nArr, photo_origin: nArr1 });
+
+        setErrObj({
+          ...errObj,
+          photoErr: false,
+          photoMsg: "",
+        });
+      } else {
+        toast.error(response.message);
+      }
+      setUploadLoader("");
+    } catch (error) {
+      console.log("error", error);
+      toast.error(error.toString());
+      setUploadLoader("");
+    }
+  }
+
+  async function deletePhoto(id, ind) {
+    console.log("o====>>>>>");
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.deleteTemplate}/${id}`,
+        "GET",
+        {}
+      );
+      if (response?.success) {
+        toast.success(response?.message);
+        const nArr = [...state.photo_url];
+        nArr.splice(ind, 1);
+        const nArr1 = [...state.photo_origin];
+        nArr1.splice(ind, 1);
+        setState({ ...state, photo_url: nArr, photo_origin: nArr1 });
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error.toString() || "Somthing went wromg try again later");
     }
   }
 
@@ -366,83 +518,103 @@ export default function Budget(props) {
             position: "relative",
           }}
         >
-          <>
-            <div
-              style={{
-                backgroundColor: "#F9F9FA",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-                height: 170,
-                border: errObj.photoErr ? "1px solid red" : "none",
-                borderRadius: 4,
-              }}
+          {uploadLoader ? (
+            <Grid
+              item
+              container
+              justifyContent={"center"}
+              alignItems={"center"}
+              sx={12}
+              minHeight={220}
             >
-              <ImageOutlined
+              <CircularProgress style={{ color: "#274BF1" }} size={26} />
+            </Grid>
+          ) : (
+            <>
+              <div
                 style={{
-                  color: "grey",
-                  marginBottom: 20,
-                  fontSize: 30,
+                  backgroundColor: "#F9F9FA",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  height: 170,
+                  border: errObj.photoErr ? "1px solid red" : "none",
+                  borderRadius: 4,
                 }}
+              >
+                <ImageOutlined
+                  style={{
+                    color: "grey",
+                    marginBottom: 20,
+                    fontSize: 30,
+                  }}
+                />
+                <InputLabel>
+                  <b>Upload Photo</b>
+                </InputLabel>
+                <InputLabel style={{ fontSize: 12 }}>
+                  {"PNG, JPG, (max size 1200*800)"}
+                </InputLabel>
+              </div>
+              <input
+                type="file"
+                accept="image/jpeg, image/png, image/jpg"
+                multiple
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  opacity: 0,
+                  cursor: "pointer",
+                }}
+                onChange={(e) => {
+                  const chosenFiles = Array.prototype.slice.call(
+                    e.target.files
+                  );
+                  if (chosenFiles) {
+                    UploadFile(chosenFiles);
+                  }
+                  // const nArr = state.photo_url ? [...state.photo_url] : [];
+                  // chosenFiles.map((item) => nArr.push(item));
+                  // setState({ ...state, photo_url: nArr });
+                  // setErrObj({
+                  //   ...errObj,
+                  //   photoErr: false,
+                  //   photoMsg: "",
+                  // });
+                }}
+                ref={fileInputRef}
               />
-              <InputLabel>
-                <b>Upload Photo</b>
-              </InputLabel>
-              <InputLabel style={{ fontSize: 12 }}>
-                {"PNG, JPG, (max size 1200*800)"}
-              </InputLabel>
-            </div>
-            <input
-              type="file"
-              accept="image/jpeg, image/png, image/jpg"
-              multiple
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                opacity: 0,
-                cursor: "pointer",
-              }}
-              onChange={(e) => {
-                const chosenFiles = Array.prototype.slice.call(e.target.files);
-                const nArr = state.photo ? [...state.photo] : [];
-                chosenFiles.map((item) => nArr.push(item));
-                setState({ ...state, photo: nArr });
-                setErrObj({
-                  ...errObj,
-                  photoErr: false,
-                  photoMsg: "",
-                });
-              }}
-              ref={fileInputRef}
-            />
-            <FormHelperText
-              error={errObj.photoErr}
-              style={{ fontFamily: "Roobert-Regular" }}
-            >
-              {errObj.photoMsg}
-            </FormHelperText>
-          </>
+              <FormHelperText
+                error={errObj.photoErr}
+                style={{ fontFamily: "Roobert-Regular" }}
+              >
+                {errObj.photoMsg}
+              </FormHelperText>
+            </>
+          )}
         </Grid>
 
         <Grid
           item
           style={{
-            marginTop: state?.photo?.length > 0 && 40,
+            marginTop: state?.photo_url?.length > 0 && 40,
             overflowY: "scroll",
             maxHeight: 500,
             width: "100%",
           }}
         >
-          {isArray(state.photo) &&
-            state?.photo?.length > 0 &&
-            state?.photo?.map((item, index) => {
+          {isArray(state.photo_origin) &&
+            state?.photo_origin?.length > 0 &&
+            state?.photo_origin?.map((item, index) => {
               let imgUrl = "";
-              if (typeof item === "object") {
+              if (item.image) {
+                imgUrl = item.image;
+              } else if (typeof item === "object" && item instanceof Blob) {
                 imgUrl = URL.createObjectURL(item);
               } else {
                 imgUrl = item;
@@ -506,10 +678,20 @@ export default function Budget(props) {
                         color: "#8C92A4",
                       }}
                       onClick={() => {
-                        // item?.id && deletePhoto(item?.id);
-                        const nArr = [...state.photo];
-                        nArr.splice(index, 1);
-                        setState({ ...state, photo: nArr });
+                        let uploadID = "";
+                        if (state?.photo_url[index]?.image) {
+                          const nArr = [...state.photo_origin];
+                          const nArr1 = [...state.photo_url];
+                          nArr.splice(index, 1);
+                          nArr1.splice(index, 1);
+                          setState({
+                            ...state,
+                            photo_origin: nArr,
+                            photo_url: nArr1,
+                          });
+                        }
+                        uploadID = state?.photo_url[index]?.image_id;
+                        uploadID?.toString() && deletePhoto(uploadID, index);
                       }}
                     />
                   </div>
@@ -521,9 +703,9 @@ export default function Budget(props) {
           <CInput
             label="Budget Name"
             placeholder="Enter Budget Name..."
-            value={state.budgetName}
+            value={state.name}
             onChange={(e) => {
-              setState({ ...state, budgetName: e.target.value });
+              setState({ ...state, name: e.target.value });
               setErrObj({
                 ...errObj,
                 bNameErr: false,
@@ -535,13 +717,13 @@ export default function Budget(props) {
           />
         </Grid>
 
-        <Grid item xs={12} id="materialType">
+        <Grid item xs={12} id="material_type">
           <CInput
             label="Material type:"
             placeholder="marble, wood, etc..."
-            value={state.materialType}
+            value={state.material_type}
             onChange={(e) => {
-              setState({ ...state, materialType: e.target.value });
+              setState({ ...state, material_type: e.target.value });
               setErrObj({
                 ...errObj,
                 materialTypeErr: false,
@@ -553,14 +735,31 @@ export default function Budget(props) {
           />
         </Grid>
         <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
+          <Grid item xs={12} md={4} id="Unit">
+            <CInput
+              label="Material unit:"
+              placeholder="Enter material unit"
+              value={state.material_unit}
+              onChange={(e) => {
+                setState({ ...state, material_unit: e.target.value });
+                setErrObj({
+                  ...errObj,
+                  unitErr: false,
+                  unitMsg: "",
+                });
+              }}
+              error={errObj.unitErr}
+              helpertext={errObj.unitMsg}
+            />
+          </Grid>
           <Grid item xs={12} md={4} id="price">
             <CInput
               label="Material unit price"
               placeholder="Enter amount here...."
-              value={state.materialUnitPrice}
+              value={state.material_unit_price}
               type="number"
               onChange={(e) => {
-                setState({ ...state, materialUnitPrice: e.target.value });
+                setState({ ...state, material_unit_price: e.target.value });
                 setErrObj({
                   ...errObj,
                   materialUnitPriceErr: false,
@@ -572,16 +771,16 @@ export default function Budget(props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={4} id="quantity">
+          <Grid item xs={12} md={4} id="qty">
             <CInput
               label="Quantity"
               placeholder="Enter quantity here...."
-              value={state.quantity}
+              value={state.qty}
               type="tel"
               onChange={(e) => {
                 const inputValue = e.target.value;
                 const numericValue = inputValue.replace(/[^0-9]/g, "");
-                setState({ ...state, quantity: numericValue });
+                setState({ ...state, qty: numericValue });
                 setErrObj({
                   ...errObj,
                   quantityErr: false,
@@ -596,24 +795,6 @@ export default function Budget(props) {
               helpertext={errObj.quantityMsg}
             />
           </Grid>
-          <Grid item xs={12} md={4} id="milestone">
-            <Cselect
-              label="milestone"
-              placeholder="Select milestone"
-              value={state.materialMilestone}
-              handleSelect={(e) => {
-                setState({ ...state, materialMilestone: e });
-                setErrObj({
-                  ...errObj,
-                  materialMilestoneErr: false,
-                  materialMilestoneMsg: "",
-                });
-              }}
-              renderTags={getMilestones()}
-              error={errObj.materialMilestoneErr}
-              helpertext={errObj.materialMilestoneMsg}
-            />
-          </Grid>
         </Grid>
 
         <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
@@ -621,10 +802,10 @@ export default function Budget(props) {
             <CInput
               label="Manpower rate"
               placeholder="Enter amount here...."
-              value={state.manpowerRate}
+              value={state.manpower_rate}
               type="number"
               onChange={(e) => {
-                setState({ ...state, manpowerRate: e.target.value });
+                setState({ ...state, manpower_rate: e.target.value });
                 setErrObj({
                   ...errObj,
                   manpowerRateErr: false,
@@ -661,19 +842,20 @@ export default function Budget(props) {
             />
           </Grid>
           <Grid item xs={12} md={4} id="manpowerMilestone">
-            <Cselect
+            <CAutocomplete
               label="milestone"
               placeholder="Select milestone"
-              value={state.manpowerMilestone}
-              handleSelect={(e) => {
-                setState({ ...state, manpowerMilestone: e });
+              value={state.milestone}
+              onChange={(e, newValue) => {
+                setState({ ...state, milestone: newValue });
                 setErrObj({
                   ...errObj,
                   manpowerMilestoneErr: false,
                   manpowerMilestoneMsg: "",
                 });
               }}
-              renderTags={getMilestones()}
+              options={milestones}
+              getOptionLabel={(option) => option.milestone_name}
               error={errObj.manpowerMilestoneErr}
               helpertext={errObj.manpowerMilestoneMsg}
             />
@@ -685,9 +867,9 @@ export default function Budget(props) {
             rows={3}
             label="Specifications:"
             placeholder="Write here..."
-            value={state.specifications}
+            value={state.specification}
             onChange={(e) => {
-              setState({ ...state, specifications: e.target.value });
+              setState({ ...state, specification: e.target.value });
               setErrObj({
                 ...errObj,
                 specificationsErr: false,
@@ -723,15 +905,41 @@ export default function Budget(props) {
             Add Budget
           </Typography>
         </Grid>
-        {isArray(budgetDetails) &&
+        {budgetLoader ? (
+          <Grid
+            item
+            container
+            justifyContent={"center"}
+            alignItems={"center"}
+            sx={12}
+            minHeight={220}
+          >
+            <CircularProgress style={{ color: "#274BF1" }} size={26} />
+          </Grid>
+        ) : (
+          isArray(budgetDetails) &&
           !isEmpty(budgetDetails) &&
           budgetDetails?.map((item, index) => {
             return (
               <Grid container className={classes.card}>
-                <Grid item container wrap={"nowrap"}>
-                  <Grid item justifyContent={"flex-start"}>
-                    {isArray(item?.photo) && !isEmpty(item?.photo) ? (
-                      getPhotoURL(item?.photo[0])
+                <Grid item container wrap={sm ? "wrap" : "nowrap"}>
+                  <Grid item sx={12} justifyContent={"flex-start"}>
+                    {isArray(item?.photo_url) && !isEmpty(item?.photo_url) ? (
+                      <img
+                        key={item?.photo_url[0].id}
+                        src={
+                          typeof item?.photo_url[0]?.image === "string"
+                            ? item?.photo_url[0]?.image
+                            : URL.createObjectURL(item?.photo_origin[0])
+                        }
+                        alt={""}
+                        style={{
+                          width: md ? 150 : 220,
+                          maxHeight: 170,
+                          objectFit: "contain",
+                          borderRadius: 4,
+                        }}
+                      />
                     ) : (
                       <img
                         style={{
@@ -748,8 +956,8 @@ export default function Budget(props) {
                     item
                     container
                     sx={12}
-                    p={2}
-                    justifyContent={"flex-end"}
+                    p={sm ? "10px" : 2}
+                    justifyContent={sm ? "flex-start" : "flex-end"}
                   >
                     <Grid
                       item
@@ -758,7 +966,7 @@ export default function Budget(props) {
                       alignItems={"flex-start"}
                     >
                       <Typography variant="h5" fontFamily={"ElMessiri-Regular"}>
-                        {item?.budgetName || "-"}
+                        {item?.name || "-"}
                       </Typography>
                       {/* <IconButton
                           onClick={(e) => handleRowClick(e, item, index)}
@@ -770,53 +978,10 @@ export default function Budget(props) {
                       >
                         <MoreVertIcon fontSize="20px" color="red" />
                       </IconButton>
-                      <Menu
-                        id={`budget-menu`}
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleClose}
-                        PaperProps={{
-                          elevation: 0,
-                          sx: {
-                            overflow: "visible",
-                            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                            mt: 1.5,
-                            "& .MuiAvatar-root": {
-                              width: 32,
-                              height: 32,
-                              ml: -0.5,
-                              mr: 1,
-                            },
-                            "&:before": {
-                              content: '""',
-                              display: "block",
-                              position: "absolute",
-                              top: 0,
-                              right: 14,
-                              width: 10,
-                              height: 10,
-                              bgcolor: "background.paper",
-                              transform: "translateY(-50%) rotate(45deg)",
-                              zIndex: 0,
-                            },
-                          },
-                        }}
-                        transformOrigin={{
-                          horizontal: "right",
-                          vertical: "top",
-                        }}
-                        anchorOrigin={{
-                          horizontal: "right",
-                          vertical: "bottom",
-                        }}
-                      >
-                        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-                        <MenuItem onClick={handleDelete}>Delete</MenuItem>
-                      </Menu>
                     </Grid>
-                    <Grid item textAlign={"end"}>
+                    <Grid item textAlign={sm ? "start" : "end"}>
                       <Typography fontFamily={"ElMEssiri-Regular"}>
-                        $ {item?.materialUnitPrice || "-"}
+                        $ {item?.material_unit_price || "-"}
                       </Typography>
                       <Typography
                         fontFamily={"ElMEssiri-Regular"}
@@ -831,10 +996,11 @@ export default function Budget(props) {
                         March 01, 2023
                       </Typography>
                     </Grid>
-                    <Grid item container xl={12} justifyContent={"flex-start"}>
+                    <Grid item container justifyContent={"flex-start"}>
                       <ListItemButton
                         style={{
                           color: color.primary,
+                          padding: sm && "10px 0px",
                         }}
                         onClick={() => {
                           handleChange(item, index);
@@ -863,183 +1029,205 @@ export default function Budget(props) {
                       width: "100%",
                     }}
                   > */}
-                  <TableContainer style={{ padding: 10 }}>
-                    <Table className={classes.customtable}>
-                      <Typography
-                        fontFamily={"ElMEssiri-Regular"}
-                        fontSize={18}
-                      >
-                        Manpower
-                      </Typography>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell
-                            align="right"
-                            style={{
-                              color: color.captionText,
-                              fontFamily: "Roobert-Regular !important",
-                            }}
-                          >
-                            Milestone
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              color: color.captionText,
-                              fontFamily: "Roobert-Regular !important",
-                            }}
-                            align="right"
-                          >
-                            Quantity
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              color: color.captionText,
-                              fontFamily: "Roobert-Regular !important",
-                            }}
-                            align="right"
-                          >
-                            Unit Price
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              color: color.captionText,
-                              fontFamily: "Roobert-Regular !important",
-                            }}
-                            align="right"
-                          >
-                            Status
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              color: color.captionText,
-                              fontFamily: "Roobert-Regular !important",
-                            }}
-                            align="right"
-                          >
-                            Last Change
-                          </TableCell>
-                        </TableRow>
-                        <TableRow key={"Manpower"}>
-                          <TableCell align="right">
-                            <Typography fontFamily={"ElMessiri-Regular"}>
-                              {item?.manpowerMilestone || "-"}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Typography fontFamily={"ElMessiri-Regular"}>
-                              {item?.quantity || "-"}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Typography fontFamily={"ElMessiri-Regular"}>
-                              {item?.manpowerRate || "-"}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Typography fontFamily={"ElMessiri-Regular"}>
-                              {item?.manpowerStatus || "-"}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Typography fontFamily={"ElMessiri-Regular"}>
-                              {item?.manpowerLastChange || "-"}
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                    <div style={{ width: "100%", padding: "10px 0px" }}>
+                  <Grid item padding={"10px 10px 0px 10px"}>
+                    <Typography fontFamily={"ElMEssiri-Regular"} fontSize={18}>
+                      Specifications
+                    </Typography>
+                    <Typography>{item?.specification || "-"}</Typography>
+                    <div
+                      style={{
+                        width: "100%",
+                        paddingTop: 14,
+                        paddingBottom: 4,
+                      }}
+                    >
                       <Divider />
                     </div>
-                    <Table className={classes.customtable}>
-                      <Typography
-                        fontFamily={"ElMEssiri-Regular"}
-                        fontSize={18}
+                  </Grid>
+                  <div className="responsive-table">
+                    <TableContainer
+                      style={{ padding: 10, boxSizing: "border-box" }}
+                    >
+                      <Table className={classes.customtable}>
+                        <Typography
+                          fontFamily={"ElMEssiri-Regular"}
+                          fontSize={18}
+                        >
+                          Manpower
+                        </Typography>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell
+                              align="right"
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                            >
+                              Milestone
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Manpower rate
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Quantity
+                            </TableCell>
+                            {/* <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Status
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Last Change
+                            </TableCell> */}
+                          </TableRow>
+                          <TableRow key={"Manpower"}>
+                            <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
+                                {item?.manpowerMilestone || "-"}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
+                                {item?.manpower_rate || "-"}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
+                                {item?.qty || "-"}
+                              </Typography>
+                            </TableCell>
+                            {/* <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
+                                {item?.manpowerStatus || "-"}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
+                                {item?.manpowerLastChange || "-"}
+                              </Typography>
+                            </TableCell> */}
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                      <div
+                        style={{ width: "100%", padding: "10px 0px 14px 0px" }}
                       >
-                        Material
-                      </Typography>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell
-                            align="right"
-                            style={{
-                              color: color.captionText,
-                              fontFamily: "Roobert-Regular !important",
-                            }}
-                          >
-                            Milestone
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              color: color.captionText,
-                              fontFamily: "Roobert-Regular !important",
-                            }}
-                            align="right"
-                          >
-                            Quantity
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              color: color.captionText,
-                              fontFamily: "Roobert-Regular !important",
-                            }}
-                            align="right"
-                          >
-                            Unit Price
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              color: color.captionText,
-                              fontFamily: "Roobert-Regular !important",
-                            }}
-                            align="right"
-                          >
-                            Status
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              color: color.captionText,
-                              fontFamily: "Roobert-Regular !important",
-                            }}
-                            align="right"
-                          >
-                            Last Change
-                          </TableCell>
-                        </TableRow>
-                        <TableRow key={"Manpower"}>
-                          <TableCell align="right">
-                            <Typography fontFamily={"ElMessiri-Regular"}>
-                              {item?.materialMilestone || "-"}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Typography fontFamily={"ElMessiri-Regular"}>
-                              {item?.materialUnitPrice || "-"}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Typography fontFamily={"ElMessiri-Regular"}>
-                              {item?.quantity || "-"}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Typography fontFamily={"ElMessiri-Regular"}>
-                              {item?.materialStatus || "-"}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Typography fontFamily={"ElMessiri-Regular"}>
-                              {item?.materialLastChange || "-"}
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+                        <Divider />
+                      </div>
+                      <Table className={classes.customtable}>
+                        <Typography
+                          fontFamily={"ElMEssiri-Regular"}
+                          fontSize={18}
+                        >
+                          Material
+                        </Typography>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell
+                              align="right"
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                            >
+                              Material Unit
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Days
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Unit Price
+                            </TableCell>
+                            {/* <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Status
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Last Change
+                            </TableCell> */}
+                          </TableRow>
+                          <TableRow key={"Manpower"}>
+                            <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
+                                {item?.materialMilestone || "-"}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
+                                {item?.material_unit_price || "-"}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
+                                {item?.qty || "-"}
+                              </Typography>
+                            </TableCell>
+                            {/* <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
+                                {"Pending" || "-"}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
+                                {item?.materialLastChange || "-"}
+                              </Typography>
+                            </TableCell> */}
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
                 </Collapse>
               </Grid>
             );
-          })}
+          })
+        )}
         <Grid
           pt={2}
           item
@@ -1062,24 +1250,73 @@ export default function Budget(props) {
             </Button>
           </Grid>
           <Grid item sm={5.9} xs={12}>
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={() => {
-                if (isArray(budgetDetails) && !isEmpty(budgetDetails)) {
-                  handleClick("submit");
-                  updateRedux();
-                } else {
-                  validate();
-                  // toast.warning("Please add atleast one milestone");
-                }
-              }}
-            >
-              Submit
+            <Button variant="contained" fullWidth onClick={handleSubmit}>
+              {buttonLoader ? (
+                <CircularProgress style={{ color: "white" }} size={26} />
+              ) : (
+                "Submit"
+              )}
             </Button>
           </Grid>
         </Grid>
       </Grid>
+      <ConfirmModel
+        visible={visible}
+        handleClose={() => setVisible(false)}
+        confirmation={() => {
+          handleDelete();
+        }}
+        message={`Are you sure you want to delete ${selectedBudget?.data?.name} budget?`}
+      />
+      <Menu
+        id={`budget-menu`}
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            mt: 1.5,
+            "& .MuiAvatar-root": {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            "&:before": {
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{
+          horizontal: "right",
+          vertical: "top",
+        }}
+        anchorOrigin={{
+          horizontal: "right",
+          vertical: "bottom",
+        }}
+      >
+        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+        <MenuItem
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
     </>
   );
 }

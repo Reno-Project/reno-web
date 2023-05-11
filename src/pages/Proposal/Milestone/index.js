@@ -50,7 +50,7 @@ const errorObj = {
   amountMsg: "",
 };
 export default function Milestone(props) {
-  const { handleClick = () => null, from } = props;
+  const { handleClick = () => null, from, villa } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
@@ -72,28 +72,30 @@ export default function Milestone(props) {
   const md = useMediaQuery(theme.breakpoints.down("md"));
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState({});
-  console.log("selectedBudget====>>>>>", selectedBudget);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    setState(
-      proposalDetails?.milestone_details?.formvalues || {
-        milestone_name: "",
-        description: "",
-        start_date: null,
-        end_date: null,
-      }
-    );
-    // setMilestones(proposalDetails?.milestone_details?.milestones || []);
-    getMilestoneList();
+    if (proposalDetails?.milestone_details?.previous) {
+      setState(
+        proposalDetails?.milestone_details?.formvalues || {
+          milestone_name: "",
+          description: "",
+          start_date: null,
+          end_date: null,
+        }
+      );
+      setMilestones(proposalDetails?.milestone_details?.milestones || []);
+    } else {
+      getMilestoneList();
+    }
   }, []);
 
   async function getMilestoneList() {
     setmilestoneLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}`,
+        `${Setting.endpoints.milestoneProposalList}/${villa?.proposal_id}`,
         "GET",
         {}
       );
@@ -108,20 +110,38 @@ export default function Milestone(props) {
   }
 
   async function addMilestone() {
-    setButtonLoader("step2");
+    setButtonLoader(true);
+    const data = {
+      project_id: 1,
+      milestone_details: milestones,
+    };
     try {
       const response = await getAPIProgressData(
-        Setting.endpoints.addPortfolio,
+        Setting.endpoints.createMilestone,
         "POST",
-        {
-          portfolio: state.portfolio,
-        },
+        data,
         true
       );
 
       if (response.success) {
         toast.success(response.message);
-        // setActiveStep((step) => step + 1);
+        const milestone_details = {
+          formvalues: {
+            milestone_name: "",
+            description: "",
+            start_date: null,
+            end_date: null,
+          },
+          milestones: [],
+          previous: false,
+        };
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            milestone_details,
+          })
+        );
+        handleClick("next");
       } else {
         toast.error(response.message);
       }
@@ -230,6 +250,15 @@ export default function Milestone(props) {
     setMilestones(dummyarr);
   };
 
+  const handleSubmit = () => {
+    if (isArray(milestones) && !isEmpty(milestones)) {
+      addMilestone();
+    } else {
+      validate();
+      // toast.warning("Please add atleast one milestone");
+    }
+  };
+
   function clearData() {
     setState({
       milestone_name: "",
@@ -242,7 +271,14 @@ export default function Milestone(props) {
   return (
     <>
       <Grid container>
-        <Grid item xs={12} pb={2} pt={"25px"}>
+        <Grid
+          item
+          container
+          xs={12}
+          pb={2}
+          pt={"25px"}
+          justifyContent={"space-between"}
+        >
           <Typography
             variant="h5"
             style={{
@@ -471,57 +507,6 @@ export default function Milestone(props) {
                     >
                       <MoreVertIcon />
                     </IconButton>
-                    {selectedBudget?.index === index && (
-                      <Menu
-                        id={`budget-menu_${index}`}
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleClose}
-                        PaperProps={{
-                          elevation: 0,
-                          sx: {
-                            overflow: "visible",
-                            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                            mt: 1.5,
-                            "& .MuiAvatar-root": {
-                              width: 32,
-                              height: 32,
-                              ml: -0.5,
-                              mr: 1,
-                            },
-                            "&:before": {
-                              content: '""',
-                              display: "block",
-                              position: "absolute",
-                              top: 0,
-                              right: 14,
-                              width: 10,
-                              height: 10,
-                              bgcolor: "background.paper",
-                              transform: "translateY(-50%) rotate(45deg)",
-                              zIndex: 0,
-                            },
-                          },
-                        }}
-                        transformOrigin={{
-                          horizontal: "right",
-                          vertical: "top",
-                        }}
-                        anchorOrigin={{
-                          horizontal: "right",
-                          vertical: "bottom",
-                        }}
-                      >
-                        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            setVisible(true);
-                          }}
-                        >
-                          Delete
-                        </MenuItem>
-                      </Menu>
-                    )}
                   </Grid>
                   <Grid item container justifyContent={"space-between"} py={2}>
                     <Grid item xl={6}>
@@ -661,6 +646,7 @@ export default function Milestone(props) {
                 const milestone_details = {
                   formvalues: state,
                   milestones: milestones,
+                  previous: true,
                 };
                 dispatch(
                   setProposalDetails({ ...proposalDetails, milestone_details })
@@ -673,28 +659,7 @@ export default function Milestone(props) {
             </Button>
           </Grid>
           <Grid item sm={5.9} xs={12}>
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={() => {
-                if (isArray(milestones) && !isEmpty(milestones)) {
-                  handleClick("next");
-                  const milestone_details = {
-                    formvalues: state,
-                    milestones: milestones,
-                  };
-                  dispatch(
-                    setProposalDetails({
-                      ...proposalDetails,
-                      milestone_details,
-                    })
-                  );
-                } else {
-                  validate();
-                  // toast.warning("Please add atleast one milestone");
-                }
-              }}
-            >
+            <Button variant="contained" fullWidth onClick={handleSubmit}>
               {buttonLoader ? (
                 <CircularProgress size={26} style={{ color: "#fff" }} />
               ) : (
@@ -710,8 +675,57 @@ export default function Milestone(props) {
         confirmation={() => {
           handleDelete();
         }}
-        message={`Are you sure you want to delete ${selectedBudget?.data?.name} milestone?`}
+        message={`Are you sure you want to delete ${selectedBudget?.data?.milestone_name} milestone?`}
       />
+      <Menu
+        id={`budget-menu`}
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            mt: 1.5,
+            "& .MuiAvatar-root": {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            "&:before": {
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{
+          horizontal: "right",
+          vertical: "top",
+        }}
+        anchorOrigin={{
+          horizontal: "right",
+          vertical: "bottom",
+        }}
+      >
+        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+        <MenuItem
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
     </>
   );
 }

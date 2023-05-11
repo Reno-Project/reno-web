@@ -39,6 +39,12 @@ export const Setting = {
     createproposal: "api/contractor/create-proposal",
     addFCMToken: "api/user/add-fcm-token",
     logout: "api/user/logout",
+    createMilestone: "api/project/create-milestone-project",
+    createBudget: "api/project/create-proposal-budget-item",
+    budgetList: "api/project/list-proposal-budget-item",
+    projectDetails: "api/project/my-projects",
+    uploadTemplate: "api/project/upload-template",
+    deleteTemplate: "api/project/upload-template-delete",
   },
 
   JS_Regex: {

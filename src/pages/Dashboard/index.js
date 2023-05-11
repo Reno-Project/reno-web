@@ -73,6 +73,8 @@ const villaDetails = [
 
 const villaDetails1 = [
   {
+    id: 5,
+    proposal_id: 45,
     name: "Villa MM-renovation",
     code: "#CH019221002900",
     created: "21.01.2023",
@@ -262,7 +264,13 @@ const Dashboard = (props) => {
             </Typography>
             <Button
               variant="contained"
-              // onClick={() => navigate("/request-proposal")}
+              // onClick={() =>
+              //   navigate("/create-proposal", {
+              //     state: {
+              //       create_proposal: true,
+              //     },
+              //   })
+              // }
             >
               Create Proposal
             </Button>

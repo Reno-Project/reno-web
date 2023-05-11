@@ -5,22 +5,79 @@ import Images from "../../config/images";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import BlueAbout from "../../components/BlueAbout";
 import theme from "../../config/theme";
-import { useDispatch, useSelector } from "react-redux";
-import authActions from "../../redux/reducers/auth/actions";
 
 export default function RequestedProposal() {
+  const location = useLocation();
+  const villa = location?.state ? location?.state : {};
   const classes = useStyles();
-  const { proposalDetails } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
-  const { setProposalDetails } = authActions;
+  // const villa = {
+  //   id: 45,
+  //   project_id: 5,
+  //   contractor_id: 291,
+  //   user_id: 291,
+  //   status: "pending",
+  //   scope_of_work: "vill",
+  //   createdAt: "2023-05-08T05:41:09.510Z",
+  //   proposal_budget_item: [
+  //     {
+  //       id: 1,
+  //       proposal_id: 45,
+  //       name: "Budget 1",
+  //       material_type: "wood",
+  //       material_unit: 2,
+  //       material_unit_price: 2300,
+  //       qty: 1,
+  //       milestone_id: 5,
+  //       manpower_rate: 1,
+  //       days: 5,
+  //       specification: "Specs",
+  //     },
+  //     {
+  //       id: 2,
+  //       proposal_id: 45,
+  //       name: "Budget 2",
+  //       material_type: "wood",
+  //       material_unit: 1,
+  //       material_unit_price: 1000,
+  //       qty: 2,
+  //       milestone_id: 5,
+  //       manpower_rate: 1,
+  //       days: 2,
+  //       specification: "test",
+  //     },
+  //   ],
+  //   proposal_id: 44,
+  //   proposal_photo: {
+  //     id: 37,
+  //     photo: "documents/proposal-b9d94f67-6dd6-4131-a22e-b6bc6a354e03",
+  //   },
+  //   project: [
+  //     {
+  //       createdAt: "2023-05-08T05:33:26.980Z",
+  //       updatedAt: "2023-05-08T05:33:26.980Z",
+  //       id: 5,
+  //       exp_id: 1,
+  //       project_type: "iterrior",
+  //       name: "vill",
+  //       description: "nscnsnc",
+  //       location: "27A blikers st",
+  //       budget: 1555,
+  //       start_date: "01/05/2023",
+  //       end_date: "31/08/2023",
+  //       form_json: '"{bnchbacb : nasncnasc}"',
+  //       status: "pending",
+  //       user_id: 291,
+  //       contractor_id: 10,
+  //     },
+  //   ],
+  // };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const Location = useLocation();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const imageArray = [
     {
@@ -342,7 +399,7 @@ export default function RequestedProposal() {
                   fullWidth
                   onClick={() => {
                     window.scrollTo({ top: 0, behavior: "smooth" });
-                    navigate("/create-proposal");
+                    navigate("/create-proposal", { state: villa });
                   }}
                 >
                   Submit proposal
