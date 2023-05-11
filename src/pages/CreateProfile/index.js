@@ -751,6 +751,17 @@ const CreateProfile = (props) => {
     }
   }
 
+  // this function checks image size validation
+  function checkImgSize(img) {
+    let valid = true;
+    if (img.size > 3145728) {
+      valid = false;
+    } else {
+      valid = true;
+    }
+    return valid;
+  }
+
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
       <Grid
@@ -1151,8 +1162,25 @@ const CreateProfile = (props) => {
                         opacity: 0,
                       }}
                       onChange={(e) => {
-                        setState({ ...state, certificate: e.target.files[0] });
-                        setErrObj({ ...errObj, certiErr: false, certiMsg: "" });
+                        const bool = checkImgSize(e.target.files[0]);
+                        if (bool) {
+                          setState({
+                            ...state,
+                            certificate: e.target.files[0],
+                          });
+                          setErrObj({
+                            ...errObj,
+                            certiErr: false,
+                            certiMsg: "",
+                          });
+                        } else {
+                          setErrObj({
+                            ...errObj,
+                            certiErr: true,
+                            certiMsg:
+                              "The image you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again.",
+                          });
+                        }
                       }}
                     />
                   </div>
@@ -1205,12 +1233,22 @@ const CreateProfile = (props) => {
                         opacity: 0,
                       }}
                       onChange={(e) => {
-                        setState({ ...state, license: e.target.files[0] });
-                        setErrObj({
-                          ...errObj,
-                          licenseErr: false,
-                          licenseMsg: "",
-                        });
+                        const bool = checkImgSize(e.target.files[0]);
+                        if (bool) {
+                          setState({ ...state, license: e.target.files[0] });
+                          setErrObj({
+                            ...errObj,
+                            licenseErr: false,
+                            licenseMsg: "",
+                          });
+                        } else {
+                          setErrObj({
+                            ...errObj,
+                            licenseErr: true,
+                            licenseMsg:
+                              "The image you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again.",
+                          });
+                        }
                       }}
                     />
                   </div>
@@ -1265,12 +1303,25 @@ const CreateProfile = (props) => {
                         opacity: 0,
                       }}
                       onChange={(e) => {
-                        setState({ ...state, registraion: e.target.files[0] });
-                        setErrObj({
-                          ...errObj,
-                          registrationErr: false,
-                          registrationMsg: "",
-                        });
+                        const bool = checkImgSize(e.target.files[0]);
+                        if (bool) {
+                          setState({
+                            ...state,
+                            registraion: e.target.files[0],
+                          });
+                          setErrObj({
+                            ...errObj,
+                            registrationErr: false,
+                            registrationMsg: "",
+                          });
+                        } else {
+                          setErrObj({
+                            ...errObj,
+                            registrationErr: true,
+                            registrationMsg:
+                              "The image you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again.",
+                          });
+                        }
                       }}
                     />
                   </div>
@@ -1506,12 +1557,21 @@ const CreateProfile = (props) => {
                         const chosenFiles = Array.prototype.slice.call(
                           e.target.files
                         );
-                        // console.log("chosenFiles", chosenFiles);
                         const nArr = [...state.portfolio];
+                        let showMsg = false;
                         chosenFiles.map((item, index) => {
-                          nArr.push(item);
+                          const bool = checkImgSize(item);
+                          if (bool) {
+                            nArr.push(item);
+                          } else {
+                            showMsg = true;
+                          }
                         });
-                        //  nArr.push(e.target.files[0]);
+                        if (showMsg) {
+                          toast.error(
+                            "Some image you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                          );
+                        }
                         setState({ ...state, portfolio: nArr });
                       }}
                     />
