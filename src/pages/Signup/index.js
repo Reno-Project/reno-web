@@ -26,6 +26,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import useStyles from "./styles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { askForPermissionToReceiveNotifications } from "../../push-notification";
 
 const errorObj = {
   unameErr: false,
@@ -75,6 +76,7 @@ const Signup = (props) => {
         locationState?.socialData?.email || locationState?.data?.email || "",
       uname: locationState?.data?.username ? locationState?.data?.username : "",
     });
+    askForPermissionToReceiveNotifications();
   }, []);
 
   useEffect(() => {
@@ -213,6 +215,7 @@ const Signup = (props) => {
       device_type: "web",
       device_name: locationData?.ip || "",
       login_address: address,
+      notification: Notification.permission === "granted" ? 1 : 0,
     };
 
     if (locationState?.type) {
@@ -247,6 +250,11 @@ const Signup = (props) => {
       toast.error(error.toString());
     }
   }
+
+  const isSocial =
+    locationState?.type === "google" ||
+    locationState?.type === "fb" ||
+    locationState?.type === "apple";
 
   return (
     <div>
@@ -289,6 +297,9 @@ const Signup = (props) => {
                 label="Email"
                 placeholder="Enter email address"
                 value={state.email}
+                disabled={
+                  isSocial && emailRegex.test(locationState?.socialData?.email)
+                }
                 onChange={(e) => {
                   setState({ ...state, email: e.target.value });
                   setErrObj({ ...errObj, emailErr: false, emailMsg: "" });

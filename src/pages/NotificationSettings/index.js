@@ -318,12 +318,18 @@ export default function NotificationSettings() {
                           <IOSSwitch
                             checked={it?.isChecked}
                             onChange={(event) => {
-                              changePushNotificationStatusApiCall(
-                                it?.title,
-                                event.target.checked,
-                                index,
-                                ind
-                              );
+                              if (Notification.permission === "granted") {
+                                changePushNotificationStatusApiCall(
+                                  it?.title,
+                                  event.target.checked,
+                                  index,
+                                  ind
+                                );
+                              } else {
+                                toast.info(
+                                  "It's look like you have't granted the permission. Please enable notifications in your browser settings to enable this services."
+                                );
+                              }
                             }}
                           />
                         </div>
