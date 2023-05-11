@@ -9,7 +9,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import {
-  Facebook,
   CreateOutlined,
   AttachFileOutlined,
   ImageOutlined,
@@ -18,10 +17,9 @@ import {
   Image,
   Instagram,
 } from "@mui/icons-material";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import _, { isArray, isEmpty, isString } from "lodash";
+import _, { isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import IBAN from "iban";
 import CStepper from "../../components/CStepper";
@@ -33,6 +31,7 @@ import { Setting } from "../../utils/Setting";
 import PlaceAutoComplete from "../../components/PlaceAutoComplete";
 import useStyles from "./styles";
 import ProfileSuccessModal from "../../components/ProfileSuccessModal";
+import ConfirmModel from "../../components/ConfirmModel";
 import Images from "../../config/images";
 
 const errorObj = {
@@ -109,9 +108,9 @@ const CreateProfile = (props) => {
     expertise: "",
     pricing: "",
     location: "",
-    certificate: "",
-    license: "",
-    registraion: "",
+    certificate: [],
+    license: [],
+    registraion: [],
     linkedin: "",
     insta: "",
     social: "",
@@ -128,21 +127,32 @@ const CreateProfile = (props) => {
   const [buttonLoader, setButtonLoader] = useState("");
   const [visible, setVisible] = useState(false);
   const [bLogo, setBLogo] = useState(null);
-
+  const [deleteImg, setDeleteImg] = useState({
+    visible: false,
+    id: null,
+    index: null,
+    type: "",
+    loader: false,
+  });
   const bank = ["HDFC", "SBI", "PNB", "ICICI", "Axis"];
   const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
   const contractArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
   useEffect(() => {
     if (!isEmpty(userData) && !isEmpty(userData?.contractor_data)) {
-      const { is_profile_verified, profile_completed } =
-        userData?.contractor_data;
+      const { profile_completed } = userData?.contractor_data;
 
       if (profile_completed === "completed") {
         navigate("/dashboard");
       }
     }
   }, [userData]);
+
+  useEffect(() => {
+    return () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  }, []);
 
   useEffect(() => {
     getprojectList();
@@ -220,11 +230,11 @@ const CreateProfile = (props) => {
           ? uData?.no_of_contracts_annually.toString()
           : "",
         expertise: newArray ? newArray : [],
-        certificate: uData?.iso_certificate ? uData?.iso_certificate : "",
-        license: uData?.licenses ? uData?.licenses : "",
+        certificate: uData?.iso_certificate ? uData?.iso_certificate : [],
+        license: uData?.licenses ? uData?.licenses : [],
         registraion: uData?.company_registration
           ? uData?.company_registration
-          : "",
+          : [],
         linkedin: uData?.linkedin_url ? uData?.linkedin_url : "",
         social: uData?.fb_url ? uData?.fb_url : "",
         insta: uData?.insta_url ? uData?.insta_url : "",
@@ -635,17 +645,46 @@ const CreateProfile = (props) => {
         long: selectedLocation?.lng ? selectedLocation?.lng : "",
         city: selectedLocation?.city ? selectedLocation?.city : "",
       };
-      if (typeof state?.certificate !== "string") {
-        data.iso_certificate = state?.certificate ? state?.certificate : "";
+
+      // this map for manage new certificate image upload
+      const newCertificate = [];
+      if (isArray(state?.certificate) && state?.certificate.length > 0) {
+        state?.certificate.map((item) => {
+          if (!_.has(item, "image")) {
+            newCertificate.push(item);
+          }
+        });
       }
-      if (typeof state?.license !== "string") {
-        data.licenses = state?.license ? state?.license : "";
+      if (isArray(state?.certificate) && state?.certificate.length > 0) {
+        data.iso_certificate = newCertificate || [];
       }
-      if (typeof state?.registraion !== "string") {
-        data.company_registration = state?.registraion
-          ? state?.registraion
-          : "";
+
+      // this map for manage new license image upload
+      const newLicense = [];
+      if (isArray(state?.license) && state?.license.length > 0) {
+        state?.license.map((item) => {
+          if (!_.has(item, "image")) {
+            newLicense.push(item);
+          }
+        });
       }
+      if (isArray(state?.license) && state?.license.length > 0) {
+        data.licenses = newLicense || [];
+      }
+
+      // this map for manage new registration image upload
+      const newRegistraion = [];
+      if (isArray(state?.registraion) && state?.registraion.length > 0) {
+        state?.registraion.map((item) => {
+          if (!_.has(item, "image")) {
+            newRegistraion.push(item);
+          }
+        });
+      }
+      if (isArray(state?.registraion) && state?.registraion.length > 0) {
+        data.company_registration = newRegistraion || [];
+      }
+
       if (typeof state?.businessLogo !== "string") {
         data.business_logo = state?.businessLogo ? state?.businessLogo : "";
       }
@@ -751,6 +790,47 @@ const CreateProfile = (props) => {
     }
   }
 
+  // this function for delete images from server
+  async function handleDeleteImage() {
+    setDeleteImg({ ...deleteImg, loader: true });
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.deleteImage}/${deleteImg.id}`,
+        "GET"
+      );
+
+      if (response.success) {
+        const data = [...state[deleteImg.type]];
+        data.splice(deleteImg?.index, 1);
+        if (deleteImg?.type === "certificate") {
+          setState({ ...state, certificate: data });
+        } else if (deleteImg?.type === "license") {
+          setState({ ...state, license: data });
+        } else if (deleteImg?.type === "registraion") {
+          setState({ ...state, registraion: data });
+        }
+        setDeleteImg({
+          visible: false,
+          id: null,
+          index: null,
+          type: "",
+          loader: false,
+        });
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+        setDeleteImg({ ...deleteImg, loader: false });
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:795 ~ handleDeleteImage ~ error:",
+        error
+      );
+      toast.error(error.toString());
+      setDeleteImg({ ...deleteImg, loader: false });
+    }
+  }
+
   // this function checks image size validation
   function checkImgSize(img) {
     let valid = true;
@@ -760,6 +840,158 @@ const CreateProfile = (props) => {
       valid = true;
     }
     return valid;
+  }
+
+  // this function renders ISO certificate
+  function renderISOCertificate() {
+    if (isArray(state.certificate) && state.certificate.length > 0) {
+      return state.certificate.map((item, index) => {
+        return (
+          <div style={{ position: "relative" }}>
+            <TextField
+              fullWidth
+              placeholder="Upload ISO Certificate"
+              style={{ marginBottom: 20 }}
+              value={item?.image ? item?.image : item?.name}
+              InputProps={{
+                endAdornment: (
+                  <>
+                    {state.certificate ? (
+                      <InputAdornment position="end">
+                        <ClearOutlined
+                          style={{ zIndex: 10, cursor: "pointer" }}
+                          onClick={() => {
+                            const data = [...state.certificate];
+                            if (_.has(item, "image")) {
+                              setDeleteImg({
+                                visible: true,
+                                id: item.id,
+                                index: index,
+                                type: "certificate",
+                                loader: false,
+                              });
+                            } else {
+                              data.splice(index, 1);
+                              setState({ ...state, certificate: data });
+                            }
+                          }}
+                        />
+                      </InputAdornment>
+                    ) : null}
+                    <InputAdornment position="end">
+                      <AttachFileOutlined />
+                    </InputAdornment>
+                  </>
+                ),
+              }}
+              error={errObj.certiErr}
+              helperText={errObj.certiMsg}
+            />
+          </div>
+        );
+      });
+    }
+    return null;
+  }
+
+  // this function renders licenses
+  function renderLicenses() {
+    if (isArray(state.license) && state.license.length > 0) {
+      return state.license.map((item, index) => {
+        return (
+          <TextField
+            fullWidth
+            placeholder="Upload Licenses"
+            value={item?.image ? item?.image : item?.name}
+            style={{ marginBottom: 20 }}
+            InputProps={{
+              endAdornment: (
+                <>
+                  {state.license ? (
+                    <InputAdornment position="end">
+                      <ClearOutlined
+                        style={{ zIndex: 10, cursor: "pointer" }}
+                        onClick={() => {
+                          const data = [...state.license];
+                          if (_.has(item, "image")) {
+                            setDeleteImg({
+                              visible: true,
+                              id: item.id,
+                              index: index,
+                              type: "license",
+                              loader: false,
+                            });
+                          } else {
+                            data.splice(index, 1);
+                            setState({ ...state, license: data });
+                          }
+                        }}
+                      />
+                    </InputAdornment>
+                  ) : null}
+                  <InputAdornment position="end">
+                    <AttachFileOutlined />
+                  </InputAdornment>
+                </>
+              ),
+            }}
+            error={errObj.licenseErr}
+            helperText={errObj.licenseErr ? errObj.licenseMsg : null}
+          />
+        );
+      });
+    }
+    return null;
+  }
+
+  // this function renders company registration
+  function renderRegistration() {
+    if (isArray(state.registraion) && state.registraion.length > 0) {
+      return state.registraion.map((item, index) => {
+        return (
+          <TextField
+            fullWidth
+            placeholder="Upload Company Registration"
+            value={item?.image ? item?.image : item?.name}
+            style={{ marginBottom: 20 }}
+            InputProps={{
+              endAdornment: (
+                <>
+                  {state.registraion ? (
+                    <InputAdornment position="end">
+                      <ClearOutlined
+                        style={{ zIndex: 10, cursor: "pointer" }}
+                        onClick={() => {
+                          const data = [...state.registraion];
+                          if (_.has(item, "image")) {
+                            setDeleteImg({
+                              visible: true,
+                              id: item.id,
+                              index: index,
+                              type: "registraion",
+                              loader: false,
+                            });
+                          } else {
+                            data.splice(index, 1);
+                            setState({ ...state, registraion: data });
+                          }
+                        }}
+                      />
+                    </InputAdornment>
+                  ) : null}
+                  <InputAdornment position="end">
+                    <AttachFileOutlined />
+                  </InputAdornment>
+                </>
+              ),
+            }}
+            error={errObj.registrationErr}
+            helperText={errObj.registrationErr ? errObj.registrationMsg : null}
+          />
+        );
+      });
+    }
+    return null;
   }
 
   return (
@@ -1118,213 +1350,205 @@ const CreateProfile = (props) => {
                   <InputLabel shrink htmlFor="bootstrap-input">
                     ISO Certificate
                   </InputLabel>
-                  <div style={{ position: "relative" }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Upload ISO Certificate"
-                      style={{ marginBottom: 20 }}
-                      value={
-                        typeof state?.certificate === "string"
-                          ? state.certificate || ""
-                          : state.certificate?.name || ""
-                      }
-                      InputProps={{
-                        endAdornment: (
-                          <>
-                            {state.certificate ? (
+                  {renderISOCertificate()}
+                  {isArray(state.certificate) &&
+                  state.certificate.length > 4 ? null : (
+                    <div style={{ position: "relative" }}>
+                      <TextField
+                        fullWidth
+                        placeholder="Upload ISO Certificate"
+                        style={{ marginBottom: 20 }}
+                        value={""}
+                        InputProps={{
+                          endAdornment: (
+                            <>
                               <InputAdornment position="end">
-                                <ClearOutlined
-                                  style={{ zIndex: 10, cursor: "pointer" }}
-                                  onClick={() => {
-                                    setState({ ...state, certificate: "" });
-                                  }}
-                                />
+                                <AttachFileOutlined />
                               </InputAdornment>
-                            ) : null}
-                            <InputAdornment position="end">
-                              <AttachFileOutlined />
-                            </InputAdornment>
-                          </>
-                        ),
-                      }}
-                      error={errObj.certiErr}
-                      helperText={errObj.certiMsg}
-                    />
-                    <input
-                      type="file"
-                      accept="image/jpeg, image/png, image/jpg"
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        opacity: 0,
-                      }}
-                      onChange={(e) => {
-                        const bool = checkImgSize(e.target.files[0]);
-                        if (bool) {
-                          setState({
-                            ...state,
-                            certificate: e.target.files[0],
+                            </>
+                          ),
+                        }}
+                        error={errObj.certiErr}
+                        helperText={errObj.certiMsg}
+                      />
+                      <input
+                        type="file"
+                        accept="image/jpeg, image/png, image/jpg"
+                        multiple
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          opacity: 0,
+                        }}
+                        onChange={(e) => {
+                          const chosenFiles = Array.prototype.slice.call(
+                            e.target.files
+                          );
+                          const data = [...state.certificate];
+                          let showMsg = false;
+                          let limit = false;
+                          chosenFiles.map((item) => {
+                            const bool = checkImgSize(item);
+                            if (bool && data.length < 5) {
+                              data.push(item);
+                            } else if (data.length >= 4) {
+                              limit = true;
+                            } else {
+                              showMsg = true;
+                            }
                           });
-                          setErrObj({
-                            ...errObj,
-                            certiErr: false,
-                            certiMsg: "",
-                          });
-                        } else {
-                          setErrObj({
-                            ...errObj,
-                            certiErr: true,
-                            certiMsg:
-                              "The image you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again.",
-                          });
-                        }
-                      }}
-                    />
-                  </div>
+                          if (limit) {
+                            toast.error("You can upload maximum 5 files");
+                          } else if (showMsg) {
+                            toast.error(
+                              "Some certificate you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                            );
+                          }
+                          setState({ ...state, certificate: data });
+                        }}
+                      />
+                    </div>
+                  )}
                 </Grid>
                 <Grid item xs={10} id="license">
                   <InputLabel shrink htmlFor="bootstrap-input">
                     Licenses
                   </InputLabel>
-                  <div style={{ position: "relative" }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Upload Licenses"
-                      value={
-                        typeof state?.license === "string"
-                          ? state.license || ""
-                          : state.license?.name || ""
-                      }
-                      style={{ marginBottom: 20 }}
-                      InputProps={{
-                        endAdornment: (
-                          <>
-                            {state.license ? (
+                  {renderLicenses()}
+                  {isArray(state.license) && state.license.length > 4 ? null : (
+                    <div style={{ position: "relative" }}>
+                      <TextField
+                        fullWidth
+                        placeholder="Upload Licenses"
+                        value={""}
+                        style={{ marginBottom: 20 }}
+                        InputProps={{
+                          endAdornment: (
+                            <>
                               <InputAdornment position="end">
-                                <ClearOutlined
-                                  style={{ zIndex: 10, cursor: "pointer" }}
-                                  onClick={() => {
-                                    setState({ ...state, license: "" });
-                                  }}
-                                />
+                                <AttachFileOutlined />
                               </InputAdornment>
-                            ) : null}
-                            <InputAdornment position="end">
-                              <AttachFileOutlined />
-                            </InputAdornment>
-                          </>
-                        ),
-                      }}
-                      error={errObj.licenseErr}
-                      helperText={errObj.licenseErr ? errObj.licenseMsg : null}
-                    />
-                    <input
-                      type="file"
-                      accept="image/jpeg, image/png, image/jpg"
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        opacity: 0,
-                      }}
-                      onChange={(e) => {
-                        const bool = checkImgSize(e.target.files[0]);
-                        if (bool) {
-                          setState({ ...state, license: e.target.files[0] });
-                          setErrObj({
-                            ...errObj,
-                            licenseErr: false,
-                            licenseMsg: "",
-                          });
-                        } else {
-                          setErrObj({
-                            ...errObj,
-                            licenseErr: true,
-                            licenseMsg:
-                              "The image you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again.",
-                          });
+                            </>
+                          ),
+                        }}
+                        error={errObj.licenseErr}
+                        helperText={
+                          errObj.licenseErr ? errObj.licenseMsg : null
                         }
-                      }}
-                    />
-                  </div>
+                      />
+                      <input
+                        type="file"
+                        accept="image/jpeg, image/png, image/jpg"
+                        multiple
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          opacity: 0,
+                        }}
+                        onChange={(e) => {
+                          const chosenFiles = Array.prototype.slice.call(
+                            e.target.files
+                          );
+                          const data = [...state.license];
+                          let showMsg = false;
+                          let limit = false;
+                          chosenFiles.map((item) => {
+                            const bool = checkImgSize(item);
+                            if (bool && data.length < 5) {
+                              data.push(item);
+                            } else if (data.length >= 4) {
+                              limit = true;
+                            } else {
+                              showMsg = true;
+                            }
+                          });
+                          if (limit) {
+                            toast.error("You can upload maximum 5 files");
+                          } else if (showMsg) {
+                            toast.error(
+                              "Some license you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                            );
+                          }
+                          setState({ ...state, license: data });
+                        }}
+                      />
+                    </div>
+                  )}
                 </Grid>
                 <Grid item xs={10} id="registartion">
                   <InputLabel shrink htmlFor="bootstrap-input">
                     Company Registration
                   </InputLabel>
-                  <div style={{ position: "relative" }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Upload Company Registration"
-                      value={
-                        typeof state?.registraion === "string"
-                          ? state.registraion || ""
-                          : state.registraion?.name || ""
-                      }
-                      style={{ marginBottom: 20 }}
-                      InputProps={{
-                        endAdornment: (
-                          <>
-                            {state.registraion ? (
+                  {renderRegistration()}
+                  {isArray(state.registraion) &&
+                  state.registraion.length > 4 ? null : (
+                    <div style={{ position: "relative" }}>
+                      <TextField
+                        fullWidth
+                        placeholder="Upload Company Registration"
+                        value={""}
+                        style={{ marginBottom: 20 }}
+                        InputProps={{
+                          endAdornment: (
+                            <>
                               <InputAdornment position="end">
-                                <ClearOutlined
-                                  style={{ zIndex: 10, cursor: "pointer" }}
-                                  onClick={() => {
-                                    setState({ ...state, registraion: "" });
-                                  }}
-                                />
+                                <AttachFileOutlined />
                               </InputAdornment>
-                            ) : null}
-                            <InputAdornment position="end">
-                              <AttachFileOutlined />
-                            </InputAdornment>
-                          </>
-                        ),
-                      }}
-                      error={errObj.registrationErr}
-                      helperText={
-                        errObj.registrationErr ? errObj.registrationMsg : null
-                      }
-                    />
-                    <input
-                      type="file"
-                      accept="image/jpeg, image/png, image/jpg"
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        opacity: 0,
-                      }}
-                      onChange={(e) => {
-                        const bool = checkImgSize(e.target.files[0]);
-                        if (bool) {
-                          setState({
-                            ...state,
-                            registraion: e.target.files[0],
-                          });
-                          setErrObj({
-                            ...errObj,
-                            registrationErr: false,
-                            registrationMsg: "",
-                          });
-                        } else {
-                          setErrObj({
-                            ...errObj,
-                            registrationErr: true,
-                            registrationMsg:
-                              "The image you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again.",
-                          });
+                            </>
+                          ),
+                        }}
+                        error={errObj.registrationErr}
+                        helperText={
+                          errObj.registrationErr ? errObj.registrationMsg : null
                         }
-                      }}
-                    />
-                  </div>
+                      />
+                      <input
+                        type="file"
+                        accept="image/jpeg, image/png, image/jpg"
+                        multiple
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          opacity: 0,
+                        }}
+                        onChange={(e) => {
+                          const chosenFiles = Array.prototype.slice.call(
+                            e.target.files
+                          );
+                          const data = [...state.registraion];
+                          let showMsg = false;
+                          let limit = false;
+                          chosenFiles.map((item) => {
+                            const bool = checkImgSize(item);
+                            if (bool && data.length < 5) {
+                              data.push(item);
+                            } else if (data.length >= 4) {
+                              limit = true;
+                            } else {
+                              showMsg = true;
+                            }
+                          });
+                          if (limit) {
+                            toast.error("You can upload maximum 5 files");
+                          } else if (showMsg) {
+                            toast.error(
+                              "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                            );
+                          }
+                          setState({ ...state, registraion: data });
+                        }}
+                      />
+                    </div>
+                  )}
                 </Grid>
 
                 <Grid item xs={10} id="linkedIn">
@@ -1865,6 +2089,23 @@ const CreateProfile = (props) => {
         </Grid>
       </Grid>
       {visible && <ProfileSuccessModal visible={visible} />}
+      <ConfirmModel
+        visible={deleteImg?.visible}
+        handleClose={() =>
+          setDeleteImg({
+            visible: false,
+            id: null,
+            index: null,
+            type: "",
+            loader: false,
+          })
+        }
+        loader={deleteImg?.loader}
+        confirmation={() => {
+          handleDeleteImage();
+        }}
+        message={`Are you sure you want to delete?`}
+      />
     </div>
   );
 };

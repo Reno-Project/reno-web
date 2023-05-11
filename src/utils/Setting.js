@@ -1,7 +1,5 @@
 const prod = process.env.NODE_ENV === "production";
-const baseUrl = prod
-  ? "https://reno-api.groovyweb.solutions/"
-  : "https://reno-api.groovyweb.solutions/";
+const baseUrl = prod ? "https://api.renohome.io/" : "https://api.renohome.io/";
 
 export const Setting = {
   baseUrl,
@@ -46,6 +44,7 @@ export const Setting = {
     uploadTemplate: "api/project/upload-template",
     deleteTemplate: "api/project/upload-template-delete",
     listproposal: "api/project/list-proposal",
+    deleteImage: "api/contractor/delete-image",
   },
 
   JS_Regex: {
