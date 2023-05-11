@@ -210,7 +210,7 @@ const Dashboard = (props) => {
     }
   }
 
-  // requested proposal api call
+  // requested proposal & submitted proposal api call
   async function requestedProposalApiCall(type) {
     try {
       const response = await getApiData(
