@@ -242,11 +242,11 @@ export default function EditProfile() {
       }
     }
 
-    if (state.description.length > 255) {
+    if (state.description.length > 1000) {
       valid = false;
       error.descriptionErr = true;
       error.descriptionMsg =
-        "Description should not be greater than 255 characters";
+        "Description should not be greater than 1000 characters";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#description");
@@ -652,6 +652,7 @@ export default function EditProfile() {
                     label="Description"
                     placeholder="Write Description"
                     value={state.description}
+                    inputProps={{ maxLength: 1000 }}
                     onChange={(e) => {
                       setState({ ...state, description: e.target.value });
                       setErrObj({
