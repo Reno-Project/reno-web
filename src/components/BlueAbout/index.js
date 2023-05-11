@@ -1,18 +1,14 @@
-import {
-  Grid,
-  IconButton,
-  ListItemText,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Grid, IconButton, ListItemText, Typography } from "@mui/material";
 import React from "react";
 import useStyles from "./styles";
 import { color } from "../../config/theme";
 import Images from "../../config/images";
+import { useLocation } from "react-router-dom";
 
 export default function BlueAbout() {
   const classes = useStyles();
+  const location = useLocation();
+  const { pathname } = location;
 
   const quickLinks = ["Home", "Our Serives", "About us", "FAQs", "Sign Up"];
   const supportArr = [
@@ -32,6 +28,7 @@ export default function BlueAbout() {
         margin={0}
         width={"100%"}
         maxWidth={"unset"}
+        mb={pathname !== "/contractor-profile" && "70px"}
       >
         <Grid
           item
