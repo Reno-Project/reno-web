@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
 import _ from "lodash";
+import { askForPermissionToReceiveNotifications } from "../../push-notification";
 import useStyles from "./styles";
 
 const IOSSwitch = styled((props) => (
@@ -163,6 +164,10 @@ export default function NotificationSettings() {
   useEffect(() => {
     getMeApiCall();
     setState({ ...state, notificationList: notificationListArray });
+
+    if (Notification.permission !== "granted") {
+      askForPermissionToReceiveNotifications();
+    }
   }, []);
 
   async function getMeApiCall() {
@@ -325,9 +330,13 @@ export default function NotificationSettings() {
                                   index,
                                   ind
                                 );
+                              } else if (
+                                Notification.permission === "default"
+                              ) {
+                                askForPermissionToReceiveNotifications();
                               } else {
                                 toast.info(
-                                  "It's look like you have't granted the permission. Please enable notifications in your browser settings to enable this services."
+                                  "It's look like you have't granted the permission. Please enable notifications in your browser site settings to value your privacy and will only send notifications relevant to our service"
                                 );
                               }
                             }}
