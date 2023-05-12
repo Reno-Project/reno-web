@@ -26,6 +26,7 @@ import ProjectCard from "../../components/ProjectCard/ProjectCard";
 import Images from "../../config/images";
 import { useTheme } from "@emotion/react";
 import BlueAbout from "../../components/BlueAbout";
+import NoData from "../../components/NoData";
 
 const errorObj = {
   emailErr: false,
@@ -407,9 +408,7 @@ const Dashboard = (props) => {
                   );
                 })
               ) : (
-                <Typography variant="h4" margin={"10px"}>
-                  No data found
-                </Typography>
+                <NoData />
               )}
             </div>
           )}
@@ -471,9 +470,7 @@ const Dashboard = (props) => {
                   );
                 })
               ) : (
-                <Typography variant="h4" margin={"10px"}>
-                  No data found
-                </Typography>
+                <NoData />
               )}
             </div>
           )}
@@ -529,9 +526,7 @@ const Dashboard = (props) => {
                   );
                 })
               ) : (
-                <Typography variant="h4" margin={"10px"}>
-                  No data found
-                </Typography>
+                <NoData />
               )}
             </div>
           )}

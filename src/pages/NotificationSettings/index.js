@@ -16,6 +16,7 @@ import authActions from "../../redux/reducers/auth/actions";
 import _ from "lodash";
 import { askForPermissionToReceiveNotifications } from "../../push-notification";
 import useStyles from "./styles";
+import NoData from "../../components/NoData";
 
 const IOSSwitch = styled((props) => (
   <div style={{ display: "flex" }}>
@@ -348,9 +349,7 @@ export default function NotificationSettings() {
                 );
               })
             ) : (
-              <Typography variant="h4" margin={"10px"}>
-                No data found
-              </Typography>
+              <NoData />
             )}
           </Grid>
         )}
