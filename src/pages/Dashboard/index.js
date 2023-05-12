@@ -34,32 +34,7 @@ const errorObj = {
   passwordMsg: "",
 };
 
-const villaDetails = [
-  {
-    exp_id: 6,
-    project_type: "Kitchen",
-    name: "Vrunda",
-    description: "Vrunda",
-    location: "Al Khawaneej",
-    budget: "6969",
-    start_date: "2023-05-31T12:10:13.318Z",
-    end_date: "2023-05-11T12:10:13.310Z",
-    form_json:
-      '"[{\\"kitchenArray\\":[{\\"id\\":1,\\"image\\":37,\\"title\\":\\"Gallery layout\\",\\"checkicon\\":false},{\\"id\\":2,\\"image\\":36,\\"title\\":\\"Corridor layout\\",\\"checkicon\\":true},{\\"id\\":3,\\"image\\":40,\\"title\\":\\"U shape layout\\",\\"checkicon\\":false},{\\"id\\":4,\\"image\\":38,\\"title\\":\\"L shape layout \\",\\"checkicon\\":false},{\\"id\\":5,\\"image\\":39,\\"title\\":\\"Peninsula layout\\",\\"checkicon\\":false}],\\"newPlumbingIndex\\":false,\\"isRequired\\":true,\\"island\\":false,\\"builtInAppliances\\":true,\\"selectedItems\\":[{\\"id\\":1,\\"title\\":\\"Microwave\\"},{\\"id\\":2,\\"title\\":\\"Fridge\\"},{\\"id\\":3,\\"title\\":\\"Oven\\"},{\\"id\\":5,\\"title\\":\\"Freezer\\"}]}]"',
-    status: "draft",
-    user_id: 453,
-    contractor_id: "",
-    id: 77,
-    filteredImageArray: [
-      {
-        id: 55,
-        uri: "file:///storage/emulated/0/Android/data/com.renohome.io/files/Pictures/f6230731-f113-4a47-bff6-959b84f70c2b.jpg",
-        name: "f6230731-f113-4a47-bff6-959b84f70c2b.jpg",
-        type: "image/jpeg",
-      },
-    ],
-  },
-];
+const villaDetails = [];
 
 const Dashboard = (props) => {
   const classes = useStyles();
@@ -73,7 +48,7 @@ const Dashboard = (props) => {
   const [password, setPassword] = useState("");
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
-  const [pageLoad, setPageLoad] = useState(false);
+  const [pageLoad, setPageLoad] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [googleBtnLoad, setGoogleBtnLoad] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -427,7 +402,7 @@ const Dashboard = (props) => {
                 villaDetails.map((villa, index) => {
                   return (
                     <div key={`Ongoing_projects_${index}`}>
-                      {/* <ProjectCard vill={villa} /> */}
+                      <ProjectCard vill={villa} />
                     </div>
                   );
                 })
