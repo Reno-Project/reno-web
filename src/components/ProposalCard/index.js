@@ -190,7 +190,7 @@ export default function ProposalCard() {
                       </Grid>
                       <Grid item lg={8} sm={8} md={8} xs={8} textAlign={"end"}>
                         <Typography className={classes.accRightText}>
-                          {item?.size}
+                          {item?.size} sq
                         </Typography>
                       </Grid>
                     </>

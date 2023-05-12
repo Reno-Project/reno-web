@@ -247,7 +247,7 @@ export default function RequestedProposal() {
                     </Grid>
                     <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
                       <Typography className={classes.accRightText}>
-                        {item?.size}
+                        {item?.size} Sqm
                       </Typography>
                     </Grid>
                     <Grid
@@ -274,7 +274,7 @@ export default function RequestedProposal() {
                       borderBottom={"1px solid #F2F3F4"}
                     >
                       <Typography className={classes.accRightText}>
-                        {item?.size}
+                        {item?.size} Sqm
                       </Typography>
                     </Grid>
                   </>
