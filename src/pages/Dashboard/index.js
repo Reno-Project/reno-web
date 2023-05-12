@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, Grid, Rating, Typography, useMediaQuery } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Rating,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
@@ -66,6 +73,7 @@ const Dashboard = (props) => {
   const [password, setPassword] = useState("");
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
+  const [pageLoad, setPageLoad] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [googleBtnLoad, setGoogleBtnLoad] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -212,6 +220,7 @@ const Dashboard = (props) => {
 
   // requested proposal & submitted proposal api call
   async function requestedProposalApiCall(type) {
+    setPageLoad(true);
     try {
       const response = await getApiData(
         `${Setting.endpoints.listproposal}?status=${type}`,
@@ -219,15 +228,19 @@ const Dashboard = (props) => {
         {}
       );
       if (response?.success) {
-        type === "pending"
-          ? setRequestedProposal(response?.data)
-          : setSubmittedProposal(response?.data);
+        if (isArray(response?.data) && !isEmpty(response?.data)) {
+          type === "pending"
+            ? setRequestedProposal(response?.data)
+            : setSubmittedProposal(response?.data);
+        }
       } else {
         toast.error(response?.message);
       }
+      setPageLoad(false);
     } catch (error) {
       console.log("ERROR=====>>>>>", error);
       toast.error(error.toString());
+      setPageLoad(false);
     }
   }
 
@@ -389,25 +402,42 @@ const Dashboard = (props) => {
               {villaDetails.length}
             </div>
           </Grid>
-          {/* <div className={classes.card}> */}
-          <div
-            style={{
-              display: "flex",
-              overflowY: "scroll",
-              padding: "10px 0",
-            }}
-          >
-            {isArray(villaDetails) &&
-              !isEmpty(villaDetails) &&
-              villaDetails.map((villa, index) => {
-                return (
-                  <div key={`Ongoing_projects_${index}`}>
-                    {/* <ProjectCard vill={villa} /> */}
-                  </div>
-                );
-              })}
-          </div>
-          {/* </div> */}
+
+          {pageLoad ? (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "20px 0",
+              }}
+            >
+              <CircularProgress size={40} />
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                overflowY: "scroll",
+                padding: "10px 0",
+              }}
+            >
+              {isArray(villaDetails) && !isEmpty(villaDetails) ? (
+                villaDetails.map((villa, index) => {
+                  return (
+                    <div key={`Ongoing_projects_${index}`}>
+                      {/* <ProjectCard vill={villa} /> */}
+                    </div>
+                  );
+                })
+              ) : (
+                <Typography variant="h4" margin={"10px"}>
+                  No data found
+                </Typography>
+              )}
+            </div>
+          )}
         </Grid>
 
         <Grid container className={classes.container}>
@@ -431,31 +461,47 @@ const Dashboard = (props) => {
               {requestedProposal.length}
             </div>
           </Grid>
-          {/* <div className={classes.card}> */}
-          <div
-            style={{
-              display: "flex",
-              overflowY: "scroll",
-              padding: "10px 0",
-            }}
-          >
-            {isArray(requestedProposal) &&
-              !isEmpty(requestedProposal) &&
-              requestedProposal.map((villa, index) => {
-                return (
-                  <div key={`Requested_Proposal_${index}`}>
-                    <ProjectCard
-                      villa={villa}
-                      requested
-                      onClick={() => {
-                        navigate("/request-proposal", { state: villa });
-                      }}
-                    />
-                  </div>
-                );
-              })}
-          </div>
-          {/* </div> */}
+          {pageLoad ? (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "20px 0",
+              }}
+            >
+              <CircularProgress size={40} />
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                overflowY: "scroll",
+                padding: "10px 0",
+              }}
+            >
+              {isArray(requestedProposal) && !isEmpty(requestedProposal) ? (
+                requestedProposal.map((villa, index) => {
+                  return (
+                    <div key={`Requested_Proposal_${index}`}>
+                      <ProjectCard
+                        villa={villa}
+                        requested
+                        onClick={() => {
+                          navigate("/request-proposal", { state: villa });
+                        }}
+                      />
+                    </div>
+                  );
+                })
+              ) : (
+                <Typography variant="h4" margin={"10px"}>
+                  No data found
+                </Typography>
+              )}
+            </div>
+          )}
         </Grid>
 
         <Grid container className={classes.container}>
@@ -479,25 +525,41 @@ const Dashboard = (props) => {
               {submittedProposal.length}
             </div>
           </Grid>
-          {/* <div className={classes.card}> */}
-          <div
-            style={{
-              display: "flex",
-              overflowY: "scroll",
-              padding: "10px 0",
-            }}
-          >
-            {isArray(submittedProposal) &&
-              !isEmpty(submittedProposal) &&
-              submittedProposal.map((villa, index) => {
-                return (
-                  <div key={`Submitted_Proposal_${index}`}>
-                    <ProjectCard villa={villa} />
-                  </div>
-                );
-              })}
-          </div>
-          {/* </div> */}
+          {pageLoad ? (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "20px 0",
+              }}
+            >
+              <CircularProgress size={40} />
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                overflowY: "scroll",
+                padding: "10px 0",
+              }}
+            >
+              {isArray(submittedProposal) && !isEmpty(submittedProposal) ? (
+                submittedProposal.map((villa, index) => {
+                  return (
+                    <div key={`Submitted_Proposal_${index}`}>
+                      <ProjectCard villa={villa} />
+                    </div>
+                  );
+                })
+              ) : (
+                <Typography variant="h4" margin={"10px"}>
+                  No data found
+                </Typography>
+              )}
+            </div>
+          )}
         </Grid>
 
         {visible && (
