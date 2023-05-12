@@ -349,7 +349,7 @@ const ContractorProfile = (props) => {
           <Grid item md={6}>
             <Grid item>
               <Typography className={classes.titleStyle} marginBottom={"20px"}>
-                Description
+                About us
               </Typography>
             </Grid>
             <Grid item>
