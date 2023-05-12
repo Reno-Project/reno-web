@@ -5,75 +5,52 @@ import Images from "../../config/images";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import BlueAbout from "../../components/BlueAbout";
 import theme from "../../config/theme";
+import moment from "moment";
 
 export default function RequestedProposal() {
   const location = useLocation();
-  const villa = location?.state ? location?.state : {};
+  // const villa = location?.state ? location?.state : {};
+  // console.log("villa======", villa);
   const classes = useStyles();
   const navigate = useNavigate();
-
-  // const villa = {
-  //   id: 45,
-  //   project_id: 5,
-  //   contractor_id: 291,
-  //   user_id: 291,
-  //   status: "pending",
-  //   scope_of_work: "vill",
-  //   createdAt: "2023-05-08T05:41:09.510Z",
-  //   proposal_budget_item: [
-  //     {
-  //       id: 1,
-  //       proposal_id: 45,
-  //       name: "Budget 1",
-  //       material_type: "wood",
-  //       material_unit: 2,
-  //       material_unit_price: 2300,
-  //       qty: 1,
-  //       milestone_id: 5,
-  //       manpower_rate: 1,
-  //       days: 5,
-  //       specification: "Specs",
-  //     },
-  //     {
-  //       id: 2,
-  //       proposal_id: 45,
-  //       name: "Budget 2",
-  //       material_type: "wood",
-  //       material_unit: 1,
-  //       material_unit_price: 1000,
-  //       qty: 2,
-  //       milestone_id: 5,
-  //       manpower_rate: 1,
-  //       days: 2,
-  //       specification: "test",
-  //     },
-  //   ],
-  //   proposal_id: 44,
-  //   proposal_photo: {
-  //     id: 37,
-  //     photo: "documents/proposal-b9d94f67-6dd6-4131-a22e-b6bc6a354e03",
-  //   },
-  //   project: [
-  //     {
-  //       createdAt: "2023-05-08T05:33:26.980Z",
-  //       updatedAt: "2023-05-08T05:33:26.980Z",
-  //       id: 5,
-  //       exp_id: 1,
-  //       project_type: "iterrior",
-  //       name: "vill",
-  //       description: "nscnsnc",
-  //       location: "27A blikers st",
-  //       budget: 1555,
-  //       start_date: "01/05/2023",
-  //       end_date: "31/08/2023",
-  //       form_json: '"{bnchbacb : nasncnasc}"',
-  //       status: "pending",
-  //       user_id: 291,
-  //       contractor_id: 10,
-  //     },
-  //   ],
-  // };
-
+  const villa = {
+    createdAt: "2023-05-12T06:15:10.670Z",
+    updatedAt: "2023-05-12T06:15:10.670Z",
+    id: 80,
+    exp_id: 1,
+    project_type: "Interior design",
+    name: " this is for testing",
+    description: "I want to create house",
+    location: "Al Furjan",
+    budget: 25000,
+    start_date: "2023-06-17T06:13:45.484Z",
+    end_date: "2023-05-12T06:13:45.482Z",
+    form_json:
+      '[{"size":"25","selectedItems":[{"id":1,"title":"Modern"},{"id":7,"title":"Mid-century"},{"id":9,"title":"Scandinavian"},{"id":4,"title":"Country"},{"id":5,"title":"Boho classic"},{"id":6,"title":"Coastal"},{"id":2,"title":"Industrial"},{"id":12,"title":"Hollywood Regency"}],"selectType":{"id":2,"title":"Apartment"},"selectFloor":{"id":2,"title":"2"},"selectBedrooms":{"id":2,"title":"2"},"selectBathrooms":{"id":3,"title":"3"},"selectKitchen":{"id":2,"title":"2"}}]',
+    status: "pending",
+    user_id: 465,
+    contractor_id: 9,
+    project_slug: "#CH555259294600",
+    project_image: [
+      {
+        id: 69,
+        image:
+          "https://static.renohome.io/documents/46497073-ca83-4598-919d-7bcbda7bd187",
+      },
+    ],
+    user_data: {
+      is_email_verified: true,
+      profile_url:
+        "https://static.renohome.io/reno-cms/ea0b2d8e-352a-45ed-aee4-59bab25bb47f",
+      email: "anurag22@groovyweb.co",
+      phone_code: "91",
+      phone_no: "9624553405",
+      username: "Anurag",
+      is_phone_verified: false,
+      role: "home_owner",
+    },
+  };
+  const formArray = JSON.parse(villa?.form_json);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -129,7 +106,7 @@ export default function RequestedProposal() {
           >
             <Grid item>
               <img
-                src="https://www.wonderplugin.com/wp-content/uploads/2016/06/blue-grape-hyacinths.jpg"
+                src={villa?.user_data?.profile_url}
                 alt="chat"
                 className={classes.imageStyle}
               />
@@ -140,7 +117,7 @@ export default function RequestedProposal() {
             <Grid item container>
               <Grid item lg={9} md={9} sm={9} xs={9}>
                 <Typography className={classes.titleText}>
-                  Albert Flores
+                  {villa?.user_data?.username}
                 </Typography>
               </Grid>
               <Grid item lg={3} md={3} sm={3} xs={3} textAlign={"end"}>
@@ -165,7 +142,7 @@ export default function RequestedProposal() {
               </Grid>
               <Grid item lg={3} md={3} sm={6} xs={6}>
                 <Typography className={classes.dateStyle}>
-                  March 01, 2023
+                  {moment(villa?.createdAt).format("MMMM DD, YYYY")}
                 </Typography>
               </Grid>
             </Grid>
@@ -190,7 +167,7 @@ export default function RequestedProposal() {
               </Grid>
               <Grid item lg={3} sm={3} md={3} xs={12} textAlign={"end"}>
                 <Typography className={classes.titleStyleRight}>
-                  Villa MM-Renovation
+                  {villa?.name}
                 </Typography>
               </Grid>
             </Grid>
@@ -219,11 +196,7 @@ export default function RequestedProposal() {
                 }}
               >
                 <Typography className={classes.paraStyle}>
-                  Lorem Ipsum has been the industry's standard dummy text ever
-                  since. When an unknown printer took a galley of type and
-                  scrambled it to make a type specimen book. It has survived not
-                  only five centuries, but also the leap into electronic
-                  typesetting, remaining essentially.
+                  {villa?.description}
                 </Typography>
               </Grid>
             </Grid>
@@ -234,65 +207,79 @@ export default function RequestedProposal() {
               justifyContent={"flex-end"}
               rowSpacing={2}
             >
-              <Grid item lg={3} sm={3} md={3} xs={3}>
-                <Typography className={classes.acctext}>
-                  Property Type:
-                </Typography>
-              </Grid>
-              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                <Typography className={classes.accRightText}>
-                  Duplex Building
-                </Typography>
-              </Grid>
-              <Grid item lg={3} sm={3} md={3} xs={3}>
-                <Typography className={classes.acctext}>Bathroom:</Typography>
-              </Grid>
-              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                <Typography className={classes.accRightText}>04</Typography>
-              </Grid>
-              <Grid item lg={3} sm={3} md={3} xs={3}>
-                <Typography className={classes.acctext}>Bedroom:</Typography>
-              </Grid>
-              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                <Typography className={classes.accRightText}>03</Typography>
-              </Grid>
-              <Grid item lg={3} sm={3} md={3} xs={3}>
-                <Typography className={classes.acctext}>
-                  Indoor Space:
-                </Typography>
-              </Grid>
-              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                <Typography className={classes.accRightText}>
-                  1600 Sqm
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                lg={3}
-                sm={3}
-                md={3}
-                xs={3}
-                paddingBottom={"14px"}
-                borderBottom={"1px solid #F2F3F4"}
-              >
-                <Typography className={classes.acctext}>
-                  Outdoor Space:
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                lg={9}
-                sm={9}
-                md={9}
-                xs={9}
-                textAlign={"end"}
-                paddingBottom={"14px"}
-                borderBottom={"1px solid #F2F3F4"}
-              >
-                <Typography className={classes.accRightText}>
-                  450 Sqm
-                </Typography>
-              </Grid>
+              {formArray?.map((item, index) => {
+                return (
+                  <>
+                    <Grid item lg={3} sm={3} md={3} xs={3}>
+                      <Typography className={classes.acctext}>
+                        Property Type:
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+                      <Typography className={classes.accRightText}>
+                        {item?.selectType?.title}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={3} sm={3} md={3} xs={3}>
+                      <Typography className={classes.acctext}>
+                        Bathroom:
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+                      <Typography className={classes.accRightText}>
+                        {item?.selectBathrooms?.title}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={3} sm={3} md={3} xs={3}>
+                      <Typography className={classes.acctext}>
+                        Bedroom:
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+                      <Typography className={classes.accRightText}>
+                        {item?.selectBedrooms?.title}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={3} sm={3} md={3} xs={3}>
+                      <Typography className={classes.acctext}>
+                        Indoor Space:
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+                      <Typography className={classes.accRightText}>
+                        {item?.size}
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      item
+                      lg={3}
+                      sm={3}
+                      md={3}
+                      xs={3}
+                      paddingBottom={"14px"}
+                      borderBottom={"1px solid #F2F3F4"}
+                    >
+                      <Typography className={classes.acctext}>
+                        Outdoor Space:
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      item
+                      lg={9}
+                      sm={9}
+                      md={9}
+                      xs={9}
+                      textAlign={"end"}
+                      paddingBottom={"14px"}
+                      borderBottom={"1px solid #F2F3F4"}
+                    >
+                      <Typography className={classes.accRightText}>
+                        {item?.size}
+                      </Typography>
+                    </Grid>
+                  </>
+                );
+              })}
 
               <Grid
                 item
@@ -318,7 +305,7 @@ export default function RequestedProposal() {
                 borderBottom={"1px solid #F2F3F4"}
               >
                 <Typography className={classes.accRightText}>
-                  $3000-$4000
+                  {villa?.budget}
                 </Typography>
               </Grid>
               <Grid
@@ -346,9 +333,10 @@ export default function RequestedProposal() {
                 paddingBottom={"14px"}
                 borderBottom={"1px solid #F2F3F4"}
               >
-                <NavLink>
-                  <Typography className={classes.linkText}>View Map</Typography>
-                </NavLink>
+                <Typography className={classes.linkText}>
+                  {villa?.location}
+                </Typography>
+
                 <img
                   alt="logo"
                   src={Images.Location}
@@ -358,7 +346,7 @@ export default function RequestedProposal() {
             </Grid>
             <Grid item container alignContent={"center"}>
               <Grid item lg={12}>
-                {imageArray.map((item, index) => {
+                {villa?.project_image.map((item, index) => {
                   return (
                     <img
                       key={index}
