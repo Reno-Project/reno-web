@@ -68,6 +68,7 @@ const ResetPassword = (props) => {
     try {
       const response = await getApiData(Setting.endpoints.resendOtp, "POST", {
         email: locationState,
+        verify_type: "email",
       });
 
       console.log("response ====resend otp=>>> ", response);

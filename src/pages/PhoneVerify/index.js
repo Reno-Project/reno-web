@@ -10,12 +10,11 @@ import { useDispatch } from "react-redux";
 import useStyles from "./styles";
 import { color } from "../../config/theme";
 
-const OtpInput = (props) => {
+const PhoneVerify = (props) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location?.state?.data ? location?.state?.data : {};
-  const fromType = location?.state?.type ? location?.state?.type : "";
   const dispatch = useDispatch();
   const { setUserData, setToken } = authActions;
   const [output, setOutput] = useState("");
@@ -53,26 +52,20 @@ const OtpInput = (props) => {
     try {
       const response = await getApiData(Setting.endpoints.verifyOtp, "POST", {
         otp: code,
-        verify_type: "email",
+        verify_type: "phone",
       });
 
       if (response.success) {
-        if (fromType === "email") {
-          navigate("/phone-verify", { state: { data: locationState } });
+        if (!response?.data?.is_two_factor_verified) {
+          toast.success(response?.message);
+        }
+        dispatch(setUserData(response?.data));
+        dispatch(setToken(response?.token));
+        // move to create profile screen
+        if (response?.data?.contractor_data?.profile_completed === "pending") {
+          navigate("/create-profile");
         } else {
-          if (!response?.data?.is_two_factor_verified) {
-            toast.success(response?.message);
-          }
-          dispatch(setUserData(response?.data));
-          dispatch(setToken(response?.token));
-          // move to create profile screen
-          if (
-            response?.data?.contractor_data?.profile_completed === "pending"
-          ) {
-            navigate("/create-profile");
-          } else {
-            navigate("/dashboard");
-          }
+          navigate("/dashboard");
         }
       } else {
         toast.error(response?.message);
@@ -92,10 +85,9 @@ const OtpInput = (props) => {
     try {
       const response = await getApiData(Setting.endpoints.resendOtp, "POST", {
         email: locationState?.email,
-        verify_type: "email",
+        verify_type: "phone",
       });
 
-      console.log("response ====resend otp=>>> ", response);
       if (response.success) {
         toast.success(response.message);
         setTimer(60);
@@ -126,10 +118,14 @@ const OtpInput = (props) => {
             Welcome to Reno
           </Typography>
           <Typography className={classes.loginHeaderText}>
-            Verify your Email
+            Verify your Phone
           </Typography>
-          <Typography className={classes.description}>
-            Please enter code that was sent to {locationState?.email || ""}
+          <Typography
+            className={classes.description}
+            style={{ textAlign: "center" }}
+          >
+            Please enter code that was sent to +
+            {locationState?.phone_code + " " + locationState?.phone_no || ""}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={7} md={5} lg={4} justifyContent={"center"}>
@@ -216,4 +212,4 @@ const OtpInput = (props) => {
   );
 };
 
-export default OtpInput;
+export default PhoneVerify;

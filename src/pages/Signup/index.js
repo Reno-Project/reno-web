@@ -233,8 +233,16 @@ const Signup = (props) => {
 
       if (response.success) {
         toast.success(response?.message || "");
-        if (response?.is_email_verified === false) {
-          navigate("/otp-verify", { state: { data } });
+        if (
+          response?.is_email_verified === false ||
+          response?.data?.is_email_verified === false
+        ) {
+          navigate("/otp-verify", { state: { data, type: "email" } });
+        } else if (
+          response?.is_phone_verified === false ||
+          response?.data?.is_phone_verified === false
+        ) {
+          navigate("/phone-verify", { state: { data, type: "phone" } });
         } else {
           dispatch(setToken(response?.token));
           dispatch(setUserData(response?.data));

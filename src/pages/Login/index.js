@@ -148,12 +148,24 @@ const Login = (props) => {
         ) {
           dispatch(setUserData(response?.data));
           navigate("/create-profile");
-        } else if (response?.is_email_verified === false) {
+        } else if (
+          response?.is_email_verified === false ||
+          response?.data?.is_email_verified === false
+        ) {
           // navigate("/otp-verify");
-          navigate("/otp-verify", { state: { data: response?.data } });
+          navigate("/otp-verify", {
+            state: { data: response?.data, type: "email" },
+          });
           // sendOtpVerifyingApiCall({
           //   email,
           // });
+        } else if (
+          response?.is_phone_verified === false ||
+          response?.data?.is_phone_verified === false
+        ) {
+          navigate("/phone-verify", {
+            state: { data: response?.data, type: "phone" },
+          });
         } else {
           dispatch(setUserData(response?.data));
           navigate("/dashboard");
@@ -217,7 +229,9 @@ const Login = (props) => {
           });
         } else if (response?.data?.is_two_factor_verified) {
           dispatch(setUserData(response?.data));
-          navigate("/otp-verify", { state: { data: response?.data } });
+          navigate("/otp-verify", {
+            state: { data: response?.data, type: "email" },
+          });
           // sendOtpVerifyingApiCall(response?.data);
         } else if (
           response?.data?.contractor_data &&
@@ -225,10 +239,22 @@ const Login = (props) => {
         ) {
           dispatch(setUserData(response?.data));
           navigate("/create-profile");
-        } else if (response?.is_email_verified === false) {
+        } else if (
+          response?.is_email_verified === false ||
+          response?.data?.is_email_verified === false
+        ) {
           // navigate("/otp-verify");
-          navigate("/otp-verify", { state: { data: response?.data } });
+          navigate("/otp-verify", {
+            state: { data: response?.data, type: "email" },
+          });
           // sendOtpVerifyingApiCall(response?.data);
+        } else if (
+          response?.is_phone_verified === false ||
+          response?.data?.is_phone_verified === false
+        ) {
+          navigate("/phone-verify", {
+            state: { data: response?.data, type: "phone" },
+          });
         } else {
           dispatch(setUserData(response?.data));
           setSocialBtnLoad("");

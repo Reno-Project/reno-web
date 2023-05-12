@@ -17,6 +17,7 @@ import Signup from "./pages/Signup";
 import CreateProfile from "./pages/CreateProfile";
 import ResetPassword from "./pages/ResetPassword";
 import OtpInput from "./pages/OtpInput";
+import PhoneVerify from "./pages/PhoneVerify";
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -122,6 +123,7 @@ function App() {
                         element={<ResetPassword />}
                       />
                       <Route path={"/otp-verify"} element={<OtpInput />} />
+                      <Route path={"/phone-verify"} element={<PhoneVerify />} />
                       <Route path="*" element={<Navigate to={"/login"} />} />
                     </>
                   )}
