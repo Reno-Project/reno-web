@@ -199,7 +199,7 @@ const Dashboard = (props) => {
     setPageLoad(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.listproposal}?status=${type}`,
+        `${Setting.endpoints.listcontractorproject}`,
         "get",
         {}
       );

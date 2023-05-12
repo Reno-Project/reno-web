@@ -17,21 +17,20 @@ import moment from "moment";
 
 const ProjectCard = (props) => {
   const { villa = {}, requested = false, onClick = () => {} } = props;
-  const data = villa?.project[0];
   const classes = useStyles();
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
-  const createdAt = moment(data?.start_date).format("DD-MM-yyyy");
-  const moveInDate = moment(data?.end_date).format("DD-MM-yyyy");
+  const createdAt = moment(villa?.start_date).format("DD-MM-yyyy");
+  const moveInDate = moment(villa?.end_date).format("DD-MM-yyyy");
 
   return (
     <Card key={villa?.id} className={classes.card} onClick={onClick}>
       <CardMedia
         component="img"
         height="140"
-        image={data?.portfolio[0]?.image}
-        alt={villa.scope_of_work}
+        image={villa?.project_image[0]?.image}
+        alt={"project_image"}
       />
       <CardContent>
         <div
@@ -43,7 +42,7 @@ const ProjectCard = (props) => {
           }}
         >
           <Typography className={classes.name} gutterBottom component="div">
-            {data?.name}
+            {villa?.name}
           </Typography>
           <IconButton>
             <MoreVertIcon style={{ color: color.black }} />
@@ -51,7 +50,7 @@ const ProjectCard = (props) => {
         </div>
         <div className={classes.rowJustified}>
           <Typography className={classes.code}>
-            <img src={Images.LocationBlue} alt="Location" /> {data?.location}
+            <img src={Images.LocationBlue} alt="Location" /> {villa?.location}
           </Typography>
 
           <Typography className={classes.code1}>
@@ -63,13 +62,13 @@ const ProjectCard = (props) => {
         </div>
         <div className={classes.rowJustified}>
           <Typography className={classes.row} fontFamily={"Roobert-Regular"}>
-            <img src={Images.badroom} alt="badroom" /> {2}
+            <img src={Images.badroom} alt="badroom" /> 2
           </Typography>
           <Typography className={classes.row} fontFamily={"Roobert-Regular"}>
-            <img src={Images.bathroom} alt="bathroom" /> {2}
+            <img src={Images.bathroom} alt="bathroom" /> 2
           </Typography>
           <Typography className={classes.row} fontFamily={"Roobert-Regular"}>
-            <img src={Images.size} alt="size" /> {"300 sqm"}
+            <img src={Images.size} alt="size" /> 300 sqm
           </Typography>
         </div>
         <div style={{ width: "100%", margin: "10px 0px" }}>
@@ -77,14 +76,14 @@ const ProjectCard = (props) => {
         </div>
         <Typography className={classes.company}>
           <img
-            src={data?.profile_url}
+            src={villa?.user_data?.profile_url}
             width={"28px"}
             height={"28px"}
             alt="profile_logo"
             style={{ marginRight: 8, borderRadius: "100%" }}
           />{" "}
-          {data?.company_name}
-          {data?.is_email_verified && (
+          {villa?.user_data?.username}
+          {villa?.user_data?.is_email_verified && (
             <img
               src={Images.verified}
               alt="verified"
@@ -98,7 +97,7 @@ const ProjectCard = (props) => {
             <div className={classes.rowJustified}>
               <Typography className={classes.row}>Budget:</Typography>
               <Typography className={classes.budget}>
-                ${data?.budget}
+                ${villa?.budget}
               </Typography>
             </div>
             <div className={classes.rowJustified}>

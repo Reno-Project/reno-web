@@ -43,7 +43,7 @@ export const Setting = {
     projectDetails: "api/project/my-projects",
     uploadTemplate: "api/project/upload-template",
     deleteTemplate: "api/project/upload-template-delete",
-    listproposal: "api/project/list-proposal",
+    listcontractorproject: "api/project/list-contractor-project",
     deleteImage: "api/contractor/delete-image",
   },
 
