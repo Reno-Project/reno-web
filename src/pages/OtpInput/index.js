@@ -16,6 +16,9 @@ const OtpInput = (props) => {
   const location = useLocation();
   const locationState = location?.state?.data ? location?.state?.data : {};
   const fromType = location?.state?.type ? location?.state?.type : "";
+  const is2Fa = location?.state?.subtype
+    ? location?.state?.subtype === "two_factor"
+    : false;
   const dispatch = useDispatch();
   const { setUserData, setToken } = authActions;
   const [output, setOutput] = useState("");
@@ -57,7 +60,7 @@ const OtpInput = (props) => {
       });
 
       if (response.success) {
-        if (fromType === "email") {
+        if (fromType === "email" && is2Fa === false) {
           navigate("/phone-verify", { state: { data: locationState } });
         } else {
           if (!response?.data?.is_two_factor_verified) {
@@ -126,10 +129,13 @@ const OtpInput = (props) => {
             Welcome to Reno
           </Typography>
           <Typography className={classes.loginHeaderText}>
-            Verify your Email
+            {is2Fa ? "Two Factor Authentication Login" : `Verify your Email`}
           </Typography>
           <Typography className={classes.description}>
-            Please enter code that was sent to {locationState?.email || ""}
+            Please enter code that was sent to{" "}
+            {is2Fa
+              ? `+${locationState?.phone_code} ${locationState?.phone_no}`
+              : locationState?.email || ""}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={7} md={5} lg={4} justifyContent={"center"}>

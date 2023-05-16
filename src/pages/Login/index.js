@@ -138,27 +138,13 @@ const Login = (props) => {
         dispatch(setToken(response?.token));
         if (response?.is_new_user) {
           navigate("/signup", { state: { socialData } });
-        }
-        if (response?.data?.is_two_factor_verified) {
-          navigate("/otp-verify", { state: { data: response?.data } });
-          // sendOtpVerifyingApiCall(response?.data);
-        } else if (
-          response?.data?.contractor_data &&
-          response?.data?.contractor_data?.profile_completed === "pending"
-        ) {
-          dispatch(setUserData(response?.data));
-          navigate("/create-profile");
         } else if (
           response?.is_email_verified === false ||
           response?.data?.is_email_verified === false
         ) {
-          // navigate("/otp-verify");
           navigate("/otp-verify", {
             state: { data: response?.data, type: "email" },
           });
-          // sendOtpVerifyingApiCall({
-          //   email,
-          // });
         } else if (
           response?.is_phone_verified === false ||
           response?.data?.is_phone_verified === false
@@ -166,6 +152,22 @@ const Login = (props) => {
           navigate("/phone-verify", {
             state: { data: response?.data, type: "phone" },
           });
+        } else if (response?.data?.is_two_factor_verified) {
+          console.log("hiiiiiiiiiii");
+          navigate("/otp-verify", {
+            state: {
+              data: response?.data,
+              type: "email",
+              subtype: "two_factor",
+            },
+          });
+          // sendOtpVerifyingApiCall(response?.data);
+        } else if (
+          response?.data?.contractor_data &&
+          response?.data?.contractor_data?.profile_completed === "pending"
+        ) {
+          dispatch(setUserData(response?.data));
+          navigate("/create-profile");
         } else {
           dispatch(setUserData(response?.data));
           navigate("/dashboard");
@@ -227,12 +229,6 @@ const Login = (props) => {
           navigate("/signup", {
             state: { socialData, type, data: response?.data },
           });
-        } else if (response?.data?.is_two_factor_verified) {
-          dispatch(setUserData(response?.data));
-          navigate("/otp-verify", {
-            state: { data: response?.data, type: "email" },
-          });
-          // sendOtpVerifyingApiCall(response?.data);
         } else if (
           response?.data?.contractor_data &&
           response?.data?.contractor_data?.profile_completed === "pending"
@@ -243,11 +239,9 @@ const Login = (props) => {
           response?.is_email_verified === false ||
           response?.data?.is_email_verified === false
         ) {
-          // navigate("/otp-verify");
           navigate("/otp-verify", {
             state: { data: response?.data, type: "email" },
           });
-          // sendOtpVerifyingApiCall(response?.data);
         } else if (
           response?.is_phone_verified === false ||
           response?.data?.is_phone_verified === false
@@ -255,6 +249,16 @@ const Login = (props) => {
           navigate("/phone-verify", {
             state: { data: response?.data, type: "phone" },
           });
+        } else if (response?.data?.is_two_factor_verified) {
+          dispatch(setUserData(response?.data));
+          navigate("/otp-verify", {
+            state: {
+              data: response?.data,
+              type: "email",
+              subtype: "two_factor",
+            },
+          });
+          // sendOtpVerifyingApiCall(response?.data);
         } else {
           dispatch(setUserData(response?.data));
           setSocialBtnLoad("");
