@@ -225,6 +225,7 @@ const Signup = (props) => {
     if (locationState?.data?.social_connection_id) {
       data.social_connection_id = locationState?.data?.social_connection_id;
       data.token = locationState?.socialData?.password;
+      data.is_email = locationState?.socialData?.email ? true : false;
     }
 
     try {
