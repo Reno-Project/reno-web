@@ -63,6 +63,7 @@ export default function Milestone(props) {
     end_date: null,
   });
   const [milestones, setMilestones] = useState([]);
+  const [budgets, setBudgets] = useState([]);
   const [milestoneLoader, setmilestoneLoader] = useState(false);
 
   const [buttonLoader, setButtonLoader] = useState(false);
@@ -73,6 +74,7 @@ export default function Milestone(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState({});
   const [visible, setVisible] = useState(false);
+  const [amounts, setAmounts] = useState([]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -91,11 +93,64 @@ export default function Milestone(props) {
     }
   }, []);
 
+  useEffect(() => {
+    if (isArray(milestones) && !isEmpty(milestones)) {
+      if (proposalDetails?.budget_details?.previous) {
+        updateBudgetMilestone(proposalDetails?.budget_details?.budgets);
+      } else {
+        getBudgetList();
+      }
+    }
+  }, [milestones]);
+
+  useEffect(() => {
+    const newAmounts = [];
+
+    milestones.forEach((milestone) => {
+      let amount = 0;
+      if (isArray(budgets) && budgets.length > 0) {
+        budgets.forEach((bud) => {
+          if (bud?.milestone?.id === milestone?.id) {
+            let count =
+              parseInt(bud?.material_unit_price || 0) *
+                parseInt(bud?.qty || 0) +
+              parseInt(bud?.manpower_rate || 0) * parseInt(bud?.days || 0);
+            amount += count;
+          }
+        });
+      }
+      newAmounts.push(amount);
+    });
+    setAmounts(newAmounts);
+  }, [budgets, milestones]);
+
+  function updateBudgetMilestone(data) {
+    const updatedBudgets = data.map((budget) => {
+      if (budget.milestone_id) {
+        // Find the corresponding milestone object in milestones array
+        const milestone = milestones.find(
+          (milestone) => milestone.id === budget.milestone_id
+        );
+        if (milestone) {
+          // Add the milestone object to the budget object
+          return {
+            ...budget,
+            milestone,
+          };
+        }
+      }
+      // Return the budget object as is (no milestone object to add)
+      return budget;
+    });
+
+    setBudgets(updatedBudgets);
+  }
+
   async function getMilestoneList() {
     setmilestoneLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}/${villa?.proposal_id}`,
+        `${Setting.endpoints.milestoneProposalList}/${villa?.id}`,
         "GET",
         {}
       );
@@ -109,18 +164,46 @@ export default function Milestone(props) {
     }
   }
 
+  async function getBudgetList() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.budgetList}/${villa?.id}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        if (isArray(response?.data) && !isEmpty(response?.data)) {
+          updateBudgetMilestone(response?.data);
+        } else {
+          setBudgets([]);
+        }
+      }
+    } catch (error) {
+      console.log("err===>", error);
+    }
+  }
+
   async function addMilestone() {
     setButtonLoader(true);
+    const extractedData = milestones?.map((item) => {
+      const { milestone_name, description, start_date, end_date, id } = item;
+      if (id) {
+        return { id, milestone_name, description, start_date, end_date };
+      } else {
+        return { milestone_name, description, start_date, end_date };
+      }
+    });
+
     const data = {
-      project_id: 1,
-      milestone_details: milestones,
+      project_id: villa?.project_id?.toString(),
+      proposal_id: villa?.id?.toString(),
+      milestone_details: extractedData,
     };
     try {
-      const response = await getAPIProgressData(
+      const response = await getApiData(
         Setting.endpoints.createMilestone,
         "POST",
-        data,
-        true
+        data
       );
 
       if (response.success) {
@@ -172,13 +255,43 @@ export default function Milestone(props) {
   };
 
   const handleDelete = () => {
-    const newItems = [...milestones]; // Create a copy of the array
-    newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
-    setMilestones(newItems);
-    setVisible(false);
-    setSelectedBudget(null);
-    handleClose();
+    if (selectedBudget?.data?.id) {
+      deleteMilestone();
+    } else {
+      const newItems = [...milestones]; // Create a copy of the array
+      newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
+      setMilestones(newItems);
+      setVisible(false);
+      setSelectedBudget(null);
+      handleClose();
+    }
   };
+
+  async function deleteMilestone() {
+    setmilestoneLoader(true);
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.deleteMilestone}/${selectedBudget?.data?.id}`,
+        "GET"
+      );
+      if (response.success) {
+        toast.success(response.message);
+        const newItems = [...milestones]; // Create a copy of the array
+        newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
+        setMilestones(newItems);
+        setVisible(false);
+        setSelectedBudget(null);
+        handleClose();
+      } else {
+        toast.error(response.message);
+      }
+      setmilestoneLoader(false);
+    } catch (error) {
+      console.log("error===>>>>", error);
+      toast.error(error.toString());
+    }
+    setmilestoneLoader(false);
+  }
 
   const validate = () => {
     const error = { ...errObj };
@@ -293,17 +406,7 @@ export default function Milestone(props) {
               fontFamily: "ElMessiri-SemiBold",
             }}
           >
-            ${" "}
-            {(isArray(milestones) &&
-              !isEmpty(milestones) &&
-              milestones
-                .map((obj) => obj.amount)
-                .reduce(
-                  (accumulator, current) =>
-                    Number(accumulator) + Number(current),
-                  0
-                )) ||
-              0}
+            $ {amounts.reduce((acc, curr) => acc + curr, 0)}
           </Typography>
         </Grid>
         <Grid item xs={12} id="name" mt={2}>
@@ -487,133 +590,139 @@ export default function Milestone(props) {
           isArray(milestones) &&
           !isEmpty(milestones) && (
             <Grid container>
-              {milestones.map((milestone, index) => (
-                <Card
-                  sx={{
-                    width: "100%",
-                    my: 2,
-                    p: 2,
-                    boxShadow: "none",
-                    border: `1px solid ${color.borderColor}`,
-                    borderRadius: "8px",
-                  }}
-                >
-                  <Grid item container justifyContent={"space-between"}>
-                    <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
-                      {milestone?.milestone_name}
-                    </Typography>
-                    <IconButton
-                      onClick={(e) => handleRowClick(e, milestone, index)}
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                  </Grid>
-                  <Grid item container justifyContent={"space-between"} py={2}>
-                    <Grid item xl={6}>
-                      <Typography variant="caption" color={"#8C92A4"}>
-                        End date
-                      </Typography>
-                      <Typography fontFamily={"ElMessiri-SemiBold"}>
-                        {milestone.end_date
-                          ? moment(milestone.end_date).format("MMMM DD, YYYY")
-                          : "-"}
-                      </Typography>
-                    </Grid>
-                    <Grid item xl={6} textAlign={"end"}>
-                      <Typography variant="caption" color={"#8C92A4"}>
-                        Amount
-                      </Typography>
-                      <Typography fontFamily={"ElMessiri-SemiBold"}>
-                        {milestone.amount ? `$ ${milestone.amount}` : `$ 0`}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <div style={{ width: "100%", paddingBottom: 16 }}>
-                    <Divider />
-                  </div>
-                  <Grid item container xl={12}>
-                    <Typography
-                      style={{
-                        color: color.primary,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "100%",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        handleChange(milestone, index);
-                      }}
-                    >
-                      View Details
-                      {milestone?.expanded ? (
-                        <ExpandLessIcon sx={{ ml: 1 }} />
-                      ) : (
-                        <ExpandMoreIcon sx={{ ml: 1 }} />
-                      )}
-                    </Typography>
-                  </Grid>
-                  <Collapse
-                    in={milestone?.expanded}
-                    timeout="auto"
-                    unmountOnExit
+              {milestones.map((milestone, index) => {
+                return (
+                  <Card
+                    sx={{
+                      width: "100%",
+                      my: 2,
+                      p: 2,
+                      boxShadow: "none",
+                      border: `1px solid ${color.borderColor}`,
+                      borderRadius: "8px",
+                    }}
                   >
-                    <List>
-                      <ListItem>
-                        <ListItemText
-                          primary="Description"
-                          secondary={milestone.description}
-                          primaryTypographyProps={{
-                            variant: "caption",
-                            color: "#8C92A4",
-                          }}
-                          secondaryTypographyProps={{
-                            fontFamily: "ElMessiri-SemiBold",
-                            color: "rgba(0, 0, 0, 0.87)",
-                          }}
-                        />
-                      </ListItem>
+                    <Grid item container justifyContent={"space-between"}>
+                      <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
+                        {milestone?.milestone_name}
+                      </Typography>
+                      <IconButton
+                        onClick={(e) => handleRowClick(e, milestone, index)}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    </Grid>
+                    <Grid
+                      item
+                      container
+                      justifyContent={"space-between"}
+                      py={2}
+                    >
+                      <Grid item xl={6}>
+                        <Typography variant="caption" color={"#8C92A4"}>
+                          End date
+                        </Typography>
+                        <Typography fontFamily={"ElMessiri-SemiBold"}>
+                          {milestone.end_date
+                            ? moment(milestone.end_date).format("MMMM DD, YYYY")
+                            : "-"}
+                        </Typography>
+                      </Grid>
+                      <Grid item xl={6} textAlign={"end"}>
+                        <Typography variant="caption" color={"#8C92A4"}>
+                          Amount
+                        </Typography>
+                        <Typography fontFamily={"ElMessiri-SemiBold"}>
+                          {`$ ${amounts[index]}` || `$ 0`}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <div style={{ width: "100%", paddingBottom: 16 }}>
                       <Divider />
-                      <ListItem>
-                        <ListItemText
-                          primary="Start Date"
-                          secondary={
-                            milestone.start_date
-                              ? moment(milestone.start_date).format(
-                                  "MMMM DD, YYYY"
-                                )
-                              : "-"
-                          }
-                          primaryTypographyProps={{
-                            variant: "caption",
-                            color: "#8C92A4",
-                          }}
-                          secondaryTypographyProps={{
-                            fontFamily: "ElMessiri-SemiBold",
-                            color: "rgba(0, 0, 0, 0.87)",
-                          }}
-                        />
-                        <ListItemText
-                          style={{ textAlign: "end" }}
-                          primary="End Date"
-                          secondary={
-                            milestone.end_date
-                              ? moment(milestone.end_date).format(
-                                  "MMMM DD, YYYY"
-                                )
-                              : "-"
-                          }
-                          primaryTypographyProps={{
-                            variant: "caption",
-                            color: "#8C92A4",
-                          }}
-                          secondaryTypographyProps={{
-                            fontFamily: "ElMessiri-SemiBold",
-                            color: "rgba(0, 0, 0, 0.87)",
-                          }}
-                        />
-                      </ListItem>
-                      {/*  <Divider />
+                    </div>
+                    <Grid item container xl={12}>
+                      <Typography
+                        style={{
+                          color: color.primary,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "100%",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          handleChange(milestone, index);
+                        }}
+                      >
+                        View Details
+                        {milestone?.expanded ? (
+                          <ExpandLessIcon sx={{ ml: 1 }} />
+                        ) : (
+                          <ExpandMoreIcon sx={{ ml: 1 }} />
+                        )}
+                      </Typography>
+                    </Grid>
+                    <Collapse
+                      in={milestone?.expanded}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <List>
+                        <ListItem>
+                          <ListItemText
+                            primary="Description"
+                            secondary={milestone.description}
+                            primaryTypographyProps={{
+                              variant: "caption",
+                              color: "#8C92A4",
+                            }}
+                            secondaryTypographyProps={{
+                              fontFamily: "ElMessiri-SemiBold",
+                              color: "rgba(0, 0, 0, 0.87)",
+                            }}
+                          />
+                        </ListItem>
+                        <Divider />
+                        <ListItem>
+                          <ListItemText
+                            primary="Start Date"
+                            secondary={
+                              milestone.start_date
+                                ? moment(milestone.start_date).format(
+                                    "MMMM DD, YYYY"
+                                  )
+                                : "-"
+                            }
+                            primaryTypographyProps={{
+                              variant: "caption",
+                              color: "#8C92A4",
+                            }}
+                            secondaryTypographyProps={{
+                              fontFamily: "ElMessiri-SemiBold",
+                              color: "rgba(0, 0, 0, 0.87)",
+                            }}
+                          />
+                          <ListItemText
+                            style={{ textAlign: "end" }}
+                            primary="End Date"
+                            secondary={
+                              milestone.end_date
+                                ? moment(milestone.end_date).format(
+                                    "MMMM DD, YYYY"
+                                  )
+                                : "-"
+                            }
+                            primaryTypographyProps={{
+                              variant: "caption",
+                              color: "#8C92A4",
+                            }}
+                            secondaryTypographyProps={{
+                              fontFamily: "ElMessiri-SemiBold",
+                              color: "rgba(0, 0, 0, 0.87)",
+                            }}
+                          />
+                        </ListItem>
+                        {/*  <Divider />
                   <ListItem>
                     <ListItemText
                       primary="Amount"
@@ -622,10 +731,11 @@ export default function Milestone(props) {
                       }`}
                     />
                   </ListItem> */}
-                    </List>
-                  </Collapse>
-                </Card>
-              ))}
+                      </List>
+                    </Collapse>
+                  </Card>
+                );
+              })}
             </Grid>
           )
         )}

@@ -17,15 +17,18 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { isArray, isEmpty } from "lodash";
 
 const errorObj = {
   scpErr: false,
   scpMsg: "",
 };
 
-export default function ProposalCard() {
+export default function ProposalCard(props) {
+  // const { villa } = props;
   const classes = useStyles();
-
+  const [expandProjectInfo, setExpandProjectInfo] = useState(true);
+  const [expandAttachments, setExpandAttachments] = useState(true);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const villa = {
     createdAt: "2023-05-12T06:15:10.670Z",
@@ -64,7 +67,6 @@ export default function ProposalCard() {
       role: "home_owner",
     },
   };
-  const formArray = JSON.parse(villa?.form_json);
   const [tabValueforcard, setTabValueforcard] = useState(0);
 
   const imageArray = [
@@ -142,7 +144,11 @@ export default function ProposalCard() {
       </Grid>
       {tabValueforcard === 0 ? (
         <>
-          <Accordion style={{ marginTop: 10 }}>
+          <Accordion
+            style={{ marginTop: 10 }}
+            expanded={expandProjectInfo}
+            onClick={() => setExpandProjectInfo(!expandProjectInfo)}
+          >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
@@ -170,32 +176,48 @@ export default function ProposalCard() {
                     {villa?.project_type}
                   </Typography>
                 </Grid>
-                {formArray.map((item, index) => {
-                  return (
-                    <>
-                      <Grid item lg={4} sm={4} md={4} xs={4}>
-                        <Typography className={classes.acctext}>
-                          Property Type:
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={8} sm={8} md={8} xs={8} textAlign={"end"}>
-                        <Typography className={classes.accRightText}>
-                          {item?.selectType?.title}
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={4} sm={4} md={4} xs={4}>
-                        <Typography className={classes.acctext}>
-                          Space:
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={8} sm={8} md={8} xs={8} textAlign={"end"}>
-                        <Typography className={classes.accRightText}>
-                          {item?.size} sq
-                        </Typography>
-                      </Grid>
-                    </>
-                  );
-                })}
+                {isArray(villa?.form_json) &&
+                  !isEmpty(villa?.form_json) &&
+                  villa?.form_json?.map((item, index) => {
+                    return (
+                      <>
+                        <Grid item lg={4} sm={4} md={4} xs={4}>
+                          <Typography className={classes.acctext}>
+                            Property Type:
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={8}
+                          sm={8}
+                          md={8}
+                          xs={8}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.selectType?.title}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={4} sm={4} md={4} xs={4}>
+                          <Typography className={classes.acctext}>
+                            Space:
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={8}
+                          sm={8}
+                          md={8}
+                          xs={8}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.size} sq
+                          </Typography>
+                        </Grid>
+                      </>
+                    );
+                  })}
                 <Grid item lg={4} sm={4} md={4} xs={4}>
                   <Typography className={classes.acctext}>
                     Project Budget:
@@ -235,7 +257,11 @@ export default function ProposalCard() {
               </Grid>
             </AccordionDetails>
           </Accordion>
-          <Accordion style={{ marginTop: 10, width: "100%" }}>
+          <Accordion
+            style={{ marginTop: 10, width: "100%" }}
+            expanded={expandAttachments}
+            onClick={() => setExpandAttachments(!expandAttachments)}
+          >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"

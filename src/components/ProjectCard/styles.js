@@ -4,7 +4,7 @@ const useStyles = makeStyles((theme) => ({
   card: {
     height: "100%",
     minWidth: 380,
-    marginRight: "24px",
+    margin: "0px 8px",
     boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.04)",
     cursor: "pointer",
     transition: "transform 0.3s ease-out !important",

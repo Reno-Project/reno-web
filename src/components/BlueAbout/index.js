@@ -28,7 +28,11 @@ export default function BlueAbout() {
         margin={0}
         width={"100%"}
         maxWidth={"unset"}
-        mb={pathname !== "/contractor-profile" && "70px"}
+        mb={
+          pathname === "/contractor-profile" || pathname === "/dashboard"
+            ? 0
+            : "70px"
+        }
       >
         <Grid
           item

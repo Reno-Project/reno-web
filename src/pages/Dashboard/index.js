@@ -43,8 +43,8 @@ const Dashboard = (props) => {
   const emailRegex =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const dispatch = useDispatch();
-  const { setUserData, setToken } = authActions;
-  const { userData } = useSelector((state) => state.auth);
+  const { setUserData, setToken, setProposalDetails } = authActions;
+  const { userData, proposalDetails } = useSelector((state) => state.auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errObj, setErrObj] = useState(errorObj);
@@ -65,8 +65,8 @@ const Dashboard = (props) => {
     handleUserData();
     askForPermissionToReceiveNotifications();
     onMessageListener();
-    requestedProposalApiCall("requested");
-    requestedProposalApiCall("pending");
+    requestedProposalApiCall("proposal");
+    requestedProposalApiCall("submitted");
 
     return () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -199,13 +199,13 @@ const Dashboard = (props) => {
     setPageLoad(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.listcontractorproject}`,
+        `${Setting.endpoints.listcontractorproject}?status=${type}`,
         "get",
         {}
       );
       if (response?.success) {
         if (isArray(response?.data) && !isEmpty(response?.data)) {
-          type === "pending"
+          type === "submitted"
             ? setRequestedProposal(response?.data)
             : setSubmittedProposal(response?.data);
         }
@@ -250,13 +250,14 @@ const Dashboard = (props) => {
               </Typography>
               <Button
                 variant="contained"
-                //  onClick={() =>
-                //   navigate("/create-proposal", {
-                //     state: {
-                //       create_proposal: true,
-                //     },
-                //   })
-                // }
+                onClick={() => {
+                  dispatch(setProposalDetails({}));
+                  navigate("/create-proposal", {
+                    state: {
+                      create_proposal: true,
+                    },
+                  });
+                }}
               >
                 Create Proposal
               </Button>
@@ -391,26 +392,24 @@ const Dashboard = (props) => {
             >
               <CircularProgress size={40} />
             </div>
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                overflowY: "scroll",
-                padding: "10px 0",
-              }}
-            >
-              {isArray(villaDetails) && !isEmpty(villaDetails) ? (
-                villaDetails.map((villa, index) => {
-                  return (
-                    <div key={`Ongoing_projects_${index}`}>
-                      <ProjectCard vill={villa} />
-                    </div>
-                  );
-                })
-              ) : (
-                <NoData />
-              )}
+          ) : isArray(villaDetails) && !isEmpty(villaDetails) ? (
+            <div className={classes.scrollableDiv}>
+              {villaDetails.map((villa, index) => {
+                return (
+                  <div
+                    style={{
+                      width: sm ? "100%" : "unset",
+                      minWidth: sm ? "100%" : "unset",
+                    }}
+                    key={`Ongoing_projects_${index}`}
+                  >
+                    <ProjectCard vill={villa} />
+                  </div>
+                );
+              })}
             </div>
+          ) : (
+            <NoData />
           )}
         </Grid>
 
@@ -447,32 +446,33 @@ const Dashboard = (props) => {
             >
               <CircularProgress size={40} />
             </div>
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                overflowY: "scroll",
-                padding: "10px 0",
-              }}
-            >
-              {isArray(requestedProposal) && !isEmpty(requestedProposal) ? (
-                requestedProposal.map((villa, index) => {
-                  return (
-                    <div key={`Requested_Proposal_${index}`}>
+          ) : isArray(requestedProposal) && !isEmpty(requestedProposal) ? (
+            <div className={classes.scrollableDiv}>
+              {requestedProposal.map((villa, index) => {
+                return (
+                  <>
+                    <div
+                      key={`Requested_Proposal_${index}`}
+                      style={{
+                        width: sm ? "100%" : "unset",
+                        minWidth: sm ? "100%" : "unset",
+                      }}
+                    >
                       <ProjectCard
                         villa={villa}
                         requested
                         onClick={() => {
+                          dispatch(setProposalDetails({}));
                           navigate("/request-proposal", { state: villa });
                         }}
                       />
                     </div>
-                  );
-                })
-              ) : (
-                <NoData />
-              )}
+                  </>
+                );
+              })}
             </div>
+          ) : (
+            <NoData />
           )}
         </Grid>
 
@@ -509,26 +509,24 @@ const Dashboard = (props) => {
             >
               <CircularProgress size={40} />
             </div>
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                overflowY: "scroll",
-                padding: "10px 0",
-              }}
-            >
-              {isArray(submittedProposal) && !isEmpty(submittedProposal) ? (
-                submittedProposal.map((villa, index) => {
-                  return (
-                    <div key={`Submitted_Proposal_${index}`}>
-                      <ProjectCard villa={villa} />
-                    </div>
-                  );
-                })
-              ) : (
-                <NoData />
-              )}
+          ) : isArray(submittedProposal) && !isEmpty(submittedProposal) ? (
+            <div className={classes.scrollableDiv}>
+              {submittedProposal?.map((villa, index) => {
+                return (
+                  <div
+                    key={`Submitted_Proposal_${index}`}
+                    style={{
+                      width: sm ? "100%" : "unset",
+                      minWidth: sm ? "100%" : "unset",
+                    }}
+                  >
+                    <ProjectCard villa={villa} />
+                  </div>
+                );
+              })}
             </div>
+          ) : (
+            <NoData />
           )}
         </Grid>
 
@@ -539,7 +537,6 @@ const Dashboard = (props) => {
           />
         )}
       </Grid>
-
       <BlueAbout />
     </>
   );

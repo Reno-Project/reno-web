@@ -30,6 +30,7 @@ import { toast } from "react-toastify";
 import { isMobile, isTablet } from "react-device-detect";
 import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
 import CAutocomplete from "../../../components/CAutocomplete";
+import moment from "moment";
 
 const errorObj = {
   scpErr: false,
@@ -46,7 +47,7 @@ const errorObj = {
   documentMsg: "",
 };
 
-export default function Summary() {
+export default function Summary(props) {
   const classes = useStyles();
   const navigate = useNavigate();
   const { proposalDetails, userData } = useSelector((state) => state.auth);
@@ -75,8 +76,6 @@ export default function Summary() {
 
   const [disableMilestone, setDisableMilestone] = useState(true);
   const [disableBudget, setDisableBudget] = useState(true);
-  const [visible, setVisible] = useState(false);
-  const [visiblesucess, setVisibleSuccess] = useState(false);
   const [loader, setloader] = useState(false);
 
   const imageArray = [
@@ -100,8 +99,14 @@ export default function Summary() {
   useEffect(() => {
     if (proposalDetails?.milestone_details?.previous) {
       setScope(proposalDetails?.scope_of_work);
+      setProjectType(proposalDetails?.project_type);
     }
   }, [proposalDetails]);
+
+  useEffect(() => {
+    setScope(villa?.proposal?.scope_of_work);
+    setProjectType(villa?.proposal?.project_type);
+  }, []);
 
   function validation() {
     const error = { ...errObj };
@@ -113,12 +118,12 @@ export default function Summary() {
       error.scpMsg = "Please enter scope of project";
     }
 
+    if (!projectType) {
+      valid = false;
+      error.typeErr = true;
+      error.typeMsg = "Please select project type";
+    }
     if (createProposal) {
-      if (!projectType) {
-        valid = false;
-        error.typeErr = true;
-        error.typeMsg = "Please select project type";
-      }
       if (isEmpty(name?.trim())) {
         valid = false;
         error.nameErr = true;
@@ -149,16 +154,19 @@ export default function Summary() {
     setErrObj(error);
     if (valid) {
       createproposalApicall();
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
 
   async function createproposalApicall() {
     setloader(true);
     const data = {
-      project_id: 2,
+      project_id: villa?.id,
       user_id: userData?.id,
       status: "pending",
       scope_of_work: scope,
+      project_type: projectType,
     };
     try {
       const response = await getApiData(
@@ -169,7 +177,13 @@ export default function Summary() {
       if (response?.success) {
         toast.success(response?.message);
         const scope_of_work = scope;
-        dispatch(setProposalDetails({ ...proposalDetails, scope_of_work }));
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            scope_of_work,
+            project_type: projectType,
+          })
+        );
         setDisableMilestone(false);
         setTabValue(1);
       } else {
@@ -191,7 +205,7 @@ export default function Summary() {
         rowGap={1}
         flexDirection="row-reverse"
         style={{ padding: isMobile && !isTablet ? "20px 0" : md ? 20 : 40 }}
-        justifyContent={!md ? "space-between" : "center"}
+        justifyContent={!createProposal && !md ? "space-between" : "center"}
         boxSizing={"border-box"}
       >
         {!createProposal && (
@@ -209,62 +223,65 @@ export default function Summary() {
         )}
         <Grid
           item
-          xs={isMobile ? 11 : 10}
+          xs={createProposal ? 12 : isMobile ? 11 : 10}
           sm={10}
           md={7.8}
           xl={8}
           className={classes.MainContainer}
         >
-          <Grid
-            item
-            container
-            wrap={sm ? "wrap" : "nowrap"}
-            alignItems={"center"}
-            columnGap={2}
-          >
-            <Grid item>
-              <img
-                src="https://www.wonderplugin.com/wp-content/uploads/2016/06/blue-grape-hyacinths.jpg"
-                alt="chat"
-                className={classes.imageStyle}
-              />
-              <div className={classes.activeContainer}>
-                <div className={classes.activeStatus}></div>
-              </div>
+          {!createProposal && (
+            <Grid
+              item
+              container
+              wrap={sm ? "wrap" : "nowrap"}
+              alignItems={"center"}
+              columnGap={2}
+            >
+              <Grid item>
+                <img
+                  src={villa?.user_data?.profile_url || ""}
+                  alt="logo"
+                  className={classes.imageStyle}
+                />
+                <div className={classes.activeContainer}>
+                  <div className={classes.activeStatus}></div>
+                </div>
+              </Grid>
+
+              <Grid container>
+                <Grid item lg={9} md={9} sm={9} xs={9}>
+                  <Typography className={classes.titleText}>
+                    {villa?.user_data?.username}
+                  </Typography>
+                </Grid>
+                <Grid item lg={3} md={3} sm={3} xs={3} textAlign={"end"}>
+                  <Typography className={classes.requestDate}>
+                    Request Date
+                  </Typography>
+                </Grid>
+                <Grid item lg={9} md={9} sm={6} xs={6}>
+                  <Button
+                    variant="contained"
+                    style={{
+                      marginTop: 3,
+                      backgroundColor: "#E9B55C",
+                      padding: 5,
+                      fontSize: "10px",
+                      letterSpacing: "1.5px",
+                      lineHeight: "16px",
+                    }}
+                  >
+                    REQUEST
+                  </Button>
+                </Grid>
+                <Grid item lg={3} md={3} sm={6} xs={6}>
+                  <Typography className={classes.dateStyle}>
+                    {moment(villa?.project?.createdAt).format("MMMM DD, YYYY")}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid container>
-              <Grid item lg={9} md={9} sm={9} xs={9}>
-                <Typography className={classes.titleText}>
-                  Albert Flores
-                </Typography>
-              </Grid>
-              <Grid item lg={3} md={3} sm={3} xs={3} textAlign={"end"}>
-                <Typography className={classes.requestDate}>
-                  Request Date
-                </Typography>
-              </Grid>
-              <Grid item lg={9} md={9} sm={6} xs={6}>
-                <Button
-                  variant="contained"
-                  style={{
-                    marginTop: 3,
-                    backgroundColor: "#E9B55C",
-                    padding: 5,
-                    fontSize: "10px",
-                    letterSpacing: "1.5px",
-                    lineHeight: "16px",
-                  }}
-                >
-                  REQUEST
-                </Button>
-              </Grid>
-              <Grid item lg={3} md={3} sm={6} xs={6}>
-                <Typography className={classes.dateStyle}>
-                  March 01, 2023
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
+          )}
           <Grid item container className={classes.contentContainer} id="scope">
             <Grid item xs={12} style={{ borderBottom: "1px solid #F2F3F4" }}>
               <Tabs
@@ -281,33 +298,33 @@ export default function Summary() {
             </Grid>
             {tabValue === 0 ? (
               <>
+                <Grid item xs={12} style={{ paddingTop: 25 }}>
+                  <CAutocomplete
+                    label="Project Type"
+                    placeholder="Select project type"
+                    value={projectType}
+                    onChange={(e, newValue) => {
+                      setProjectType(newValue);
+                      setErrObj({
+                        ...errObj,
+                        typeErr: false,
+                        typeMsg: "",
+                      });
+                    }}
+                    options={[
+                      "Interior design",
+                      "Kitchen",
+                      "Full reno",
+                      "Bathroom",
+                      "Landscaping",
+                    ]}
+                    getOptionLabel={(option) => option}
+                    error={errObj.typeErr}
+                    helpertext={errObj.typeMsg}
+                  />
+                </Grid>
                 {createProposal && (
                   <>
-                    <Grid item xs={12} style={{ paddingTop: 25 }}>
-                      <CAutocomplete
-                        label="Project Type"
-                        placeholder="Select project type"
-                        value={projectType}
-                        onChange={(e, newValue) => {
-                          setProjectType(newValue);
-                          setErrObj({
-                            ...errObj,
-                            typeErr: false,
-                            typeMsg: "",
-                          });
-                        }}
-                        options={[
-                          "Interior design",
-                          "Kitchen",
-                          "Full reno",
-                          "Bathroom",
-                          "Landscaping",
-                        ]}
-                        getOptionLabel={(option) => option}
-                        error={errObj.typeErr}
-                        helpertext={errObj.typeMsg}
-                      />
-                    </Grid>
                     <Grid item xs={12}>
                       <CInput
                         label="Project Name"
@@ -363,11 +380,7 @@ export default function Summary() {
                     </Grid>
                   </>
                 )}
-                <Grid
-                  item
-                  xs={12}
-                  style={{ paddingTop: createProposal ? 0 : 25 }}
-                >
+                <Grid item xs={12}>
                   <CInput
                     multiline={true}
                     rows={3}
@@ -575,7 +588,7 @@ export default function Summary() {
                     </Grid>
                   </>
                 )}
-                {!createProposal && (
+                {/* {!createProposal && (
                   <>
                     <Grid item lg={12} sm={12} md={12} xs={12}>
                       <Typography className={classes.MainTitle}>
@@ -602,11 +615,11 @@ export default function Summary() {
                       </Grid>
                       <Grid item lg={3} sm={3} md={3} xs={12} textAlign={"end"}>
                         <Typography className={classes.titleStyleRight}>
-                          Villa MM-Renovation
+                          {villa?.name}
                         </Typography>
                       </Grid>
                     </Grid>
-                    <Grid
+                   <Grid
                       container
                       alignItems="center"
                       justifyContent={"flex-end"}
@@ -630,16 +643,11 @@ export default function Summary() {
                         }}
                       >
                         <Typography className={classes.paraStyle}>
-                          Lorem Ipsum has been the industry's standard dummy
-                          text ever since. When an unknown printer took a galley
-                          of type and scrambled it to make a type specimen book.
-                          It has survived not only five centuries, but also the
-                          leap into electronic typesetting, remaining
-                          essentially.
+                          {villa?.description}
                         </Typography>
                       </Grid>
                     </Grid>
-                    <Grid
+                   <Grid
                       container
                       alignItems="center"
                       justifyContent={"flex-end"}
@@ -652,7 +660,7 @@ export default function Summary() {
                       </Grid>
                       <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
                         <Typography className={classes.accRightText}>
-                          Duplex Building
+                          {villa?.project_type}
                         </Typography>
                       </Grid>
                       <Grid item lg={3} sm={3} md={3} xs={3}>
@@ -662,7 +670,7 @@ export default function Summary() {
                       </Grid>
                       <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
                         <Typography className={classes.accRightText}>
-                          04
+                          {villa?.project?.bathroom}
                         </Typography>
                       </Grid>
                       <Grid item lg={3} sm={3} md={3} xs={3}>
@@ -672,7 +680,7 @@ export default function Summary() {
                       </Grid>
                       <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
                         <Typography className={classes.accRightText}>
-                          03
+                          {villa?.project?.badroom}
                         </Typography>
                       </Grid>
                       <Grid item lg={3} sm={3} md={3} xs={3}>
@@ -750,9 +758,9 @@ export default function Summary() {
                           );
                         })}
                       </Grid>
-                    </Grid>
+                    </Grid> 
                   </>
-                )}
+                )} */}
 
                 <Grid
                   item
@@ -771,12 +779,16 @@ export default function Summary() {
                         dispatch(setProposalDetails({}));
                       }}
                     >
-                      cancel
+                      Cancel
                     </Button>
                   </Grid>
                   <Grid item sm={5.9} xs={12}>
                     <Button variant="contained" fullWidth onClick={validation}>
-                      Continue
+                      {loader ? (
+                        <CircularProgress style={{ color: "#fff" }} size={26} />
+                      ) : (
+                        "Continue"
+                      )}
                     </Button>
                   </Grid>
                 </Grid>
@@ -801,8 +813,6 @@ export default function Summary() {
                 handleClick={(type, data) => {
                   if (type === "back") {
                     setTabValue(1);
-                  } else if (type === "submit") {
-                    setVisible(true);
                   }
                 }}
                 villa={villa}
@@ -812,25 +822,6 @@ export default function Summary() {
         </Grid>
       </Grid>
       <BlueAbout />
-
-      <ConfirmModel
-        visible={visible}
-        handleClose={() => setVisible(false)}
-        confirmation={() => {
-          dispatch(setProposalDetails({}));
-          setVisible(false);
-          setVisibleSuccess(true);
-        }}
-        message="Are you sure you want to submit proposal?"
-        title="Submit"
-      />
-      {visiblesucess && (
-        <ProfileSuccessModal
-          msg="Your profile has been created successfully."
-          visible={visiblesucess}
-          btnTitle="Continue"
-        />
-      )}
     </div>
   );
 }

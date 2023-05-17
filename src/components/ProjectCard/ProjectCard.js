@@ -21,8 +21,8 @@ const ProjectCard = (props) => {
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
-  const createdAt = moment(villa?.start_date).format("DD-MM-yyyy");
-  const moveInDate = moment(villa?.end_date).format("DD-MM-yyyy");
+  const createdAt = moment(villa?.createdAt).format("DD-MM-yyyy");
+  const moveInDate = moment(villa?.end_date, "DD/MM/YYYY").format("DD.MM.YYYY");
 
   return (
     <Card key={villa?.id} className={classes.card} onClick={onClick}>
@@ -62,13 +62,16 @@ const ProjectCard = (props) => {
         </div>
         <div className={classes.rowJustified}>
           <Typography className={classes.row} fontFamily={"Roobert-Regular"}>
-            <img src={Images.badroom} alt="badroom" /> 2
+            <img src={Images.badroom} alt="badroom" />
+            {villa?.form_json[0]?.bedrooms?.title || 0}
           </Typography>
           <Typography className={classes.row} fontFamily={"Roobert-Regular"}>
-            <img src={Images.bathroom} alt="bathroom" /> 2
+            <img src={Images.bathroom} alt="bathroom" />{" "}
+            {villa?.form_json[0]?.bathrooms?.title || 0}
           </Typography>
           <Typography className={classes.row} fontFamily={"Roobert-Regular"}>
-            <img src={Images.size} alt="size" /> 300 sqm
+            <img src={Images.size} alt="size" />{" "}
+            {villa?.form_json[0]?.size || 0} sqm
           </Typography>
         </div>
         <div style={{ width: "100%", margin: "10px 0px" }}>

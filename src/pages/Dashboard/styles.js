@@ -64,12 +64,32 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: "32px !important",
     cursor: "pointer",
     fontWeight: "600 !important",
+    paddingLeft: 8,
   },
   container: {
     borderRadius: "8px !important",
     backgroundColor: color.white,
     padding: "30px 24px !important",
     marginTop: "28px !important",
+  },
+  scrollableDiv: {
+    display: "flex",
+    overflowX: "scroll",
+    width: "100%",
+    padding: "10px 0",
+    WebkitBoxDirection: "normal",
+    WebkitOverflowScrolling: "touch", // For iOS Safari
+    "&::-webkit-scrollbar": {
+      display: "-webkit-inline-box !important",
+      width: "10px",
+      backgroundColor: "#f1f1f1",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#888",
+    },
+    "&::-webkit-scrollbar-thumb:hover": {
+      backgroundColor: "#555",
+    },
   },
 }));
 

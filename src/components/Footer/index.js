@@ -9,10 +9,15 @@ function Footer(props) {
 
   const location = useLocation();
   const { pathname } = location;
+  const disabledFooter =
+    pathname === "/contractor-profile" ||
+    pathname === "/" ||
+    pathname === "/dashboard" ||
+    pathname === "/create-proposal";
 
   return (
     <>
-      {pathname === "/contractor-profile" || pathname === "/" ? null : (
+      {disabledFooter ? null : (
         <div className={classes.footerMainCon}>
           <Grid container className={classes.container}>
             <Grid

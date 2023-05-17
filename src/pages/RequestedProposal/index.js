@@ -9,48 +9,160 @@ import moment from "moment";
 
 export default function RequestedProposal() {
   const location = useLocation();
-  // const villa = location?.state ? location?.state : {};
-  // console.log("villa======", villa);
+  const villa = location?.state ? location?.state : {};
   const classes = useStyles();
   const navigate = useNavigate();
-  const villa = {
-    createdAt: "2023-05-12T06:15:10.670Z",
-    updatedAt: "2023-05-12T06:15:10.670Z",
-    id: 80,
-    exp_id: 1,
-    project_type: "Interior design",
-    name: " this is for testing",
-    description: "I want to create house",
-    location: "Al Furjan",
-    budget: 25000,
-    start_date: "2023-06-17T06:13:45.484Z",
-    end_date: "2023-05-12T06:13:45.482Z",
-    form_json:
-      '[{"size":"25","selectedItems":[{"id":1,"title":"Modern"},{"id":7,"title":"Mid-century"},{"id":9,"title":"Scandinavian"},{"id":4,"title":"Country"},{"id":5,"title":"Boho classic"},{"id":6,"title":"Coastal"},{"id":2,"title":"Industrial"},{"id":12,"title":"Hollywood Regency"}],"selectType":{"id":2,"title":"Apartment"},"selectFloor":{"id":2,"title":"2"},"selectBedrooms":{"id":2,"title":"2"},"selectBathrooms":{"id":3,"title":"3"},"selectKitchen":{"id":2,"title":"2"}}]',
-    status: "pending",
-    user_id: 465,
-    contractor_id: 9,
-    project_slug: "#CH555259294600",
-    project_image: [
-      {
-        id: 69,
-        image:
-          "https://static.renohome.io/documents/46497073-ca83-4598-919d-7bcbda7bd187",
-      },
-    ],
-    user_data: {
-      is_email_verified: true,
-      profile_url:
-        "https://static.renohome.io/reno-cms/ea0b2d8e-352a-45ed-aee4-59bab25bb47f",
-      email: "anurag22@groovyweb.co",
-      phone_code: "91",
-      phone_no: "9624553405",
-      username: "Anurag",
-      is_phone_verified: false,
-      role: "home_owner",
-    },
-  };
-  const formArray = JSON.parse(villa?.form_json);
+  // const villa = {
+  //   createdAt: "2023-05-12T06:15:10.670Z",
+  //   updatedAt: "2023-05-12T06:15:10.670Z",
+  //   id: 80,
+  //   exp_id: 1,
+  //   project_type: "Interior design",
+  //   name: " this is for testing",
+  //   description: "I want to create house",
+  //   location: "Al Furjan",
+  //   budget: 25000,
+  //   start_date: "2023-06-17T06:13:45.484Z",
+  //   end_date: "2023-05-12T06:13:45.482Z",
+  //   form_json: [
+  //     {
+  //       size: "25",
+  //       selectedItems: [
+  //         {
+  //           id: 1,
+  //           title: "Modern",
+  //         },
+  //         {
+  //           id: 7,
+  //           title: "Mid-century",
+  //         },
+  //         {
+  //           id: 9,
+  //           title: "Scandinavian",
+  //         },
+  //         {
+  //           id: 4,
+  //           title: "Country",
+  //         },
+  //         {
+  //           id: 5,
+  //           title: "Boho classic",
+  //         },
+  //         {
+  //           id: 6,
+  //           title: "Coastal",
+  //         },
+  //         {
+  //           id: 2,
+  //           title: "Industrial",
+  //         },
+  //         {
+  //           id: 12,
+  //           title: "Hollywood Regency",
+  //         },
+  //       ],
+  //       selectType: {
+  //         id: 2,
+  //         title: "Apartment",
+  //       },
+  //       selectFloor: {
+  //         id: 2,
+  //         title: "2",
+  //       },
+  //       selectBedrooms: {
+  //         id: 2,
+  //         title: "2",
+  //       },
+  //       selectBathrooms: {
+  //         id: 3,
+  //         title: "3",
+  //       },
+  //       selectKitchen: {
+  //         id: 2,
+  //         title: "2",
+  //       },
+  //     },
+  //     {
+  //       size: "25",
+  //       selectedItems: [
+  //         {
+  //           id: 1,
+  //           title: "Modern",
+  //         },
+  //         {
+  //           id: 7,
+  //           title: "Mid-century",
+  //         },
+  //         {
+  //           id: 9,
+  //           title: "Scandinavian",
+  //         },
+  //         {
+  //           id: 4,
+  //           title: "Country",
+  //         },
+  //         {
+  //           id: 5,
+  //           title: "Boho classic",
+  //         },
+  //         {
+  //           id: 6,
+  //           title: "Coastal",
+  //         },
+  //         {
+  //           id: 2,
+  //           title: "Industrial",
+  //         },
+  //         {
+  //           id: 12,
+  //           title: "Hollywood Regency",
+  //         },
+  //       ],
+  //       selectType: {
+  //         id: 2,
+  //         title: "Apartment",
+  //       },
+  //       selectFloor: {
+  //         id: 2,
+  //         title: "2",
+  //       },
+  //       selectBedrooms: {
+  //         id: 2,
+  //         title: "2",
+  //       },
+  //       selectBathrooms: {
+  //         id: 3,
+  //         title: "3",
+  //       },
+  //       selectKitchen: {
+  //         id: 2,
+  //         title: "2",
+  //       },
+  //     },
+  //   ],
+  //   status: "pending",
+  //   user_id: 465,
+  //   contractor_id: 9,
+  //   project_slug: "#CH555259294600",
+  //   project_image: [
+  //     {
+  //       id: 69,
+  //       image:
+  //         "https://static.renohome.io/documents/46497073-ca83-4598-919d-7bcbda7bd187",
+  //     },
+  //   ],
+  //   user_data: {
+  //     is_email_verified: true,
+  //     profile_url:
+  //       "https://static.renohome.io/reno-cms/ea0b2d8e-352a-45ed-aee4-59bab25bb47f",
+  //     email: "anurag22@groovyweb.co",
+  //     phone_code: "91",
+  //     phone_no: "9624553405",
+  //     username: "Anurag",
+  //     is_phone_verified: false,
+  //     role: "home_owner",
+  //   },
+  // };
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -207,7 +319,7 @@ export default function RequestedProposal() {
               justifyContent={"flex-end"}
               rowSpacing={2}
             >
-              {formArray?.map((item, index) => {
+              {/* {JSON.parse(villa?.form_json)?.map((item, index) => {
                 return (
                   <>
                     <Grid item lg={3} sm={3} md={3} xs={3}>
@@ -279,7 +391,7 @@ export default function RequestedProposal() {
                     </Grid>
                   </>
                 );
-              })}
+              })} */}
 
               <Grid
                 item

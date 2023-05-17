@@ -37,6 +37,8 @@ import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
 import ConfirmModel from "../../../components/ConfirmModel";
 import CAutocomplete from "../../../components/CAutocomplete";
+import ProfileSuccessModal from "../../../components/ProfileSuccessModal";
+import moment from "moment";
 
 const errorObj = {
   bNameErr: false,
@@ -47,8 +49,6 @@ const errorObj = {
   materialUnitPriceMsg: "",
   quantityErr: false,
   quantityMsg: "",
-  // materialMilestoneErr: false,
-  // materialMilestoneMsg: "",
   unitErr: false,
   unitMsg: "",
   daysErr: false,
@@ -81,58 +81,21 @@ export default function Budget(props) {
     days: "",
     milestone: null,
     specification: "",
-    // manpowerLastChange: moment().format("MMMM DD, YYYY")?.toString(),
-    // materialLastChange: moment().format("MMMM DD, YYYY")?.toString(),
-    // manpowerStatus: "Pending",
-    // materialStatus: "pending",
+    updatedAt: moment().format("MMMM DD, YYYY"),
   };
   const [state, setState] = useState(initialFormvalues);
-  console.log("state====>>>>>", state);
-
   const [budgetDetails, setBudgetDetails] = useState([]);
-  console.log("budgetDetails====>>>>>", budgetDetails);
   const [budgetLoader, setBudgetLoader] = useState(false);
   const [milestones, setMilestones] = useState([]);
   const [visible, setVisible] = useState(false);
-  // const budgetlist = [
-  //   {
-  //     name: "Milestone 1",
-  //     material_type: "marble",
-  //     material_unit_price: "20",
-  //     qty: "2",
-  //     materialMilestone: "N/A",
-  //     manpower_rate: "20",
-  //     days: "",
-  //     manpowerMilestone: "N/A",
-  //     specification: "",
-  //     photo: Images.building,
-  //     manpowerLastChange: moment().format("MMMM DD, YYYY")?.toString(),
-  //     materialLastChange: moment().format("MMMM DD, YYYY")?.toString(),
-  //     manpowerStatus: "Pending",
-  //     materialStatus: "pending",
-  //   },
-  //   {
-  //     photo: Images.building,
-  //     name: "Milestone 2",
-  //     material_type: "wood",
-  //     material_unit_price: "20",
-  //     qty: "2",
-  //     materialMilestone: "Polish",
-  //     manpower_rate: "20",
-  //     days: "",
-  //     manpowerMilestone: "Procurement",
-  //     specification: "",
-  //     manpowerLastChange: moment().format("MMMM DD, YYYY")?.toString(),
-  //     materialLastChange: moment().format("MMMM DD, YYYY")?.toString(),
-  //     manpowerStatus: "Pending",
-  //     materialStatus: "pending",
-  //   },
-  // ];
+  const [visibleLoader, setVisibleLoader] = useState(false);
+  const [visibleFinal, setVisibleFinal] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [buttonLoader, setButtonLoader] = useState(false);
   const [uploadLoader, setUploadLoader] = useState(false);
+  const [proposalModal, setProposalModal] = useState(false);
 
   const [errObj, setErrObj] = useState(errorObj);
 
@@ -140,6 +103,7 @@ export default function Budget(props) {
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const [amounts, setAmounts] = useState([]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -154,16 +118,36 @@ export default function Budget(props) {
     getMilestoneList();
   }, []);
 
+  useEffect(() => {
+    const array = [];
+
+    budgetDetails.map((bud) => {
+      let count =
+        parseInt(bud.material_unit_price || 0) * parseInt(bud.qty || 0) +
+        parseInt(bud.manpower_rate || 0) * parseInt(bud.days || 0);
+      array.push(count);
+    });
+    setAmounts(array);
+  }, [budgetDetails]);
+
   async function getBudgetList() {
     setBudgetLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.budgetList}/${villa?.proposal_id}`,
+        `${Setting.endpoints.budgetList}/${villa?.id}`,
         "GET",
         {}
       );
       if (response.success) {
-        setBudgetDetails(response?.data);
+        if (isArray(response?.data) && !isEmpty(response?.data)) {
+          const modifiedArray = response?.data?.map((item) => ({
+            ...item,
+            photo_origin: item.photo_url,
+          }));
+          setBudgetDetails(modifiedArray);
+        } else {
+          setBudgetDetails([]);
+        }
       }
       setBudgetLoader(false);
     } catch (error) {
@@ -216,12 +200,6 @@ export default function Budget(props) {
       error.quantityErr = true;
       error.quantityMsg = "Please select the material qty";
     }
-
-    // if (isEmpty(state.materialMilestone?.toString())) {
-    //   valid = false;
-    //   error.materialMilestoneErr = true;
-    //   error.materialMilestoneMsg = "Please select the milestone";
-    // }
 
     if (!state.material_unit) {
       valid = false;
@@ -280,6 +258,7 @@ export default function Budget(props) {
     const budget_details = {
       formvalues: state,
       budgets: budgetDetails,
+      previous: true,
     };
     dispatch(
       setProposalDetails({
@@ -308,16 +287,21 @@ export default function Budget(props) {
 
     const { data: selectedData } = selectedBudget;
 
-    const milestoneObj = milestones?.find(
-      (item) => selectedData?.milestone_id?.toString() === item?.id?.toString()
-    );
+    const milestoneObj = milestones?.find((item) => {
+      if (selectedData?.milestone_id) {
+        return selectedData?.milestone_id?.toString() === item?.id?.toString();
+      } else {
+        return selectedData?.milestone?.id?.toString() === item?.id?.toString();
+      }
+    });
 
     const nextState = {
       ...selectedData,
       milestone: milestoneObj,
+      updatedAt: moment().format("MMMM DD, YYYY"),
       photo_origin: selectedData?.photo_url?.image
         ? [selectedData.photo_url]
-        : [],
+        : selectedData?.photo_origin,
     };
 
     setState(nextState);
@@ -325,18 +309,48 @@ export default function Budget(props) {
   };
 
   const handleDelete = () => {
-    const newItems = [...budgetDetails]; // Create a copy of the array
-    newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
-    setBudgetDetails(newItems);
-    setVisible(false);
-    setSelectedBudget(null);
-    handleClose();
+    if (selectedBudget?.data?.id) {
+      deleteBudget();
+    } else {
+      const newItems = [...budgetDetails]; // Create a copy of the array
+      newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
+      setBudgetDetails(newItems);
+      setVisible(false);
+      setSelectedBudget(null);
+      handleClose();
+    }
   };
+
+  async function deleteBudget() {
+    setVisibleLoader(true);
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.deleteBudget}/${selectedBudget?.data?.id}`,
+        "GET"
+      );
+      if (response.success) {
+        toast.success(response.message);
+        const newItems = [...budgetDetails]; // Create a copy of the array
+        newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
+        setBudgetDetails(newItems);
+        setVisible(false);
+        setSelectedBudget(null);
+        handleClose();
+      } else {
+        toast.error(response.message);
+      }
+      setVisibleLoader(false);
+    } catch (error) {
+      console.log("error===>>>>", error);
+      toast.error(error.toString());
+    }
+    setVisibleLoader(false);
+  }
 
   async function getMilestoneList() {
     try {
       const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}/${villa?.proposal_id}`,
+        `${Setting.endpoints.milestoneProposalList}/${villa?.id}`,
         "GET",
         {}
       );
@@ -352,32 +366,38 @@ export default function Budget(props) {
 
   async function addBudget() {
     setButtonLoader(true);
+
+    const extractedData = budgetDetails?.map((item) => {
+      return {
+        name: item?.name,
+        material_type: item?.material_type,
+        material_unit: item?.material_unit,
+        material_unit_price: item?.material_unit_price,
+        qty: item?.qty,
+        milestone_id: item?.milestone?.id,
+        manpower_rate: item?.manpower_rate,
+        days: item?.days,
+        specification: item?.specification,
+        image: item?.photo_url,
+      };
+    });
+
     const data = {
-      project_id: 1,
-      budget_details: budgetDetails,
+      proposal_id: villa?.id,
+      budget_item: extractedData,
     };
+
     try {
-      const response = await getAPIProgressData(
+      const response = await getApiData(
         Setting.endpoints.createBudget,
         "POST",
-        data,
-        true
+        data
       );
 
       if (response.success) {
         toast.success(response.message);
-        const budget_details = {
-          formvalues: initialFormvalues,
-          milestones: [],
-          previous: false,
-        };
-        dispatch(
-          setProposalDetails({
-            ...proposalDetails,
-            budget_details,
-          })
-        );
-        handleClick("next");
+        setProposalModal(true);
+        dispatch(setProposalDetails({}));
       } else {
         toast.error(response.message);
       }
@@ -391,7 +411,7 @@ export default function Budget(props) {
 
   const handleSubmit = () => {
     if (isArray(budgetDetails) && !isEmpty(budgetDetails)) {
-      addBudget();
+      setVisibleFinal(true);
     } else {
       validate();
       // toast.warning("Please add atleast one milestone");
@@ -460,7 +480,6 @@ export default function Budget(props) {
   }
 
   async function deletePhoto(id, ind) {
-    console.log("o====>>>>>");
     try {
       const response = await getApiData(
         `${Setting.endpoints.deleteTemplate}/${id}`,
@@ -508,7 +527,17 @@ export default function Budget(props) {
               fontFamily: "ElMessiri-SemiBold",
             }}
           >
-            $15,000
+            ${" "}
+            {(isArray(budgetDetails) &&
+              !isEmpty(budgetDetails) &&
+              budgetDetails?.reduce((acc, bud) => {
+                const amount =
+                  parseInt(bud?.material_unit_price || 0) *
+                    parseInt(bud?.qty || 0) +
+                  parseInt(bud?.manpower_rate || 0) * parseInt(bud?.days || 0);
+                return acc + amount;
+              }, 0)) ||
+              0}
           </Typography>
         </Grid>
         <Grid
@@ -736,7 +765,7 @@ export default function Budget(props) {
         </Grid>
         <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
           <Grid item xs={12} md={4} id="Unit">
-            <CInput
+            {/* <CInput
               label="Material unit:"
               placeholder="Enter material unit"
               value={state.material_unit}
@@ -748,6 +777,23 @@ export default function Budget(props) {
                   unitMsg: "",
                 });
               }}
+              error={errObj.unitErr}
+              helpertext={errObj.unitMsg}
+            /> */}
+            <CAutocomplete
+              label="Material unit:"
+              placeholder="Enter material unit"
+              value={state.material_unit}
+              onChange={(e, newValue) => {
+                setState({ ...state, material_unit: newValue });
+                setErrObj({
+                  ...errObj,
+                  unitErr: false,
+                  unitMsg: "",
+                });
+              }}
+              options={["tonns", "Kg", "g", "lbs", "liter", "ml"]}
+              getOptionLabel={(option) => option}
               error={errObj.unitErr}
               helpertext={errObj.unitMsg}
             />
@@ -920,17 +966,23 @@ export default function Budget(props) {
           isArray(budgetDetails) &&
           !isEmpty(budgetDetails) &&
           budgetDetails?.map((item, index) => {
+            const milestoneValue = item?.milestone_id
+              ? milestones?.find((e, i) => {
+                  return e?.id === item?.milestone_id;
+                })
+              : item?.milestone;
+
             return (
               <Grid container className={classes.card}>
                 <Grid item container wrap={sm ? "wrap" : "nowrap"}>
                   <Grid item sx={12} justifyContent={"flex-start"}>
-                    {isArray(item?.photo_url) && !isEmpty(item?.photo_url) ? (
+                    {isArray(item?.photo_url) && !isEmpty(item?.photo_url) && (
                       <img
                         key={item?.photo_url[0].id}
                         src={
-                          typeof item?.photo_url[0]?.image === "string"
+                          (typeof item?.photo_url[0]?.image === "string"
                             ? item?.photo_url[0]?.image
-                            : URL.createObjectURL(item?.photo_origin[0])
+                            : URL.createObjectURL(item?.photo_origin[0])) || ""
                         }
                         alt={""}
                         style={{
@@ -939,16 +991,6 @@ export default function Budget(props) {
                           objectFit: "contain",
                           borderRadius: 4,
                         }}
-                      />
-                    ) : (
-                      <img
-                        style={{
-                          width: md ? 150 : 220,
-                          maxHeight: 170,
-                          objectFit: "contain",
-                        }}
-                        src={Images.building}
-                        alt=""
                       />
                     )}
                   </Grid>
@@ -981,7 +1023,7 @@ export default function Budget(props) {
                     </Grid>
                     <Grid item textAlign={sm ? "start" : "end"}>
                       <Typography fontFamily={"ElMEssiri-Regular"}>
-                        $ {item?.material_unit_price || "-"}
+                        $ {amounts[index] || 0}
                       </Typography>
                       <Typography
                         fontFamily={"ElMEssiri-Regular"}
@@ -993,7 +1035,7 @@ export default function Budget(props) {
                         <Typography fontFamily={"Roobert-Regular"} mr={1}>
                           Last updated:
                         </Typography>
-                        March 01, 2023
+                        {moment(item?.updatedAt).format("MMMM DD, YYYY")}
                       </Typography>
                     </Grid>
                     <Grid item container justifyContent={"flex-start"}>
@@ -1075,6 +1117,7 @@ export default function Budget(props) {
                             >
                               Manpower rate
                             </TableCell>
+
                             <TableCell
                               style={{
                                 color: color.captionText,
@@ -1082,7 +1125,7 @@ export default function Budget(props) {
                               }}
                               align="right"
                             >
-                              Quantity
+                              Days
                             </TableCell>
                             {/* <TableCell
                               style={{
@@ -1106,7 +1149,7 @@ export default function Budget(props) {
                           <TableRow key={"Manpower"}>
                             <TableCell align="right">
                               <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.manpowerMilestone || "-"}
+                                {milestoneValue?.milestone_name || "-"}
                               </Typography>
                             </TableCell>
                             <TableCell align="right">
@@ -1116,7 +1159,7 @@ export default function Budget(props) {
                             </TableCell>
                             <TableCell align="right">
                               <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.qty || "-"}
+                                {item?.days || "-"}
                               </Typography>
                             </TableCell>
                             {/* <TableCell align="right">
@@ -1162,7 +1205,7 @@ export default function Budget(props) {
                               }}
                               align="right"
                             >
-                              Days
+                              Unit Price
                             </TableCell>
                             <TableCell
                               style={{
@@ -1171,7 +1214,7 @@ export default function Budget(props) {
                               }}
                               align="right"
                             >
-                              Unit Price
+                              Quantity
                             </TableCell>
                             {/* <TableCell
                               style={{
@@ -1195,12 +1238,13 @@ export default function Budget(props) {
                           <TableRow key={"Manpower"}>
                             <TableCell align="right">
                               <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.materialMilestone || "-"}
+                                {item?.material_unit || "-"}
                               </Typography>
                             </TableCell>
+
                             <TableCell align="right">
                               <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.material_unit_price || "-"}
+                                $ {item?.material_unit_price || "0"}
                               </Typography>
                             </TableCell>
                             <TableCell align="right">
@@ -1251,22 +1295,28 @@ export default function Budget(props) {
           </Grid>
           <Grid item sm={5.9} xs={12}>
             <Button variant="contained" fullWidth onClick={handleSubmit}>
-              {buttonLoader ? (
-                <CircularProgress style={{ color: "white" }} size={26} />
-              ) : (
-                "Submit"
-              )}
+              Submit
             </Button>
           </Grid>
         </Grid>
       </Grid>
       <ConfirmModel
         visible={visible}
+        loader={visibleLoader}
         handleClose={() => setVisible(false)}
         confirmation={() => {
           handleDelete();
         }}
         message={`Are you sure you want to delete ${selectedBudget?.data?.name} budget?`}
+      />
+      <ConfirmModel
+        visible={visibleFinal}
+        loader={buttonLoader}
+        handleClose={() => setVisibleFinal(false)}
+        confirmation={() => {
+          addBudget();
+        }}
+        message={`Are you sure you want to submit proposal?`}
       />
       <Menu
         id={`budget-menu`}
@@ -1317,6 +1367,14 @@ export default function Budget(props) {
           Delete
         </MenuItem>
       </Menu>
+      {proposalModal && (
+        <ProfileSuccessModal
+          title="Congrats!"
+          msg="Proposal successfully submitted!"
+          btnTitle="Continue"
+          visible={proposalModal}
+        />
+      )}
     </>
   );
 }
