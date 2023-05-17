@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { isString } from "lodash";
 import authActions from "./redux/reducers/auth/actions";
 import { store } from "./redux/store/configureStore";
 import { getApiData } from "./utils/APIHelper";
@@ -27,7 +28,7 @@ export const askForPermissionToReceiveNotifications = () => {
       if (currentToken) {
         // console.log("current token for client: ", currentToken);
         const { useruuid, token } = store.getState().auth;
-        if (useruuid !== currentToken && token !== "") {
+        if (useruuid !== currentToken && isString(token) && token !== "") {
           store.dispatch(authActions.setUserUUID(currentToken));
           updateUUID(currentToken);
         }
