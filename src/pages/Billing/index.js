@@ -63,7 +63,7 @@ export default function Billing() {
         bank: data?.bank_name,
         acc: data?.bank_account,
         swift: data?.swift_code,
-        bankAddress: data?.Address,
+        bankAddress: data?.address,
       });
     }
   }, [billingData]);
@@ -224,7 +224,7 @@ export default function Billing() {
         bank_name: state.bank,
         bank_account: state.acc,
         swift_code: state.swift,
-        Address: state.bankAddress,
+        address: state.bankAddress,
       };
 
       const response = await getApiData(

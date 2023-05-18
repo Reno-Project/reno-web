@@ -766,7 +766,7 @@ const CreateProfile = (props) => {
         bank_name: state.bank,
         bank_account: state.acc,
         swift_code: state.swift,
-        Address: state.address,
+        address: state.address,
       };
 
       const response = await getApiData(
