@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
   },
   acctext: {
     fontFamily: "Roobert-Regular !important",
-    fontSize: "14px !important",
+    fontSize: "16px !important",
     lineHeight: "20px !important",
     fontWeight: "400 !important",
   },
@@ -120,6 +120,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "14px !important",
     lineHeight: "24px !important",
     fontWeight: "500 !important",
+    "& img": {
+      width: 140,
+      height: 140,
+    },
   },
   linkText: {
     fontFamily: "Roobert-Regular !important",

@@ -61,14 +61,14 @@ const Images = {
   eye: "/assets/images/eye.svg",
   dollar: "/assets/images/dollar.svg",
   verify_green: "/assets/images/verify_green.png",
-  kitchen_1:"/assets/images/kitchen-galley.png",
-  corridor:"/assets/images/Corridor-SHaped.png",
-  l_shaped:"/assets/images/L-SHaped.png",
-  Peninsula:"/assets/images/Peninsula.png",
-  U_shape:"/assets/images/U-shape.png",
-  b2_pieces:"/assets/images/Bathroom-2-pieces.png",
-  b3_pieces :"/assets/images/Bathroom-3-pieces.png",
-  b4_pieces :"/assets/images/Bathroom-4-pieces.png",
+  kitchen_1: "/assets/images/kitchen-galley.svg",
+  corridor: "/assets/images/Corridor-SHaped.svg",
+  l_shaped: "/assets/images/L-SHaped.svg",
+  Peninsula: "/assets/images/Peninsula.svg",
+  U_shape: "/assets/images/U-shape.svg",
+  b2_pieces: "/assets/images/Bathroom-2-pieces.svg",
+  b3_pieces: "/assets/images/Bathroom-3-pieces.svg",
+  b4_pieces: "/assets/images/Bathroom-4-pieces.svg",
 };
 
 export default Images;
