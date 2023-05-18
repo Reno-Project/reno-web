@@ -458,6 +458,7 @@ export default function Milestone(props) {
               </InputLabel>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
+                  disablePast
                   value={state.start_date ? new Date(state?.start_date) : null}
                   onChange={(e, v) => {
                     setState({

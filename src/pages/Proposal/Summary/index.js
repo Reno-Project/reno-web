@@ -28,7 +28,7 @@ import { getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import { toast } from "react-toastify";
 import { isMobile, isTablet } from "react-device-detect";
-import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
+import { HighlightOffOutlined, ImageOutlined, Tune } from "@mui/icons-material";
 import CAutocomplete from "../../../components/CAutocomplete";
 import moment from "moment";
 
@@ -77,6 +77,8 @@ export default function Summary(props) {
   const [disableMilestone, setDisableMilestone] = useState(true);
   const [disableBudget, setDisableBudget] = useState(true);
   const [loader, setloader] = useState(false);
+  const [visible, setvisible] = useState({ bool: false, val: null });
+  console.log("visible====>>>>>", visible);
 
   const imageArray = [
     {
@@ -105,7 +107,7 @@ export default function Summary(props) {
 
   useEffect(() => {
     setScope(villa?.proposal?.scope_of_work);
-    setProjectType(villa?.proposal?.project_type);
+    setProjectType(villa?.project_type);
   }, []);
 
   function validation() {
@@ -118,12 +120,12 @@ export default function Summary(props) {
       error.scpMsg = "Please enter scope of project";
     }
 
-    if (!projectType) {
-      valid = false;
-      error.typeErr = true;
-      error.typeMsg = "Please select project type";
-    }
     if (createProposal) {
+      if (!projectType) {
+        valid = false;
+        error.typeErr = true;
+        error.typeMsg = "Please select project type";
+      }
       if (isEmpty(name?.trim())) {
         valid = false;
         error.nameErr = true;
@@ -218,7 +220,7 @@ export default function Summary(props) {
             xl={3}
             className={classes.MainContainer}
           >
-            <ProposalCard />
+            <ProposalCard villa={villa} />
           </Grid>
         )}
         <Grid
@@ -287,7 +289,7 @@ export default function Summary(props) {
               <Tabs
                 value={tabValue}
                 onChange={(v, b) => {
-                  setTabValue(b);
+                  setvisible({ bool: true, val: b });
                 }}
                 variant="scrollable"
               >
@@ -321,6 +323,7 @@ export default function Summary(props) {
                     getOptionLabel={(option) => option}
                     error={errObj.typeErr}
                     helpertext={errObj.typeMsg}
+                    readOnly={!createProposal}
                   />
                 </Grid>
                 {createProposal && (
@@ -822,6 +825,16 @@ export default function Summary(props) {
         </Grid>
       </Grid>
       <BlueAbout />
+      <ConfirmModel
+        visible={visible?.bool}
+        handleClose={() => setvisible({ bool: false, val: null })}
+        confirmation={() => {
+          setTabValue(visible?.val);
+          setvisible({ bool: false, val: null });
+        }}
+        titleText={"⚠️ Warning: You will lose the form data."}
+        message={"Are you sure you want to change the tab?"}
+      />
     </div>
   );
 }

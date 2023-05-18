@@ -189,16 +189,23 @@ export default function Budget(props) {
       valid = false;
       error.materialUnitPriceErr = true;
       error.materialUnitPriceMsg = "Please enter the material unit price";
-    } else if (!regex.test(state.material_unit_price)) {
+    } else if (
+      !regex.test(state.material_unit_price) ||
+      parseInt(state.material_unit_price) <= 0
+    ) {
       valid = false;
       error.materialUnitPriceErr = true;
       error.materialUnitPriceMsg = "Please enter valid material unit price";
     }
-
+    const positiveIntRegex = /^[1-9]\d*$/;
     if (!state?.qty) {
       valid = false;
       error.quantityErr = true;
       error.quantityMsg = "Please select the material qty";
+    } else if (!positiveIntRegex.test(state?.qty)) {
+      valid = false;
+      error.quantityErr = true;
+      error.quantityMsg = "Please enter valid material qty";
     }
 
     if (!state.material_unit) {
@@ -211,12 +218,23 @@ export default function Budget(props) {
       valid = false;
       error.manpowerRateErr = true;
       error.manpowerRateMsg = "Please enter the manpower rate";
+    } else if (
+      !regex.test(state.manpower_rate) ||
+      parseInt(state.manpower_rate) <= 0
+    ) {
+      valid = false;
+      error.manpowerRateErr = true;
+      error.manpowerRateMsg = "Please enter valid manpower rate";
     }
 
     if (!state?.days) {
       valid = false;
       error.daysErr = true;
       error.daysMsg = "Please select the days";
+    } else if (!positiveIntRegex.test(state?.days)) {
+      valid = false;
+      error.quantityErr = true;
+      error.quantityMsg = "Please enter valid days";
     }
 
     if (
@@ -281,6 +299,8 @@ export default function Budget(props) {
   };
 
   const handleEdit = (data, index) => {
+    setErrObj(errorObj);
+
     if (!selectedBudget) {
       return; // or handle the error in some other way
     }
@@ -502,6 +522,16 @@ export default function Budget(props) {
     }
   }
 
+  function checkImgSize(img) {
+    let valid = true;
+    if (img.size > 3145728) {
+      valid = false;
+    } else {
+      valid = true;
+    }
+    return valid;
+  }
+
   return (
     <>
       <Grid container>
@@ -604,17 +634,30 @@ export default function Budget(props) {
                   const chosenFiles = Array.prototype.slice.call(
                     e.target.files
                   );
-                  if (chosenFiles) {
-                    UploadFile(chosenFiles);
+                  let showMsg = false;
+                  let limit = false;
+                  const newArr = [];
+                  chosenFiles.map((item) => {
+                    const bool = checkImgSize(item);
+                    if (bool && chosenFiles.length < 5) {
+                      newArr.push(item);
+                    } else if (chosenFiles.length >= 4) {
+                      limit = true;
+                    } else {
+                      showMsg = true;
+                    }
+                  });
+                  if (limit) {
+                    toast.error("You can upload maximum 5 files");
+                  } else if (showMsg) {
+                    toast.error(
+                      "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                    );
                   }
-                  // const nArr = state.photo_url ? [...state.photo_url] : [];
-                  // chosenFiles.map((item) => nArr.push(item));
-                  // setState({ ...state, photo_url: nArr });
-                  // setErrObj({
-                  //   ...errObj,
-                  //   photoErr: false,
-                  //   photoMsg: "",
-                  // });
+
+                  if (newArr) {
+                    UploadFile(newArr);
+                  }
                 }}
                 ref={fileInputRef}
               />
@@ -805,7 +848,15 @@ export default function Budget(props) {
               value={state.material_unit_price}
               type="number"
               onChange={(e) => {
-                setState({ ...state, material_unit_price: e.target.value });
+                const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
+                  Number(e.target.value)
+                );
+                if (bool) {
+                  setState({
+                    ...state,
+                    material_unit_price: e.target.value,
+                  });
+                }
                 setErrObj({
                   ...errObj,
                   materialUnitPriceErr: false,
@@ -824,9 +875,10 @@ export default function Budget(props) {
               value={state.qty}
               type="tel"
               onChange={(e) => {
-                const inputValue = e.target.value;
-                const numericValue = inputValue.replace(/[^0-9]/g, "");
-                setState({ ...state, qty: numericValue });
+                const bool = /^[0-9]+$/.test(Number(e.target.value));
+                if (bool) {
+                  setState({ ...state, qty: e.target.value });
+                }
                 setErrObj({
                   ...errObj,
                   quantityErr: false,
@@ -851,7 +903,12 @@ export default function Budget(props) {
               value={state.manpower_rate}
               type="number"
               onChange={(e) => {
-                setState({ ...state, manpower_rate: e.target.value });
+                const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
+                  Number(e.target.value)
+                );
+                if (bool) {
+                  setState({ ...state, manpower_rate: e.target.value });
+                }
                 setErrObj({
                   ...errObj,
                   manpowerRateErr: false,
@@ -870,9 +927,10 @@ export default function Budget(props) {
               value={state.days}
               type="tel"
               onChange={(e) => {
-                const inputValue = e.target.value;
-                const numericValue = inputValue.replace(/[^0-9]/g, "");
-                setState({ ...state, days: numericValue });
+                const bool = /^[0-9]+$/.test(Number(e.target.value));
+                if (bool) {
+                  setState({ ...state, days: e.target.value });
+                }
                 setErrObj({
                   ...errObj,
                   daysErr: false,

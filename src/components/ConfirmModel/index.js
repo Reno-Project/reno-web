@@ -16,6 +16,7 @@ export default function ConfirmModel(props) {
     confirmation = () => null,
     loader = false,
     title = "",
+    titleText = "",
   } = props;
 
   return (
@@ -42,6 +43,22 @@ export default function ConfirmModel(props) {
         }}
       >
         <Grid item>
+          {titleText && (
+            <Typography
+              style={{
+                color: "#0D1522 ",
+                fontFamily: "ElMessiri-Regular",
+                fontSize: "18px",
+                letterSpacing: "0.5px",
+                lineHeight: "24px",
+                fontWeight: "bold",
+                textAlign: "center",
+                marginBottom: "10px",
+              }}
+            >
+              {titleText}
+            </Typography>
+          )}
           <Typography
             style={{
               color: "#0D1522 ",
@@ -52,7 +69,6 @@ export default function ConfirmModel(props) {
               fontWeight: "500",
               textAlign: "center",
               marginBottom: "24px",
-              padding: isMobile ? 0 : "0 30px",
             }}
           >
             {message}
