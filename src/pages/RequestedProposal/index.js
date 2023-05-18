@@ -6,185 +6,18 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import BlueAbout from "../../components/BlueAbout";
 import theme from "../../config/theme";
 import moment from "moment";
+import { isEmpty } from "lodash";
 
 export default function RequestedProposal() {
   const location = useLocation();
   const villa = location?.state ? location?.state : {};
   const classes = useStyles();
   const navigate = useNavigate();
-  // const villa = {
-  //   createdAt: "2023-05-12T06:15:10.670Z",
-  //   updatedAt: "2023-05-12T06:15:10.670Z",
-  //   id: 80,
-  //   exp_id: 1,
-  //   project_type: "Interior design",
-  //   name: " this is for testing",
-  //   description: "I want to create house",
-  //   location: "Al Furjan",
-  //   budget: 25000,
-  //   start_date: "2023-06-17T06:13:45.484Z",
-  //   end_date: "2023-05-12T06:13:45.482Z",
-  //   form_json: [
-  //     {
-  //       size: "25",
-  //       selectedItems: [
-  //         {
-  //           id: 1,
-  //           title: "Modern",
-  //         },
-  //         {
-  //           id: 7,
-  //           title: "Mid-century",
-  //         },
-  //         {
-  //           id: 9,
-  //           title: "Scandinavian",
-  //         },
-  //         {
-  //           id: 4,
-  //           title: "Country",
-  //         },
-  //         {
-  //           id: 5,
-  //           title: "Boho classic",
-  //         },
-  //         {
-  //           id: 6,
-  //           title: "Coastal",
-  //         },
-  //         {
-  //           id: 2,
-  //           title: "Industrial",
-  //         },
-  //         {
-  //           id: 12,
-  //           title: "Hollywood Regency",
-  //         },
-  //       ],
-  //       selectType: {
-  //         id: 2,
-  //         title: "Apartment",
-  //       },
-  //       selectFloor: {
-  //         id: 2,
-  //         title: "2",
-  //       },
-  //       selectBedrooms: {
-  //         id: 2,
-  //         title: "2",
-  //       },
-  //       selectBathrooms: {
-  //         id: 3,
-  //         title: "3",
-  //       },
-  //       selectKitchen: {
-  //         id: 2,
-  //         title: "2",
-  //       },
-  //     },
-  //     {
-  //       size: "25",
-  //       selectedItems: [
-  //         {
-  //           id: 1,
-  //           title: "Modern",
-  //         },
-  //         {
-  //           id: 7,
-  //           title: "Mid-century",
-  //         },
-  //         {
-  //           id: 9,
-  //           title: "Scandinavian",
-  //         },
-  //         {
-  //           id: 4,
-  //           title: "Country",
-  //         },
-  //         {
-  //           id: 5,
-  //           title: "Boho classic",
-  //         },
-  //         {
-  //           id: 6,
-  //           title: "Coastal",
-  //         },
-  //         {
-  //           id: 2,
-  //           title: "Industrial",
-  //         },
-  //         {
-  //           id: 12,
-  //           title: "Hollywood Regency",
-  //         },
-  //       ],
-  //       selectType: {
-  //         id: 2,
-  //         title: "Apartment",
-  //       },
-  //       selectFloor: {
-  //         id: 2,
-  //         title: "2",
-  //       },
-  //       selectBedrooms: {
-  //         id: 2,
-  //         title: "2",
-  //       },
-  //       selectBathrooms: {
-  //         id: 3,
-  //         title: "3",
-  //       },
-  //       selectKitchen: {
-  //         id: 2,
-  //         title: "2",
-  //       },
-  //     },
-  //   ],
-  //   status: "pending",
-  //   user_id: 465,
-  //   contractor_id: 9,
-  //   project_slug: "#CH555259294600",
-  //   project_image: [
-  //     {
-  //       id: 69,
-  //       image:
-  //         "https://static.renohome.io/documents/46497073-ca83-4598-919d-7bcbda7bd187",
-  //     },
-  //   ],
-  //   user_data: {
-  //     is_email_verified: true,
-  //     profile_url:
-  //       "https://static.renohome.io/reno-cms/ea0b2d8e-352a-45ed-aee4-59bab25bb47f",
-  //     email: "anurag22@groovyweb.co",
-  //     phone_code: "91",
-  //     phone_no: "9624553405",
-  //     username: "Anurag",
-  //     is_phone_verified: false,
-  //     role: "home_owner",
-  //   },
-  // };
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
-  const imageArray = [
-    {
-      id: 1,
-      image:
-        "https://www.wonderplugin.com/wp-content/uploads/2016/06/blue-grape-hyacinths.jpg",
-    },
-    {
-      id: 2,
-      image:
-        "https://www.wonderplugin.com/wp-content/uploads/2016/06/blue-grape-hyacinths.jpg",
-    },
-    {
-      id: 3,
-      image:
-        "https://www.wonderplugin.com/wp-content/uploads/2016/06/blue-grape-hyacinths.jpg",
-    },
-  ];
 
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
@@ -319,79 +152,678 @@ export default function RequestedProposal() {
               justifyContent={"flex-end"}
               rowSpacing={2}
             >
-              {/* {JSON.parse(villa?.form_json)?.map((item, index) => {
-                return (
-                  <>
-                    <Grid item lg={3} sm={3} md={3} xs={3}>
-                      <Typography className={classes.acctext}>
-                        Property Type:
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                      <Typography className={classes.accRightText}>
-                        {item?.selectType?.title}
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3} sm={3} md={3} xs={3}>
-                      <Typography className={classes.acctext}>
-                        Bathroom:
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                      <Typography className={classes.accRightText}>
-                        {item?.selectBathrooms?.title}
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3} sm={3} md={3} xs={3}>
-                      <Typography className={classes.acctext}>
-                        Bedroom:
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                      <Typography className={classes.accRightText}>
-                        {item?.selectBedrooms?.title}
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3} sm={3} md={3} xs={3}>
-                      <Typography className={classes.acctext}>
-                        Indoor Space:
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                      <Typography className={classes.accRightText}>
-                        {item?.size} Sqm
-                      </Typography>
-                    </Grid>
-                    <Grid
-                      item
-                      lg={3}
-                      sm={3}
-                      md={3}
-                      xs={3}
-                      paddingBottom={"14px"}
-                      borderBottom={"1px solid #F2F3F4"}
-                    >
-                      <Typography className={classes.acctext}>
-                        Outdoor Space:
-                      </Typography>
-                    </Grid>
-                    <Grid
-                      item
-                      lg={9}
-                      sm={9}
-                      md={9}
-                      xs={9}
-                      textAlign={"end"}
-                      paddingBottom={"14px"}
-                      borderBottom={"1px solid #F2F3F4"}
-                    >
-                      <Typography className={classes.accRightText}>
-                        {item?.size} Sqm
-                      </Typography>
-                    </Grid>
-                  </>
-                );
-              })} */}
+              {villa?.project_type === "Interior design"
+                ? villa?.form_json?.map((item, index) => {
+                    return (
+                      <>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Unit Type :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          {item?.unit_Type === 1 ? (
+                            <Typography className={classes.accRightText}>
+                              Villa
+                            </Typography>
+                          ) : item?.unit_Type === 2 ? (
+                            <Typography className={classes.accRightText}>
+                              Apartment
+                            </Typography>
+                          ) : (
+                            <Typography className={classes.accRightText}>
+                              Studio
+                            </Typography>
+                          )}
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Size(sqm) :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.size}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Floors :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.floors}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Bedrooms :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.bedrooms}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Bathrooms :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.bathrooms}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Kitchen :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.kitchen}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Preferred style :
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={9} sm={9} md={9} xs={9} textAlign="end">
+                          {item?.preferred_style.map((item1, index) => (
+                            <div
+                              key={index}
+                              style={{ display: "inline-block" }}
+                            >
+                              <Typography className={classes.accRightText}>
+                                {item1.title},
+                              </Typography>
+                            </div>
+                          ))}
+                        </Grid>
+                      </>
+                    );
+                  })
+                : villa?.project_type === "Home renovation"
+                ? villa?.form_json?.map((item, index) => {
+                    return (
+                      <>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Unit Type :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          {item?.unit_Type === 1 ? (
+                            <Typography className={classes.accRightText}>
+                              Villa
+                            </Typography>
+                          ) : item?.unit_Type === 2 ? (
+                            <Typography className={classes.accRightText}>
+                              Apartment
+                            </Typography>
+                          ) : (
+                            <Typography className={classes.accRightText}>
+                              Studio
+                            </Typography>
+                          )}
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Size(sqm) :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.size}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Floors :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.floors}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Bedrooms :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.bedrooms}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Bathrooms :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.bathrooms}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Kitchen :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.kitchen}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Required services :
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={9} sm={9} md={9} xs={9} textAlign="end">
+                          {item?.require_service.map((item1, index) => (
+                            <div
+                              key={index}
+                              style={{ display: "inline-block" }}
+                            >
+                              <Typography className={classes.accRightText}>
+                                {item1.title},
+                              </Typography>
+                            </div>
+                          ))}
+                        </Grid>
+                      </>
+                    );
+                  })
+                : villa?.project_type === "Landscaping"
+                ? villa?.form_json?.map((item, index) => {
+                    return (
+                      <>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Size(sqm) :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.size}
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Include appliances:
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={9} sm={9} md={9} xs={9} textAlign="end">
+                          {item?.include.map((item1, index) => (
+                            <div
+                              key={index}
+                              style={{ display: "inline-block" }}
+                            >
+                              <Typography className={classes.accRightText}>
+                                {item1.title},
+                              </Typography>
+                            </div>
+                          ))}
+                        </Grid>
+                      </>
+                    );
+                  })
+                : villa?.project_type === "Kitchen"
+                ? villa?.form_json?.map((item, index) => {
+                    const objectWithCheckIconTrue = item?.kitchenArray.find(
+                      (item) => item.checkicon === true
+                    );
+                    return (
+                      <>
+                        {objectWithCheckIconTrue.title === "Gallery layout" ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                Gallery layout
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                <img
+                                  src={Images.kitchen_1}
+                                  alt="Gallery layout"
+                                />
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : objectWithCheckIconTrue.title ===
+                          "Corridor layout" ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                Corridor layout
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                <img
+                                  src={Images.corridor}
+                                  alt="Corridor layout"
+                                />
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : objectWithCheckIconTrue.title ===
+                          "U shape layout" ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                U shape layout
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                <img
+                                  src={Images.U_shape}
+                                  alt="U shape layout"
+                                />
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : objectWithCheckIconTrue.title ===
+                          "L shape layout" ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                L shape layout
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                <img
+                                  src={Images.l_shaped}
+                                  alt="L shape layout"
+                                />
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                Peninsula layout
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                <img
+                                  src={Images.Peninsula}
+                                  alt="Peninsula layout"
+                                />
+                              </Typography>
+                            </Grid>
+                          </>
+                        )}
+                        {item?.new_plumbing === true ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                New plumbing
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                Yes
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : null}
+                        {item?.demolationRequired === true ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                Is the demolition required?
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                Yes
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : null}
+                        {item?.island === true ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                With island?
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                Yes
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : null}
+                        {item?.builtInAppliances === true ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                Built-in appliances?
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                Yes
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : null}
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Include appliances:
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={9} sm={9} md={9} xs={9} textAlign="end">
+                          {item?.include_Appliances.map((item1, index) => (
+                            <div
+                              key={index}
+                              style={{ display: "inline-block" }}
+                            >
+                              <Typography className={classes.accRightText}>
+                                {item1.title},
+                              </Typography>
+                            </div>
+                          ))}
+                        </Grid>
+                      </>
+                    );
+                  })
+                : villa?.form_json?.map((item, index) => {
+                    const objectWithCheckIconTrue = item?.bathroomArray.find(
+                      (item) => item.checkicon === true
+                    );
+                    return (
+                      <>
+                        {objectWithCheckIconTrue.title === "Two-piece" ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                Two-piece
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                <img src={Images.b2_pieces} alt="Two-piece " />
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : objectWithCheckIconTrue.title === "Three piece" ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                Three piece
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                <img src={Images.b3_pieces} alt="Three piece" />
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                Four piece
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                <img src={Images.b4_pieces} alt="Four piece" />
+                              </Typography>
+                            </Grid>
+                          </>
+                        )}
+                        <Grid item lg={3} sm={3} md={3} xs={3}>
+                          <Typography className={classes.acctext}>
+                            Size(sqm) :
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          lg={9}
+                          sm={9}
+                          md={9}
+                          xs={9}
+                          textAlign={"end"}
+                        >
+                          <Typography className={classes.accRightText}>
+                            {item?.size}
+                          </Typography>
+                        </Grid>
+                        {item?.new_plumbing === true ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                New plumbing
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                Yes
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : null}
+                        {item?.demolationRequired === true ? (
+                          <>
+                            <Grid item lg={3} sm={3} md={3} xs={3}>
+                              <Typography className={classes.acctext}>
+                                Is the demolition required?
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={9}
+                              sm={9}
+                              md={9}
+                              xs={9}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                Yes
+                              </Typography>
+                            </Grid>
+                          </>
+                        ) : null}
+                      </>
+                    );
+                  })}
 
               <Grid
                 item
