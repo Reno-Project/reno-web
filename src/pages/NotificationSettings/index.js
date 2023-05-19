@@ -166,8 +166,12 @@ export default function NotificationSettings() {
     getMeApiCall();
     setState({ ...state, notificationList: notificationListArray });
 
-    if (Notification.permission !== "granted") {
-      askForPermissionToReceiveNotifications();
+    const userAgent = window.navigator.userAgent;
+    const isSafari = userAgent.includes("Safari");
+    if (!isSafari && !isMobile) {
+      if (Notification && Notification?.permission !== "granted") {
+        askForPermissionToReceiveNotifications();
+      }
     }
   }, []);
 
@@ -324,7 +328,13 @@ export default function NotificationSettings() {
                           <IOSSwitch
                             checked={it?.isChecked}
                             onChange={(event) => {
-                              if (Notification.permission === "granted") {
+                              const userAgent = window.navigator.userAgent;
+                              const isSafari = userAgent.includes("Safari");
+                              if (isSafari && isMobile) {
+                              } else if (
+                                Notification &&
+                                Notification?.permission === "granted"
+                              ) {
                                 changePushNotificationStatusApiCall(
                                   it?.title,
                                   event.target.checked,
@@ -332,7 +342,8 @@ export default function NotificationSettings() {
                                   ind
                                 );
                               } else if (
-                                Notification.permission === "default"
+                                Notification &&
+                                Notification?.permission === "default"
                               ) {
                                 askForPermissionToReceiveNotifications();
                               } else {

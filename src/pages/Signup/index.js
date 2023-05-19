@@ -18,6 +18,7 @@ import {
   PhoneNumberUtil,
 } from "google-libphonenumber";
 import "react-phone-input-2/lib/style.css";
+import { isMobile } from "react-device-detect";
 import CInput from "../../components/CInput";
 import { getApiData } from "../../utils/APIHelper";
 import authActions from "../../redux/reducers/auth/actions";
@@ -205,6 +206,9 @@ const Signup = (props) => {
       locationData?.region ? locationData?.region + "," : ""
     } ${locationData?.country_name || ""}`;
 
+    const userAgent = window.navigator.userAgent;
+    const isSafari = userAgent.includes("Safari");
+
     let data = {
       username: uname,
       email,
@@ -215,7 +219,12 @@ const Signup = (props) => {
       device_type: "web",
       device_name: locationData?.ip || "",
       login_address: address,
-      notification: Notification.permission === "granted" ? 1 : 0,
+      notification:
+        isSafari && isMobile
+          ? 0
+          : Notification?.permission === "granted"
+          ? 1
+          : 0,
     };
 
     if (locationState?.type) {
