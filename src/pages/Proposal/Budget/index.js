@@ -64,7 +64,7 @@ const errorObj = {
 };
 
 export default function Budget(props) {
-  const { handleClick = () => null, villa } = props;
+  const { handleClick = () => null, villa, createProposal, dpId } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
@@ -87,6 +87,7 @@ export default function Budget(props) {
   const [budgetDetails, setBudgetDetails] = useState([]);
   const [budgetLoader, setBudgetLoader] = useState(false);
   const [milestones, setMilestones] = useState([]);
+  console.log("milestones====>>>>>", milestones);
   const [visible, setVisible] = useState(false);
   const [visibleLoader, setVisibleLoader] = useState(false);
   const [visibleFinal, setVisibleFinal] = useState(false);
@@ -134,7 +135,7 @@ export default function Budget(props) {
     setBudgetLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.budgetList}/${villa?.id}`,
+        `${Setting.endpoints.budgetList}/${createProposal ? dpId : villa?.id}`,
         "GET",
         {}
       );
@@ -370,14 +371,14 @@ export default function Budget(props) {
   async function getMilestoneList() {
     try {
       const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}/${villa?.id}`,
+        `${Setting.endpoints.milestoneProposalList}/${
+          createProposal ? dpId : villa?.id
+        }`,
         "GET",
         {}
       );
       if (response.success) {
-        isArray(response?.data) &&
-          !isEmpty(response?.data) &&
-          setMilestones(response?.data);
+        setMilestones(response?.data);
       }
     } catch (error) {
       console.log("err===>", error);
@@ -402,10 +403,16 @@ export default function Budget(props) {
       };
     });
 
-    const data = {
-      proposal_id: villa?.id,
-      budget_item: extractedData,
-    };
+    const data = createProposal
+      ? {
+          proposal_id: dpId,
+          email: proposalDetails?.email,
+          budget_item: extractedData,
+        }
+      : {
+          proposal_id: villa?.id,
+          budget_item: extractedData,
+        };
 
     try {
       const response = await getApiData(
@@ -636,12 +643,12 @@ export default function Budget(props) {
                   );
                   let showMsg = false;
                   let limit = false;
-                  const newArr = [];
+                  const newArr = [...state?.photo_url];
                   chosenFiles.map((item) => {
                     const bool = checkImgSize(item);
-                    if (bool && chosenFiles.length < 5) {
+                    if (bool && newArr.length < 5) {
                       newArr.push(item);
-                    } else if (chosenFiles.length >= 4) {
+                    } else if (newArr.length >= 4) {
                       limit = true;
                     } else {
                       showMsg = true;
@@ -654,9 +661,12 @@ export default function Budget(props) {
                       "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
                     );
                   }
-
-                  if (newArr) {
-                    UploadFile(newArr);
+                  let shouldUpload =
+                    isArray(newArr) &&
+                    !isEmpty(newArr) &&
+                    newArr?.filter((elem) => !elem?.image_id);
+                  if (shouldUpload) {
+                    UploadFile(shouldUpload);
                   }
                 }}
                 ref={fileInputRef}
@@ -784,6 +794,7 @@ export default function Budget(props) {
                 bNameMsg: "",
               });
             }}
+            inputProps={{ maxLength: 50 }}
             error={errObj.bNameErr}
             helpertext={errObj.bNameMsg}
           />
@@ -802,6 +813,7 @@ export default function Budget(props) {
                 materialTypeMsg: "",
               });
             }}
+            inputProps={{ maxLength: 50 }}
             error={errObj.materialTypeErr}
             helpertext={errObj.materialTypeMsg}
           />
@@ -1064,6 +1076,7 @@ export default function Budget(props) {
                       container
                       justifyContent={"space-between"}
                       alignItems={"flex-start"}
+                      wrap="nowrap"
                     >
                       <Typography variant="h5" fontFamily={"ElMessiri-Regular"}>
                         {item?.name || "-"}

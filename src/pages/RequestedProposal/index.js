@@ -111,12 +111,12 @@ export default function RequestedProposal() {
               justifyContent={"flex-end"}
               style={{ paddingTop: 25, paddingBottom: 25 }}
             >
-              <Grid item lg={9} sm={9} md={9} xs={12} textAlign={"start"}>
+              <Grid item lg={5} sm={6} md={6} xs={12} textAlign={"start"}>
                 <Typography className={classes.titleStyle}>
                   Project Name:
                 </Typography>
               </Grid>
-              <Grid item lg={3} sm={3} md={3} xs={12} textAlign={"end"}>
+              <Grid item lg={7} sm={6} md={6} xs={12} textAlign={"end"}>
                 <Typography className={classes.titleStyleRight}>
                   {villa?.name}
                 </Typography>
@@ -158,12 +158,12 @@ export default function RequestedProposal() {
               justifyContent={"flex-end"}
               style={{ paddingTop: 25, paddingBottom: 25 }}
             >
-              <Grid item lg={3} sm={6} md={3} xs={12}>
+              <Grid item lg={5} sm={12} md={6} xs={12}>
                 <Typography className={classes.acctext}>
                   Project Type:
                 </Typography>
               </Grid>
-              <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
+              <Grid item lg={7} sm={12} md={6} xs={9} textAlign={"end"}>
                 <Typography className={classes.accRightText}>
                   {villa?.project_type}
                 </Typography>
@@ -182,16 +182,16 @@ export default function RequestedProposal() {
                   ? villa?.form_json?.map((item, index) => {
                       return (
                         <>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Unit Type :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -209,16 +209,16 @@ export default function RequestedProposal() {
                               </Typography>
                             )}
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Size(sqm) :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -226,16 +226,16 @@ export default function RequestedProposal() {
                               {item?.size}
                             </Typography>
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Floors :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -243,16 +243,16 @@ export default function RequestedProposal() {
                               {item?.floors}
                             </Typography>
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Bedrooms :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -260,16 +260,16 @@ export default function RequestedProposal() {
                               {item?.bedrooms}
                             </Typography>
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Bathrooms :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -277,16 +277,16 @@ export default function RequestedProposal() {
                               {item?.bathrooms}
                             </Typography>
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Kitchen :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -294,20 +294,20 @@ export default function RequestedProposal() {
                               {item?.kitchen}
                             </Typography>
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Preferred style :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign="end"
                           >
-                            {item?.preferred_style.map((item1, index) => (
+                            {item?.preferred_style?.map((item1, index) => (
                               <div
                                 key={index}
                                 style={{ display: "inline-block" }}
@@ -325,16 +325,16 @@ export default function RequestedProposal() {
                   ? villa?.form_json?.map((item, index) => {
                       return (
                         <>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Unit Type :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -352,16 +352,16 @@ export default function RequestedProposal() {
                               </Typography>
                             )}
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Size(sqm) :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -369,16 +369,16 @@ export default function RequestedProposal() {
                               {item?.size}
                             </Typography>
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Floors :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -386,16 +386,16 @@ export default function RequestedProposal() {
                               {item?.floors}
                             </Typography>
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Bedrooms :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -403,16 +403,16 @@ export default function RequestedProposal() {
                               {item?.bedrooms}
                             </Typography>
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Bathrooms :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -420,16 +420,16 @@ export default function RequestedProposal() {
                               {item?.bathrooms}
                             </Typography>
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Kitchen :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -437,26 +437,26 @@ export default function RequestedProposal() {
                               {item?.kitchen}
                             </Typography>
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Required services :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign="end"
                           >
-                            {item?.require_service.map((item1, index) => (
+                            {item?.require_service?.map((item1, index) => (
                               <div
                                 key={index}
                                 style={{ display: "inline-block" }}
                               >
                                 <Typography className={classes.accRightText}>
-                                  {item1.title},
+                                  {item1?.title},
                                 </Typography>
                               </div>
                             ))}
@@ -468,16 +468,16 @@ export default function RequestedProposal() {
                   ? villa?.form_json?.map((item, index) => {
                       return (
                         <>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Size(sqm) :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -485,26 +485,26 @@ export default function RequestedProposal() {
                               {item?.size}
                             </Typography>
                           </Grid>
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Include appliances:
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign="end"
                           >
-                            {item?.include.map((item1, index) => (
+                            {item?.include?.map((item1, index) => (
                               <div
                                 key={index}
                                 style={{ display: "inline-block" }}
                               >
                                 <Typography className={classes.accRightText}>
-                                  {item1.title},
+                                  {item1?.title},
                                 </Typography>
                               </div>
                             ))}
@@ -514,8 +514,8 @@ export default function RequestedProposal() {
                     })
                   : villa?.project_type === "Kitchen"
                   ? villa?.form_json?.map((item, index) => {
-                      const objectWithCheckIconTrue = item?.kitchenArray.find(
-                        (item) => item.checkicon === true
+                      const objectWithCheckIconTrue = item?.kitchenArray?.find(
+                        (item) => item?.checkicon === true
                       );
                       return (
                         <>
@@ -528,19 +528,19 @@ export default function RequestedProposal() {
                               Kitchen - {index + 1}
                             </Typography>
                           </Grid>
-                          {objectWithCheckIconTrue.title ===
+                          {objectWithCheckIconTrue?.title ===
                           "Gallery layout" ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   Gallery layout
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -552,19 +552,19 @@ export default function RequestedProposal() {
                                 </Typography>
                               </Grid>
                             </>
-                          ) : objectWithCheckIconTrue.title ===
+                          ) : objectWithCheckIconTrue?.title ===
                             "Corridor layout" ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   Corridor layout
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -576,19 +576,19 @@ export default function RequestedProposal() {
                                 </Typography>
                               </Grid>
                             </>
-                          ) : objectWithCheckIconTrue.title ===
+                          ) : objectWithCheckIconTrue?.title ===
                             "U shape layout" ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   U shape layout
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -600,19 +600,19 @@ export default function RequestedProposal() {
                                 </Typography>
                               </Grid>
                             </>
-                          ) : objectWithCheckIconTrue.title ===
+                          ) : objectWithCheckIconTrue?.title ===
                             "L shape layout" ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   L shape layout
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -626,16 +626,16 @@ export default function RequestedProposal() {
                             </>
                           ) : (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   Peninsula layout
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -650,16 +650,16 @@ export default function RequestedProposal() {
                           )}
                           {item?.new_plumbing === true ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   New plumbing
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -671,16 +671,16 @@ export default function RequestedProposal() {
                           ) : null}
                           {item?.demolationRequired === true ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   Is the demolition required?
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -692,16 +692,16 @@ export default function RequestedProposal() {
                           ) : null}
                           {item?.island === true ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   With island?
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -713,16 +713,16 @@ export default function RequestedProposal() {
                           ) : null}
                           {item?.builtInAppliances === true ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   Built-in appliances?
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -732,20 +732,20 @@ export default function RequestedProposal() {
                               </Grid>
                             </>
                           ) : null}
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Include appliances:
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign="end"
                           >
-                            {item?.include_Appliances.map((item1, index) => (
+                            {item?.include_Appliances?.map((item1, index) => (
                               <div
                                 key={index}
                                 style={{ display: "inline-block" }}
@@ -761,7 +761,7 @@ export default function RequestedProposal() {
                             ))}
                           </Grid>
 
-                          {villa?.form_json.length > 1 && (
+                          {villa?.form_json?.length > 1 && (
                             <div style={{ width: "100%", paddingTop: 14 }}>
                               <Divider />
                             </div>
@@ -770,30 +770,32 @@ export default function RequestedProposal() {
                       );
                     })
                   : villa?.form_json?.map((item, index) => {
-                      const objectWithCheckIconTrue = item?.bathroomArray.find(
+                      const objectWithCheckIconTrue = item?.bathroomArray?.find(
                         (item) => item.checkicon === true
                       );
                       return (
                         <>
-                          <Typography
-                            variant="h6"
-                            fontWeight={"bold !important"}
-                            className={classes.acctext}
-                          >
-                            Bathroom - {index + 1}
-                          </Typography>
-                          {objectWithCheckIconTrue.title === "Two-piece" ? (
+                          <Grid item container xs={12}>
+                            <Typography
+                              variant="h6"
+                              fontWeight={"bold !important"}
+                              className={classes.acctext}
+                            >
+                              Bathroom - {index + 1}
+                            </Typography>
+                          </Grid>
+                          {objectWithCheckIconTrue?.title === "Two-piece" ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   Two-piece
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -805,19 +807,19 @@ export default function RequestedProposal() {
                                 </Typography>
                               </Grid>
                             </>
-                          ) : objectWithCheckIconTrue.title ===
+                          ) : objectWithCheckIconTrue?.title ===
                             "Three piece" ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   Three piece
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -831,16 +833,16 @@ export default function RequestedProposal() {
                             </>
                           ) : (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   Four piece
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -853,16 +855,16 @@ export default function RequestedProposal() {
                               </Grid>
                             </>
                           )}
-                          <Grid item lg={3} sm={6} md={3} xs={12}>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
                             <Typography className={classes.acctext}>
                               Size(sqm) :
                             </Typography>
                           </Grid>
                           <Grid
                             item
-                            lg={9}
+                            lg={7}
                             sm={12}
-                            md={9}
+                            md={6}
                             xs={12}
                             textAlign={"end"}
                           >
@@ -872,16 +874,16 @@ export default function RequestedProposal() {
                           </Grid>
                           {item?.new_plumbing === true ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   New plumbing
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -893,16 +895,16 @@ export default function RequestedProposal() {
                           ) : null}
                           {item?.demolationRequired === true ? (
                             <>
-                              <Grid item lg={3} sm={6} md={3} xs={12}>
+                              <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
                                   Is the demolition required?
                                 </Typography>
                               </Grid>
                               <Grid
                                 item
-                                lg={9}
+                                lg={7}
                                 sm={12}
-                                md={9}
+                                md={6}
                                 xs={12}
                                 textAlign={"end"}
                               >
@@ -912,11 +914,16 @@ export default function RequestedProposal() {
                               </Grid>
                             </>
                           ) : null}
+                          {villa?.form_json.length > 1 && (
+                            <div style={{ width: "100%", paddingTop: 14 }}>
+                              <Divider />
+                            </div>
+                          )}
                         </>
                       );
                     })}
 
-                <Grid item lg={3} sm={12} md={3} xs={12} paddingBottom={"14px"}>
+                <Grid item lg={5} sm={12} md={6} xs={12} paddingBottom={"14px"}>
                   <Typography className={classes.acctext}>
                     Project Budget:
                   </Typography>
@@ -924,9 +931,9 @@ export default function RequestedProposal() {
 
                 <Grid
                   item
-                  lg={9}
+                  lg={7}
                   sm={12}
-                  md={9}
+                  md={6}
                   xs={12}
                   textAlign={"end"}
                   paddingBottom={"14px"}
@@ -938,7 +945,7 @@ export default function RequestedProposal() {
                 <div style={{ width: "100%" }}>
                   <Divider />
                 </div>
-                <Grid item lg={9} sm={12} md={9} xs={12} paddingBottom={"14px"}>
+                <Grid item lg={5} sm={12} md={6} xs={12} paddingBottom={"14px"}>
                   <Typography className={classes.acctext}>
                     Project Location:
                   </Typography>
@@ -946,9 +953,9 @@ export default function RequestedProposal() {
                 <Grid
                   item
                   container
-                  lg={3}
+                  lg={7}
                   sm={12}
-                  md={3}
+                  md={6}
                   xs={12}
                   justifyContent={"flex-end"}
                   wrap="nowrap"
@@ -972,7 +979,7 @@ export default function RequestedProposal() {
 
             <Grid item container alignContent={"center"}>
               <Grid item lg={12}>
-                {villa?.project_image.map((item, index) => {
+                {villa?.project_image?.map((item, index) => {
                   return (
                     <img
                       key={index}

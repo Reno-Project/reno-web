@@ -50,7 +50,7 @@ const errorObj = {
   amountMsg: "",
 };
 export default function Milestone(props) {
-  const { handleClick = () => null, from, villa } = props;
+  const { handleClick = () => null, from, villa, createProposal, dpId } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
@@ -98,7 +98,7 @@ export default function Milestone(props) {
       if (proposalDetails?.budget_details?.previous) {
         updateBudgetMilestone(proposalDetails?.budget_details?.budgets);
       } else {
-        getBudgetList();
+        !createProposal && getBudgetList();
       }
     }
   }, [milestones]);
@@ -150,7 +150,9 @@ export default function Milestone(props) {
     setmilestoneLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}/${villa?.id}`,
+        `${Setting.endpoints.milestoneProposalList}/${
+          createProposal ? dpId : villa?.id
+        }`,
         "GET",
         {}
       );
@@ -167,7 +169,7 @@ export default function Milestone(props) {
   async function getBudgetList() {
     try {
       const response = await getApiData(
-        `${Setting.endpoints.budgetList}/${villa?.id}`,
+        `${Setting.endpoints.budgetList}/${createProposal ? dpId : villa?.id}`,
         "GET",
         {}
       );
@@ -195,8 +197,7 @@ export default function Milestone(props) {
     });
 
     const data = {
-      project_id: villa?.project_id?.toString(),
-      proposal_id: villa?.id?.toString(),
+      proposal_id: createProposal ? dpId : villa?.id?.toString(),
       milestone_details: extractedData,
     };
     try {
@@ -422,6 +423,7 @@ export default function Milestone(props) {
                 nameMsg: "",
               });
             }}
+            inputProps={{ maxLength: 50 }}
             error={errObj.nameErr}
             helpertext={errObj.nameMsg}
           />

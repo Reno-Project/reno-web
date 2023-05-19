@@ -66,7 +66,7 @@ const Dashboard = (props) => {
     askForPermissionToReceiveNotifications();
     onMessageListener();
     requestedProposalApiCall("proposal");
-    requestedProposalApiCall("submitted");
+    requestedProposalApiCall("Requested");
 
     return () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -205,7 +205,7 @@ const Dashboard = (props) => {
       );
       if (response?.success) {
         if (isArray(response?.data) && !isEmpty(response?.data)) {
-          type === "submitted"
+          type === "Requested"
             ? setRequestedProposal(response?.data)
             : setSubmittedProposal(response?.data);
         }

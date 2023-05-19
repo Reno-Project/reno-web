@@ -35,6 +35,7 @@ export const Setting = {
     milestoneProposalList: "api/project/milestone-project-list",
     singleDeviceLogout: "api/user/other-devices-logout/",
     createproposal: "api/contractor/create-proposal",
+    directproposal: "api/contractor/create-direct-proposal",
     addFCMToken: "api/user/add-fcm-token",
     logout: "api/user/logout",
     createMilestone: "api/project/create-milestone-project",

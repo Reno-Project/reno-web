@@ -24,7 +24,7 @@ import authActions from "../../../redux/reducers/auth/actions";
 import ConfirmModel from "../../../components/ConfirmModel";
 import ProfileSuccessModal from "../../../components/ProfileSuccessModal";
 import ProposalCard from "../../../components/ProposalCard";
-import { getApiData } from "../../../utils/APIHelper";
+import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import { toast } from "react-toastify";
 import { isMobile, isTablet } from "react-device-detect";
@@ -53,7 +53,8 @@ export default function Summary(props) {
   const { proposalDetails, userData } = useSelector((state) => state.auth);
   const location = useLocation();
 
-  const createProposal = location?.state?.create_proposal;
+  const createProposal = location?.state?.create_proposal || false;
+  console.log("createProposal====>>>>>", createProposal);
   const villa = location?.state ? location?.state : {};
   const dispatch = useDispatch();
   const { setProposalDetails } = authActions;
@@ -78,37 +79,30 @@ export default function Summary(props) {
   const [disableBudget, setDisableBudget] = useState(true);
   const [loader, setloader] = useState(false);
   const [visible, setvisible] = useState({ bool: false, val: null });
-  console.log("visible====>>>>>", visible);
+  const [expertiseList, setExpertiesList] = useState([]);
+  const [dpId, setDpId] = useState("");
 
-  const imageArray = [
-    {
-      id: 1,
-      image:
-        "https://www.wonderplugin.com/wp-content/uploads/2016/06/blue-grape-hyacinths.jpg",
-    },
-    {
-      id: 2,
-      image:
-        "https://www.wonderplugin.com/wp-content/uploads/2016/06/blue-grape-hyacinths.jpg",
-    },
-    {
-      id: 3,
-      image:
-        "https://www.wonderplugin.com/wp-content/uploads/2016/06/blue-grape-hyacinths.jpg",
-    },
-  ];
+  useEffect(() => {
+    if (!createProposal) {
+      setScope(villa?.proposal?.scope_of_work);
+      setProjectType(villa?.project_type);
+    } else {
+      getprojectList();
+    }
+  }, []);
 
   useEffect(() => {
     if (proposalDetails?.milestone_details?.previous) {
       setScope(proposalDetails?.scope_of_work);
-      setProjectType(proposalDetails?.project_type);
+      if (createProposal) {
+        setProjectType(proposalDetails?.project_type || "");
+        setName(proposalDetails?.name || "");
+        setDescription(proposalDetails?.description || "");
+        setEmail(proposalDetails?.email || "");
+        setDocument(proposalDetails?.project || []);
+      }
     }
   }, [proposalDetails]);
-
-  useEffect(() => {
-    setScope(villa?.proposal?.scope_of_work);
-    setProjectType(villa?.project_type);
-  }, []);
 
   function validation() {
     const error = { ...errObj };
@@ -163,31 +157,59 @@ export default function Summary(props) {
 
   async function createproposalApicall() {
     setloader(true);
-    const data = {
-      project_id: villa?.id,
-      user_id: userData?.id,
-      status: "pending",
-      scope_of_work: scope,
-      project_type: projectType,
-    };
+    const data = createProposal
+      ? {
+          scope_of_work: scope,
+          project_type: projectType?.project_name,
+          name,
+          description: description,
+          email,
+          project: document,
+        }
+      : {
+          proposal_id: villa?.id,
+          scope_of_work: scope,
+          project_type: villa?.project_type,
+        };
+
+    if (createProposal && proposalDetails?.milestone_details?.previous) {
+      data.id = proposalDetails?.id;
+    }
+
+    const endpoint = createProposal
+      ? Setting.endpoints.directproposal
+      : Setting.endpoints.createproposal;
+
     try {
-      const response = await getApiData(
-        Setting.endpoints.createproposal,
-        "POST",
-        data
-      );
+      const response = await getAPIProgressData(endpoint, "POST", data, true);
       if (response?.success) {
         toast.success(response?.message);
         const scope_of_work = scope;
-        dispatch(
-          setProposalDetails({
-            ...proposalDetails,
-            scope_of_work,
-            project_type: projectType,
-          })
-        );
+        createProposal
+          ? dispatch(
+              setProposalDetails({
+                ...proposalDetails,
+                id: response?.data?.project_id,
+                scope_of_work,
+                project_type: projectType,
+                name,
+                description: description,
+                email,
+                project: document,
+              })
+            )
+          : dispatch(
+              setProposalDetails({
+                ...proposalDetails,
+                scope_of_work,
+                project_type: projectType,
+              })
+            );
         setDisableMilestone(false);
-        setTabValue(1);
+        setDpId(response?.data?.proposal_id);
+        setTimeout(() => {
+          setTabValue(1);
+        }, 100);
       } else {
         toast.error(response?.message);
       }
@@ -199,6 +221,34 @@ export default function Summary(props) {
     }
   }
 
+  async function getprojectList() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.projectlist}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        if (isArray(response?.data) && !isEmpty(response?.data)) {
+          setExpertiesList(response?.data);
+        } else {
+          setExpertiesList([]);
+        }
+      }
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
+    }
+  }
+
+  function checkImgSize(img) {
+    let valid = true;
+    if (img.size > 3145728) {
+      valid = false;
+    } else {
+      valid = true;
+    }
+    return valid;
+  }
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
       <Grid
@@ -300,34 +350,27 @@ export default function Summary(props) {
             </Grid>
             {tabValue === 0 ? (
               <>
-                <Grid item xs={12} style={{ paddingTop: 25 }}>
-                  <CAutocomplete
-                    label="Project Type"
-                    placeholder="Select project type"
-                    value={projectType}
-                    onChange={(e, newValue) => {
-                      setProjectType(newValue);
-                      setErrObj({
-                        ...errObj,
-                        typeErr: false,
-                        typeMsg: "",
-                      });
-                    }}
-                    options={[
-                      "Interior design",
-                      "Kitchen",
-                      "Full reno",
-                      "Bathroom",
-                      "Landscaping",
-                    ]}
-                    getOptionLabel={(option) => option}
-                    error={errObj.typeErr}
-                    helpertext={errObj.typeMsg}
-                    readOnly={!createProposal}
-                  />
-                </Grid>
                 {createProposal && (
                   <>
+                    <Grid item xs={12} style={{ paddingTop: 25 }}>
+                      <CAutocomplete
+                        label="Project Type"
+                        placeholder="Select project type"
+                        value={projectType}
+                        onChange={(e, newValue) => {
+                          setProjectType(newValue);
+                          setErrObj({
+                            ...errObj,
+                            typeErr: false,
+                            typeMsg: "",
+                          });
+                        }}
+                        options={expertiseList}
+                        getOptionLabel={(option) => option?.project_name}
+                        error={errObj.typeErr}
+                        helpertext={errObj.typeMsg}
+                      />
+                    </Grid>
                     <Grid item xs={12}>
                       <CInput
                         label="Project Name"
@@ -341,6 +384,7 @@ export default function Summary(props) {
                             nameMsg: "",
                           });
                         }}
+                        inputProps={{ maxLength: 50 }}
                         error={errObj.nameErr}
                         helpertext={errObj.nameMsg}
                       />
@@ -383,7 +427,11 @@ export default function Summary(props) {
                     </Grid>
                   </>
                 )}
-                <Grid item xs={12}>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ paddingTop: createProposal ? 0 : 25 }}
+                >
                   <CInput
                     multiline={true}
                     rows={3}
@@ -477,16 +525,42 @@ export default function Summary(props) {
                                 opacity: 0,
                                 cursor: "pointer",
                               }}
+                              // onChange={(e) => {
+                              //   const chosenFiles = Array.prototype.slice.call(
+                              //     e.target.files
+                              //   );
+                              // if (chosenFiles) {
+                              //   UploadFile(chosenFiles);
+                              // }
+                              // const nArr = document ? [...document] : [];
+                              // chosenFiles.map((item) => nArr.push(item));
+                              // setDocument(nArr);
+
                               onChange={(e) => {
                                 const chosenFiles = Array.prototype.slice.call(
                                   e.target.files
                                 );
-                                // if (chosenFiles) {
-                                //   UploadFile(chosenFiles);
-                                // }
-                                const nArr = document ? [...document] : [];
-                                chosenFiles.map((item) => nArr.push(item));
-                                setDocument(nArr);
+                                const data = [...document];
+                                let showMsg = false;
+                                let limit = false;
+                                chosenFiles.map((item) => {
+                                  const bool = checkImgSize(item);
+                                  if (bool && data.length < 5) {
+                                    data.push(item);
+                                  } else if (data.length >= 4) {
+                                    limit = true;
+                                  } else {
+                                    showMsg = true;
+                                  }
+                                });
+                                if (limit) {
+                                  toast.error("You can upload maximum 5 files");
+                                } else if (showMsg) {
+                                  toast.error(
+                                    "Some certificate you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                                  );
+                                }
+                                setDocument(data);
                                 setErrObj({
                                   ...errObj,
                                   documentErr: false,
@@ -809,6 +883,8 @@ export default function Summary(props) {
                   }
                 }}
                 villa={villa}
+                createProposal={createProposal}
+                dpId={dpId}
               />
             ) : null}
             {tabValue === 2 ? (
@@ -819,6 +895,8 @@ export default function Summary(props) {
                   }
                 }}
                 villa={villa}
+                createProposal={createProposal}
+                dpId={dpId}
               />
             ) : null}
           </Grid>
