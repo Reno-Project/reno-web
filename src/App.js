@@ -29,6 +29,7 @@ import { Box, Grid } from "@mui/material";
 import Notifications from "./pages/Notifications";
 import RequestedProposal from "./pages/RequestedProposal";
 import Summary from "./pages/Proposal/Summary";
+import ProjectDetail from "./pages/ProjectDetail";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
@@ -127,6 +128,10 @@ function App() {
                       <Route path="*" element={<Navigate to={"/login"} />} />
                     </>
                   )}
+                  <Route
+                    path={"/project/project-details/:id"}
+                    element={<ProjectDetail />}
+                  />
                 </Routes>
               </div>
               <Footer />
