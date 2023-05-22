@@ -69,6 +69,7 @@ const Images = {
   b2_pieces: "/assets/images/Bathroom-2-pieces.svg",
   b3_pieces: "/assets/images/Bathroom-3-pieces.svg",
   b4_pieces: "/assets/images/Bathroom-4-pieces.svg",
+  playstore: "/assets/images/play-store.svg",
 };
 
 export default Images;

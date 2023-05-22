@@ -123,6 +123,16 @@ export default function ProposalCard(props) {
                     {villa?.name}
                   </Typography>
                 </Grid>
+                <Grid item lg={4} sm={4} md={4} xs={4}>
+                  <Typography className={classes.acctext}>
+                    Project Type:
+                  </Typography>
+                </Grid>
+                <Grid item lg={8} sm={8} md={8} xs={8} textAlign={"end"}>
+                  <Typography className={classes.accRightText}>
+                    {villa?.project_type}
+                  </Typography>
+                </Grid>
                 {/* {isArray(villa?.form_json) &&
                   !isEmpty(villa?.form_json) &&
                   villa?.form_json?.map((item, index) => {

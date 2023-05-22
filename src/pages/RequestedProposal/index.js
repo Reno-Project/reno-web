@@ -10,15 +10,16 @@ import useStyles from "./styles";
 import Images from "../../config/images";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import BlueAbout from "../../components/BlueAbout";
-import theme from "../../config/theme";
 import moment from "moment";
 import { isArray, isEmpty } from "lodash";
+import { useTheme } from "@mui/styles";
 
 export default function RequestedProposal() {
   const location = useLocation();
   const villa = location?.state ? location?.state : {};
   const classes = useStyles();
   const navigate = useNavigate();
+  const theme = useTheme();
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);

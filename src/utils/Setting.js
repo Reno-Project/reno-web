@@ -48,6 +48,7 @@ export const Setting = {
     deleteImage: "api/contractor/delete-image",
     deleteMilestone: "api/project/milestone-proposal-delete",
     deleteBudget: "api/project/delete-budget-item",
+    proposalDetails: "/api/project/project-details",
   },
 
   JS_Regex: {
