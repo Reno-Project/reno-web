@@ -10,9 +10,15 @@ import {
   InputLabel,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   Menu,
   MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -70,7 +76,9 @@ export default function Milestone(props) {
   const [errObj, setErrObj] = useState(errorObj);
 
   const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const md = useMediaQuery(theme.breakpoints.down("md"));
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState({});
   const [visible, setVisible] = useState(false);
@@ -407,7 +415,7 @@ export default function Milestone(props) {
               fontFamily: "ElMessiri-SemiBold",
             }}
           >
-            $ {amounts.reduce((acc, curr) => acc + curr, 0)}
+            AED {amounts.reduce((acc, curr) => acc + curr, 0)}
           </Typography>
         </Grid>
         <Grid item xs={12} id="name" mt={2}>
@@ -636,7 +644,7 @@ export default function Milestone(props) {
                           Amount
                         </Typography>
                         <Typography fontFamily={"ElMessiri-SemiBold"}>
-                          {`$ ${amounts[index]}` || `$ 0`}
+                          {`AED ${amounts[index]}` || `AED 0`}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -725,16 +733,175 @@ export default function Milestone(props) {
                             }}
                           />
                         </ListItem>
-                        {/*  <Divider />
-                  <ListItem>
-                    <ListItemText
-                      primary="Amount"
-                      secondary={`$ ${
-                        milestone.amount ? milestone.amount : "-"
-                      }`}
-                    />
-                  </ListItem> */}
                       </List>
+                      {isArray(budgets) &&
+                        !isEmpty(budgets) &&
+                        budgets?.map((item, index) => {
+                          if (item?.milestone?.id === milestone?.id) {
+                            return (
+                              <Grid container className={classes.card}>
+                                <Grid item container xs={12}>
+                                  <Typography
+                                    fontFamily={"ElMEssiri-Regular"}
+                                    fontWeight="bold"
+                                    pl={1}
+                                  >
+                                    {item?.name}
+                                  </Typography>
+                                </Grid>
+                                <TableContainer
+                                  style={{
+                                    padding: 10,
+                                    boxSizing: "border-box",
+                                  }}
+                                >
+                                  <Table className={classes.customtable}>
+                                    <Typography
+                                      fontFamily={"ElMEssiri-Regular"}
+                                      fontSize={18}
+                                    >
+                                      Manpower
+                                    </Typography>
+                                    <TableBody>
+                                      <TableRow>
+                                        <TableCell
+                                          style={{
+                                            color: color.captionText,
+                                            fontFamily:
+                                              "Roobert-Regular !important",
+                                          }}
+                                          align="right"
+                                        >
+                                          Manpower rate
+                                        </TableCell>
+
+                                        <TableCell
+                                          style={{
+                                            color: color.captionText,
+                                            fontFamily:
+                                              "Roobert-Regular !important",
+                                          }}
+                                          align="right"
+                                        >
+                                          Days
+                                        </TableCell>
+                                      </TableRow>
+                                      <TableRow key={"Manpower"}>
+                                        <TableCell align="right">
+                                          <Typography
+                                            fontFamily={"ElMessiri-Regular"}
+                                          >
+                                            {item?.manpower_rate || "-"}
+                                          </Typography>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                          <Typography
+                                            fontFamily={"ElMessiri-Regular"}
+                                          >
+                                            {item?.days || "-"}
+                                          </Typography>
+                                        </TableCell>
+                                      </TableRow>
+                                    </TableBody>
+                                  </Table>
+                                  <div
+                                    style={{
+                                      width: "100%",
+                                      padding: "10px 0px 14px 0px",
+                                    }}
+                                  >
+                                    <Divider />
+                                  </div>
+                                  <Table className={classes.customtable}>
+                                    <Typography
+                                      fontFamily={"ElMEssiri-Regular"}
+                                      fontSize={18}
+                                    >
+                                      Material
+                                    </Typography>
+                                    <TableBody>
+                                      <TableRow>
+                                        <TableCell
+                                          align="right"
+                                          style={{
+                                            color: color.captionText,
+                                            fontFamily:
+                                              "Roobert-Regular !important",
+                                          }}
+                                        >
+                                          Material Type
+                                        </TableCell>
+                                        <TableCell
+                                          align="right"
+                                          style={{
+                                            color: color.captionText,
+                                            fontFamily:
+                                              "Roobert-Regular !important",
+                                          }}
+                                        >
+                                          Material Unit
+                                        </TableCell>
+                                        <TableCell
+                                          style={{
+                                            color: color.captionText,
+                                            fontFamily:
+                                              "Roobert-Regular !important",
+                                          }}
+                                          align="right"
+                                        >
+                                          Unit Price
+                                        </TableCell>
+                                        <TableCell
+                                          style={{
+                                            color: color.captionText,
+                                            fontFamily:
+                                              "Roobert-Regular !important",
+                                          }}
+                                          align="right"
+                                        >
+                                          Quantity
+                                        </TableCell>
+                                      </TableRow>
+                                      <TableRow key={"Manpower"}>
+                                        <TableCell align="right">
+                                          <Typography
+                                            fontFamily={"ElMessiri-Regular"}
+                                          >
+                                            {item?.material_type || "-"}
+                                          </Typography>
+                                        </TableCell>
+
+                                        <TableCell align="right">
+                                          <Typography
+                                            fontFamily={"ElMessiri-Regular"}
+                                          >
+                                            {item?.material_unit || "-"}
+                                          </Typography>
+                                        </TableCell>
+
+                                        <TableCell align="right">
+                                          <Typography
+                                            fontFamily={"ElMessiri-Regular"}
+                                          >
+                                            AED{" "}
+                                            {item?.material_unit_price || "0"}
+                                          </Typography>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                          <Typography
+                                            fontFamily={"ElMessiri-Regular"}
+                                          >
+                                            {item?.qty || "-"}
+                                          </Typography>
+                                        </TableCell>
+                                      </TableRow>
+                                    </TableBody>
+                                  </Table>
+                                </TableContainer>
+                              </Grid>
+                            );
+                          }
+                        })}
                     </Collapse>
                   </Card>
                 );

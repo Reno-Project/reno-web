@@ -60,7 +60,7 @@ const ProjectCard = (props) => {
             {createdAt}
           </Typography>
         </div>
-        <div className={classes.rowJustified}>
+        {/* <div className={classes.rowJustified}>
           <Typography className={classes.row} fontFamily={"Roobert-Regular"}>
             <img src={Images.badroom} alt="badroom" />
             {villa?.form_json[0]?.bedrooms?.title || 0}
@@ -73,7 +73,7 @@ const ProjectCard = (props) => {
             <img src={Images.size} alt="size" />{" "}
             {villa?.form_json[0]?.size || 0} sqm
           </Typography>
-        </div>
+        </div> */}
         <div style={{ width: "100%", margin: "10px 0px" }}>
           <Divider style={{ color: "#F2F3F4" }} />
         </div>

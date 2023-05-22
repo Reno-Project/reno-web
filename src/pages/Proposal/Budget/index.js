@@ -87,7 +87,6 @@ export default function Budget(props) {
   const [budgetDetails, setBudgetDetails] = useState([]);
   const [budgetLoader, setBudgetLoader] = useState(false);
   const [milestones, setMilestones] = useState([]);
-  console.log("milestones====>>>>>", milestones);
   const [visible, setVisible] = useState(false);
   const [visibleLoader, setVisibleLoader] = useState(false);
   const [visibleFinal, setVisibleFinal] = useState(false);
@@ -564,7 +563,7 @@ export default function Budget(props) {
               fontFamily: "ElMessiri-SemiBold",
             }}
           >
-            ${" "}
+            AED{" "}
             {(isArray(budgetDetails) &&
               !isEmpty(budgetDetails) &&
               budgetDetails?.reduce((acc, bud) => {
@@ -1094,7 +1093,7 @@ export default function Budget(props) {
                     </Grid>
                     <Grid item textAlign={sm ? "start" : "end"}>
                       <Typography fontFamily={"ElMEssiri-Regular"}>
-                        $ {amounts[index] || 0}
+                        AED {amounts[index] || 0}
                       </Typography>
                       <Typography
                         fontFamily={"ElMEssiri-Regular"}
@@ -1267,6 +1266,15 @@ export default function Budget(props) {
                                 fontFamily: "Roobert-Regular !important",
                               }}
                             >
+                              Material Type
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                            >
                               Material Unit
                             </TableCell>
                             <TableCell
@@ -1309,13 +1317,19 @@ export default function Budget(props) {
                           <TableRow key={"Manpower"}>
                             <TableCell align="right">
                               <Typography fontFamily={"ElMessiri-Regular"}>
+                                {item?.material_type || "-"}
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
                                 {item?.material_unit || "-"}
                               </Typography>
                             </TableCell>
 
                             <TableCell align="right">
                               <Typography fontFamily={"ElMessiri-Regular"}>
-                                $ {item?.material_unit_price || "0"}
+                                AED {item?.material_unit_price || "0"}
                               </Typography>
                             </TableCell>
                             <TableCell align="right">

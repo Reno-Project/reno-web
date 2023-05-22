@@ -217,6 +217,23 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "5px",
     color: "#a9a9a9",
   },
+  table: {
+    "& td": {
+      width: "33%",
+      fontFamily: "Roobert-Regular !important",
+    },
+    "& .MuiTableCell-head": {
+      fontWeight: "bold !important",
+      fontFamily: "Roobert-Regular !important",
+    },
+  },
+  dataMain: {
+    marginTop: 20,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 500,
+  },
 }));
 
 export default useStyles;
