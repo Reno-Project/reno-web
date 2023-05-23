@@ -972,13 +972,18 @@ export default function RequestedProposal() {
                     // style={{ width: '12%' }}
                   />
                 </Grid>
-                <div style={{ width: "100%" }}>
+                <div style={{ width: "100%", paddingBottom: 14 }}>
                   <Divider />
                 </div>
               </Grid>
             )}
 
             <Grid item container alignContent={"center"}>
+              <Grid item xs={12}>
+                <Typography className={classes.acctext}>
+                  Project FIles:
+                </Typography>
+              </Grid>
               <Grid item lg={12}>
                 {villa?.project_image?.map((item, index) => {
                   return (

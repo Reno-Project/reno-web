@@ -475,9 +475,9 @@ export default function Summary(props) {
                         </Grid>
                       ) : (
                         <>
-                          <InputLabel shrink error={errObj.documentErr}>
+                          {/* <InputLabel shrink error={errObj.documentErr}>
                             Project Files
-                          </InputLabel>
+                          </InputLabel> */}
                           <Grid
                             item
                             container
