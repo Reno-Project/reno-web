@@ -68,10 +68,7 @@ export default function Budget(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
-  console.log(
-    "proposalDetails====>>>>>",
-    proposalDetails?.budget_details?.formvalues
-  );
+
   const { setProposalDetails } = authActions;
   const initialFormvalues = {
     name: "",

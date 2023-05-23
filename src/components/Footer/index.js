@@ -13,7 +13,8 @@ function Footer(props) {
     pathname === "/contractor-profile" ||
     pathname === "/" ||
     pathname === "/dashboard" ||
-    pathname === "/create-proposal";
+    pathname === "/create-proposal" ||
+    pathname === "/request-proposal";
 
   return (
     <>
