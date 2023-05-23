@@ -50,7 +50,8 @@ const ProjectCard = (props) => {
         </div>
         <div className={classes.rowJustified}>
           <Typography className={classes.code}>
-            <img src={Images.LocationBlue} alt="Location" /> {villa?.location}
+            <img src={Images.LocationBlue} alt="Location" />
+            {villa?.project_slug}
           </Typography>
 
           <Typography className={classes.code1}>

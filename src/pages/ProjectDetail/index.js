@@ -318,135 +318,145 @@ export default function ProjectDetail() {
                             </Typography>
                           </Grid>
                           <Grid item container xs={12}>
-                            {milestone?.budget.map((item) => (
-                              <Grid
-                                item
-                                container
-                                style={{
-                                  border: `1px solid ${color.borderColor}`,
-                                  padding: 8,
-                                  borderRadius: 8,
-                                }}
-                              >
-                                {milestone?.budget?.length > 1 && (
-                                  <Grid item xs={12} p={2}>
-                                    <Typography
-                                      variant="h6"
-                                      fontWeight={"bold !important"}
-                                      className={classes.acctext}
-                                    >
-                                      `Budget - {index + 1}`
-                                    </Typography>
-                                  </Grid>
-                                )}
-                                <Grid item lg={5} sm={12} md={6} xs={12}>
-                                  <Typography
-                                    className={classes.acctext}
-                                    px={2}
-                                  >
-                                    Budget Name:
-                                  </Typography>
-                                </Grid>
+                            {isArray(milestone?.budget) &&
+                              !isEmpty(milestone?.budget) &&
+                              milestone?.budget?.map((item) => (
                                 <Grid
                                   item
-                                  lg={7}
-                                  sm={12}
-                                  md={6}
-                                  xs={12}
-                                  textAlign={"end"}
+                                  container
+                                  style={{
+                                    border: `1px solid ${color.borderColor}`,
+                                    padding: 8,
+                                    borderRadius: 8,
+                                  }}
                                 >
-                                  <Typography
-                                    px={2}
-                                    className={classes.accRightText}
+                                  {milestone?.budget?.length > 1 && (
+                                    <Grid item xs={12} p={2}>
+                                      <Typography
+                                        variant="h6"
+                                        fontWeight={"bold !important"}
+                                        className={classes.acctext}
+                                      >
+                                        `Budget - {index + 1}`
+                                      </Typography>
+                                    </Grid>
+                                  )}
+                                  <Grid item lg={5} sm={12} md={6} xs={12}>
+                                    <Typography
+                                      className={classes.acctext}
+                                      px={2}
+                                    >
+                                      Budget Name:
+                                    </Typography>
+                                  </Grid>
+                                  <Grid
+                                    item
+                                    lg={7}
+                                    sm={12}
+                                    md={6}
+                                    xs={12}
+                                    textAlign={"end"}
                                   >
-                                    {item?.name}
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={12} mt={2}>
-                                  <Typography
-                                    px={2}
-                                    className={classes.acctext}
-                                  >
-                                    Specifications:
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                  <Typography
-                                    px={2}
-                                    className={classes.accRightText}
-                                  >
-                                    {item?.specification}
-                                  </Typography>
-                                </Grid>
-                                <Table className={classes.table}>
-                                  <TableRow>
-                                    <TableCell variant="head">
-                                      Material Type
-                                    </TableCell>
-                                    <TableCell variant="head">
-                                      Material Unit Price
-                                    </TableCell>
-                                    <TableCell variant="head">
-                                      Quantity
-                                    </TableCell>
-                                  </TableRow>
-                                  <TableRow key={item.id}>
-                                    <TableCell className={classes.accRightText}>
-                                      {item?.material_type}
-                                    </TableCell>
-                                    <TableCell className={classes.accRightText}>
-                                      {item?.material_unit}{" "}
-                                      {item?.material_unit_price}
-                                    </TableCell>
-                                    <TableCell className={classes.accRightText}>
-                                      {item?.qty}
-                                    </TableCell>
-                                  </TableRow>
-                                  <TableRow>
-                                    <TableCell variant="head">
-                                      Manpower Rate
-                                    </TableCell>
-                                    <TableCell variant="head" colSpan={2}>
-                                      Days
-                                    </TableCell>
-                                  </TableRow>
-                                  <TableRow>
-                                    <TableCell className={classes.accRightText}>
-                                      {item?.manpower_rate}
-                                    </TableCell>
-                                    <TableCell
-                                      colSpan={2}
+                                    <Typography
+                                      px={2}
                                       className={classes.accRightText}
                                     >
-                                      {item?.days}
-                                    </TableCell>
-                                  </TableRow>
-                                </Table>
+                                      {item?.name}
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} mt={2}>
+                                    <Typography
+                                      px={2}
+                                      className={classes.acctext}
+                                    >
+                                      Specifications:
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12}>
+                                    <Typography
+                                      px={2}
+                                      className={classes.accRightText}
+                                    >
+                                      {item?.specification}
+                                    </Typography>
+                                  </Grid>
+                                  <Table className={classes.table}>
+                                    <TableRow>
+                                      <TableCell variant="head">
+                                        Material Type
+                                      </TableCell>
+                                      <TableCell variant="head">
+                                        Material Unit Price
+                                      </TableCell>
+                                      <TableCell variant="head">
+                                        Quantity
+                                      </TableCell>
+                                    </TableRow>
+                                    <TableRow key={item.id}>
+                                      <TableCell
+                                        className={classes.accRightText}
+                                      >
+                                        {item?.material_type}
+                                      </TableCell>
+                                      <TableCell
+                                        className={classes.accRightText}
+                                      >
+                                        {item?.material_unit}{" "}
+                                        {item?.material_unit_price}
+                                      </TableCell>
+                                      <TableCell
+                                        className={classes.accRightText}
+                                      >
+                                        {item?.qty}
+                                      </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell variant="head">
+                                        Manpower Rate
+                                      </TableCell>
+                                      <TableCell variant="head" colSpan={2}>
+                                        Days
+                                      </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell
+                                        className={classes.accRightText}
+                                      >
+                                        {item?.manpower_rate}
+                                      </TableCell>
+                                      <TableCell
+                                        colSpan={2}
+                                        className={classes.accRightText}
+                                      >
+                                        {item?.days}
+                                      </TableCell>
+                                    </TableRow>
+                                  </Table>
 
-                                <Grid item container>
-                                  <ImageList
-                                    style={{ flex: 1 }}
-                                    // sx={{ width: 500 }}
-                                    cols={3}
-                                  >
-                                    {isArray(item?.buget_image) &&
-                                      !isEmpty(item?.buget_image) &&
-                                      item?.buget_image?.map((ele) => (
-                                        <ImageListItem key={ele.ud}>
-                                          <img
-                                            src={`${ele.image}?w=164&h=164&fit=crop&auto=format`}
-                                            srcSet={`${ele.image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                            alt={`budget_image_${ele?.id}`}
-                                            loading="lazy"
-                                          />
-                                        </ImageListItem>
-                                      ))}
-                                  </ImageList>
+                                  <Grid item container>
+                                    <ImageList
+                                      style={{ flex: 1 }}
+                                      // sx={{ width: 500 }}
+                                      cols={3}
+                                    >
+                                      {isArray(item?.buget_image) &&
+                                        !isEmpty(item?.buget_image) &&
+                                        item?.buget_image?.map((ele) => (
+                                          <ImageListItem key={ele.ud}>
+                                            <img
+                                              src={`${ele.image}?w=164&h=164&fit=crop&auto=format`}
+                                              srcSet={`${ele.image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                              alt={`budget_image_${ele?.id}`}
+                                              loading="lazy"
+                                            />
+                                          </ImageListItem>
+                                        ))}
+                                    </ImageList>
+                                  </Grid>
                                 </Grid>
-                              </Grid>
-                            ))}
+                              ))}
                           </Grid>
-                          {villa?.milestone.length > 1 && (
+                          {villa?.milestone?.length > 1 && (
                             <div style={{ width: "100%", paddingTop: 14 }}>
                               <Divider />
                             </div>

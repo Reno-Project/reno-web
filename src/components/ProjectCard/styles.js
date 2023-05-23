@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     "& > img": {
-      paddingRight: 8,
+      // paddingRight: 8,
     },
     color: "#202939",
     fontFamily: "Robbert-Regular !important",

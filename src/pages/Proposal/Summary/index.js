@@ -435,7 +435,7 @@ export default function Summary(props) {
                   <CInput
                     multiline={true}
                     rows={3}
-                    label="Scope of work:"
+                    label="Scope of work"
                     placeholder="Write here..."
                     value={scope}
                     onChange={(e) => {
@@ -475,6 +475,9 @@ export default function Summary(props) {
                         </Grid>
                       ) : (
                         <>
+                          <InputLabel shrink error={errObj.documentErr}>
+                            Project Files
+                          </InputLabel>
                           <Grid
                             item
                             container
