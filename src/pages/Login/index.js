@@ -331,7 +331,7 @@ const Login = (props) => {
 
       console.log("response ====forgot otp=>>> ", response);
       if (response.success) {
-        navigate("/reset-password", { state: { data: email } });
+        navigate("/reset-password", { state: { data: forgotEmail } });
       } else {
         toast.error(response.message);
       }
