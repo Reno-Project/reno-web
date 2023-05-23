@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "700 !important",
     fontSize: "28px !important",
     lineHeight: "100% !important",
-    textAlign: "center",
   },
   cardSubTxt: {
     color: "#475569",

@@ -242,7 +242,12 @@ const Dashboard = (props) => {
               flexDirection={"column"}
               lg={2.3}
             >
-              <Typography className={classes.cardTxt}>
+              <Typography
+                className={classes.cardTxt}
+                style={{
+                  textAlign: "center",
+                }}
+              >
                 Hi {userData?.contractor_data?.company_name}
               </Typography>
               <Typography className={classes.cardSubTxt}>
@@ -284,7 +289,7 @@ const Dashboard = (props) => {
               <Typography className={classes.annualC}>
                 Annual contracts value
               </Typography>
-              <Typography className={classes.cardTxt}>$20,000</Typography>
+              <Typography className={classes.cardTxt}>AED 20,000</Typography>
             </Grid>
             <Grid
               item
@@ -308,7 +313,7 @@ const Dashboard = (props) => {
               <Typography className={classes.annualC}>
                 Active Contracts
               </Typography>
-              <Typography className={classes.cardTxt}>$12</Typography>
+              <Typography className={classes.cardTxt}>AED 12</Typography>
             </Grid>
             <Grid
               item
@@ -332,7 +337,7 @@ const Dashboard = (props) => {
               <Typography className={classes.annualC}>
                 Profile Views today
               </Typography>
-              <Typography className={classes.cardTxt}>$4,384</Typography>
+              <Typography className={classes.cardTxt}>AED 4,384</Typography>
             </Grid>
             <Grid
               item

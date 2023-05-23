@@ -289,7 +289,7 @@ function Header(props) {
                               padding: "7px 10px",
                             }}
                           >
-                            Balance: $500.00
+                            Balance: AED 500.00
                           </Typography>
                         </Grid>
                         <MenuItem

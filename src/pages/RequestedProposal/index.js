@@ -313,8 +313,14 @@ export default function RequestedProposal() {
                                 key={index}
                                 style={{ display: "inline-block" }}
                               >
-                                <Typography className={classes.accRightText}>
-                                  {item1.title},
+                                <Typography
+                                  className={classes.accRightText}
+                                  pr={0.5}
+                                >
+                                  {item1.title}
+                                  {item?.preferred_style?.length - 1 !== index
+                                    ? ", "
+                                    : " "}
                                 </Typography>
                               </div>
                             ))}
@@ -456,8 +462,14 @@ export default function RequestedProposal() {
                                 key={index}
                                 style={{ display: "inline-block" }}
                               >
-                                <Typography className={classes.accRightText}>
-                                  {item1?.title},
+                                <Typography
+                                  className={classes.accRightText}
+                                  pr={0.5}
+                                >
+                                  {item1?.title}
+                                  {item?.require_service?.length - 1 !== index
+                                    ? ", "
+                                    : " "}
                                 </Typography>
                               </div>
                             ))}
@@ -504,8 +516,14 @@ export default function RequestedProposal() {
                                 key={index}
                                 style={{ display: "inline-block" }}
                               >
-                                <Typography className={classes.accRightText}>
-                                  {item1?.title},
+                                <Typography
+                                  className={classes.accRightText}
+                                  pr={0.5}
+                                >
+                                  {item1?.title}
+                                  {item?.include?.length - 1 !== index
+                                    ? ", "
+                                    : " "}
                                 </Typography>
                               </div>
                             ))}
@@ -981,7 +999,7 @@ export default function RequestedProposal() {
             <Grid item container alignContent={"center"}>
               <Grid item xs={12}>
                 <Typography className={classes.acctext}>
-                  Project FIles:
+                  Project Files:
                 </Typography>
               </Grid>
               <Grid item lg={12}>

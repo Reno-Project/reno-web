@@ -1095,11 +1095,6 @@ export default function Budget(props) {
                       <Typography variant="h5" fontFamily={"ElMessiri-Regular"}>
                         {item?.name || "-"}
                       </Typography>
-                      {/* <IconButton
-                          onClick={(e) => handleRowClick(e, item, index)}
-                        >
-                          <MoreVertIcon />
-                        </IconButton> */}
                       <IconButton
                         onClick={(e) => handleRowClick(e, item, index)}
                       >

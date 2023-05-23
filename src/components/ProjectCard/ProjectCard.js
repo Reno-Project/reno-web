@@ -101,7 +101,7 @@ const ProjectCard = (props) => {
             <div className={classes.rowJustified}>
               <Typography className={classes.row}>Budget:</Typography>
               <Typography className={classes.budget}>
-                ${villa?.budget}
+                AED {villa?.budget || 0}
               </Typography>
             </div>
             <div className={classes.rowJustified}>

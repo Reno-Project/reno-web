@@ -613,7 +613,12 @@ export default function Milestone(props) {
                       borderRadius: "8px",
                     }}
                   >
-                    <Grid item container justifyContent={"space-between"}>
+                    <Grid
+                      item
+                      container
+                      justifyContent={"space-between"}
+                      wrap="nowrap"
+                    >
                       <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
                         {milestone?.milestone_name}
                       </Typography>
