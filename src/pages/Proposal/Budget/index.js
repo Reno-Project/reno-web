@@ -68,6 +68,10 @@ export default function Budget(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
+  console.log(
+    "proposalDetails====>>>>>",
+    proposalDetails?.budget_details?.formvalues
+  );
   const { setProposalDetails } = authActions;
   const initialFormvalues = {
     name: "",
@@ -108,15 +112,26 @@ export default function Budget(props) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (proposalDetails?.budget_details?.previous) {
-      setState(
-        proposalDetails?.budget_details?.formvalues || initialFormvalues
-      );
       setBudgetDetails(proposalDetails?.budget_details?.budgets || []);
     } else {
       getBudgetList();
     }
     getMilestoneList();
   }, []);
+
+  useEffect(() => {
+    if (proposalDetails?.budget_details?.previous) {
+      const milestoneValue = milestones.find(
+        (milestone) =>
+          milestone.id ===
+          proposalDetails?.budget_details?.formvalues?.milestone?.id
+      );
+      setState({
+        ...proposalDetails?.budget_details?.formvalues,
+        milestone: milestoneValue,
+      });
+    }
+  }, [milestones]);
 
   useEffect(() => {
     const array = [];

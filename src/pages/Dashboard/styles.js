@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
     "&::-webkit-scrollbar": {
       display: "-webkit-inline-box !important",
       width: "10px",
-      backgroundColor: "#f1f1f1",
+      backgroundColor: "transparent",
     },
     "&::-webkit-scrollbar-thumb": {
       backgroundColor: "#888",

@@ -54,7 +54,6 @@ export default function Summary(props) {
   const location = useLocation();
 
   const createProposal = location?.state?.create_proposal || false;
-  console.log("createProposal====>>>>>", createProposal);
   const villa = location?.state ? location?.state : {};
   const dispatch = useDispatch();
   const { setProposalDetails } = authActions;

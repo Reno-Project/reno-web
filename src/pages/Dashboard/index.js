@@ -461,17 +461,9 @@ const Dashboard = (props) => {
                       <ProjectCard
                         villa={villa}
                         requested
-                        onClick={(event) => {
-                          if (
-                            event.target.tagName === "BUTTON" ||
-                            event.target instanceof SVGElement
-                          ) {
-                            // Clicked on the IconButton, do not navigate
-                            return;
-                          } else {
-                            dispatch(setProposalDetails({}));
-                            navigate("/request-proposal", { state: villa });
-                          }
+                        onClick={() => {
+                          dispatch(setProposalDetails({}));
+                          navigate("/request-proposal", { state: villa });
                         }}
                       />
                     </div>

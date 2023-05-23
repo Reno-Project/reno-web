@@ -26,7 +26,6 @@ const errorObj = {
 
 export default function ProposalCard(props) {
   const { villa } = props;
-  console.log("villa====>>>>>", villa);
   const classes = useStyles();
   const [expandProjectInfo, setExpandProjectInfo] = useState(true);
   const [expandAttachments, setExpandAttachments] = useState(true);

@@ -44,9 +44,9 @@ const ProjectCard = (props) => {
           <Typography className={classes.name} gutterBottom component="div">
             {villa?.name}
           </Typography>
-          <IconButton>
+          {/* <IconButton>
             <MoreVertIcon style={{ color: color.black }} />
-          </IconButton>
+          </IconButton> */}
         </div>
         <div className={classes.rowJustified}>
           <Typography className={classes.code}>

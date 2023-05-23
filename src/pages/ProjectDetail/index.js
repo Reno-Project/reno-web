@@ -39,7 +39,6 @@ export default function ProjectDetail() {
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const [villa, setVilla] = useState({});
-  console.log("villa====>>>>>", villa);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pageLoad, setPageLoad] = useState(true);
 
