@@ -55,7 +55,7 @@ const ProjectCard = (props) => {
           </Typography>
 
           <Typography className={classes.code1}>
-            <Typography className={classes.code1} color={"#8C92A4"}>
+            <Typography className={classes.code1} color={"#8C92A4"} mr={0.5}>
               Created:{" "}
             </Typography>{" "}
             {createdAt}
@@ -84,7 +84,7 @@ const ProjectCard = (props) => {
             width={"28px"}
             height={"28px"}
             alt="profile_logo"
-            style={{ marginRight: 8, borderRadius: "100%" }}
+            style={{ margin: 0, marginRight: 8, borderRadius: "100%" }}
           />{" "}
           {villa?.user_data?.username}
           {villa?.user_data?.is_email_verified && (

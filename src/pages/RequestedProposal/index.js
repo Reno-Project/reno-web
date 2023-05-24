@@ -16,7 +16,8 @@ import { useTheme } from "@mui/styles";
 
 export default function RequestedProposal() {
   const location = useLocation();
-  const villa = location?.state ? location?.state : {};
+  const villa = location?.state?.villa ? location?.state?.villa : {};
+  const isSubmitted = location?.state?.status === "submitted";
   const classes = useStyles();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -82,14 +83,14 @@ export default function RequestedProposal() {
                   variant="contained"
                   style={{
                     marginTop: 3,
-                    backgroundColor: "#E9B55C",
+                    backgroundColor: isSubmitted ? "#32D583" : "#E9B55C",
                     padding: 5,
                     fontSize: "10px",
                     letterSpacing: "1.5px",
                     lineHeight: "16px",
                   }}
                 >
-                  REQUEST
+                  {isSubmitted ? "SUBMITTED" : "REQUEST"}
                 </Button>
               </Grid>
               <Grid item lg={3} md={3} sm={6} xs={6}>
@@ -1021,36 +1022,38 @@ export default function RequestedProposal() {
               </Grid>
             </Grid>
 
-            <Grid
-              item
-              container
-              columnGap={1}
-              rowGap={1}
-              justifyContent={"space-between"}
-            >
-              <Grid item sm={5.9} xs={12}>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  sx={{ boxShadow: "none" }}
-                  disabled={true}
-                >
-                  Request clarifications
-                </Button>
+            {!isSubmitted && (
+              <Grid
+                item
+                container
+                columnGap={1}
+                rowGap={1}
+                justifyContent={"space-between"}
+              >
+                <Grid item sm={5.9} xs={12}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    sx={{ boxShadow: "none" }}
+                    disabled={true}
+                  >
+                    Request clarifications
+                  </Button>
+                </Grid>
+                <Grid item sm={5.9} xs={12}>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                      navigate("/create-proposal", { state: villa });
+                    }}
+                  >
+                    Submit proposal
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item sm={5.9} xs={12}>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  onClick={() => {
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                    navigate("/create-proposal", { state: villa });
-                  }}
-                >
-                  Submit proposal
-                </Button>
-              </Grid>
-            </Grid>
+            )}
           </Grid>
         </Grid>
       </Grid>

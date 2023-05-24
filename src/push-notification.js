@@ -57,6 +57,8 @@ export function onMessageListener() {
   return new Promise((resolve, reject) => {
     onMessage(messaging, (payload) => {
       const notiData = payload?.notification;
+      let metaObj = payload?.data?.meta ? JSON.parse(payload?.data?.meta) : "";
+      notiData.type = metaObj?.type || "";
       store.dispatch(authActions.setNotiData(notiData));
       store.dispatch(authActions.displayNotificationPopUp(true));
       setTimeout(() => {

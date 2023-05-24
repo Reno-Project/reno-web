@@ -3,12 +3,13 @@ import {
   Button,
   CircularProgress,
   Grid,
+  IconButton,
   Rating,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { isArray, isEmpty } from "lodash";
+import _, { isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
@@ -27,6 +28,11 @@ import Images from "../../config/images";
 import { useTheme } from "@emotion/react";
 import BlueAbout from "../../components/BlueAbout";
 import NoData from "../../components/NoData";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
 const errorObj = {
   emailErr: false,
@@ -43,13 +49,18 @@ const Dashboard = (props) => {
   const emailRegex =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const dispatch = useDispatch();
-  const { setUserData, setToken, setProposalDetails } = authActions;
-  const { userData, proposalDetails } = useSelector((state) => state.auth);
+  const { setUserData, setToken, setProposalDetails, setNotiData } =
+    authActions;
+  const { userData, proposalDetails, notiData } = useSelector(
+    (state) => state.auth
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
-  const [pageLoad, setPageLoad] = useState(true);
+  const [onGoingLoader, setonGoingLoader] = useState(false);
+  const [requestedLoader, setrequestedLoader] = useState(true);
+  const [submittedLoader, setsubmittedLoader] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [googleBtnLoad, setGoogleBtnLoad] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -61,17 +72,31 @@ const Dashboard = (props) => {
   const [requestedProposal, setRequestedProposal] = useState([]);
   const [submittedProposal, setSubmittedProposal] = useState([]);
 
+  const oSliderRef = React.useRef();
+  const rSliderRef = React.useRef();
+  const sSliderRef = React.useRef();
+
   useEffect(() => {
     handleUserData();
     askForPermissionToReceiveNotifications();
     onMessageListener();
-    requestedProposalApiCall("proposal");
-    requestedProposalApiCall("Requested");
+    requestedProposalApiCall("proposal", true);
+    requestedProposalApiCall("Requested", true);
 
     return () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
   }, []);
+
+  useEffect(() => {
+    if (!isEmpty(notiData?.type)) {
+      if (notiData?.type === "Requested") {
+        requestedProposalApiCall("Requested");
+      } else if (notiData?.type === "proposal") {
+        requestedProposalApiCall("proposal");
+      }
+    }
+  }, [notiData]);
 
   // this function for check is user profile approved or not
   async function handleUserData() {
@@ -195,8 +220,10 @@ const Dashboard = (props) => {
   }
 
   // requested proposal & submitted proposal api call
-  async function requestedProposalApiCall(type) {
-    setPageLoad(true);
+  async function requestedProposalApiCall(type, bool) {
+    type === "Requested" && setrequestedLoader(true);
+    type === "proposal" && setsubmittedLoader(true);
+    type === "onGoing" && setonGoingLoader(true);
     try {
       const response = await getApiData(
         `${Setting.endpoints.listcontractorproject}?status=${type}`,
@@ -208,18 +235,57 @@ const Dashboard = (props) => {
           type === "Requested"
             ? setRequestedProposal(response?.data)
             : setSubmittedProposal(response?.data);
+          if (bool) {
+            dispatch(setNotiData({ ...notiData, type: "" }));
+          }
         }
       } else {
         toast.error(response?.message);
       }
-      setPageLoad(false);
+      type === "Requested" && setrequestedLoader(false);
+      type === "proposal" && setsubmittedLoader(false);
+      type === "onGoing" && setonGoingLoader(false);
     } catch (error) {
       console.log("ERROR=====>>>>>", error);
       toast.error(error.toString());
-      setPageLoad(false);
+      type === "Requested" && setrequestedLoader(false);
+      type === "proposal" && setsubmittedLoader(false);
+      type === "onGoing" && setonGoingLoader(false);
     }
   }
 
+  const settings = {
+    dots: false,
+    infinite: false,
+    // slidesToShow: 4,
+    slidesToScroll: 1,
+    swipeToSlide: false,
+    variableWidth: true,
+
+    // responsive: [
+    //   {
+    //     breakpoint: 1300, // Screen width at which the settings will change
+    //     settings: {
+    //       // slidesToShow: 2, // Number of columns to show for screens wider than 1024px
+    //       slidesToScroll: 2,
+    //     },
+    //   },
+    //   {
+    //     breakpoint: 1024, // Screen width at which the settings will change
+    //     settings: {
+    //       // slidesToShow: 2, // Number of columns to show for screens wider than 1024px
+    //       slidesToScroll: 2,
+    //     },
+    //   },
+    //   {
+    //     breakpoint: 900, // Screen width at which the settings will change
+    //     settings: {
+    //       slidesToShow: 1, // Number of columns to show for screens wider than 768px
+    //       slidesToScroll: 1,
+    //     },
+    //   },
+    // ],
+  };
   return (
     <>
       <Grid
@@ -366,27 +432,54 @@ const Dashboard = (props) => {
         </Grid>
 
         <Grid container className={classes.container}>
-          <Grid item container mb={"18px"} alignItems={"center"}>
-            <Typography className={classes.ptitle}>Ongoing projects</Typography>
-            <div
-              style={{
-                padding: "2px 10px",
-                margin: "0px 8px",
-                backgroundColor: color.primary,
-                color: color.white,
-                fontWeight: "bold",
-                borderRadius: 22,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {villaDetails.length}
+          <Grid
+            item
+            container
+            mb={"18px"}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+            wrap="nowrap"
+          >
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography className={classes.ptitle}>
+                Ongoing projects
+              </Typography>
+              <div
+                style={{
+                  padding: "2px 10px",
+                  margin: "0px 8px",
+                  backgroundColor: color.primary,
+                  color: color.white,
+                  fontWeight: "bold",
+                  borderRadius: 22,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {villaDetails.length}
+              </div>
             </div>
+            {isArray(villaDetails) && !isEmpty(villaDetails) && (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <IconButton
+                  style={{ border: `1px solid #F2F3F4`, marginRight: 8 }}
+                  onClick={() => oSliderRef.current.slickPrev()}
+                >
+                  <KeyboardArrowLeftIcon style={{ color: "#363853" }} />
+                </IconButton>
+                <IconButton
+                  style={{ border: `1px solid #F2F3F4` }}
+                  onClick={() => oSliderRef.current.slickNext()}
+                >
+                  <KeyboardArrowRightIcon style={{ color: "#363853" }} />
+                </IconButton>
+              </div>
+            )}
           </Grid>
 
-          {pageLoad ? (
-            <div
+          {onGoingLoader ? (
+            <on
               style={{
                 width: "100%",
                 display: "flex",
@@ -396,22 +489,24 @@ const Dashboard = (props) => {
               }}
             >
               <CircularProgress size={40} />
-            </div>
+            </on>
           ) : isArray(villaDetails) && !isEmpty(villaDetails) ? (
             <div className={classes.scrollableDiv}>
-              {villaDetails.map((villa, index) => {
-                return (
-                  <div
-                    style={{
-                      width: sm ? "100%" : "unset",
-                      minWidth: sm ? "100%" : "unset",
-                    }}
-                    key={`Ongoing_projects_${index}`}
-                  >
-                    <ProjectCard vill={villa} />
-                  </div>
-                );
-              })}
+              <Slider {...settings} ref={oSliderRef}>
+                {villaDetails.map((villa, index) => {
+                  return (
+                    <div
+                      style={{
+                        width: sm ? "100%" : "unset",
+                        minWidth: sm ? "100%" : "unset",
+                      }}
+                      key={`Ongoing_projects_${index}`}
+                    >
+                      <ProjectCard vill={villa} />
+                    </div>
+                  );
+                })}
+              </Slider>
             </div>
           ) : (
             <NoData />
@@ -419,27 +514,52 @@ const Dashboard = (props) => {
         </Grid>
 
         <Grid container className={classes.container}>
-          <Grid item container mb={"18px"} alignItems={"center"}>
-            <Typography className={classes.ptitle}>
-              Requested proposals
-            </Typography>
-            <div
-              style={{
-                padding: "2px 10px",
-                margin: "0px 8px",
-                backgroundColor: "#E9B55C",
-                color: color.white,
-                fontWeight: "bold",
-                borderRadius: 22,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {requestedProposal.length}
+          <Grid
+            item
+            container
+            mb={"18px"}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+            wrap="nowrap"
+          >
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography className={classes.ptitle}>
+                Requested proposals
+              </Typography>
+              <div
+                style={{
+                  padding: "2px 10px",
+                  margin: "0px 8px",
+                  backgroundColor: "#E9B55C",
+                  color: color.white,
+                  fontWeight: "bold",
+                  borderRadius: 22,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {requestedProposal.length}
+              </div>
             </div>
+            {isArray(requestedProposal) && !isEmpty(requestedProposal) && (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <IconButton
+                  style={{ border: `1px solid #F2F3F4`, marginRight: 8 }}
+                  onClick={() => rSliderRef.current.slickPrev()}
+                >
+                  <KeyboardArrowLeftIcon style={{ color: "#363853" }} />
+                </IconButton>
+                <IconButton
+                  style={{ border: `1px solid #F2F3F4` }}
+                  onClick={() => rSliderRef.current.slickNext()}
+                >
+                  <KeyboardArrowRightIcon style={{ color: "#363853" }} />
+                </IconButton>
+              </div>
+            )}
           </Grid>
-          {pageLoad ? (
+          {requestedLoader ? (
             <div
               style={{
                 width: "100%",
@@ -452,10 +572,10 @@ const Dashboard = (props) => {
               <CircularProgress size={40} />
             </div>
           ) : isArray(requestedProposal) && !isEmpty(requestedProposal) ? (
-            <div className={classes.scrollableDiv}>
-              {requestedProposal.map((villa, index) => {
-                return (
-                  <>
+            <div className={classes.sliderCon}>
+              <Slider {...settings} ref={rSliderRef}>
+                {requestedProposal.map((villa, index) => {
+                  return (
                     <div
                       key={`Requested_Proposal_${index}`}
                       style={{
@@ -468,13 +588,13 @@ const Dashboard = (props) => {
                         requested
                         onClick={() => {
                           dispatch(setProposalDetails({}));
-                          navigate("/request-proposal", { state: villa });
+                          navigate("/request-proposal", { state: { villa } });
                         }}
                       />
                     </div>
-                  </>
-                );
-              })}
+                  );
+                })}
+              </Slider>
             </div>
           ) : (
             <NoData />
@@ -482,27 +602,52 @@ const Dashboard = (props) => {
         </Grid>
 
         <Grid container className={classes.container}>
-          <Grid item container mb={"18px"} alignItems={"center"}>
-            <Typography className={classes.ptitle}>
-              Submitted proposals
-            </Typography>
-            <div
-              style={{
-                padding: "2px 10px",
-                margin: "0px 8px",
-                backgroundColor: "#5CC385",
-                color: color.white,
-                fontWeight: "bold",
-                borderRadius: 22,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {submittedProposal.length}
+          <Grid
+            item
+            container
+            mb={"18px"}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+            wrap="nowrap"
+          >
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography className={classes.ptitle}>
+                Submitted proposals
+              </Typography>
+              <div
+                style={{
+                  padding: "2px 10px",
+                  margin: "0px 8px",
+                  backgroundColor: "#5CC385",
+                  color: color.white,
+                  fontWeight: "bold",
+                  borderRadius: 22,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {submittedProposal.length}
+              </div>
             </div>
+            {isArray(submittedProposal) && !isEmpty(submittedProposal) && (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <IconButton
+                  style={{ border: `1px solid #F2F3F4`, marginRight: 8 }}
+                  onClick={() => sSliderRef.current.slickPrev()}
+                >
+                  <KeyboardArrowLeftIcon style={{ color: "#363853" }} />
+                </IconButton>
+                <IconButton
+                  style={{ border: `1px solid #F2F3F4` }}
+                  onClick={() => sSliderRef.current.slickNext()}
+                >
+                  <KeyboardArrowRightIcon style={{ color: "#363853" }} />
+                </IconButton>
+              </div>
+            )}
           </Grid>
-          {pageLoad ? (
+          {submittedLoader ? (
             <div
               style={{
                 width: "100%",
@@ -515,20 +660,30 @@ const Dashboard = (props) => {
               <CircularProgress size={40} />
             </div>
           ) : isArray(submittedProposal) && !isEmpty(submittedProposal) ? (
-            <div className={classes.scrollableDiv}>
-              {submittedProposal?.map((villa, index) => {
-                return (
-                  <div
-                    key={`Submitted_Proposal_${index}`}
-                    style={{
-                      width: sm ? "100%" : "unset",
-                      minWidth: sm ? "100%" : "unset",
-                    }}
-                  >
-                    <ProjectCard villa={villa} />
-                  </div>
-                );
-              })}
+            <div className={classes.sliderCon}>
+              <Slider {...settings} ref={sSliderRef}>
+                {submittedProposal?.map((villa, index) => {
+                  return (
+                    <div
+                      key={`Submitted_Proposal_${index}`}
+                      style={{
+                        width: sm ? "100%" : "unset",
+                        minWidth: sm ? "100%" : "unset",
+                      }}
+                    >
+                      <ProjectCard
+                        villa={villa}
+                        onClick={() => {
+                          dispatch(setProposalDetails({}));
+                          navigate("/request-proposal", {
+                            state: { villa, status: "submitted" },
+                          });
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </Slider>
             </div>
           ) : (
             <NoData />

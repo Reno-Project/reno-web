@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardSubTxt: {
     color: "#475569",
-    fontFamily: "Robbert-Regular !important",
+    fontFamily: "Roobert-Regular !important",
     fontWeight: "400 !important",
     fontSize: "16px !important",
     lineHeight: "110% !important",
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
   annualC: {
     color: "#475569",
-    fontFamily: "Robbert-Regular !important",
+    fontFamily: "Roobert-Regular !important",
     fontWeight: "500 !important",
     fontSize: "16px !important",
     lineHeight: "100% !important",
@@ -89,6 +89,10 @@ const useStyles = makeStyles((theme) => ({
     "&::-webkit-scrollbar-thumb:hover": {
       backgroundColor: "#555",
     },
+  },
+  sliderCon: {
+    width: "100%",
+    position: "relative",
   },
 }));
 
