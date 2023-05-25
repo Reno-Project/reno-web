@@ -34,13 +34,6 @@ import "slick-carousel/slick/slick-theme.css";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
-const errorObj = {
-  emailErr: false,
-  passwordErr: false,
-  emailMsg: "",
-  passwordMsg: "",
-};
-
 const villaDetails = [];
 
 const Dashboard = (props) => {
@@ -49,20 +42,11 @@ const Dashboard = (props) => {
   const emailRegex =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const dispatch = useDispatch();
-  const { setUserData, setToken, setProposalDetails, setNotiData } =
-    authActions;
-  const { userData, proposalDetails, notiData } = useSelector(
-    (state) => state.auth
-  );
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errObj, setErrObj] = useState(errorObj);
-  const [btnLoad, setBtnLoad] = useState(false);
+  const { setProposalDetails, setNotiData } = authActions;
+  const { userData, notiData } = useSelector((state) => state.auth);
   const [onGoingLoader, setonGoingLoader] = useState(false);
   const [requestedLoader, setrequestedLoader] = useState(true);
   const [submittedLoader, setsubmittedLoader] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [googleBtnLoad, setGoogleBtnLoad] = useState(false);
   const [visible, setVisible] = useState(false);
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
@@ -107,115 +91,6 @@ const Dashboard = (props) => {
       if (profile_completed === "completed" && !is_profile_verified) {
         setVisible(true);
       }
-    }
-  }
-
-  // this function checks validation of login field
-  function validation() {
-    const error = { ...errObj };
-    let valid = true;
-
-    // validate email
-    if (isEmpty(email)) {
-      valid = false;
-      error.emailErr = true;
-      error.emailMsg = "Please enter email";
-    } else if (!emailRegex.test(email)) {
-      valid = false;
-      error.emailErr = true;
-      error.emailMsg = "Please enter valid email";
-    }
-
-    // validate password
-    if (isEmpty(password)) {
-      valid = false;
-      error.passwordErr = true;
-      error.passwordMsg = "Please enter password";
-    } else if (password.length < 8) {
-      valid = false;
-      error.passwordErr = true;
-      error.passwordMsg = "Password length must be of 8-15";
-    }
-
-    setErrObj(error);
-    if (valid) {
-      loginUser();
-    }
-  }
-
-  // this function for login user
-  async function loginUser() {
-    setBtnLoad(true);
-    try {
-      const response = await getApiData(Setting.endpoints.login, "POST", {
-        email,
-        password,
-        device_type: "web",
-      });
-
-      if (response.success) {
-        dispatch(setUserData(response?.data));
-        dispatch(setToken(response?.token));
-      } else {
-        toast.error(response.message);
-      }
-      setBtnLoad(false);
-    } catch (error) {
-      console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
-      setBtnLoad(false);
-      toast.error(error.toString());
-    }
-  }
-
-  // this function for login user
-  async function googleDataApiCall(googleCode) {
-    try {
-      setGoogleBtnLoad(true);
-      const response = await getApiData(Setting.endpoints.googleData, "POST", {
-        code: googleCode,
-      });
-
-      if (response.success) {
-        if (!isEmpty(response?.data)) {
-          socialLoginApiCall(response?.data, "google");
-        }
-      } else {
-        toast.error(response.message);
-        setGoogleBtnLoad(false);
-      }
-    } catch (error) {
-      console.log("🚀 ~ google data api call ~ error:", error);
-      toast.error(error.toString());
-      setGoogleBtnLoad(false);
-    }
-  }
-
-  // social login
-  async function socialLoginApiCall(socialData, type) {
-    try {
-      const response = await getApiData(Setting.endpoints.login, "POST", {
-        email: socialData?.email ? socialData?.email : "",
-        password: socialData?.password ? socialData?.password : "",
-        device_type: "web",
-        social_connection: type ? type : "",
-      });
-
-      console.log("socialLoginApiCallresponse =====>>> ", response);
-      if (response.success) {
-        if (response?.is_new_user) {
-          navigate("/signup", { state: { socialData, type } });
-        } else {
-          dispatch(setUserData(response?.data));
-          dispatch(setToken(response?.token));
-        }
-      } else {
-        toast.error(response.message);
-      }
-      setGoogleBtnLoad(false);
-    } catch (error) {
-      console.log("🚀 ~ file: index.js:63 ~ loginUser ~ error:", error);
-      setGoogleBtnLoad(false);
-      toast.error(error.toString());
     }
   }
 

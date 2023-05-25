@@ -56,7 +56,7 @@ export default function RequestedProposal() {
             alignItems={"center"}
             columnGap={2}
           >
-            <Grid item>
+            <div style={{ position: "relative" }}>
               <img
                 src={villa?.user_data?.profile_url}
                 alt="chat"
@@ -65,7 +65,7 @@ export default function RequestedProposal() {
               <div className={classes.activeContainer}>
                 <div className={classes.activeStatus}></div>
               </div>
-            </Grid>
+            </div>
             <Grid item container>
               <Grid item lg={9} md={9} sm={9} xs={9}>
                 <Typography className={classes.titleText}>
@@ -1021,14 +1021,16 @@ export default function RequestedProposal() {
                 {villa?.project_image?.map((item, index) => {
                   return (
                     <img
-                      key={index}
                       alt="logo"
-                      src={item.image}
+                      src={
+                        item?.type?.includes("image") ? item?.image : Images.pdf
+                      }
                       style={{
-                        width: "190px",
-                        height: "129px",
+                        width: "140px",
+                        height: "140px",
                         borderRadius: "7px",
                         margin: "15px 5px",
+                        objectFit: "contain",
                       }}
                     />
                   );

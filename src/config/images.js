@@ -70,6 +70,7 @@ const Images = {
   b3_pieces: "/assets/images/Bathroom-3-pieces.svg",
   b4_pieces: "/assets/images/Bathroom-4-pieces.svg",
   playstore: "/assets/images/play-store.svg",
+  pdf: "/assets/images/pdf.png",
 };
 
 export default Images;
