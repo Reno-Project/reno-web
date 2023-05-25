@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.renohome.io",
+      "sha256_cert_fingerprints": [
+        "C6:36:55:C5:E8:1A:44:35:C6:69:BC:C4:3B:55:4F:E3:88:0D:7C:0A:B6:BD:80:28:CD:04:64:F7:4A:24:54:DA"
+      ]
+    }
+  }
+]
