@@ -970,9 +970,9 @@ export default function Budget(props) {
           </Grid>
           <Grid item xs={12} md={4} id="manpowerMilestone">
             <CAutocomplete
-              label="milestone"
+              label="Milestone"
               placeholder="Select milestone"
-              value={state.milestone}
+              value={state?.milestone}
               onChange={(e, newValue) => {
                 setState({ ...state, milestone: newValue });
                 setErrObj({
