@@ -120,6 +120,9 @@ theme = createTheme(theme, {
     },
     MuiTypography: {
       styleOverrides: {
+        root: {
+          wordWrap: "break-word",
+        },
         subtitle1: {
           fontSize: 28,
           color: color.primary,

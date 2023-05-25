@@ -26,7 +26,6 @@ export default function RequestedProposal() {
   }, []);
 
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
-
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
       <Grid
@@ -180,7 +179,8 @@ export default function RequestedProposal() {
                 justifyContent={"flex-end"}
                 rowSpacing={2}
               >
-                {villa?.project_type === "Interior design"
+                {villa?.project_type?.toLowerCase() ===
+                "Interior design".toLowerCase()
                   ? villa?.form_json?.map((item, index) => {
                       return (
                         <>
@@ -329,7 +329,8 @@ export default function RequestedProposal() {
                         </>
                       );
                     })
-                  : villa?.project_type === "Home renovation"
+                  : villa?.project_type?.toLowerCase() ===
+                    "Home renovation".toLowerCase()
                   ? villa?.form_json?.map((item, index) => {
                       return (
                         <>
@@ -478,7 +479,8 @@ export default function RequestedProposal() {
                         </>
                       );
                     })
-                  : villa?.project_type === "Landscaping"
+                  : villa?.project_type?.toLowerCase() ===
+                    "Landscaping".toLowerCase()
                   ? villa?.form_json?.map((item, index) => {
                       return (
                         <>
@@ -532,7 +534,8 @@ export default function RequestedProposal() {
                         </>
                       );
                     })
-                  : villa?.project_type === "Kitchen"
+                  : villa?.project_type?.toLowerCase() ===
+                    "Kitchen".toLowerCase()
                   ? villa?.form_json?.map((item, index) => {
                       const objectWithCheckIconTrue = item?.kitchenArray?.find(
                         (item) => item?.checkicon === true
@@ -621,7 +624,9 @@ export default function RequestedProposal() {
                               </Grid>
                             </>
                           ) : objectWithCheckIconTrue?.title ===
-                            "L shape layout" ? (
+                              "L shape layout" ||
+                            objectWithCheckIconTrue?.title ===
+                              "L shape layout " ? (
                             <>
                               <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>
@@ -770,7 +775,16 @@ export default function RequestedProposal() {
                                 key={index}
                                 style={{ display: "inline-block" }}
                               >
-                                <Typography className={classes.accRightText}>
+                                <Typography
+                                  className={classes.accRightText}
+                                  style={{
+                                    marginRight:
+                                      item?.include_Appliances?.length - 1 !==
+                                      index
+                                        ? 3
+                                        : 0,
+                                  }}
+                                >
                                   {item1.title}
                                   {item?.include_Appliances?.length - 1 !==
                                   index
@@ -959,7 +973,7 @@ export default function RequestedProposal() {
                   paddingBottom={"14px"}
                 >
                   <Typography className={classes.accRightText}>
-                    {villa?.budget}
+                    AED {villa?.budget || 0}
                   </Typography>
                 </Grid>
                 <div style={{ width: "100%" }}>
