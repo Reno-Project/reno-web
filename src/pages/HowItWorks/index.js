@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
-  Avatar,
   Button,
   Card,
   CardContent,
-  CardMedia,
   Divider,
   Grid,
   MenuItem,
@@ -15,12 +13,9 @@ import {
 } from "@mui/material";
 import useStyles from "./styles";
 import { color } from "../../config/theme";
-import { getApiData } from "../../utils/APIHelper";
-import { Setting } from "../../utils/Setting";
 import { useTheme } from "@emotion/react";
 import Images from "../../config/images";
 import CustomCard from "../../components/CustomCard/CustomCard";
-import Cselect from "../../components/CSelect";
 import BlueAbout from "../../components/BlueAbout";
 import { useNavigate } from "react-router-dom";
 
@@ -45,8 +40,6 @@ const HowItWorks = (props) => {
       borderColor: borderColor ? borderColor : "#000000", // use prop value or default to black
     },
   }));
-
-  const employeeArr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
 
   return (
     <div className={classes.mainContainer}>

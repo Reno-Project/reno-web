@@ -8,7 +8,7 @@ import {
 import React, { useEffect } from "react";
 import useStyles from "./styles";
 import Images from "../../config/images";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BlueAbout from "../../components/BlueAbout";
 import moment from "moment";
 import { isArray, isEmpty } from "lodash";

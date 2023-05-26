@@ -1,5 +1,4 @@
 import { makeStyles } from "@mui/styles";
-import { color } from "../../config/theme";
 
 const useStyles = makeStyles((theme) => ({
   MainContainer: {

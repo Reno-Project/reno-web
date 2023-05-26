@@ -16,10 +16,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "50%",
     objectFit: "cover",
     "@media (max-width:1832px)": {
-      height: "70px",
-      width: "70px",
-    },
-    "@media (max-width:1832px)": {
       height: "65px",
       width: "65px",
     },

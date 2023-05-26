@@ -11,10 +11,9 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
-import Images from "../../../config/images";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BlueAbout from "../../../components/BlueAbout";
-import theme, { color } from "../../../config/theme";
+import theme from "../../../config/theme";
 import Milestone from "../../Proposal/Milestone";
 import Budget from "../../Proposal/Budget";
 import CInput from "../../../components/CInput";
@@ -22,13 +21,12 @@ import { isArray, isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
 import ConfirmModel from "../../../components/ConfirmModel";
-import ProfileSuccessModal from "../../../components/ProfileSuccessModal";
 import ProposalCard from "../../../components/ProposalCard";
 import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import { toast } from "react-toastify";
 import { isMobile, isTablet } from "react-device-detect";
-import { HighlightOffOutlined, ImageOutlined, Tune } from "@mui/icons-material";
+import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
 import CAutocomplete from "../../../components/CAutocomplete";
 import moment from "moment";
 
@@ -50,7 +48,7 @@ const errorObj = {
 export default function Summary(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { proposalDetails, userData } = useSelector((state) => state.auth);
+  const { proposalDetails } = useSelector((state) => state.auth);
   const location = useLocation();
 
   const createProposal = location?.state?.create_proposal || false;
@@ -63,7 +61,6 @@ export default function Summary(props) {
 
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const md = useMediaQuery(theme.breakpoints.down("md"));
-  const lg = useMediaQuery(theme.breakpoints.down("lg"));
 
   const [tabValue, setTabValue] = useState(0);
   const [errObj, setErrObj] = useState(errorObj);

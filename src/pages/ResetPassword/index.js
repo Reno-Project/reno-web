@@ -11,14 +11,10 @@ import { isEmpty } from "lodash";
 import CInput from "../../components/CInput";
 import { toast } from "react-toastify";
 import useStyles from "./styles";
-import { getApiData, getAPIProgressData } from "../../utils/APIHelper";
-import OtpInputFields from "react-otp-input";
-import { useDispatch, useSelector } from "react-redux";
-import authActions from "../../redux/reducers/auth/actions";
+import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
-import color from "../../config/theme.js";
 
 const errorObj = {
   passwordErr: false,
@@ -35,7 +31,6 @@ const ResetPassword = (props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);
-  const { token } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -140,36 +135,7 @@ const ResetPassword = (props) => {
 
     setErrObj(error);
     if (valid) {
-      // updatepassword();
       updatePasswordByOtp();
-    }
-  }
-
-  async function updatepassword() {
-    try {
-      const response = await getAPIProgressData(
-        Setting.endpoints.updatepassword,
-        "POST",
-        {
-          opt: otp,
-          old_password: password,
-          new_password: newPassword,
-          device_type: "web",
-        },
-        { Authorization: `Bearer ${token}` }
-      );
-
-      console.log("response =====>>> ", response);
-      if (response.success) {
-        toast.success(response.message);
-        // move to create profile screen
-        navigate("/create-profile");
-      } else {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      console.log("error=====>>>>>", error);
-      toast.error(error.toString());
     }
   }
 

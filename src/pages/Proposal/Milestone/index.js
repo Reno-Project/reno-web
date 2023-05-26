@@ -10,7 +10,6 @@ import {
   InputLabel,
   List,
   ListItem,
-  ListItemButton,
   ListItemText,
   Menu,
   MenuItem,
@@ -40,7 +39,7 @@ import ConfirmModel from "../../../components/ConfirmModel";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
-import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
+import { getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 
 const errorObj = {
@@ -56,7 +55,7 @@ const errorObj = {
   amountMsg: "",
 };
 export default function Milestone(props) {
-  const { handleClick = () => null, from, villa, createProposal, dpId } = props;
+  const { handleClick = () => null, villa, createProposal, dpId } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
@@ -76,7 +75,6 @@ export default function Milestone(props) {
   const [errObj, setErrObj] = useState(errorObj);
 
   const theme = useTheme();
-  const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
   const [anchorEl, setAnchorEl] = useState(null);

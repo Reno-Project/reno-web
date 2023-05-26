@@ -1,5 +1,4 @@
 import { makeStyles } from "@mui/styles";
-import { color } from "../../config/theme";
 
 const useStyles = makeStyles((theme) => ({
   MainContainer: {
@@ -15,10 +14,6 @@ const useStyles = makeStyles((theme) => ({
     width: "80px",
     borderRadius: "50%",
     objectFit: "cover",
-    "@media (max-width:1832px)": {
-      height: "70px",
-      width: "70px",
-    },
     "@media (max-width:1832px)": {
       height: "65px",
       width: "65px",
