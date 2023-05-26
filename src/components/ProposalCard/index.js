@@ -231,11 +231,14 @@ export default function ProposalCard(props) {
               <Grid item container alignContent={"center"}>
                 <Grid item lg={12}>
                   {villa?.project_image.map((item, index) => {
+                    const url = item?.type?.includes("image")
+                      ? item?.image
+                      : Images.pdf;
                     return (
                       <img
                         key={index}
                         alt="logo"
-                        src={item.image}
+                        src={url}
                         style={{
                           width: "88px",
                           height: "88px",
