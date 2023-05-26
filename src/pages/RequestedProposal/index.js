@@ -5,7 +5,7 @@ import {
   useMediaQuery,
   Divider,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
 import Images from "../../config/images";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -13,11 +13,15 @@ import BlueAbout from "../../components/BlueAbout";
 import moment from "moment";
 import { isArray, isEmpty } from "lodash";
 import { useTheme } from "@mui/styles";
+import ImageViewer from "../../components/ImageViewer";
 
 export default function RequestedProposal() {
   const location = useLocation();
   const villa = location?.state?.villa ? location?.state?.villa : {};
   const isSubmitted = location?.state?.status === "submitted";
+  const [isPressed, setIsPressed] = useState(false);
+  const [url, setUrl] = useState("");
+  const [imgurl, setImgUrl] = useState("");
   const classes = useStyles();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -1020,19 +1024,33 @@ export default function RequestedProposal() {
               <Grid item lg={12}>
                 {villa?.project_image?.map((item, index) => {
                   return (
-                    <img
-                      alt="logo"
-                      src={
-                        item?.type?.includes("image") ? item?.image : Images.pdf
-                      }
-                      style={{
-                        width: "140px",
-                        height: "140px",
-                        borderRadius: "7px",
-                        margin: "15px 5px",
-                        objectFit: "contain",
-                      }}
-                    />
+                    <a href={url ? `${url}` : null} target="_blank">
+                      <img
+                        onClick={() => {
+                          if (item?.type?.includes("image")) {
+                            setIsPressed(true);
+                            setImgUrl(item?.image);
+                            setUrl("");
+                          } else {
+                            setUrl(item?.image);
+                            setImgUrl("");
+                          }
+                        }}
+                        alt="logo"
+                        src={
+                          item?.type?.includes("image")
+                            ? item?.image
+                            : Images.pdf
+                        }
+                        style={{
+                          width: "140px",
+                          height: "140px",
+                          borderRadius: "7px",
+                          margin: "15px 5px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </a>
                   );
                 })}
               </Grid>
@@ -1074,6 +1092,14 @@ export default function RequestedProposal() {
         </Grid>
       </Grid>
       <BlueAbout />
+      <ImageViewer
+        url={imgurl}
+        visible={isPressed}
+        isPdf={url}
+        onClose={() => {
+          setIsPressed(false);
+        }}
+      />
     </div>
   );
 }
