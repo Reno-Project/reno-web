@@ -53,6 +53,9 @@ export default function Summary(props) {
 
   const createProposal = location?.state?.create_proposal || false;
   const villa = location?.state ? location?.state : {};
+  const nData = villa?.submitted_by_reno
+    ? villa?.reno_data || {}
+    : villa?.user_data || {};
   const dispatch = useDispatch();
   const { setProposalDetails } = authActions;
 
@@ -287,7 +290,7 @@ export default function Summary(props) {
             >
               <Grid item>
                 <img
-                  src={villa?.user_data?.profile_url || ""}
+                  src={nData?.profile_url || ""}
                   alt="logo"
                   className={classes.imageStyle}
                 />
@@ -299,7 +302,7 @@ export default function Summary(props) {
               <Grid container>
                 <Grid item lg={9} md={9} sm={9} xs={9}>
                   <Typography className={classes.titleText}>
-                    {villa?.user_data?.username}
+                    {nData?.username}
                   </Typography>
                 </Grid>
                 <Grid item lg={3} md={3} sm={3} xs={3} textAlign={"end"}>

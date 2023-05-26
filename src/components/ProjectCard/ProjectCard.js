@@ -22,7 +22,12 @@ const ProjectCard = (props) => {
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
   const createdAt = moment(villa?.createdAt).format("DD-MM-yyyy");
-  const moveInDate = moment(villa?.end_date, "DD/MM/YYYY").format("DD.MM.YYYY");
+  const moveInDate = moment(villa?.move_in_date, "YYYY-MM-DD").format(
+    "DD.MM.YYYY"
+  );
+  const nData = villa?.submitted_by_reno
+    ? villa?.reno_data || {}
+    : villa?.user_data || {};
 
   return (
     <Card key={villa?.id} className={classes.card} onClick={onClick}>
@@ -80,20 +85,22 @@ const ProjectCard = (props) => {
         </div>
         <Typography className={classes.company}>
           <img
-            src={villa?.user_data?.profile_url}
+            src={nData?.profile_url}
             width={"28px"}
             height={"28px"}
             alt="profile_logo"
             style={{ margin: 0, marginRight: 8, borderRadius: "100%" }}
           />{" "}
-          {villa?.user_data?.username}
-          {villa?.user_data?.is_email_verified && (
-            <img
-              src={Images.verified}
-              alt="verified"
-              style={{ marginLeft: 8 }}
-            />
-          )}
+          {nData?.username}
+          {nData?.submitted_by_reno
+            ? null
+            : nData?.is_email_verified && (
+                <img
+                  src={Images.verified}
+                  alt="verified"
+                  style={{ marginLeft: 8 }}
+                />
+              )}
         </Typography>
 
         {!requested && (

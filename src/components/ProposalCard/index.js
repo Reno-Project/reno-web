@@ -27,6 +27,9 @@ const errorObj = {
 export default function ProposalCard(props) {
   const { villa } = props;
   const classes = useStyles();
+  const nData = villa?.submitted_by_reno
+    ? villa?.reno_data || {}
+    : villa?.user_data || {};
   const [expandProjectInfo, setExpandProjectInfo] = useState(true);
   const [expandAttachments, setExpandAttachments] = useState(true);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
@@ -45,7 +48,7 @@ export default function ProposalCard(props) {
       >
         <Grid item lg={4} md={4} sm={4} xs={12}>
           <img
-            src={villa?.user_data?.profile_url}
+            src={nData?.profile_url}
             alt="chat"
             className={classes.imageStyle}
           />
@@ -53,7 +56,7 @@ export default function ProposalCard(props) {
         <Grid item container>
           <Grid item lg={9} md={9} sm={9} xs={9}>
             <Typography className={classes.titleText}>
-              {villa?.user_data?.username}
+              {nData?.username}
             </Typography>
           </Grid>
 

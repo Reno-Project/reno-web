@@ -18,6 +18,9 @@ import ImageViewer from "../../components/ImageViewer";
 export default function RequestedProposal() {
   const location = useLocation();
   const villa = location?.state?.villa ? location?.state?.villa : {};
+  const nData = villa?.submitted_by_reno
+    ? villa?.reno_data || {}
+    : villa?.user_data || {};
   const isSubmitted = location?.state?.status === "submitted";
   const [isPressed, setIsPressed] = useState(false);
   const [url, setUrl] = useState("");
@@ -62,7 +65,7 @@ export default function RequestedProposal() {
           >
             <div style={{ position: "relative" }}>
               <img
-                src={villa?.user_data?.profile_url}
+                src={nData?.profile_url}
                 alt="chat"
                 className={classes.imageStyle}
               />
@@ -73,7 +76,7 @@ export default function RequestedProposal() {
             <Grid item container>
               <Grid item lg={9} md={9} sm={9} xs={9}>
                 <Typography className={classes.titleText}>
-                  {villa?.user_data?.username}
+                  {nData?.username}
                 </Typography>
               </Grid>
               <Grid item lg={3} md={3} sm={3} xs={3} textAlign={"end"}>
