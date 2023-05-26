@@ -16,6 +16,9 @@ function Footer(props) {
     pathname === "/create-proposal" ||
     pathname === "/request-proposal";
 
+  const handleDragStart = (event) => {
+    event.preventDefault();
+  };
   return (
     <>
       {disabledFooter ? null : (
@@ -30,7 +33,7 @@ function Footer(props) {
               display="flex"
               alignItems="center"
             >
-              <Grid item>
+              <Grid item onDragStart={handleDragStart}>
                 <img
                   src={Images.flogo}
                   alt="logoimage"

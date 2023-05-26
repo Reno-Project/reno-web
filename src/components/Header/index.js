@@ -78,6 +78,9 @@ function Header(props) {
       console.log("🚀 logout ~ error:", error);
     }
   }
+  const handleDragStart = (event) => {
+    event.preventDefault();
+  };
 
   return (
     <>
@@ -93,6 +96,7 @@ function Header(props) {
           >
             <div
               className={classes.imgContainer}
+              onDragStart={handleDragStart}
               onClick={() => {
                 if (
                   userData?.contractor_data?.profile_completed === "pending"
@@ -111,7 +115,11 @@ function Header(props) {
             </div>
             {currentUrl?.includes("signup") || currentUrl?.includes("login") ? (
               <Grid item style={{ paddingLeft: 10 }}>
-                <NavLink to="/how-it-works" className={classes.linkStyle}>
+                <NavLink
+                  to="/how-it-works"
+                  className={classes.linkStyle}
+                  onDragStart={handleDragStart}
+                >
                   <Typography className={classes.menuTitleStyle}>
                     How it works?
                   </Typography>
@@ -345,7 +353,11 @@ function Header(props) {
                   </Popover>
                 </>
               ) : currentUrl.includes("login") ? (
-                <NavLink to="/signup" className={classes.linkStyle}>
+                <NavLink
+                  to="/signup"
+                  className={classes.linkStyle}
+                  onDragStart={handleDragStart}
+                >
                   <Button
                     variant="contained"
                     color="primary"
@@ -355,7 +367,11 @@ function Header(props) {
                   </Button>
                 </NavLink>
               ) : (
-                <NavLink to="/login" className={classes.linkStyle}>
+                <NavLink
+                  to="/login"
+                  className={classes.linkStyle}
+                  onDragStart={handleDragStart}
+                >
                   <Button
                     variant="contained"
                     color="primary"
