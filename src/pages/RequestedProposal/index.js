@@ -818,7 +818,7 @@ export default function RequestedProposal() {
                               Bathroom - {index + 1}
                             </Typography>
                           </Grid>
-                          {objectWithCheckIconTrue?.title === "Two-piece" ? (
+                          {objectWithCheckIconTrue?.title === "Two piece" ? (
                             <>
                               <Grid item lg={5} sm={12} md={6} xs={12}>
                                 <Typography className={classes.acctext}>

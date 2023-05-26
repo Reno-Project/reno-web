@@ -327,6 +327,10 @@ export default function Milestone(props) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
+    } else if (new Date(state.start_date).getTime() < new Date().getTime()) {
+      valid = false;
+      error.startErr = true;
+      error.startMsg = "Please enter valid date";
     }
 
     if (isNull(state.end_date)) {
@@ -336,6 +340,12 @@ export default function Milestone(props) {
     } else if (
       !isNull(state.end_date) &&
       state.end_date?.toString() == "Invalid date"
+    ) {
+      valid = false;
+      error.endErr = true;
+      error.endMsg = "Please enter valid date";
+    } else if (
+      new Date(state.start_date).getTime() > new Date(state.end_date).getTime()
     ) {
       valid = false;
       error.endErr = true;
