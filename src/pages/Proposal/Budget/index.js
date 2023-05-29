@@ -232,7 +232,8 @@ export default function Budget(props) {
       error.manpowerRateMsg = "Please enter the manpower rate";
     } else if (
       !regex.test(state.manpower_rate) ||
-      parseInt(state.manpower_rate) <= 0
+      parseInt(state.manpower_rate) <= 0 ||
+      parseInt(state.manpower_rate) > 100
     ) {
       valid = false;
       error.manpowerRateErr = true;

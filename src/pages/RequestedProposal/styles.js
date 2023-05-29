@@ -95,6 +95,23 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "400 !important",
     letterSpacing: "0.25px !important",
   },
+  dataMain: {
+    marginTop: 20,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 500,
+  },
+  table: {
+    "& td": {
+      width: "33%",
+      fontFamily: "Roobert-Regular !important",
+    },
+    "& .MuiTableCell-head": {
+      fontWeight: "bold !important",
+      fontFamily: "Roobert-Regular !important",
+    },
+  },
 }));
 
 export default useStyles;
