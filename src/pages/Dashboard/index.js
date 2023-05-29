@@ -74,7 +74,7 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     if (!isEmpty(notiData?.type)) {
-      if (notiData?.type === "Requested") {
+      if (notiData?.type === "requested") {
         requestedProposalApiCall("Requested");
       } else if (notiData?.type === "proposal") {
         requestedProposalApiCall("proposal");
