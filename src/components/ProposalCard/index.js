@@ -61,19 +61,21 @@ export default function ProposalCard(props) {
           </Grid>
 
           <Grid item lg={9} md={9} sm={6} xs={6}>
-            <Button
+            <span
               variant="contained"
               style={{
                 marginTop: 3,
                 backgroundColor: "#E9B55C",
-                padding: 5,
+                padding: 8,
                 fontSize: "10px",
                 letterSpacing: "1.5px",
                 lineHeight: "16px",
+                borderRadius: 4,
+                color: "#FFFFFF",
               }}
             >
               REQUEST
-            </Button>
+            </span>
           </Grid>
         </Grid>
       </Grid>

@@ -182,7 +182,7 @@ export default function Summary(props) {
     try {
       const response = await getAPIProgressData(endpoint, "POST", data, true);
       if (response?.success) {
-        toast.success(response?.message);
+        // toast.success(response?.message);
         const scope_of_work = scope;
         createProposal
           ? dispatch(
@@ -311,19 +311,21 @@ export default function Summary(props) {
                   </Typography>
                 </Grid>
                 <Grid item lg={9} md={9} sm={6} xs={6}>
-                  <Button
+                  <span
                     variant="contained"
                     style={{
                       marginTop: 3,
                       backgroundColor: "#E9B55C",
-                      padding: 5,
+                      padding: 8,
                       fontSize: "10px",
                       letterSpacing: "1.5px",
                       lineHeight: "16px",
+                      borderRadius: 4,
+                      color: "#FFFFFF",
                     }}
                   >
                     REQUEST
-                  </Button>
+                  </span>
                 </Grid>
                 <Grid item lg={3} md={3} sm={6} xs={6}>
                   <Typography className={classes.dateStyle}>

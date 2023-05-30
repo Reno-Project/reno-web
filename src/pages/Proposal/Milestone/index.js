@@ -214,7 +214,7 @@ export default function Milestone(props) {
       );
 
       if (response.success) {
-        toast.success(response.message);
+        // toast.success(response.message);
         const milestone_details = {
           formvalues: {
             milestone_name: "",
