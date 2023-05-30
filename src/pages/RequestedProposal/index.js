@@ -1453,6 +1453,7 @@ export default function RequestedProposal() {
                                 : Images.pdf
                             }
                             style={{
+                              cursor: "pointer",
                               width: "140px",
                               height: "140px",
                               borderRadius: "7px",

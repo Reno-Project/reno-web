@@ -19,6 +19,8 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { isArray, isEmpty } from "lodash";
 
+import ImageViewer from "../../components/ImageViewer";
+
 const errorObj = {
   scpErr: false,
   scpMsg: "",
@@ -32,6 +34,9 @@ export default function ProposalCard(props) {
     : villa?.user_data || {};
   const [expandProjectInfo, setExpandProjectInfo] = useState(true);
   const [expandAttachments, setExpandAttachments] = useState(true);
+  const [isPressed, setIsPressed] = useState(false);
+  const [url, setUrl] = useState("");
+  const [imgurl, setImgUrl] = useState("");
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [tabValueforcard, setTabValueforcard] = useState(0);
@@ -235,21 +240,34 @@ export default function ProposalCard(props) {
               <Grid item container alignContent={"center"}>
                 <Grid item lg={12}>
                   {villa?.project_image.map((item, index) => {
-                    const url = item?.type?.includes("image")
-                      ? item?.image
-                      : Images.pdf;
                     return (
-                      <img
-                        key={index}
-                        alt="logo"
-                        src={url}
-                        style={{
-                          width: "88px",
-                          height: "88px",
-                          borderRadius: "7px",
-                          margin: "15px 5px",
-                        }}
-                      />
+                      <a href={url ? `${url}` : null} target="_blank">
+                        <img
+                          onClick={() => {
+                            if (item?.type?.includes("image")) {
+                              setIsPressed(true);
+                              setImgUrl(item?.image);
+                              setUrl("");
+                            } else {
+                              setUrl(item?.image);
+                              setImgUrl("");
+                            }
+                          }}
+                          alt="logo"
+                          src={
+                            item?.type?.includes("image")
+                              ? item?.image
+                              : Images.pdf
+                          }
+                          style={{
+                            cursor: "pointer",
+                            width: "88px",
+                            height: "88px",
+                            borderRadius: "7px",
+                            margin: "15px 5px",
+                          }}
+                        />
+                      </a>
                     );
                   })}
                 </Grid>
@@ -258,6 +276,14 @@ export default function ProposalCard(props) {
           </Accordion>
         </>
       ) : null}
+      <ImageViewer
+        url={imgurl}
+        visible={isPressed}
+        isPdf={url}
+        onClose={() => {
+          setIsPressed(false);
+        }}
+      />
       {tabValueforcard === 1 ? (
         <>
           <Grid item xs={12}></Grid>
