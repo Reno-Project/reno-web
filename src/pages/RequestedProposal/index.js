@@ -279,7 +279,9 @@ export default function RequestedProposal() {
                                 component={"span"}
                                 className={classes.accRightText}
                               >
-                                {milestone?.start_date}
+                                {moment(milestone?.start_date).format(
+                                  "DD-MM-YYYY"
+                                )}
                               </Typography>
                             </Grid>
                             <Grid
@@ -301,7 +303,9 @@ export default function RequestedProposal() {
                                 component={"span"}
                                 className={classes.accRightText}
                               >
-                                {milestone?.end_date}
+                                {moment(milestone?.end_date).format(
+                                  "DD-MM-YYYY"
+                                )}
                               </Typography>
                             </Grid>
 
@@ -315,15 +319,18 @@ export default function RequestedProposal() {
                                 {milestone?.description}
                               </Typography>
                             </Grid>
-                            <Grid item xs={12}>
-                              <Typography className={classes.acctext}>
-                                Budget Details:
-                              </Typography>
-                            </Grid>
+                            {isArray(milestone?.budget) &&
+                              !isEmpty(milestone?.budget) && (
+                                <Grid item xs={12}>
+                                  <Typography className={classes.acctext}>
+                                    Budget Details:
+                                  </Typography>
+                                </Grid>
+                              )}
                             <Grid item container xs={12}>
                               {isArray(milestone?.budget) &&
                                 !isEmpty(milestone?.budget) &&
-                                milestone?.budget?.map((item) => (
+                                milestone?.budget?.map((item, ind) => (
                                   <Grid
                                     item
                                     container
@@ -331,6 +338,7 @@ export default function RequestedProposal() {
                                       border: `1px solid ${color.borderColor}`,
                                       padding: 8,
                                       borderRadius: 8,
+                                      marginBottom: 15,
                                     }}
                                   >
                                     {milestone?.budget?.length > 1 && (
@@ -340,7 +348,7 @@ export default function RequestedProposal() {
                                           fontWeight={"bold !important"}
                                           className={classes.acctext}
                                         >
-                                          `Budget - {index + 1}`
+                                          {`Budget - ${ind + 1}`}
                                         </Typography>
                                       </Grid>
                                     )}
@@ -492,7 +500,7 @@ export default function RequestedProposal() {
                         component={"span"}
                         className={classes.accRightText}
                       >
-                        {villa?.start_date}
+                        {moment(villa?.start_date).format("DD-MM-YYYY")}
                       </Typography>
                     </Grid>
                     <Grid item lg={6} sm={12} md={6} xs={12} textAlign={"end"}>
@@ -507,7 +515,7 @@ export default function RequestedProposal() {
                         component={"span"}
                         className={classes.accRightText}
                       >
-                        {villa?.end_date}
+                        {moment(villa?.end_date).format("DD-MM-YYYY")}
                       </Typography>
                     </Grid>
                   </>

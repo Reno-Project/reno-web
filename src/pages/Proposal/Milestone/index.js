@@ -20,6 +20,10 @@ import {
   TableRow,
   Typography,
   useMediaQuery,
+  Modal,
+  Fade,
+  Box,
+  Backdrop,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
@@ -77,10 +81,26 @@ export default function Milestone(props) {
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: sm ? 300 : 500,
+    bgcolor: "background.paper",
+    borderRadius: 1,
+    boxShadow: 24,
+    p: 4,
+  };
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState({});
   const [visible, setVisible] = useState(false);
   const [amounts, setAmounts] = useState([]);
+
+  const [visibleEditModal, setVisibleEditModal] = useState(false);
+  const [btnUpdateLoader, setBtnUpdateLoader] = useState("");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -257,6 +277,7 @@ export default function Milestone(props) {
   };
 
   const handleEdit = (data, index) => {
+    setVisibleEditModal(true);
     setState(selectedBudget.data);
     handleClose();
   };
@@ -300,7 +321,7 @@ export default function Milestone(props) {
     setmilestoneLoader(false);
   }
 
-  const validate = () => {
+  const validate = (isUpdateModalVisible) => {
     const error = { ...errObj };
     let valid = true;
 
@@ -364,6 +385,9 @@ export default function Milestone(props) {
 
     setErrObj(error);
     if (valid) {
+      if (isUpdateModalVisible) {
+        setVisibleEditModal(false);
+      }
       if (
         _.isObject(selectedBudget?.data) &&
         !_.isEmpty(selectedBudget?.data)
@@ -388,7 +412,7 @@ export default function Milestone(props) {
     if (isArray(milestones) && !isEmpty(milestones)) {
       addMilestone();
     } else {
-      validate();
+      validate(false);
       // toast.warning("Please add atleast one milestone");
     }
   };
@@ -402,39 +426,21 @@ export default function Milestone(props) {
     });
     setErrObj(errorObj);
   }
-  return (
-    <>
-      <Grid container>
-        <Grid
-          item
-          container
-          xs={12}
-          pb={2}
-          pt={"25px"}
-          justifyContent={"space-between"}
-        >
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "ElMessiri-SemiBold",
-            }}
-          >
-            Total Milestones Amount
-          </Typography>
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "ElMessiri-SemiBold",
-            }}
-          >
-            AED {amounts.reduce((acc, curr) => acc + curr, 0)}
-          </Typography>
-        </Grid>
+
+  function renderMilestoneCreateForm(mode) {
+    return (
+      <>
         <Grid item xs={12} id="name" mt={2}>
           <CInput
             label="Milestone Name"
             placeholder="Enter Milestone Name..."
-            value={state.milestone_name}
+            value={
+              mode === "modal" && visibleEditModal
+                ? state.milestone_name
+                : mode === "form" && visibleEditModal
+                ? ""
+                : state.milestone_name
+            }
             onChange={(e) => {
               setState({ ...state, milestone_name: e.target.value });
               setErrObj({
@@ -444,8 +450,20 @@ export default function Milestone(props) {
               });
             }}
             inputProps={{ maxLength: 50 }}
-            error={errObj.nameErr}
-            helpertext={errObj.nameMsg}
+            error={
+              mode === "modal" && visibleEditModal
+                ? errObj.nameErr
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.nameErr
+            }
+            helpertext={
+              mode === "modal" && visibleEditModal
+                ? errObj.nameMsg
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.nameMsg
+            }
           />
         </Grid>
         <Grid item xs={12} id="desctiption">
@@ -454,7 +472,13 @@ export default function Milestone(props) {
             rows={3}
             label="Description:"
             placeholder="Write description here..."
-            value={state.description}
+            value={
+              mode === "modal" && visibleEditModal
+                ? state.description
+                : mode === "form" && visibleEditModal
+                ? ""
+                : state.description
+            }
             onChange={(e) => {
               setState({ ...state, description: e.target.value });
               setErrObj({
@@ -463,8 +487,20 @@ export default function Milestone(props) {
                 descriptionMsg: "",
               });
             }}
-            error={errObj.descriptionErr}
-            helpertext={errObj.descriptionMsg}
+            error={
+              mode === "modal" && visibleEditModal
+                ? errObj.descriptionErr
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.descriptionErr
+            }
+            helpertext={
+              mode === "modal" && visibleEditModal
+                ? errObj.descriptionMsg
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.descriptionMsg
+            }
           />
         </Grid>
         <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
@@ -472,7 +508,13 @@ export default function Milestone(props) {
             <FormControl
               variant="standard"
               fullWidth
-              error={errObj.startErr}
+              error={
+                mode === "modal" && visibleEditModal
+                  ? errObj.startErr
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.startErr
+              }
               style={{ position: "relative" }}
             >
               <InputLabel shrink htmlFor="start-date">
@@ -481,7 +523,15 @@ export default function Milestone(props) {
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   disablePast
-                  value={state.start_date ? new Date(state?.start_date) : null}
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? new Date(state.start_date)
+                      : mode === "form" && visibleEditModal
+                      ? null
+                      : state.start_date
+                      ? new Date(state?.start_date)
+                      : null
+                  }
                   onChange={(e, v) => {
                     setState({
                       ...state,
@@ -501,8 +551,18 @@ export default function Milestone(props) {
                   format="MMMM dd, yyyy"
                   slotProps={{
                     textField: {
-                      helperText: errObj.startMsg,
-                      error: errObj.startErr,
+                      helperText:
+                        mode === "modal" && visibleEditModal
+                          ? errObj.startMsg
+                          : mode === "form" && visibleEditModal
+                          ? ""
+                          : errObj.startMsg,
+                      error:
+                        mode === "modal" && visibleEditModal
+                          ? errObj.startErr
+                          : mode === "form" && visibleEditModal
+                          ? ""
+                          : errObj.startErr,
                       id: "start-date",
                     },
                   }}
@@ -514,7 +574,13 @@ export default function Milestone(props) {
             <FormControl
               variant="standard"
               fullWidth
-              error={errObj.endErr}
+              error={
+                mode === "modal" && visibleEditModal
+                  ? errObj.endErr
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.endErr
+              }
               style={{ position: "relative" }}
             >
               <InputLabel shrink htmlFor="end-date">
@@ -523,7 +589,15 @@ export default function Milestone(props) {
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   minDate={new Date(state?.start_date)}
-                  value={state?.end_date ? new Date(state?.end_date) : null}
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? new Date(state.end_date)
+                      : mode === "form" && visibleEditModal
+                      ? null
+                      : state?.end_date
+                      ? new Date(state?.end_date)
+                      : null
+                  }
                   onChange={(e) => {
                     setState({
                       ...state,
@@ -541,8 +615,18 @@ export default function Milestone(props) {
                   }}
                   slotProps={{
                     textField: {
-                      helperText: errObj.endMsg,
-                      error: errObj.endErr,
+                      helperText:
+                        mode === "modal" && visibleEditModal
+                          ? errObj.endMsg
+                          : mode === "form" && visibleEditModal
+                          ? ""
+                          : errObj.endMsg,
+                      error:
+                        mode === "modal" && visibleEditModal
+                          ? errObj.endErr
+                          : mode === "form" && visibleEditModal
+                          ? ""
+                          : errObj.endErr,
                       id: "end-date",
                     },
                   }}
@@ -573,11 +657,44 @@ export default function Milestone(props) {
             helpertext={errObj.amountMsg}
           />
         </Grid> */}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Grid container>
+        <Grid
+          item
+          container
+          xs={12}
+          pb={2}
+          pt={"25px"}
+          justifyContent={"space-between"}
+        >
+          <Typography
+            variant="h5"
+            style={{
+              fontFamily: "ElMessiri-SemiBold",
+            }}
+          >
+            Total Milestones Amount
+          </Typography>
+          <Typography
+            variant="h5"
+            style={{
+              fontFamily: "ElMessiri-SemiBold",
+            }}
+          >
+            AED {amounts.reduce((acc, curr) => acc + curr, 0)}
+          </Typography>
+        </Grid>
+        {renderMilestoneCreateForm("form")}
         <Grid item container alignItems={"center"}>
           <IconButton
             id="add-icon"
             onClick={() => {
-              validate();
+              validate(false);
             }}
             sx={{ p: 0 }}
           >
@@ -1023,6 +1140,72 @@ export default function Milestone(props) {
           Delete
         </MenuItem>
       </Menu>
+
+      {/* Edit details Modal */}
+      <Modal
+        open={visibleEditModal}
+        onClose={() =>
+          btnUpdateLoader === "update" ? null : setVisibleEditModal(false)
+        }
+        closeAfterTransition
+        disableAutoFocus
+        slotProps={{ backdrop: Backdrop }}
+        style={{ overflowY: "scroll" }}
+      >
+        <Fade in={visibleEditModal}>
+          <Box sx={style}>
+            <Grid container justifyContent="center" alignItems="center">
+              <Typography className={classes.forgotHeaderText}>
+                Update Milestone Details
+              </Typography>
+              <Grid item xs={12}>
+                {renderMilestoneCreateForm("modal")}
+              </Grid>
+
+              <Grid
+                item
+                container
+                columnGap={1}
+                justifyContent={"space-between"}
+              >
+                <Grid item xs={5.7}>
+                  <Button
+                    color="primary"
+                    fullWidth
+                    style={{ marginTop: 20, marginBottom: 20 }}
+                    onClick={() => {
+                      setVisibleEditModal(false);
+                      clearData();
+                    }}
+                    disabled={btnUpdateLoader === "update"}
+                  >
+                    Close
+                  </Button>
+                </Grid>
+
+                <Grid item xs={5.7}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    style={{ marginTop: 20, marginBottom: 20 }}
+                    onClick={() => {
+                      validate(true);
+                    }}
+                    disabled={btnUpdateLoader === "update"}
+                  >
+                    {btnUpdateLoader === "update" ? (
+                      <CircularProgress style={{ color: "#fff" }} size={26} />
+                    ) : (
+                      "Update"
+                    )}
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Box>
+        </Fade>
+      </Modal>
     </>
   );
 }
