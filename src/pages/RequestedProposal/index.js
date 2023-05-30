@@ -27,7 +27,6 @@ import { Setting } from "../../utils/Setting";
 export default function RequestedProposal() {
   const location = useLocation();
   const [villa, setVilla] = useState(location?.state?.villa);
-  console.log("villa====>>>>>", villa);
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
     : villa?.user_data || {};
@@ -126,11 +125,17 @@ export default function RequestedProposal() {
                       Request Date
                     </Typography>
                   </Grid>
-                  <Grid item lg={9} md={9} sm={6} xs={6}>
+                  <Grid
+                    item
+                    lg={9}
+                    md={9}
+                    sm={6}
+                    xs={6}
+                    style={{ marginTop: 5 }}
+                  >
                     <span
                       variant="contained"
                       style={{
-                        marginTop: 3,
                         backgroundColor: isSubmitted ? "#32D583" : "#E9B55C",
                         padding: 8,
                         fontSize: "10px",

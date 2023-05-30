@@ -310,11 +310,10 @@ export default function Summary(props) {
                     Request Date
                   </Typography>
                 </Grid>
-                <Grid item lg={9} md={9} sm={6} xs={6}>
+                <Grid item lg={9} md={9} sm={6} xs={6} style={{ marginTop: 5 }}>
                   <span
                     variant="contained"
                     style={{
-                      marginTop: 3,
                       backgroundColor: "#E9B55C",
                       padding: 8,
                       fontSize: "10px",
