@@ -17,6 +17,10 @@ import {
   TableRow,
   Typography,
   useMediaQuery,
+  Modal,
+  Fade,
+  Box,
+  Backdrop,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import useStyles from "./styles";
@@ -70,6 +74,7 @@ export default function Budget(props) {
   const { proposalDetails } = useSelector((state) => state.auth);
 
   const { setProposalDetails } = authActions;
+
   const initialFormvalues = {
     name: "",
     photo_url: [],
@@ -104,7 +109,21 @@ export default function Budget(props) {
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: sm ? 300 : 600,
+    bgcolor: "background.paper",
+    borderRadius: 1,
+    boxShadow: 24,
+    padding: "25px 25px 0px 25px",
+  };
+
   const [amounts, setAmounts] = useState([]);
+  const [visibleEditModal, setVisibleEditModal] = useState(false);
+  const [btnUpdateLoader, setBtnUpdateLoader] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -174,7 +193,7 @@ export default function Budget(props) {
     setBudgetDetails(dummyarr);
   };
 
-  const validate = () => {
+  const validate = (isUpdateModalVisible) => {
     const error = { ...errObj };
     let valid = true;
 
@@ -237,7 +256,7 @@ export default function Budget(props) {
     ) {
       valid = false;
       error.manpowerRateErr = true;
-      error.manpowerRateMsg = "Please enter valid manpower rate";
+      error.manpowerRateMsg = "Please enter valid manpower rate under 100";
     }
 
     if (!state?.days) {
@@ -268,6 +287,9 @@ export default function Budget(props) {
     setErrObj(error);
 
     if (valid) {
+      if (isUpdateModalVisible) {
+        setVisibleEditModal(false);
+      }
       if (
         _.isObject(selectedBudget?.data) &&
         !_.isEmpty(selectedBudget?.data)
@@ -312,6 +334,7 @@ export default function Budget(props) {
   };
 
   const handleEdit = (data, index) => {
+    setVisibleEditModal(true);
     setErrObj(errorObj);
 
     if (!selectedBudget) {
@@ -452,7 +475,7 @@ export default function Budget(props) {
     if (isArray(budgetDetails) && !isEmpty(budgetDetails)) {
       setVisibleFinal(true);
     } else {
-      validate();
+      validate(false);
       // toast.warning("Please add atleast one milestone");
     }
   };
@@ -551,44 +574,96 @@ export default function Budget(props) {
     return valid;
   }
 
-  return (
-    <>
-      <Grid container>
-        <Grid
-          item
-          container
-          xs={12}
-          justifyContent={"space-between"}
-          pt={"25px"}
-          pb={2}
-        >
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "ElMessiri-SemiBold",
-            }}
-          >
-            Total Budget amount
-          </Typography>
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "ElMessiri-SemiBold",
-            }}
-          >
-            AED{" "}
-            {(isArray(budgetDetails) &&
-              !isEmpty(budgetDetails) &&
-              budgetDetails?.reduce((acc, bud) => {
-                const amount =
-                  parseInt(bud?.material_unit_price || 0) *
-                    parseInt(bud?.qty || 0) +
-                  parseInt(bud?.manpower_rate || 0) * parseInt(bud?.days || 0);
-                return acc + amount;
-              }, 0)) ||
-              0}
-          </Typography>
-        </Grid>
+  function displayImagesView(mode) {
+    if (isArray(state.photo_origin) && state?.photo_origin?.length > 0) {
+     if (mode === "form" && visibleEditModal) {
+        return null;
+      } else {
+        return state?.photo_origin?.map((item, index) => {
+          let imgUrl = "";
+          if (item.image) {
+            imgUrl = item.image;
+          } else if (typeof item === "object" && item instanceof Blob) {
+            imgUrl = URL.createObjectURL(item);
+          } else {
+            imgUrl = item;
+          }
+          return (
+            <div
+              style={{
+                display: "flex",
+                border: "1px solid #F2F3F4",
+                borderRadius: 6,
+                marginBottom: 10,
+                padding: 3,
+              }}
+            >
+              <img
+                style={{
+                  width: 60,
+                  height: 70,
+                  borderRadius: 6,
+                  marginRight: 20,
+                  objectFit: "cover",
+                }}
+                src={imgUrl}
+                alt="Budget Photos"
+              />
+              <div style={{ margin: "auto 0" }}>
+                <Typography
+                  style={{
+                    fontFamily: "Roobert-Regular",
+                    fontWeight: "500",
+                    color: "#202939",
+                    fontSize: 18,
+                  }}
+                >
+                  {item?.name || `Budget Image ${index + 1}` || ""}
+                </Typography>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginLeft: "auto",
+                  marginRight: 10,
+                }}
+              >
+                <HighlightOffOutlined
+                  style={{
+                    zIndex: 10,
+                    cursor: "pointer",
+                    fontSize: 28,
+                    color: "#8C92A4",
+                  }}
+                  onClick={() => {
+                    let uploadID = "";
+                    if (state?.photo_url[index]?.image) {
+                      const nArr = [...state.photo_origin];
+                      const nArr1 = [...state.photo_url];
+                      nArr.splice(index, 1);
+                      nArr1.splice(index, 1);
+                      setState({
+                        ...state,
+                        photo_origin: nArr,
+                        photo_url: nArr1,
+                      });
+                    }
+                    uploadID = state?.photo_url[index]?.image_id;
+                    uploadID?.toString() && deletePhoto(uploadID, index);
+                  }}
+                />
+              </div>
+            </div>
+          );
+        });
+      }
+    }
+  }
+
+  function renderBudgetCreateForm(mode) {
+    return (
+      <>
         <Grid
           item
           xs={12}
@@ -596,7 +671,9 @@ export default function Budget(props) {
             position: "relative",
           }}
         >
-          {uploadLoader ? (
+          {uploadLoader &&
+          ((mode === "form" && visibleEditModal === false) ||
+            (mode === "modal" && visibleEditModal)) ? (
             <Grid
               item
               container
@@ -702,102 +779,19 @@ export default function Budget(props) {
             width: "100%",
           }}
         >
-          {isArray(state.photo_origin) &&
-            state?.photo_origin?.length > 0 &&
-            state?.photo_origin?.map((item, index) => {
-              let imgUrl = "";
-              if (item.image) {
-                imgUrl = item.image;
-              } else if (typeof item === "object" && item instanceof Blob) {
-                imgUrl = URL.createObjectURL(item);
-              } else {
-                imgUrl = item;
-              }
-              return (
-                <div
-                  style={{
-                    display: "flex",
-                    border: "1px solid #F2F3F4",
-                    borderRadius: 6,
-                    marginBottom: 10,
-                    padding: 3,
-                  }}
-                >
-                  <img
-                    style={{
-                      width: 60,
-                      height: 70,
-                      borderRadius: 6,
-                      marginRight: 20,
-                      objectFit: "cover",
-                    }}
-                    src={imgUrl}
-                    alt="Portfolio Photos"
-                  />
-                  <div style={{ margin: "auto 0" }}>
-                    <Typography
-                      style={{
-                        fontFamily: "Roobert-Regular",
-                        fontWeight: "500",
-                        color: "#202939",
-                        fontSize: 18,
-                      }}
-                    >
-                      {item?.name || `Portfolio Image ${index + 1}` || ""}
-                    </Typography>
-                    {/* <Typography
-                              style={{
-                                fontFamily: "Roobert-Regular",
-                                color: "#787B8C",
-                              }}
-                            >
-                              {isString(item?.image)
-                                ? ""
-                                : `${(item?.size / 1000).toFixed(2)} kb`}
-                            </Typography> */}
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      marginLeft: "auto",
-                      marginRight: 10,
-                    }}
-                  >
-                    <HighlightOffOutlined
-                      style={{
-                        zIndex: 10,
-                        cursor: "pointer",
-                        fontSize: 28,
-                        color: "#8C92A4",
-                      }}
-                      onClick={() => {
-                        let uploadID = "";
-                        if (state?.photo_url[index]?.image) {
-                          const nArr = [...state.photo_origin];
-                          const nArr1 = [...state.photo_url];
-                          nArr.splice(index, 1);
-                          nArr1.splice(index, 1);
-                          setState({
-                            ...state,
-                            photo_origin: nArr,
-                            photo_url: nArr1,
-                          });
-                        }
-                        uploadID = state?.photo_url[index]?.image_id;
-                        uploadID?.toString() && deletePhoto(uploadID, index);
-                      }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+          {displayImagesView(mode)}
         </Grid>
         <Grid item xs={12} id="bName" mt={2}>
           <CInput
             label="Budget Name"
             placeholder="Enter Budget Name..."
-            value={state.name}
+            value={
+              mode === "modal" && visibleEditModal
+                ? state.name
+                : mode === "form" && visibleEditModal
+                ? ""
+                : state.name
+            }
             onChange={(e) => {
               setState({ ...state, name: e.target.value });
               setErrObj({
@@ -807,8 +801,20 @@ export default function Budget(props) {
               });
             }}
             inputProps={{ maxLength: 50 }}
-            error={errObj.bNameErr}
-            helpertext={errObj.bNameMsg}
+            error={
+              mode === "modal" && visibleEditModal
+                ? errObj.bNameErr
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.bNameErr
+            }
+            helpertext={
+              mode === "modal" && visibleEditModal
+                ? errObj.bNameMsg
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.bNameMsg
+            }
           />
         </Grid>
 
@@ -816,7 +822,13 @@ export default function Budget(props) {
           <CInput
             label="Material type:"
             placeholder="marble, wood, etc..."
-            value={state.material_type}
+            value={
+              mode === "modal" && visibleEditModal
+                ? state.material_type
+                : mode === "form" && visibleEditModal
+                ? ""
+                : state.material_type
+            }
             onChange={(e) => {
               setState({ ...state, material_type: e.target.value });
               setErrObj({
@@ -826,8 +838,20 @@ export default function Budget(props) {
               });
             }}
             inputProps={{ maxLength: 50 }}
-            error={errObj.materialTypeErr}
-            helpertext={errObj.materialTypeMsg}
+            error={
+              mode === "modal" && visibleEditModal
+                ? errObj.materialTypeErr
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.materialTypeErr
+            }
+            helpertext={
+              mode === "modal" && visibleEditModal
+                ? errObj.materialTypeMsg
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.materialTypeMsg
+            }
           />
         </Grid>
         <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
@@ -850,7 +874,13 @@ export default function Budget(props) {
             <CAutocomplete
               label="Material unit:"
               placeholder="Enter material unit"
-              value={state.material_unit}
+              value={
+                mode === "modal" && visibleEditModal
+                  ? state.material_unit
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : state.material_unit
+              }
               onChange={(e, newValue) => {
                 setState({ ...state, material_unit: newValue });
                 setErrObj({
@@ -861,15 +891,33 @@ export default function Budget(props) {
               }}
               options={["tonns", "Kg", "g", "lbs", "liter", "ml"]}
               getOptionLabel={(option) => option}
-              error={errObj.unitErr}
-              helpertext={errObj.unitMsg}
+              error={
+                mode === "modal" && visibleEditModal
+                  ? errObj.unitErr
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.unitErr
+              }
+              helpertext={
+                mode === "modal" && visibleEditModal
+                  ? errObj.unitMsg
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.unitMsg
+              }
             />
           </Grid>
           <Grid item xs={12} md={4} id="price">
             <CInput
               label="Material unit price"
               placeholder="Enter amount here...."
-              value={state.material_unit_price}
+              value={
+                mode === "modal" && visibleEditModal
+                  ? state.material_unit_price
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : state.material_unit_price
+              }
               type="number"
               onChange={(e) => {
                 const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
@@ -887,8 +935,20 @@ export default function Budget(props) {
                   materialUnitPriceMsg: "",
                 });
               }}
-              error={errObj.materialUnitPriceErr}
-              helpertext={errObj.materialUnitPriceMsg}
+              error={
+                mode === "modal" && visibleEditModal
+                  ? errObj.materialUnitPriceErr
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.materialUnitPriceErr
+              }
+              helpertext={
+                mode === "modal" && visibleEditModal
+                  ? errObj.materialUnitPriceMsg
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.materialUnitPriceMsg
+              }
             />
           </Grid>
 
@@ -896,7 +956,13 @@ export default function Budget(props) {
             <CInput
               label="Quantity"
               placeholder="Enter quantity here...."
-              value={state.qty}
+              value={
+                mode === "modal" && visibleEditModal
+                  ? state.qty
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : state.qty
+              }
               type="tel"
               onChange={(e) => {
                 const bool = /^[0-9]+$/.test(Number(e.target.value));
@@ -913,8 +979,20 @@ export default function Budget(props) {
                 pattern: "[0-9]*", // Allow only digits
                 inputMode: "numeric", // Show numeric keyboard on mobile devices
               }}
-              error={errObj.quantityErr}
-              helpertext={errObj.quantityMsg}
+              error={
+                mode === "modal" && visibleEditModal
+                  ? errObj.quantityErr
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.quantityErr
+              }
+              helpertext={
+                mode === "modal" && visibleEditModal
+                  ? errObj.quantityMsg
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.quantityMsg
+              }
             />
           </Grid>
         </Grid>
@@ -924,7 +1002,13 @@ export default function Budget(props) {
             <CInput
               label="Manpower rate"
               placeholder="Enter amount here...."
-              value={state.manpower_rate}
+              value={
+                mode === "modal" && visibleEditModal
+                  ? state.manpower_rate
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : state.manpower_rate
+              }
               type="number"
               onChange={(e) => {
                 const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
@@ -939,8 +1023,20 @@ export default function Budget(props) {
                   manpowerRateMsg: "",
                 });
               }}
-              error={errObj.manpowerRateErr}
-              helpertext={errObj.manpowerRateMsg}
+              error={
+                mode === "modal" && visibleEditModal
+                  ? errObj.manpowerRateErr
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.manpowerRateErr
+              }
+              helpertext={
+                mode === "modal" && visibleEditModal
+                  ? errObj.manpowerRateMsg
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.manpowerRateMsg
+              }
             />
           </Grid>
 
@@ -948,7 +1044,13 @@ export default function Budget(props) {
             <CInput
               label="Days"
               placeholder="Enter Days"
-              value={state.days}
+              value={
+                mode === "modal" && visibleEditModal
+                  ? state.days
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : state.days
+              }
               type="tel"
               onChange={(e) => {
                 const bool = /^[0-9]+$/.test(Number(e.target.value));
@@ -965,15 +1067,33 @@ export default function Budget(props) {
                 pattern: "[0-9]*", // Allow only digits
                 inputMode: "numeric", // Show numeric keyboard on mobile devices
               }}
-              error={errObj.daysErr}
-              helpertext={errObj.daysMsg}
+              error={
+                mode === "modal" && visibleEditModal
+                  ? errObj.daysErr
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.daysErr
+              }
+              helpertext={
+                mode === "modal" && visibleEditModal
+                  ? errObj.daysMsg
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.daysMsg
+              }
             />
           </Grid>
           <Grid item xs={12} md={4} id="manpowerMilestone">
             <CAutocomplete
               label="Milestone"
               placeholder="Select milestone"
-              value={state?.milestone}
+              value={
+                mode === "modal" && visibleEditModal
+                  ? state?.milestone
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : state?.milestone
+              }
               onChange={(e, newValue) => {
                 setState({ ...state, milestone: newValue });
                 setErrObj({
@@ -984,8 +1104,20 @@ export default function Budget(props) {
               }}
               options={milestones}
               getOptionLabel={(option) => option.milestone_name}
-              error={errObj.manpowerMilestoneErr}
-              helpertext={errObj.manpowerMilestoneMsg}
+              error={
+                mode === "modal" && visibleEditModal
+                  ? errObj.manpowerMilestoneErr
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.manpowerMilestoneErr
+              }
+              helpertext={
+                mode === "modal" && visibleEditModal
+                  ? errObj.manpowerMilestoneMsg
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.manpowerMilestoneMsg
+              }
             />
           </Grid>
         </Grid>
@@ -995,7 +1127,13 @@ export default function Budget(props) {
             rows={3}
             label="Specifications:"
             placeholder="Write here..."
-            value={state.specification}
+            value={
+              mode === "modal" && visibleEditModal
+                ? state.specification
+                : mode === "form" && visibleEditModal
+                ? ""
+                : state.specification
+            }
             onChange={(e) => {
               setState({ ...state, specification: e.target.value });
               setErrObj({
@@ -1004,15 +1142,72 @@ export default function Budget(props) {
                 specificationsMsg: "",
               });
             }}
-            error={errObj.specificationsErr}
-            helpertext={errObj.specificationsMsg}
+            error={
+              mode === "modal" && visibleEditModal
+                ? errObj.specificationsErr
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.specificationsErr
+            }
+            helpertext={
+              mode === "modal" && visibleEditModal
+                ? errObj.specificationsMsg
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.specificationsMsg
+            }
           />
         </Grid>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Grid container>
+        <Grid
+          item
+          container
+          xs={12}
+          justifyContent={"space-between"}
+          pt={"25px"}
+          pb={2}
+        >
+          <Typography
+            variant="h5"
+            style={{
+              fontFamily: "ElMessiri-SemiBold",
+            }}
+          >
+            Total Budget amount
+          </Typography>
+          <Typography
+            variant="h5"
+            style={{
+              fontFamily: "ElMessiri-SemiBold",
+            }}
+          >
+            AED{" "}
+            {(isArray(budgetDetails) &&
+              !isEmpty(budgetDetails) &&
+              budgetDetails?.reduce((acc, bud) => {
+                const amount =
+                  parseInt(bud?.material_unit_price || 0) *
+                    parseInt(bud?.qty || 0) +
+                  parseInt(bud?.manpower_rate || 0) * parseInt(bud?.days || 0);
+                return acc + amount;
+              }, 0)) ||
+              0}
+          </Typography>
+        </Grid>
+
+        {renderBudgetCreateForm("form")}
+
         <Grid item container alignItems={"center"} mb={2}>
           <IconButton
             id="add-icon"
             onClick={() => {
-              validate();
+              validate(false);
             }}
             sx={{ p: 0 }}
           >
@@ -1468,6 +1663,73 @@ export default function Budget(props) {
           visible={proposalModal}
         />
       )}
+
+      {/* Edit details for Budget Modal */}
+      {visibleEditModal ? (
+        <Modal
+          open={visibleEditModal}
+          onClose={() =>
+            btnUpdateLoader === "update" ? null : setVisibleEditModal(false)
+          }
+          closeAfterTransition
+          disableAutoFocus
+          slotProps={{ backdrop: Backdrop }}
+          style={{ overflowY: "scroll" }}
+        >
+          <Fade in={visibleEditModal}>
+            <Box sx={style}>
+              <Grid
+                container
+                style={{ height: 600, overflow: "auto" }}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Typography className={classes.forgotHeaderText}>
+                  Update Budget Details
+                </Typography>
+                <Grid item xs={12}>
+                  {renderBudgetCreateForm("modal")}
+                </Grid>
+              </Grid>
+              <Grid
+                item
+                container
+                columnGap={1}
+                justifyContent={"space-between"}
+                alignItems="end"
+              >
+                <Grid item xs={5.7}>
+                  <Button
+                    color="primary"
+                    fullWidth
+                    style={{ marginTop: 20, marginBottom: 20 }}
+                    onClick={() => {
+                      setVisibleEditModal(false);
+                      clearData();
+                    }}
+                  >
+                    Close
+                  </Button>
+                </Grid>
+
+                <Grid item xs={5.7}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    style={{ marginTop: 20, marginBottom: 20 }}
+                    onClick={() => {
+                      validate(true);
+                    }}
+                  >
+                    Update
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+          </Fade>
+        </Modal>
+      ) : null}
     </>
   );
 }
