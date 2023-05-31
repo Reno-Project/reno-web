@@ -391,6 +391,29 @@ export default function RequestedProposal() {
                                         {item?.specification}
                                       </Typography>
                                     </Grid>
+                                    <Grid item lg={5} sm={12} md={6} xs={12}>
+                                      <Typography
+                                        className={classes.acctext}
+                                        px={2}
+                                      >
+                                      Total amount
+                                      </Typography>
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      lg={7}
+                                      sm={12}
+                                      md={6}
+                                      xs={12}
+                                      textAlign={"end"}
+                                    >
+                                      <Typography
+                                        px={2}
+                                        className={classes.accRightText}
+                                      >
+                                      AED  { (item?.material_unit_price *item?.qty) +(item?.manpower_rate * item?.days)}
+                                      </Typography>
+                                    </Grid>
                                     <Table className={classes.table}>
                                       <TableRow>
                                         <TableCell variant="head">
@@ -401,6 +424,9 @@ export default function RequestedProposal() {
                                         </TableCell>
                                         <TableCell variant="head">
                                           Quantity
+                                        </TableCell>
+                                        <TableCell variant="head">
+                                          Amount
                                         </TableCell>
                                       </TableRow>
                                       <TableRow key={item.id}>
@@ -420,6 +446,11 @@ export default function RequestedProposal() {
                                         >
                                           {item?.qty}
                                         </TableCell>
+                                        <TableCell
+                                          className={classes.accRightText}
+                                        >
+                                        AED {item?.material_unit_price*item?.qty}
+                                        </TableCell>
                                       </TableRow>
                                       <TableRow>
                                         <TableCell variant="head">
@@ -427,6 +458,9 @@ export default function RequestedProposal() {
                                         </TableCell>
                                         <TableCell variant="head" colSpan={2}>
                                           Days
+                                        </TableCell>
+                                        <TableCell variant="head" colSpan={2}>
+                                          Amount
                                         </TableCell>
                                       </TableRow>
                                       <TableRow>
@@ -440,6 +474,12 @@ export default function RequestedProposal() {
                                           className={classes.accRightText}
                                         >
                                           {item?.days}
+                                        </TableCell>
+                                        <TableCell
+                                          colSpan={2}
+                                          className={classes.accRightText}
+                                        >
+                                          AED {item?.manpower_rate * item?.days}
                                         </TableCell>
                                       </TableRow>
                                     </Table>
@@ -547,13 +587,13 @@ export default function RequestedProposal() {
                                   xs={12}
                                   textAlign={"end"}
                                 >
-                                  {item?.unit_Type === 1 ? (
+                                  {item?.unit_Type?.id === 1 ? (
                                     <Typography
                                       className={classes.accRightText}
                                     >
                                       Villa
                                     </Typography>
-                                  ) : item?.unit_Type === 2 ? (
+                                  ) : item?.unit_Type?.id === 2 ? (
                                     <Typography
                                       className={classes.accRightText}
                                     >

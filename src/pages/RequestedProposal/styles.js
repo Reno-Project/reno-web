@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     "& td": {
-      width: "33%",
+      width: "30%",
       fontFamily: "Roobert-Regular !important",
     },
     "& .MuiTableCell-head": {
