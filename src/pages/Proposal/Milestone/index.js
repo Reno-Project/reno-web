@@ -113,10 +113,8 @@ export default function Milestone(props) {
           end_date: null,
         }
       );
-      setMilestones(proposalDetails?.milestone_details?.milestones || []);
-    } else {
-      getMilestoneList();
     }
+    getMilestoneList();
   }, []);
 
   useEffect(() => {
@@ -183,7 +181,21 @@ export default function Milestone(props) {
         {}
       );
       if (response.success) {
-        setMilestones(response?.data);
+        if (
+          proposalDetails?.milestone_details?.previous ||
+          (isArray(proposalDetails?.milestone_details?.milestone) &&
+            !isEmpty(proposalDetails?.milestone_details?.milestone))
+        ) {
+          setMilestones(proposalDetails?.milestone_details?.milestone);
+        } else if (
+          !proposalDetails?.milestone_details?.previous &&
+          isArray(response?.data) &&
+          !isEmpty(response?.data)
+        ) {
+          setMilestones(response?.data);
+        } else {
+          setMilestones([]);
+        }
       }
       setmilestoneLoader(false);
     } catch (error) {
@@ -242,7 +254,7 @@ export default function Milestone(props) {
             start_date: null,
             end_date: null,
           },
-          milestones: [],
+          milestone: [],
           previous: false,
         };
         dispatch(
@@ -396,8 +408,29 @@ export default function Milestone(props) {
         newArray[selectedBudget?.index] = state; // modify the copy
         setMilestones(newArray);
         setSelectedBudget({});
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            milestone_details: {
+              ...proposalDetails.milestone_details,
+              milestone: newArray,
+            },
+          })
+        );
       } else {
         setMilestones((arr) => [...arr, state]);
+        let milestone_details = {
+          formvalues: {},
+          milestone: milestones ? [...milestones, state] : [state],
+        };
+        setTimeout(() => {
+          dispatch(
+            setProposalDetails({
+              ...proposalDetails,
+              milestone_details,
+            })
+          );
+        }, 500);
       }
       clearData();
     }
@@ -691,29 +724,17 @@ export default function Milestone(props) {
         </Grid>
         {renderMilestoneCreateForm("form")}
         <Grid item container alignItems={"center"}>
-          <IconButton
-            id="add-icon"
+          <Button
+            variant="contained"
             onClick={() => {
               validate(false);
             }}
-            sx={{ p: 0 }}
           >
-            <AddCircleOutlineOutlinedIcon style={{ color: color.primary }} />
-          </IconButton>
-          <Typography
-            variant="button"
-            component={"label"}
-            htmlFor="add-icon"
-            fontFamily={"Roobert-Regular"}
-            style={{
-              cursor: "pointer",
-              height: 24,
-              marginLeft: 8,
-              color: color.primary,
-            }}
-          >
+            <AddCircleOutlineOutlinedIcon
+              style={{ color: color.white, marginRight: 4 }}
+            />
             Add Milestone
-          </Typography>
+          </Button>
         </Grid>
         {milestoneLoader ? (
           <Grid
@@ -1059,7 +1080,7 @@ export default function Milestone(props) {
               onClick={() => {
                 const milestone_details = {
                   formvalues: state,
-                  milestones: milestones,
+                  milestone: milestones,
                   previous: true,
                 };
                 dispatch(
@@ -1077,7 +1098,7 @@ export default function Milestone(props) {
               {buttonLoader ? (
                 <CircularProgress size={26} style={{ color: "#fff" }} />
               ) : (
-                "Continue"
+                "Save & Continue"
               )}
             </Button>
           </Grid>

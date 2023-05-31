@@ -17,7 +17,7 @@ import theme from "../../../config/theme";
 import Milestone from "../../Proposal/Milestone";
 import Budget from "../../Proposal/Budget";
 import CInput from "../../../components/CInput";
-import { isArray, isEmpty } from "lodash";
+import _, { cloneDeep, isArray, isEmpty, isObject } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
 import ConfirmModel from "../../../components/ConfirmModel";
@@ -49,9 +49,11 @@ export default function Summary(props) {
   const classes = useStyles();
   const navigate = useNavigate();
   const { proposalDetails } = useSelector((state) => state.auth);
+  console.log("proposalDetails====>>>>>", proposalDetails);
   const location = useLocation();
 
   const createProposal = location?.state?.create_proposal || false;
+  console.log("createProposal====>>>>>", createProposal);
   const villa = location?.state ? location?.state : {};
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
@@ -82,26 +84,25 @@ export default function Summary(props) {
   const [dpId, setDpId] = useState("");
 
   useEffect(() => {
-    if (!createProposal) {
+    if (
+      !createProposal &&
+      (!_?.isObject(proposalDetails) || isEmpty(proposalDetails))
+    ) {
       setScope(villa?.proposal?.scope_of_work);
       setProjectType(villa?.project_type);
+    } else if (_?.isObject(proposalDetails) && !isEmpty(proposalDetails)) {
+      setScope(proposalDetails?.scope_of_work);
+      setProjectType(proposalDetails?.project_type || "");
+      setName(proposalDetails?.name || "");
+      setDescription(proposalDetails?.description || "");
+      setEmail(proposalDetails?.email || "");
+
+      setDocument(proposalDetails?.project || []);
+      getprojectList();
     } else {
       getprojectList();
     }
   }, []);
-
-  useEffect(() => {
-    if (proposalDetails?.milestone_details?.previous) {
-      setScope(proposalDetails?.scope_of_work);
-      if (createProposal) {
-        setProjectType(proposalDetails?.project_type || "");
-        setName(proposalDetails?.name || "");
-        setDescription(proposalDetails?.description || "");
-        setEmail(proposalDetails?.email || "");
-        setDocument(proposalDetails?.project || []);
-      }
-    }
-  }, [proposalDetails]);
 
   function validation() {
     const error = { ...errObj };
@@ -156,6 +157,11 @@ export default function Summary(props) {
 
   async function createproposalApicall() {
     setloader(true);
+    const filterDocs =
+      (isArray(document) &&
+        !isEmpty(document) &&
+        document?.filter((obj) => !obj.id)) ||
+      [];
     const data = createProposal
       ? {
           scope_of_work: scope,
@@ -163,7 +169,7 @@ export default function Summary(props) {
           name,
           description: description,
           email,
-          project: document,
+          project: filterDocs,
         }
       : {
           proposal_id: villa?.id,
@@ -171,7 +177,7 @@ export default function Summary(props) {
           project_type: villa?.project_type,
         };
 
-    if (createProposal && proposalDetails?.milestone_details?.previous) {
+    if (createProposal && proposalDetails?.id) {
       data.id = proposalDetails?.id;
     }
 
@@ -194,7 +200,7 @@ export default function Summary(props) {
                 name,
                 description: description,
                 email,
-                project: document,
+                project: response?.data?.image || [],
               })
             )
           : dispatch(
@@ -204,6 +210,7 @@ export default function Summary(props) {
                 project_type: projectType,
               })
             );
+        setDocument(response?.data?.image);
         setDisableMilestone(false);
         setDpId(response?.data?.proposal_id);
         setTimeout(() => {
@@ -248,6 +255,29 @@ export default function Summary(props) {
     }
     return valid;
   }
+
+  async function deletePhoto(id, ind) {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.deleteTemplate}/${id}`,
+        "GET",
+        {}
+      );
+      if (response?.success) {
+        toast.success(response?.message, { toastId: 11 });
+        const nArr = [...document];
+        nArr.splice(ind, 1);
+        setDocument(nArr);
+        dispatch(setProposalDetails({ ...proposalDetails, project: nArr }));
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error.toString() || "Somthing went wromg try again later");
+    }
+  }
+
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
       <Grid
@@ -310,10 +340,11 @@ export default function Summary(props) {
                     Request Date
                   </Typography>
                 </Grid>
-                <Grid item lg={9} md={9} sm={6} xs={6} style={{ marginTop: 5 }}>
+                <Grid item lg={9} md={9} sm={6} xs={6}>
                   <span
                     variant="contained"
                     style={{
+                      marginTop: 3,
                       backgroundColor: "#E9B55C",
                       padding: 8,
                       fontSize: "10px",
@@ -591,10 +622,10 @@ export default function Summary(props) {
                               document?.length > 0 &&
                               document?.map((item, index) => {
                                 let imgUrl = "";
-                                if (typeof item === "object") {
-                                  imgUrl = URL.createObjectURL(item);
+                                if (item?.id && typeof item === "object") {
+                                  imgUrl = item?.image;
                                 } else {
-                                  imgUrl = item;
+                                  imgUrl = URL.createObjectURL(item);
                                 }
                                 return (
                                   <div
@@ -653,9 +684,19 @@ export default function Summary(props) {
                                         //     deletePhoto(uploadID, index);
                                         // }}
                                         onClick={() => {
-                                          const nArr = [...document];
-                                          nArr.splice(index, 1);
-                                          setDocument(nArr);
+                                          if (item?.id) {
+                                            deletePhoto(item?.id, index);
+                                          } else {
+                                            const nArr = [...document];
+                                            nArr.splice(index, 1);
+                                            setDocument(nArr);
+                                            dispatch(
+                                              setProposalDetails({
+                                                ...proposalDetails,
+                                                project: nArr,
+                                              })
+                                            );
+                                          }
                                         }}
                                       />
                                     </div>
@@ -668,179 +709,6 @@ export default function Summary(props) {
                     </Grid>
                   </>
                 )}
-                {/* {!createProposal && (
-                  <>
-                    <Grid item lg={12} sm={12} md={12} xs={12}>
-                      <Typography className={classes.MainTitle}>
-                        Project Informations
-                      </Typography>
-                    </Grid>
-                    <Grid
-                      container
-                      alignItems="center"
-                      justifyContent={"flex-end"}
-                      style={{ paddingTop: 25, paddingBottom: 25 }}
-                    >
-                      <Grid
-                        item
-                        lg={9}
-                        sm={9}
-                        md={9}
-                        xs={12}
-                        textAlign={"start"}
-                      >
-                        <Typography className={classes.titleStyle}>
-                          Project Name:
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={3} sm={3} md={3} xs={12} textAlign={"end"}>
-                        <Typography className={classes.titleStyleRight}>
-                          {villa?.name}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                   <Grid
-                      container
-                      alignItems="center"
-                      justifyContent={"flex-end"}
-                    >
-                      <Grid item lg={12} sm={12} md={12} xs={12}>
-                        <Typography className={classes.titleStyle}>
-                          Project Descriptions:
-                        </Typography>
-                      </Grid>
-                      <Grid
-                        item
-                        lg={12}
-                        sm={12}
-                        md={12}
-                        xs={12}
-                        style={{
-                          backgroundColor: "#F5F6F8",
-                          padding: "11px 15px",
-                          gap: "10px",
-                          margin: "10px 0px",
-                        }}
-                      >
-                        <Typography className={classes.paraStyle}>
-                          {villa?.description}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                   <Grid
-                      container
-                      alignItems="center"
-                      justifyContent={"flex-end"}
-                      rowSpacing={2}
-                    >
-                      <Grid item lg={3} sm={3} md={3} xs={3}>
-                        <Typography className={classes.acctext}>
-                          Property Type:
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                        <Typography className={classes.accRightText}>
-                          {villa?.project_type}
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={3} sm={3} md={3} xs={3}>
-                        <Typography className={classes.acctext}>
-                          Bathroom:
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                        <Typography className={classes.accRightText}>
-                          {villa?.project?.bathroom}
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={3} sm={3} md={3} xs={3}>
-                        <Typography className={classes.acctext}>
-                          Bedroom:
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                        <Typography className={classes.accRightText}>
-                          {villa?.project?.badroom}
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={3} sm={3} md={3} xs={3}>
-                        <Typography className={classes.acctext}>
-                          Indoor Space:
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                        <Typography className={classes.accRightText}>
-                          1600 Sqm
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={3} sm={3} md={3} xs={3}>
-                        <Typography className={classes.acctext}>
-                          Outdoor Space:
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                        <Typography className={classes.accRightText}>
-                          450 Sqm
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={3} sm={3} md={3} xs={3}>
-                        <Typography className={classes.acctext}>
-                          Project Budget:
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={9} sm={9} md={9} xs={9} textAlign={"end"}>
-                        <Typography className={classes.accRightText}>
-                          $3000-$4000
-                        </Typography>
-                      </Grid>
-                      <Grid item lg={9} sm={9} md={9} xs={9}>
-                        <Typography className={classes.acctext}>
-                          Project Location:
-                        </Typography>
-                      </Grid>
-                      <Grid
-                        item
-                        container
-                        lg={3}
-                        sm={3}
-                        md={3}
-                        xs={3}
-                        justifyContent={"flex-end"}
-                        wrap="nowrap"
-                      >
-                        <NavLink>
-                          <Typography className={classes.linkText}>
-                            View Map
-                          </Typography>
-                        </NavLink>
-                        <img
-                          alt="logo"
-                          src={Images.Location}
-                          // style={{ width: '12%' }}
-                        />
-                      </Grid>
-                    </Grid>
-                    <Grid item container alignContent={"center"}>
-                      <Grid item lg={12}>
-                        {imageArray.map((item, index) => {
-                          return (
-                            <img
-                              key={index}
-                              alt="logo"
-                              src={item.image}
-                              style={{
-                                width: "190px",
-                                height: "129px",
-                                borderRadius: "7px",
-                                margin: "15px 5px",
-                              }}
-                            />
-                          );
-                        })}
-                      </Grid>
-                    </Grid> 
-                  </>
-                )} */}
 
                 <Grid
                   item

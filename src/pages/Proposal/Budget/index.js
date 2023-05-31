@@ -30,7 +30,7 @@ import CInput from "../../../components/CInput";
 import { useTheme } from "@emotion/react";
 import Images from "../../../config/images";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import _, { isArray, isEmpty } from "lodash";
+import _, { isArray, isEmpty, isNull, isObject } from "lodash";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -90,6 +90,7 @@ export default function Budget(props) {
     updatedAt: moment().format("MMMM DD, YYYY"),
   };
   const [state, setState] = useState(initialFormvalues);
+  console.log("state====>>>>>", state);
   const [budgetDetails, setBudgetDetails] = useState([]);
   const [budgetLoader, setBudgetLoader] = useState(false);
   const [milestones, setMilestones] = useState([]);
@@ -124,19 +125,19 @@ export default function Budget(props) {
   const [amounts, setAmounts] = useState([]);
   const [visibleEditModal, setVisibleEditModal] = useState(false);
   const [btnUpdateLoader, setBtnUpdateLoader] = useState(false);
+  console.log("selectedBudget====>>>>>", selectedBudget);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (proposalDetails?.budget_details?.previous) {
-      setBudgetDetails(proposalDetails?.budget_details?.budgets || []);
-    } else {
-      getBudgetList();
-    }
+    getBudgetList();
     getMilestoneList();
   }, []);
 
   useEffect(() => {
-    if (proposalDetails?.budget_details?.previous) {
+    if (
+      _.isObject(proposalDetails?.budget_details?.formvalues?.milestone) &&
+      proposalDetails?.budget_details?.formvalues?.milestone?.id
+    ) {
       const milestoneValue = milestones.find(
         (milestone) =>
           milestone.id ===
@@ -170,7 +171,17 @@ export default function Budget(props) {
         {}
       );
       if (response.success) {
-        if (isArray(response?.data) && !isEmpty(response?.data)) {
+        if (
+          proposalDetails?.budget_details?.previous ||
+          (isArray(proposalDetails?.budget_details?.budgets) &&
+            !isEmpty(proposalDetails?.budget_details?.budgets))
+        ) {
+          setBudgetDetails(proposalDetails?.budget_details?.budgets);
+        } else if (
+          !proposalDetails?.budget_details?.previous &&
+          isArray(response?.data) &&
+          !isEmpty(response?.data)
+        ) {
           const modifiedArray = response?.data?.map((item) => ({
             ...item,
             photo_origin: item.photo_url,
@@ -215,58 +226,127 @@ export default function Budget(props) {
       error.materialTypeMsg = "Please enter the material type";
     }
 
-    const regex = /^\d+(\.\d+)?$/;
-    if (!state.material_unit_price) {
-      valid = false;
-      error.materialUnitPriceErr = true;
-      error.materialUnitPriceMsg = "Please enter the material unit price";
-    } else if (
-      !regex.test(state.material_unit_price) ||
-      parseInt(state.material_unit_price) <= 0
-    ) {
-      valid = false;
-      error.materialUnitPriceErr = true;
-      error.materialUnitPriceMsg = "Please enter valid material unit price";
-    }
     const positiveIntRegex = /^[1-9]\d*$/;
-    if (!state?.qty) {
-      valid = false;
-      error.quantityErr = true;
-      error.quantityMsg = "Please select the material qty";
-    } else if (!positiveIntRegex.test(state?.qty)) {
-      valid = false;
-      error.quantityErr = true;
-      error.quantityMsg = "Please enter valid material qty";
-    }
+    const regex = /^\d+(\.\d+)?$/;
 
-    if (!state.material_unit) {
-      valid = false;
-      error.unitErr = true;
-      error.unitMsg = "Please enter material unit";
-    }
-
-    if (!state?.manpower_rate) {
-      valid = false;
-      error.manpowerRateErr = true;
-      error.manpowerRateMsg = "Please enter the manpower rate";
-    } else if (
-      !regex.test(state.manpower_rate) ||
-      parseInt(state.manpower_rate) <= 0 ||
-      parseInt(state.manpower_rate) > 100
+    if (
+      isEmpty(state.material_unit_price?.toString()) &&
+      isEmpty(state.material_type?.toString()) &&
+      isEmpty(state?.manpower_rate?.toString()) &&
+      isEmpty(state?.days?.toString()) &&
+      isEmpty(state?.qty?.toString()) &&
+      isNull(state?.material_unit)
     ) {
-      valid = false;
-      error.manpowerRateErr = true;
-      error.manpowerRateMsg = "Please enter valid manpower rate under 100";
-    }
+      if (isEmpty(state.material_unit_price?.toString())) {
+        valid = false;
+        error.materialUnitPriceErr = true;
+        error.materialUnitPriceMsg = "Please enter the material unit price";
+      } else if (
+        !regex.test(state.material_unit_price) ||
+        parseInt(state.material_unit_price) <= 0
+      ) {
+        valid = false;
+        error.materialUnitPriceErr = true;
+        error.materialUnitPriceMsg = "Please enter valid material unit price";
+      }
+      if (isEmpty(state?.qty?.toString())) {
+        valid = false;
+        error.quantityErr = true;
+        error.quantityMsg = "Please select the material qty";
+      } else if (!positiveIntRegex.test(state?.qty)) {
+        valid = false;
+        error.quantityErr = true;
+        error.quantityMsg = "Please enter valid material qty";
+      }
 
-    if (!state?.days) {
-      valid = false;
-      error.daysErr = true;
-      error.daysMsg = "Please select the days";
-    } else if (!positiveIntRegex.test(state?.days)) {
-      valid = false;
-      error.quantityErr = true;
-      error.quantityMsg = "Please enter valid days";
+      if (isNull(state.material_unit)) {
+        valid = false;
+        error.unitErr = true;
+        error.unitMsg = "Please enter material unit";
+      }
+
+      if (isEmpty(state?.manpower_rate?.toString())) {
+        valid = false;
+        error.manpowerRateErr = true;
+        error.manpowerRateMsg = "Please enter the manpower rate";
+      } else if (
+        !regex.test(state.manpower_rate) ||
+        parseInt(state.manpower_rate) <= 0 ||
+        parseInt(state.manpower_rate) > 100
+      ) {
+        valid = false;
+        error.manpowerRateErr = true;
+        error.manpowerRateMsg = "Please enter valid manpower rate under 100";
+      }
+
+      if (isEmpty(state?.days?.toString())) {
+        valid = false;
+        error.daysErr = true;
+        error.daysMsg = "Please select the days";
+      } else if (!positiveIntRegex.test(state?.days)) {
+        valid = false;
+        error.quantityErr = true;
+        error.quantityMsg = "Please enter valid days";
+      }
+    } else if (
+      !isEmpty(state.material_unit_price?.toString()) ||
+      !isNull(state.material_unit) ||
+      !isEmpty(state?.qty?.toString())
+    ) {
+      if (!state.material_unit_price) {
+        valid = false;
+        error.materialUnitPriceErr = true;
+        error.materialUnitPriceMsg = "Please enter the material unit price";
+      } else if (
+        !regex.test(state.material_unit_price) ||
+        parseInt(state.material_unit_price) <= 0
+      ) {
+        valid = false;
+        error.materialUnitPriceErr = true;
+        error.materialUnitPriceMsg = "Please enter valid material unit price";
+      }
+      if (isEmpty(state?.qty?.toString())) {
+        valid = false;
+        error.quantityErr = true;
+        error.quantityMsg = "Please select the material qty";
+      } else if (!positiveIntRegex.test(state?.qty)) {
+        valid = false;
+        error.quantityErr = true;
+        error.quantityMsg = "Please enter valid material qty";
+      }
+
+      if (isNull(state.material_unit)) {
+        valid = false;
+        error.unitErr = true;
+        error.unitMsg = "Please enter material unit";
+      }
+    } else if (
+      !isEmpty(state?.manpower_rate?.toString()) ||
+      !isEmpty(state?.days?.toString())
+    ) {
+      if (isEmpty(state?.manpower_rate?.toString())) {
+        valid = false;
+        error.manpowerRateErr = true;
+        error.manpowerRateMsg = "Please enter the manpower rate";
+      } else if (
+        !regex.test(state.manpower_rate) ||
+        parseInt(state.manpower_rate) <= 0 ||
+        parseInt(state.manpower_rate) > 100
+      ) {
+        valid = false;
+        error.manpowerRateErr = true;
+        error.manpowerRateMsg = "Please enter valid manpower rate under 100";
+      }
+
+      if (isEmpty(state?.days?.toString())) {
+        valid = false;
+        error.daysErr = true;
+        error.daysMsg = "Please select the days";
+      } else if (!positiveIntRegex.test(state?.days)) {
+        valid = false;
+        error.quantityErr = true;
+        error.quantityMsg = "Please enter valid days";
+      }
     }
 
     if (
@@ -298,8 +378,31 @@ export default function Budget(props) {
         newArray[selectedBudget?.index] = state; // modify the copy
         setBudgetDetails(newArray);
         setSelectedBudget({});
+        console.log("newArray====>>>>>", newArray);
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            budget_details: {
+              ...proposalDetails.budget_details,
+              budgets: newArray,
+            },
+          })
+        );
       } else {
         setBudgetDetails((arr) => [...arr, state]);
+        let budget_details = {
+          formvalues: {},
+          budgets: budgetDetails ? [...budgetDetails, state] : [state],
+        };
+
+        setTimeout(() => {
+          dispatch(
+            setProposalDetails({
+              ...proposalDetails,
+              budget_details,
+            })
+          );
+        }, 500);
       }
       clearData();
     } else {
@@ -489,19 +592,13 @@ export default function Budget(props) {
     if (!data) {
       return;
     } else {
-      const imgUrl = URL.createObjectURL(data);
-      return (
-        <img
-          style={{
-            width: md ? 150 : 220,
-            maxHeight: 170,
-            objectFit: "contain",
-            borderRadius: 4,
-          }}
-          src={imgUrl}
-          alt=""
-        />
-      );
+      const { path, originalname, mimetype } = data;
+      const fileContent = [path];
+      const file = new File(fileContent, originalname, { type: mimetype });
+      console.log("file====>>>>>", file);
+      const fileUrl = URL.createObjectURL(file);
+      console.log("fileUrl====>>>>>", fileUrl);
+      return fileUrl;
     }
   }
 
@@ -522,7 +619,11 @@ export default function Budget(props) {
         response?.data?.map((item) => nArr.push(item));
 
         const nArr1 = state.photo_origin ? [...state.photo_origin] : [];
-        img.map((item) => nArr1.push(item));
+        for (let i = 0; i < img.length; i++) {
+          const base64Data = await convertToBase64(img[i]);
+          console.log("base64Data====>>>>>", base64Data);
+          nArr1.push(base64Data);
+        }
         setState({ ...state, photo_url: nArr, photo_origin: nArr1 });
 
         setErrObj({
@@ -564,6 +665,21 @@ export default function Budget(props) {
     }
   }
 
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
   function checkImgSize(img) {
     let valid = true;
     if (img.size > 3145728) {
@@ -576,7 +692,7 @@ export default function Budget(props) {
 
   function displayImagesView(mode) {
     if (isArray(state.photo_origin) && state?.photo_origin?.length > 0) {
-     if (mode === "form" && visibleEditModal) {
+      if (mode === "form" && visibleEditModal) {
         return null;
       } else {
         return state?.photo_origin?.map((item, index) => {
@@ -1254,21 +1370,18 @@ export default function Budget(props) {
                 <Grid item container wrap={sm ? "wrap" : "nowrap"}>
                   <Grid item sx={12} justifyContent={"flex-start"}>
                     {isArray(item?.photo_url) && !isEmpty(item?.photo_url) && (
-                      <img
-                        key={item?.photo_url[0].id}
-                        src={
-                          (typeof item?.photo_url[0]?.image === "string"
-                            ? item?.photo_url[0]?.image
-                            : URL.createObjectURL(item?.photo_origin[0])) || ""
-                        }
-                        alt={""}
-                        style={{
-                          width: md ? 150 : 220,
-                          maxHeight: 170,
-                          objectFit: "contain",
-                          borderRadius: 4,
-                        }}
-                      />
+                      <>
+                        <img
+                          style={{
+                            width: md ? 150 : 220,
+                            maxHeight: 170,
+                            objectFit: "contain",
+                            borderRadius: 4,
+                          }}
+                          src={item?.photo_origin[0]}
+                          alt="budget"
+                        />
+                      </>
                     )}
                   </Grid>
                   <Grid
@@ -1400,6 +1513,15 @@ export default function Budget(props) {
                             >
                               Days
                             </TableCell>
+                            <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Roobert-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Amount
+                            </TableCell>
                             {/* <TableCell
                               style={{
                                 color: color.captionText,
@@ -1435,6 +1557,14 @@ export default function Budget(props) {
                                 {item?.days || "-"}
                               </Typography>
                             </TableCell>
+                            <TableCell align="right">
+                              <Typography fontFamily={"ElMessiri-Regular"}>
+                                AED{" "}
+                                {parseInt(item.material_unit_price || 0) *
+                                  parseInt(item.qty || 0)}
+                              </Typography>
+                            </TableCell>
+
                             {/* <TableCell align="right">
                               <Typography fontFamily={"ElMessiri-Regular"}>
                                 {item?.manpowerStatus || "-"}
@@ -1498,15 +1628,6 @@ export default function Budget(props) {
                             >
                               Quantity
                             </TableCell>
-                            {/* <TableCell
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                              align="right"
-                            >
-                              Status
-                            </TableCell>
                             <TableCell
                               style={{
                                 color: color.captionText,
@@ -1514,8 +1635,8 @@ export default function Budget(props) {
                               }}
                               align="right"
                             >
-                              Last Change
-                            </TableCell> */}
+                              Amount
+                            </TableCell>
                           </TableRow>
                           <TableRow key={"Manpower"}>
                             <TableCell align="right">
@@ -1540,16 +1661,13 @@ export default function Budget(props) {
                                 {item?.qty || "-"}
                               </Typography>
                             </TableCell>
-                            {/* <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                {"Pending" || "-"}
-                              </Typography>
-                            </TableCell>
                             <TableCell align="right">
                               <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.materialLastChange || "-"}
+                                AED{" "}
+                                {parseInt(item.manpower_rate || 0) *
+                                  parseInt(item.days || 0)}
                               </Typography>
-                            </TableCell> */}
+                            </TableCell>
                           </TableRow>
                         </TableBody>
                       </Table>
