@@ -500,7 +500,7 @@ export default function RequestedProposal() {
                         component={"span"}
                         className={classes.accRightText}
                       >
-                        {moment(villa?.start_date).format("DD-MM-YYYY")}
+                     {moment(villa?.start_date,'DD/MM/YYYY').format("DD-MM-YYYY")}
                       </Typography>
                     </Grid>
                     <Grid item lg={6} sm={12} md={6} xs={12} textAlign={"end"}>
@@ -515,7 +515,7 @@ export default function RequestedProposal() {
                         component={"span"}
                         className={classes.accRightText}
                       >
-                        {moment(villa?.end_date).format("DD-MM-YYYY")}
+                      {moment(villa?.end_date,'DD/MM/YYYY').format("DD-MM-YYYY")}
                       </Typography>
                     </Grid>
                   </>
@@ -530,8 +530,7 @@ export default function RequestedProposal() {
                       justifyContent={"flex-end"}
                       rowSpacing={2}
                     >
-                      {villa?.project_type?.toLowerCase() ===
-                      "Interior design".toLowerCase()
+                      {villa?.exp_id == 1
                         ? villa?.form_json?.map((item, index) => {
                             return (
                               <>
@@ -689,8 +688,7 @@ export default function RequestedProposal() {
                               </>
                             );
                           })
-                        : villa?.project_type?.toLowerCase() ===
-                          "Home renovation".toLowerCase()
+                        : villa?.exp_id == 3
                         ? villa?.form_json?.map((item, index) => {
                             return (
                               <>
@@ -848,8 +846,7 @@ export default function RequestedProposal() {
                               </>
                             );
                           })
-                        : villa?.project_type?.toLowerCase() ===
-                          "Landscaping".toLowerCase()
+                        : villa?.exp_id == 5
                         ? villa?.form_json?.map((item, index) => {
                             return (
                               <>
@@ -903,12 +900,11 @@ export default function RequestedProposal() {
                               </>
                             );
                           })
-                        : villa?.project_type?.toLowerCase() ===
-                          "Kitchen".toLowerCase()
+                        : villa?.exp_id == 2
                         ? villa?.form_json?.map((item, index) => {
                             const objectWithCheckIconTrue =
-                              item?.kitchenArray?.find(
-                                (item) => item?.checkicon === true
+                            item?.kitchenArray?.find(
+                              (item) => item?.checkicon === true
                               );
                             return (
                               <>
@@ -921,8 +917,7 @@ export default function RequestedProposal() {
                                     Kitchen - {index + 1}
                                   </Typography>
                                 </Grid>
-                                {objectWithCheckIconTrue?.title ===
-                                "Gallery layout" ? (
+                                {objectWithCheckIconTrue?.id == 1 ? (
                                   <>
                                     <Grid item lg={5} sm={12} md={6} xs={12}>
                                       <Typography className={classes.acctext}>
@@ -947,8 +942,7 @@ export default function RequestedProposal() {
                                       </Typography>
                                     </Grid>
                                   </>
-                                ) : objectWithCheckIconTrue?.title ===
-                                  "Corridor layout" ? (
+                                ) : objectWithCheckIconTrue?.id == 2 ? (
                                   <>
                                     <Grid item lg={5} sm={12} md={6} xs={12}>
                                       <Typography className={classes.acctext}>
@@ -973,8 +967,7 @@ export default function RequestedProposal() {
                                       </Typography>
                                     </Grid>
                                   </>
-                                ) : objectWithCheckIconTrue?.title ===
-                                  "U shape layout" ? (
+                                ) : objectWithCheckIconTrue?.id == 3 ? (
                                   <>
                                     <Grid item lg={5} sm={12} md={6} xs={12}>
                                       <Typography className={classes.acctext}>
@@ -999,10 +992,7 @@ export default function RequestedProposal() {
                                       </Typography>
                                     </Grid>
                                   </>
-                                ) : objectWithCheckIconTrue?.title ===
-                                    "L shape layout" ||
-                                  objectWithCheckIconTrue?.title ===
-                                    "L shape layout " ? (
+                                ) : objectWithCheckIconTrue?.id == 4 ? (
                                   <>
                                     <Grid item lg={5} sm={12} md={6} xs={12}>
                                       <Typography className={classes.acctext}>
@@ -1213,8 +1203,7 @@ export default function RequestedProposal() {
                                     Bathroom - {index + 1}
                                   </Typography>
                                 </Grid>
-                                {objectWithCheckIconTrue?.title ===
-                                "Two piece" ? (
+                                {objectWithCheckIconTrue?.id == 1 ? (
                                   <>
                                     <Grid item lg={5} sm={12} md={6} xs={12}>
                                       <Typography className={classes.acctext}>
@@ -1234,13 +1223,12 @@ export default function RequestedProposal() {
                                       >
                                         <img
                                           src={Images.b2_pieces}
-                                          alt="Two-piece "
+                                          alt="Two-piece"
                                         />
                                       </Typography>
                                     </Grid>
                                   </>
-                                ) : objectWithCheckIconTrue?.title ===
-                                  "Three piece" ? (
+                                ) : objectWithCheckIconTrue?.id == 2 ? (
                                   <>
                                     <Grid item lg={5} sm={12} md={6} xs={12}>
                                       <Typography className={classes.acctext}>
