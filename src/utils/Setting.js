@@ -51,6 +51,7 @@ export const Setting = {
     proposalDetails: "/api/project/project-details",
     getProject: "api/project/get-projects",
     deleteSummaryImage: "api/user/delete-image",
+    alreadySentProposal: "api/project/already-proposal",
   },
 
   JS_Regex: {

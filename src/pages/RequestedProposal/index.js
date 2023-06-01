@@ -280,7 +280,7 @@ export default function RequestedProposal() {
                                 className={classes.accRightText}
                               >
                                 {moment(milestone?.start_date).format(
-                                  "DD-MM-YYYY"
+                                  "MMM DD, YYYY"
                                 )}
                               </Typography>
                             </Grid>
@@ -304,7 +304,7 @@ export default function RequestedProposal() {
                                 className={classes.accRightText}
                               >
                                 {moment(milestone?.end_date).format(
-                                  "DD-MM-YYYY"
+                                  "MMM DD, YYYY"
                                 )}
                               </Typography>
                             </Grid>
@@ -396,7 +396,7 @@ export default function RequestedProposal() {
                                         className={classes.acctext}
                                         px={2}
                                       >
-                                      Total amount
+                                        Total amount
                                       </Typography>
                                     </Grid>
                                     <Grid
@@ -411,7 +411,9 @@ export default function RequestedProposal() {
                                         px={2}
                                         className={classes.accRightText}
                                       >
-                                      AED  { (item?.material_unit_price *item?.qty) +(item?.manpower_rate * item?.days)}
+                                        AED{" "}
+                                        {item?.material_unit_price * item?.qty +
+                                          item?.manpower_rate * item?.days}
                                       </Typography>
                                     </Grid>
                                     <Table className={classes.table}>
@@ -449,7 +451,9 @@ export default function RequestedProposal() {
                                         <TableCell
                                           className={classes.accRightText}
                                         >
-                                        AED {item?.material_unit_price*item?.qty}
+                                          AED{" "}
+                                          {item?.material_unit_price *
+                                            item?.qty}
                                         </TableCell>
                                       </TableRow>
                                       <TableRow>
@@ -485,28 +489,43 @@ export default function RequestedProposal() {
                                     </Table>
 
                                     <Grid item container>
-                                      <ImageList
-                                        style={{ flex: 1 }}
-                                        // sx={{ width: 500 }}
-                                        cols={3}
-                                      >
-                                        {isArray(item?.buget_image) &&
-                                          !isEmpty(item?.buget_image) &&
-                                          item?.buget_image?.map((ele) => (
-                                            <ImageListItem key={ele.ud}>
-                                              <img
-                                                src={`${ele.image}?w=164&h=164&fit=crop&auto=format`}
-                                                srcSet={`${ele.image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                                alt={`budget_image_${ele?.id}`}
-                                                loading="lazy"
-                                                style={{
-                                                  width: 180,
-                                                  height: 150,
-                                                }}
-                                              />
-                                            </ImageListItem>
-                                          ))}
-                                      </ImageList>
+                                      {isArray(item?.buget_image) &&
+                                        !isEmpty(item?.buget_image) &&
+                                        item?.buget_image?.map((ele) => (
+                                          <a
+                                            href={url ? `${url}` : null}
+                                            target="_blank"
+                                          >
+                                            <img
+                                              onClick={() => {
+                                                if (
+                                                  ele?.type?.includes("image")
+                                                ) {
+                                                  setIsPressed(true);
+                                                  setImgUrl(ele?.image);
+                                                  setUrl("");
+                                                } else {
+                                                  setUrl(ele?.image);
+                                                  setImgUrl("");
+                                                }
+                                              }}
+                                              alt="logo"
+                                              src={
+                                                ele?.type?.includes("image")
+                                                  ? ele?.image
+                                                  : Images.pdf
+                                              }
+                                              style={{
+                                                cursor: "pointer",
+                                                width: "140px",
+                                                height: "140px",
+                                                borderRadius: "7px",
+                                                margin: "15px 5px",
+                                                objectFit: "contain",
+                                              }}
+                                            />
+                                          </a>
+                                        ))}
                                     </Grid>
                                   </Grid>
                                 ))}
@@ -540,7 +559,9 @@ export default function RequestedProposal() {
                         component={"span"}
                         className={classes.accRightText}
                       >
-                     {moment(villa?.start_date,'DD/MM/YYYY').format("DD-MM-YYYY")}
+                        {moment(villa?.start_date, "DD/MM/YYYY").format(
+                          "MMM DD, YYYY"
+                        )}
                       </Typography>
                     </Grid>
                     <Grid item lg={6} sm={12} md={6} xs={12} textAlign={"end"}>
@@ -555,7 +576,9 @@ export default function RequestedProposal() {
                         component={"span"}
                         className={classes.accRightText}
                       >
-                      {moment(villa?.end_date,'DD/MM/YYYY').format("DD-MM-YYYY")}
+                        {moment(villa?.end_date, "DD/MM/YYYY").format(
+                          "MMM DD, YYYY"
+                        )}
                       </Typography>
                     </Grid>
                   </>
@@ -943,8 +966,8 @@ export default function RequestedProposal() {
                         : villa?.exp_id == 2
                         ? villa?.form_json?.map((item, index) => {
                             const objectWithCheckIconTrue =
-                            item?.kitchenArray?.find(
-                              (item) => item?.checkicon === true
+                              item?.kitchenArray?.find(
+                                (item) => item?.checkicon === true
                               );
                             return (
                               <>

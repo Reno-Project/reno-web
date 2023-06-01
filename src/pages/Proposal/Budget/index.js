@@ -95,11 +95,15 @@ export default function Budget(props) {
   const [milestones, setMilestones] = useState([]);
   const [visible, setVisible] = useState(false);
   const [visibleLoader, setVisibleLoader] = useState(false);
+  const [alreadySubmittedPop, setAlreadySubmittedPop] = useState(false);
+  const [alreadySubmittedPopLoader, setAlreadySubmittedPopLoader] =
+    useState(false);
   const [visibleFinal, setVisibleFinal] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [buttonLoader, setButtonLoader] = useState(false);
+  const [submitLoader, setsubmitLoader] = useState(false);
   const [uploadLoader, setUploadLoader] = useState(false);
   const [proposalModal, setProposalModal] = useState(false);
 
@@ -540,7 +544,7 @@ export default function Budget(props) {
 
   async function addBudget() {
     setButtonLoader(true);
-
+    setAlreadySubmittedPopLoader(true);
     const extractedData = budgetDetails?.map((item) => {
       return {
         name: item?.name,
@@ -576,22 +580,47 @@ export default function Budget(props) {
 
       if (response.success) {
         toast.success(response.message);
+        setAlreadySubmittedPop(false);
+        setVisibleFinal(false);
         setProposalModal(true);
         dispatch(setProposalDetails({}));
       } else {
         toast.error(response.message);
       }
       setButtonLoader("");
+      setAlreadySubmittedPopLoader(false);
     } catch (error) {
       console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
       toast.error(error.toString());
       setButtonLoader("");
+      setAlreadySubmittedPopLoader(false);
+    }
+  }
+
+  async function checkSubmitted() {
+    setsubmitLoader(true);
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.alreadySentProposal}/${villa?.proposal_id}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        setAlreadySubmittedPop(true);
+      } else {
+        setVisibleFinal(true);
+      }
+      setsubmitLoader(false);
+    } catch (error) {
+      setsubmitLoader(false);
+      console.log("err===>", error);
     }
   }
 
   const handleSubmit = () => {
     if (isArray(budgetDetails) && !isEmpty(budgetDetails)) {
-      setVisibleFinal(true);
+      checkSubmitted();
+      // setVisibleFinal(true);
     } else {
       validate(false);
       // toast.warning("Please add atleast one milestone");
@@ -1316,29 +1345,17 @@ export default function Budget(props) {
         {renderBudgetCreateForm("form")}
 
         <Grid item container alignItems={"center"} mb={2}>
-          <IconButton
-            id="add-icon"
+          <Button
+            variant="contained"
             onClick={() => {
               validate(false);
             }}
-            sx={{ p: 0 }}
           >
-            <AddCircleOutlineOutlinedIcon style={{ color: color.primary }} />
-          </IconButton>
-          <Typography
-            variant="button"
-            component={"label"}
-            htmlFor="add-icon"
-            fontFamily={"Roobert-Regular"}
-            style={{
-              cursor: "pointer",
-              height: 24,
-              marginLeft: 8,
-              color: color.primary,
-            }}
-          >
+            <AddCircleOutlineOutlinedIcon
+              style={{ color: color.white, marginRight: 4 }}
+            />
             Add Budget
-          </Typography>
+          </Button>
         </Grid>
         {budgetLoader ? (
           <Grid
@@ -1697,7 +1714,11 @@ export default function Budget(props) {
           </Grid>
           <Grid item sm={5.9} xs={12}>
             <Button variant="contained" fullWidth onClick={handleSubmit}>
-              Submit
+              {submitLoader ? (
+                <CircularProgress style={{ color: "#fff" }} size={26} />
+              ) : (
+                "Submit"
+              )}
             </Button>
           </Grid>
         </Grid>
@@ -1720,6 +1741,17 @@ export default function Budget(props) {
         }}
         message={`Are you sure you want to submit proposal?`}
       />
+
+      <ConfirmModel
+        visible={alreadySubmittedPop}
+        loader={alreadySubmittedPopLoader}
+        handleClose={() => setAlreadySubmittedPop(false)}
+        confirmation={() => {
+          addBudget();
+        }}
+        message={`Reno has already submitted the proposal to contractor so are you want to send it again?`}
+      />
+
       <Menu
         id={`budget-menu`}
         anchorEl={anchorEl}
@@ -1782,9 +1814,14 @@ export default function Budget(props) {
       {visibleEditModal ? (
         <Modal
           open={visibleEditModal}
-          onClose={() =>
-            btnUpdateLoader === "update" ? null : setVisibleEditModal(false)
-          }
+          onClose={() => {
+            if (btnUpdateLoader === "update") {
+              return null;
+            } else {
+              setVisibleEditModal(false);
+            }
+            clearData();
+          }}
           closeAfterTransition
           disableAutoFocus
           slotProps={{ backdrop: Backdrop }}
