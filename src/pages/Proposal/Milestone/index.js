@@ -303,6 +303,15 @@ export default function Milestone(props) {
       setMilestones(newItems);
       setVisible(false);
       setSelectedBudget(null);
+      dispatch(
+        setProposalDetails({
+          ...proposalDetails,
+          milestone_details: {
+            ...proposalDetails.milestone_details,
+            milestone: newItems,
+          },
+        })
+      );
       handleClose();
     }
   };
@@ -319,6 +328,15 @@ export default function Milestone(props) {
         const newItems = [...milestones]; // Create a copy of the array
         newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
         setMilestones(newItems);
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            milestone_details: {
+              ...proposalDetails.milestone_details,
+              milestone: newItems,
+            },
+          })
+        );
         setVisible(false);
         setSelectedBudget(null);
         handleClose();

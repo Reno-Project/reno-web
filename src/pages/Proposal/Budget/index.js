@@ -90,7 +90,6 @@ export default function Budget(props) {
     updatedAt: moment().format("MMMM DD, YYYY"),
   };
   const [state, setState] = useState(initialFormvalues);
-  console.log("state====>>>>>", state);
   const [budgetDetails, setBudgetDetails] = useState([]);
   const [budgetLoader, setBudgetLoader] = useState(false);
   const [milestones, setMilestones] = useState([]);
@@ -125,7 +124,6 @@ export default function Budget(props) {
   const [amounts, setAmounts] = useState([]);
   const [visibleEditModal, setVisibleEditModal] = useState(false);
   const [btnUpdateLoader, setBtnUpdateLoader] = useState(false);
-  console.log("selectedBudget====>>>>>", selectedBudget);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -235,7 +233,7 @@ export default function Budget(props) {
       isEmpty(state?.manpower_rate?.toString()) &&
       isEmpty(state?.days?.toString()) &&
       isEmpty(state?.qty?.toString()) &&
-      isNull(state?.material_unit)
+      isEmpty(state?.material_unit)
     ) {
       if (isEmpty(state.material_unit_price?.toString())) {
         valid = false;
@@ -259,7 +257,7 @@ export default function Budget(props) {
         error.quantityMsg = "Please enter valid material qty";
       }
 
-      if (isNull(state.material_unit)) {
+      if (isEmpty(state.material_unit)) {
         valid = false;
         error.unitErr = true;
         error.unitMsg = "Please enter material unit";
@@ -290,7 +288,7 @@ export default function Budget(props) {
       }
     } else if (
       !isEmpty(state.material_unit_price?.toString()) ||
-      !isNull(state.material_unit) ||
+      !isEmpty(state.material_unit) ||
       !isEmpty(state?.qty?.toString())
     ) {
       if (!state.material_unit_price) {
@@ -315,7 +313,7 @@ export default function Budget(props) {
         error.quantityMsg = "Please enter valid material qty";
       }
 
-      if (isNull(state.material_unit)) {
+      if (isEmpty(state.material_unit)) {
         valid = false;
         error.unitErr = true;
         error.unitMsg = "Please enter material unit";
@@ -378,7 +376,6 @@ export default function Budget(props) {
         newArray[selectedBudget?.index] = state; // modify the copy
         setBudgetDetails(newArray);
         setSelectedBudget({});
-        console.log("newArray====>>>>>", newArray);
         dispatch(
           setProposalDetails({
             ...proposalDetails,
@@ -477,6 +474,15 @@ export default function Budget(props) {
       setVisible(false);
       setSelectedBudget(null);
       handleClose();
+      dispatch(
+        setProposalDetails({
+          ...proposalDetails,
+          budget_details: {
+            ...proposalDetails.budget_details,
+            budgets: newItems,
+          },
+        })
+      );
     }
   };
 
@@ -494,6 +500,15 @@ export default function Budget(props) {
         setBudgetDetails(newItems);
         setVisible(false);
         setSelectedBudget(null);
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            budget_details: {
+              ...proposalDetails.budget_details,
+              budgets: newItems,
+            },
+          })
+        );
         handleClose();
       } else {
         toast.error(response.message);
@@ -588,20 +603,6 @@ export default function Budget(props) {
     setErrObj(errorObj);
   }
 
-  function getPhotoURL(data) {
-    if (!data) {
-      return;
-    } else {
-      const { path, originalname, mimetype } = data;
-      const fileContent = [path];
-      const file = new File(fileContent, originalname, { type: mimetype });
-      console.log("file====>>>>>", file);
-      const fileUrl = URL.createObjectURL(file);
-      console.log("fileUrl====>>>>>", fileUrl);
-      return fileUrl;
-    }
-  }
-
   async function UploadFile(img) {
     setUploadLoader(true);
     const data = {
@@ -621,7 +622,6 @@ export default function Budget(props) {
         const nArr1 = state.photo_origin ? [...state.photo_origin] : [];
         for (let i = 0; i < img.length; i++) {
           const base64Data = await convertToBase64(img[i]);
-          console.log("base64Data====>>>>>", base64Data);
           nArr1.push(base64Data);
         }
         setState({ ...state, photo_url: nArr, photo_origin: nArr1 });
@@ -775,6 +775,22 @@ export default function Budget(props) {
         });
       }
     }
+  }
+
+  function clearErr() {
+    setErrObj({
+      ...errObj,
+      materialUnitPriceErr: false,
+      materialUnitPriceMsg: "",
+      quantityErr: false,
+      quantityMsg: "",
+      unitErr: false,
+      unitMsg: "",
+      daysErr: false,
+      daysMsg: "",
+      manpowerRateErr: false,
+      manpowerRateMsg: "",
+    });
   }
 
   function renderBudgetCreateForm(mode) {
@@ -999,13 +1015,9 @@ export default function Budget(props) {
               }
               onChange={(e, newValue) => {
                 setState({ ...state, material_unit: newValue });
-                setErrObj({
-                  ...errObj,
-                  unitErr: false,
-                  unitMsg: "",
-                });
+                clearErr();
               }}
-              options={["tonns", "Kg", "g", "lbs", "liter", "ml"]}
+              options={["tonns", "Kg", "g", "lbs", "liter", "ml", "sqm"]}
               getOptionLabel={(option) => option}
               error={
                 mode === "modal" && visibleEditModal
@@ -1045,11 +1057,7 @@ export default function Budget(props) {
                     material_unit_price: e.target.value,
                   });
                 }
-                setErrObj({
-                  ...errObj,
-                  materialUnitPriceErr: false,
-                  materialUnitPriceMsg: "",
-                });
+                clearErr();
               }}
               error={
                 mode === "modal" && visibleEditModal
@@ -1085,11 +1093,7 @@ export default function Budget(props) {
                 if (bool) {
                   setState({ ...state, qty: e.target.value });
                 }
-                setErrObj({
-                  ...errObj,
-                  quantityErr: false,
-                  quantityMsg: "",
-                });
+                clearErr();
               }}
               inputProps={{
                 pattern: "[0-9]*", // Allow only digits
@@ -1133,11 +1137,7 @@ export default function Budget(props) {
                 if (bool) {
                   setState({ ...state, manpower_rate: e.target.value });
                 }
-                setErrObj({
-                  ...errObj,
-                  manpowerRateErr: false,
-                  manpowerRateMsg: "",
-                });
+                clearErr();
               }}
               error={
                 mode === "modal" && visibleEditModal
@@ -1173,11 +1173,7 @@ export default function Budget(props) {
                 if (bool) {
                   setState({ ...state, days: e.target.value });
                 }
-                setErrObj({
-                  ...errObj,
-                  daysErr: false,
-                  daysMsg: "",
-                });
+                clearErr();
               }}
               inputProps={{
                 pattern: "[0-9]*", // Allow only digits
@@ -1560,8 +1556,8 @@ export default function Budget(props) {
                             <TableCell align="right">
                               <Typography fontFamily={"ElMessiri-Regular"}>
                                 AED{" "}
-                                {parseInt(item.material_unit_price || 0) *
-                                  parseInt(item.qty || 0)}
+                                {parseInt(item.manpower_rate || 0) *
+                                  parseInt(item.days || 0)}
                               </Typography>
                             </TableCell>
 
@@ -1664,8 +1660,8 @@ export default function Budget(props) {
                             <TableCell align="right">
                               <Typography fontFamily={"ElMessiri-Regular"}>
                                 AED{" "}
-                                {parseInt(item.manpower_rate || 0) *
-                                  parseInt(item.days || 0)}
+                                {parseInt(item.material_unit_price || 0) *
+                                  parseInt(item.qty || 0)}
                               </Typography>
                             </TableCell>
                           </TableRow>

@@ -49,11 +49,9 @@ export default function Summary(props) {
   const classes = useStyles();
   const navigate = useNavigate();
   const { proposalDetails } = useSelector((state) => state.auth);
-  console.log("proposalDetails====>>>>>", proposalDetails);
   const location = useLocation();
 
   const createProposal = location?.state?.create_proposal || false;
-  console.log("createProposal====>>>>>", createProposal);
   const villa = location?.state ? location?.state : {};
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
@@ -79,7 +77,6 @@ export default function Summary(props) {
   const [disableMilestone, setDisableMilestone] = useState(true);
   const [disableBudget, setDisableBudget] = useState(true);
   const [loader, setloader] = useState(false);
-  const [visible, setvisible] = useState({ bool: false, val: null });
   const [expertiseList, setExpertiesList] = useState([]);
   const [dpId, setDpId] = useState("");
 
@@ -369,10 +366,10 @@ export default function Summary(props) {
             <Grid item xs={12} style={{ borderBottom: "1px solid #F2F3F4" }}>
               <Tabs
                 value={tabValue}
-                onChange={(v, b) => {
-                  setvisible({ bool: true, val: b });
-                }}
                 variant="scrollable"
+                onChange={(v, b) => {
+                  setTabValue(b);
+                }}
               >
                 <Tab label="Summary" />
                 <Tab label="Milestone" disabled={disableMilestone} />
@@ -774,16 +771,6 @@ export default function Summary(props) {
         </Grid>
       </Grid>
       <BlueAbout />
-      <ConfirmModel
-        visible={visible?.bool}
-        handleClose={() => setvisible({ bool: false, val: null })}
-        confirmation={() => {
-          setTabValue(visible?.val);
-          setvisible({ bool: false, val: null });
-        }}
-        titleText={"⚠️ Warning: You will lose the form data."}
-        message={"Are you sure you want to change the tab?"}
-      />
     </div>
   );
 }
