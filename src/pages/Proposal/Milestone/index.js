@@ -958,6 +958,16 @@ export default function Milestone(props) {
                                         >
                                           Days
                                         </TableCell>
+                                        <TableCell
+                                          style={{
+                                            color: color.captionText,
+                                            fontFamily:
+                                              "Roobert-Regular !important",
+                                          }}
+                                          align="right"
+                                        >
+                                          Amount
+                                        </TableCell>
                                       </TableRow>
                                       <TableRow key={"Manpower"}>
                                         <TableCell align="right">
@@ -972,6 +982,15 @@ export default function Milestone(props) {
                                             fontFamily={"ElMessiri-Regular"}
                                           >
                                             {item?.days || "-"}
+                                          </Typography>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                          <Typography
+                                            fontFamily={"ElMessiri-Regular"}
+                                          >
+                                            AED{" "}
+                                            {parseInt(item.manpower_rate || 0) *
+                                              parseInt(item.days || 0)}
                                           </Typography>
                                         </TableCell>
                                       </TableRow>
@@ -1034,6 +1053,16 @@ export default function Milestone(props) {
                                         >
                                           Quantity
                                         </TableCell>
+                                        <TableCell
+                                          style={{
+                                            color: color.captionText,
+                                            fontFamily:
+                                              "Roobert-Regular !important",
+                                          }}
+                                          align="right"
+                                        >
+                                          Amount
+                                        </TableCell>
                                       </TableRow>
                                       <TableRow key={"Manpower"}>
                                         <TableCell align="right">
@@ -1065,6 +1094,16 @@ export default function Milestone(props) {
                                             fontFamily={"ElMessiri-Regular"}
                                           >
                                             {item?.qty || "-"}
+                                          </Typography>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                          <Typography
+                                            fontFamily={"ElMessiri-Regular"}
+                                          >
+                                            AED{" "}
+                                            {parseInt(
+                                              item.material_unit_price || 0
+                                            ) * parseInt(item.qty || 0)}
                                           </Typography>
                                         </TableCell>
                                       </TableRow>
