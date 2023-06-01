@@ -220,6 +220,10 @@ export default function Budget(props) {
       valid = false;
       error.bNameErr = true;
       error.bNameMsg = "Please enter the name";
+    } else if (state?.name?.length > 50) {
+      valid = false;
+      error.bNameErr = true;
+      error.bNameMsg = "Please enter the name less then 50 characters";
     }
 
     if (isEmpty(state.material_type?.trim())) {
@@ -271,14 +275,6 @@ export default function Budget(props) {
         valid = false;
         error.manpowerRateErr = true;
         error.manpowerRateMsg = "Please enter the manpower rate";
-      } else if (
-        !regex.test(state.manpower_rate) ||
-        parseInt(state.manpower_rate) <= 0 ||
-        parseInt(state.manpower_rate) > 100
-      ) {
-        valid = false;
-        error.manpowerRateErr = true;
-        error.manpowerRateMsg = "Please enter valid manpower rate under 100";
       }
 
       if (isEmpty(state?.days?.toString())) {
@@ -287,8 +283,8 @@ export default function Budget(props) {
         error.daysMsg = "Please select the days";
       } else if (!positiveIntRegex.test(state?.days)) {
         valid = false;
-        error.quantityErr = true;
-        error.quantityMsg = "Please enter valid days";
+        error.daysErr = true;
+        error.daysErr = "Please enter valid days";
       }
     } else if (
       !isEmpty(state.material_unit_price?.toString()) ||
@@ -316,6 +312,21 @@ export default function Budget(props) {
         error.quantityErr = true;
         error.quantityMsg = "Please enter valid material qty";
       }
+      if (state?.qty >= 100000) {
+        valid = false;
+        error.quantityErr = true;
+        error.quantityMsg = "Please enter Quantity less then 100000";
+      }
+      if (state.manpower_rate >= 100000) {
+        valid = false;
+        error.manpowerRateErr = true;
+        error.manpowerRateMsg = "Please enter valid manpower rate under 10000 ";
+      }
+      if (state?.days >= 365) {
+        valid = false;
+        error.daysErr = true;
+        error.daysMsg = "Please enter days under 365";
+      }
 
       if (isEmpty(state.material_unit)) {
         valid = false;
@@ -330,11 +341,7 @@ export default function Budget(props) {
         valid = false;
         error.manpowerRateErr = true;
         error.manpowerRateMsg = "Please enter the manpower rate";
-      } else if (
-        !regex.test(state.manpower_rate) ||
-        parseInt(state.manpower_rate) <= 0 ||
-        parseInt(state.manpower_rate) > 100
-      ) {
+      } else if (!regex.test(state.manpower_rate)) {
         valid = false;
         error.manpowerRateErr = true;
         error.manpowerRateMsg = "Please enter valid manpower rate under 100";
