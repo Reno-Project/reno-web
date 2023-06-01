@@ -119,7 +119,11 @@ export default function Milestone(props) {
 
   useEffect(() => {
     if (isArray(milestones) && !isEmpty(milestones)) {
-      if (proposalDetails?.budget_details?.previous) {
+      if (
+        proposalDetails?.budget_details?.previous ||
+        (isArray(proposalDetails?.budget_details?.budgets) &&
+          !isEmpty(proposalDetails?.budget_details?.budgets))
+      ) {
         updateBudgetMilestone(proposalDetails?.budget_details?.budgets);
       } else {
         !createProposal && getBudgetList();
