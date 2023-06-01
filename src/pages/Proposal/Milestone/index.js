@@ -359,6 +359,10 @@ export default function Milestone(props) {
     const error = { ...errObj };
     let valid = true;
 
+    const stDate = new Date(state?.start_date);
+    const enDate = new Date(state?.end_date);
+    const todayDate = new Date();
+
     if (isEmpty(state.milestone_name)) {
       valid = false;
       error.nameErr = true;
@@ -376,17 +380,13 @@ export default function Milestone(props) {
       error.startErr = true;
       error.startMsg = "Please select the start date";
     } else if (
-      !isNull(state?.start_date) &&
-      state?.start_date?.toString() == "Invalid date"
+      !isNull(stDate) &&
+      stDate?.toString() == "Invalid date"
     ) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
-    } else if (
-      moment(state?.start_date, "MMM DD, YYYY").isBefore(
-        moment().format("MMM DD, YYYY")
-      )
-    ) {
+    } else if (moment(stDate, "DD/MM/YYYY").isSameOrBefore(moment(todayDate).format("DD/MM/YYYY"))) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
@@ -396,16 +396,11 @@ export default function Milestone(props) {
       valid = false;
       error.endErr = true;
       error.endMsg = "Please select the end date";
-    } else if (
-      !isNull(state.end_date) &&
-      state.end_date?.toString() == "Invalid date"
-    ) {
+    } else if (!isNull(enDate) && enDate?.toString() == "Invalid date") {
       valid = false;
       error.endErr = true;
       error.endMsg = "Please enter valid date";
-    } else if (
-      new Date(state.start_date).getTime() > new Date(state.end_date).getTime()
-    ) {
+    } else if (stDate > enDate) {
       valid = false;
       error.endErr = true;
       error.endMsg = "Please enter valid date";
@@ -1226,9 +1221,14 @@ export default function Milestone(props) {
       {/* Edit details Modal */}
       <Modal
         open={visibleEditModal}
-        onClose={() =>
-          btnUpdateLoader === "update" ? null : setVisibleEditModal(false)
-        }
+        onClose={() => {
+          if (btnUpdateLoader === "update") {
+            return null;
+          } else {
+            setVisibleEditModal(false);
+            clearData();
+          }
+        }}
         closeAfterTransition
         disableAutoFocus
         slotProps={{ backdrop: Backdrop }}
