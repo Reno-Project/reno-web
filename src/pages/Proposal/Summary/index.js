@@ -256,7 +256,7 @@ export default function Summary(props) {
   async function deletePhoto(id, ind) {
     try {
       const response = await getApiData(
-        `${Setting.endpoints.deleteTemplate}/${id}`,
+        `${Setting.endpoints.deleteSummaryImage}/${id}`,
         "GET",
         {}
       );
