@@ -131,7 +131,6 @@ export default function Budget(props) {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    getBudgetList();
     getMilestoneList();
   }, []);
 
@@ -149,6 +148,9 @@ export default function Budget(props) {
         ...proposalDetails?.budget_details?.formvalues,
         milestone: milestoneValue,
       });
+    }
+    if (isArray(milestones) && !isEmpty(milestones)) {
+      getBudgetList();
     }
   }, [milestones]);
 
@@ -178,7 +180,18 @@ export default function Budget(props) {
           (isArray(proposalDetails?.budget_details?.budgets) &&
             !isEmpty(proposalDetails?.budget_details?.budgets))
         ) {
-          setBudgetDetails(proposalDetails?.budget_details?.budgets);
+          const updatedBudgets = proposalDetails?.budget_details?.budgets?.map(
+            (budget) => {
+              const matchingMilestone = milestones.find(
+                (milestone) => milestone.id === budget.milestone.id
+              );
+              if (matchingMilestone) {
+                return { ...budget, milestone: matchingMilestone };
+              }
+              return budget;
+            }
+          );
+          setBudgetDetails(updatedBudgets || []);
         } else if (
           !proposalDetails?.budget_details?.previous &&
           isArray(response?.data) &&
@@ -263,6 +276,10 @@ export default function Budget(props) {
         valid = false;
         error.quantityErr = true;
         error.quantityMsg = "Please enter valid material qty";
+      } else if (state?.qty >= 100000) {
+        valid = false;
+        error.quantityErr = true;
+        error.quantityMsg = "Please enter Quantity less then 100000";
       }
 
       if (isEmpty(state.material_unit)) {
@@ -275,6 +292,14 @@ export default function Budget(props) {
         valid = false;
         error.manpowerRateErr = true;
         error.manpowerRateMsg = "Please enter the manpower rate";
+      } else if (!regex.test(state?.manpower_rate)) {
+        valid = false;
+        error.manpowerRateErr = true;
+        error.manpowerRateMsg = "Please enter valid manpower rate";
+      } else if (state?.manpower_rate >= 100000) {
+        valid = false;
+        error.manpowerRateErr = true;
+        error.manpowerRateMsg = "Please enter valid manpower rate under 10000 ";
       }
 
       if (isEmpty(state?.days?.toString())) {
@@ -285,8 +310,14 @@ export default function Budget(props) {
         valid = false;
         error.daysErr = true;
         error.daysErr = "Please enter valid days";
+      } else if (state?.days >= 365) {
+        valid = false;
+        error.daysErr = true;
+        error.daysMsg = "Please enter days under 365";
       }
-    } else if (
+    }
+
+    if (
       !isEmpty(state.material_unit_price?.toString()) ||
       !isEmpty(state.material_unit) ||
       !isEmpty(state?.qty?.toString())
@@ -311,21 +342,10 @@ export default function Budget(props) {
         valid = false;
         error.quantityErr = true;
         error.quantityMsg = "Please enter valid material qty";
-      }
-      if (state?.qty >= 100000) {
+      } else if (state?.qty >= 100000) {
         valid = false;
         error.quantityErr = true;
         error.quantityMsg = "Please enter Quantity less then 100000";
-      }
-      if (state.manpower_rate >= 100000) {
-        valid = false;
-        error.manpowerRateErr = true;
-        error.manpowerRateMsg = "Please enter valid manpower rate under 10000 ";
-      }
-      if (state?.days >= 365) {
-        valid = false;
-        error.daysErr = true;
-        error.daysMsg = "Please enter days under 365";
       }
 
       if (isEmpty(state.material_unit)) {
@@ -333,7 +353,8 @@ export default function Budget(props) {
         error.unitErr = true;
         error.unitMsg = "Please enter material unit";
       }
-    } else if (
+    }
+    if (
       !isEmpty(state?.manpower_rate?.toString()) ||
       !isEmpty(state?.days?.toString())
     ) {
@@ -344,7 +365,11 @@ export default function Budget(props) {
       } else if (!regex.test(state.manpower_rate)) {
         valid = false;
         error.manpowerRateErr = true;
-        error.manpowerRateMsg = "Please enter valid manpower rate under 100";
+        error.manpowerRateMsg = "Please enter valid manpower rate";
+      } else if (state?.manpower_rate >= 100000) {
+        valid = false;
+        error.manpowerRateErr = true;
+        error.manpowerRateMsg = "Please enter valid manpower rate under 10000 ";
       }
 
       if (isEmpty(state?.days?.toString())) {
@@ -355,6 +380,10 @@ export default function Budget(props) {
         valid = false;
         error.quantityErr = true;
         error.quantityMsg = "Please enter valid days";
+      } else if (state?.days >= 365) {
+        valid = false;
+        error.daysErr = true;
+        error.daysMsg = "Please enter days under 365";
       }
     }
 
@@ -386,7 +415,6 @@ export default function Budget(props) {
         const newArray = [...budgetDetails]; // create a copy of the array
         newArray[selectedBudget?.index] = state; // modify the copy
         setBudgetDetails(newArray);
-        setSelectedBudget({});
         dispatch(
           setProposalDetails({
             ...proposalDetails,
@@ -396,6 +424,7 @@ export default function Budget(props) {
             },
           })
         );
+        handleClose();
       } else {
         setBudgetDetails((arr) => [...arr, state]);
         let budget_details = {
@@ -441,7 +470,7 @@ export default function Budget(props) {
 
   const handleClose = () => {
     setAnchorEl(null);
-    // setSelectedBudget(null);
+    setSelectedBudget(null);
   };
 
   const handleEdit = (data, index) => {
@@ -472,7 +501,6 @@ export default function Budget(props) {
     };
 
     setState(nextState);
-    handleClose();
   };
 
   const handleDelete = () => {
@@ -483,7 +511,6 @@ export default function Budget(props) {
       newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
       setBudgetDetails(newItems);
       setVisible(false);
-      setSelectedBudget(null);
       handleClose();
       dispatch(
         setProposalDetails({
@@ -494,6 +521,7 @@ export default function Budget(props) {
           },
         })
       );
+      handleClose();
     }
   };
 

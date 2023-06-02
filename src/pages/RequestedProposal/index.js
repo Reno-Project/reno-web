@@ -610,13 +610,13 @@ export default function RequestedProposal() {
                                   xs={12}
                                   textAlign={"end"}
                                 >
-                                  {item?.unit_Type?.id == 1 ? (
+                                  {item?.unit_type?.id == 1 ? (
                                     <Typography
                                       className={classes.accRightText}
                                     >
                                       Villa
                                     </Typography>
-                                  ) : item?.unit_Type?.id == 2 ? (
+                                  ) : item?.unit_type?.id == 2 ? (
                                     <Typography
                                       className={classes.accRightText}
                                     >
@@ -768,13 +768,13 @@ export default function RequestedProposal() {
                                   xs={12}
                                   textAlign={"end"}
                                 >
-                                  {item?.unit_Type?.id == 1 ? (
+                                  {item?.unit_type?.id == 1 ? (
                                     <Typography
                                       className={classes.accRightText}
                                     >
                                       Villa
                                     </Typography>
-                                  ) : item?.unit_Type?.id == 2 ? (
+                                  ) : item?.unit_type?.id == 2 ? (
                                     <Typography
                                       className={classes.accRightText}
                                     >

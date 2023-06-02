@@ -289,13 +289,12 @@ export default function Milestone(props) {
 
   const handleClose = () => {
     setAnchorEl(null);
-    // setSelectedBudget(null);
+    setSelectedBudget(null);
   };
 
   const handleEdit = (data, index) => {
     setVisibleEditModal(true);
     setState(selectedBudget.data);
-    handleClose();
   };
 
   const handleDelete = () => {
@@ -306,7 +305,6 @@ export default function Milestone(props) {
       newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
       setMilestones(newItems);
       setVisible(false);
-      setSelectedBudget(null);
       dispatch(
         setProposalDetails({
           ...proposalDetails,
@@ -329,6 +327,15 @@ export default function Milestone(props) {
       );
       if (response.success) {
         toast.success(response.message);
+        const indices = budgets
+          .map((item, index) =>
+            item?.milestone?.id === selectedBudget?.data?.id ? index : -1
+          )
+          .filter((index) => index !== -1);
+        let newBudArr = budgets.filter(
+          (item, index) => !indices.includes(index)
+        );
+
         const newItems = [...milestones]; // Create a copy of the array
         newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
         setMilestones(newItems);
@@ -339,10 +346,13 @@ export default function Milestone(props) {
               ...proposalDetails.milestone_details,
               milestone: newItems,
             },
+            budget_details: {
+              ...proposalDetails?.budget_details,
+              budgets: newBudArr,
+            },
           })
         );
         setVisible(false);
-        setSelectedBudget(null);
         handleClose();
       } else {
         toast.error(response.message);
@@ -379,14 +389,15 @@ export default function Milestone(props) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please select the start date";
-    } else if (
-      !isNull(stDate) &&
-      stDate?.toString() == "Invalid date"
-    ) {
+    } else if (!isNull(stDate) && stDate?.toString() == "Invalid date") {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
-    } else if (moment(stDate, "DD/MM/YYYY").isSameOrBefore(moment(todayDate).format("DD/MM/YYYY"))) {
+    } else if (
+      moment(stDate, "DD/MM/YYYY").isSameOrBefore(
+        moment(todayDate).format("DD/MM/YYYY")
+      )
+    ) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
@@ -424,7 +435,6 @@ export default function Milestone(props) {
         const newArray = [...milestones]; // create a copy of the array
         newArray[selectedBudget?.index] = state; // modify the copy
         setMilestones(newArray);
-        setSelectedBudget({});
         dispatch(
           setProposalDetails({
             ...proposalDetails,
@@ -475,6 +485,7 @@ export default function Milestone(props) {
       end_date: null,
     });
     setErrObj(errorObj);
+    handleClose();
   }
 
   function renderMilestoneCreateForm(mode) {
@@ -1258,6 +1269,7 @@ export default function Milestone(props) {
                     onClick={() => {
                       setVisibleEditModal(false);
                       clearData();
+                      setSelectedBudget(null);
                     }}
                     disabled={btnUpdateLoader === "update"}
                   >
