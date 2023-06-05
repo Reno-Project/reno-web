@@ -669,8 +669,8 @@ export default function Budget(props) {
       checkSubmitted();
       // setVisibleFinal(true);
     } else {
-      validate(false);
-      // toast.warning("Please add atleast one milestone");
+      // validate(false);
+      toast.warning("Please add atleast one budget");
     }
   };
 

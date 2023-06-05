@@ -453,10 +453,10 @@ const Dashboard = (props) => {
                   return (
                     <div
                       key={`Requested_Proposal_${index}`}
-                      style={{
-                        width: sm ? "100%" : "unset",
-                        minWidth: sm ? "100%" : "unset",
-                      }}
+                      // style={{
+                      //   width: sm ? "100%" : "unset",
+                      //   minWidth: sm ? "100%" : "unset",
+                      // }}
                     >
                       <ProjectCard
                         villa={villa}
@@ -541,10 +541,10 @@ const Dashboard = (props) => {
                   return (
                     <div
                       key={`Submitted_Proposal_${index}`}
-                      style={{
-                        width: sm ? "100%" : "unset",
-                        minWidth: sm ? "100%" : "unset",
-                      }}
+                      // style={{
+                      //   width: sm ? "100%" : "unset",
+                      //   minWidth: sm ? "100%" : "unset",
+                      // }}
                     >
                       <ProjectCard
                         villa={villa}

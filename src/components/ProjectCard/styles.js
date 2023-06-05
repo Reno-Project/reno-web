@@ -4,6 +4,7 @@ const useStyles = makeStyles((theme) => ({
   card: {
     height: "100%",
     minWidth: 380,
+    maxWidth: 380,
     margin: "0px 8px",
     boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.04)",
     cursor: "pointer",
