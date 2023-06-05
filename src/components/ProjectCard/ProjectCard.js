@@ -22,6 +22,7 @@ const ProjectCard = (props) => {
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
   const createdAt = moment(villa?.createdAt).format("DD-MM-yyyy");
+  const updatedAt = moment(villa?.updatedAt).format("DD-MM-yyyy");
   const moveInDate = moment(villa?.move_in_date, "YYYY-MM-DD").format(
     "DD.MM.YYYY"
   );
@@ -61,9 +62,9 @@ const ProjectCard = (props) => {
 
           <Typography className={classes.code1}>
             <Typography className={classes.code1} color={"#8C92A4"} mr={0.5}>
-              Created:{" "}
+              {requested ? "Created" : "Submitted"}:{" "}
             </Typography>{" "}
-            {createdAt}
+            {requested ? createdAt : updatedAt}
           </Typography>
         </div>
         {/* <div className={classes.rowJustified}>

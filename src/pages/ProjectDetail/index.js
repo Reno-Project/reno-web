@@ -32,6 +32,7 @@ import { Setting } from "../../utils/Setting";
 import DownloadIcon from "@mui/icons-material/Download";
 import { color } from "../../config/theme";
 import { Apple } from "@mui/icons-material";
+import ImageViewer from "../../components/ImageViewer";
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -41,6 +42,8 @@ export default function ProjectDetail() {
   const [villa, setVilla] = useState({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pageLoad, setPageLoad] = useState(true);
+  const [isPressed, setIsPressed] = useState(false);
+  const [imgurl, setImgUrl] = useState("");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -127,28 +130,33 @@ export default function ProjectDetail() {
                   </Grid>
                   <Grid item lg={3} md={3} sm={3} xs={3} textAlign={"end"}>
                     <Typography className={classes.requestDate}>
-                      Request Date
+                      {villa?.status === "submitted"
+                        ? "Submitted Date"
+                        : "Request Date"}
                     </Typography>
                   </Grid>
                   <Grid item lg={9} md={9} sm={6} xs={6}>
-                    <Button
+                    <span
                       variant="contained"
                       style={{
-                        marginTop: 3,
                         backgroundColor:
                           villa?.status === "submitted" ? "#32D583" : "#E9B55C",
-                        padding: 5,
+                        padding: 8,
                         fontSize: "10px",
                         letterSpacing: "1.5px",
                         lineHeight: "16px",
+                        borderRadius: 4,
+                        color: color.white,
                       }}
                     >
-                      {villa?.status}
-                    </Button>
+                      {villa?.status === "submitted" ? "SUBMITTED" : "REQUEST"}
+                    </span>
                   </Grid>
                   <Grid item lg={3} md={3} sm={6} xs={6}>
                     <Typography className={classes.dateStyle}>
-                      {moment(villa?.createdAt).format("MMMM DD, YYYY")}
+                      {villa?.status === "submitted"
+                        ? moment(villa?.updated).format("MMMM DD, YYYY")
+                        : moment(villa?.createdAt).format("MMMM DD, YYYY")}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -433,24 +441,45 @@ export default function ProjectDetail() {
                                   </Table>
 
                                   <Grid item container>
-                                    <ImageList
-                                      style={{ flex: 1 }}
-                                      // sx={{ width: 500 }}
-                                      cols={3}
-                                    >
-                                      {isArray(item?.buget_image) &&
-                                        !isEmpty(item?.buget_image) &&
-                                        item?.buget_image?.map((ele) => (
-                                          <ImageListItem key={ele.ud}>
-                                            <img
-                                              src={`${ele.image}?w=164&h=164&fit=crop&auto=format`}
-                                              srcSet={`${ele.image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                              alt={`budget_image_${ele?.id}`}
-                                              loading="lazy"
-                                            />
-                                          </ImageListItem>
-                                        ))}
-                                    </ImageList>
+                                    {isArray(item?.buget_image) &&
+                                      !isEmpty(item?.buget_image) &&
+                                      item?.buget_image?.map((ele) => (
+                                        <a
+                                          href={
+                                            ele?.type?.includes("pdf")
+                                              ? `${ele?.image}`
+                                              : null
+                                          }
+                                          target="_blank"
+                                        >
+                                          <img
+                                            onClick={() => {
+                                              if (
+                                                ele?.type?.includes("image")
+                                              ) {
+                                                setIsPressed(true);
+                                                setImgUrl(ele?.image);
+                                              } else {
+                                                setImgUrl("");
+                                              }
+                                            }}
+                                            alt="logo"
+                                            src={
+                                              ele?.type?.includes("image")
+                                                ? ele?.image
+                                                : Images.pdf
+                                            }
+                                            style={{
+                                              cursor: "pointer",
+                                              width: "140px",
+                                              height: "140px",
+                                              borderRadius: "7px",
+                                              margin: "15px 5px",
+                                              objectFit: "contain",
+                                            }}
+                                          />
+                                        </a>
+                                      ))}
                                   </Grid>
                                 </Grid>
                               ))}
@@ -567,6 +596,13 @@ export default function ProjectDetail() {
           </Button>
         </DialogActions>
       </Dialog>
+      <ImageViewer
+        url={imgurl}
+        visible={isPressed}
+        onClose={() => {
+          setIsPressed(false);
+        }}
+      />
     </div>
   );
 }

@@ -122,7 +122,7 @@ export default function RequestedProposal() {
                   </Grid>
                   <Grid item lg={3} md={3} sm={3} xs={3} textAlign={"end"}>
                     <Typography className={classes.requestDate}>
-                      Request Date
+                      {isSubmitted ? "Submitted Date" : "Request Date"}
                     </Typography>
                   </Grid>
                   <Grid
@@ -150,7 +150,9 @@ export default function RequestedProposal() {
                   </Grid>
                   <Grid item lg={3} md={3} sm={6} xs={6}>
                     <Typography className={classes.dateStyle}>
-                      {moment(villa?.createdAt).format("MMMM DD, YYYY")}
+                      {isSubmitted
+                        ? moment(villa?.updatedAt).format("MMMM DD, YYYY")
+                        : moment(villa?.createdAt).format("MMMM DD, YYYY")}
                     </Typography>
                   </Grid>
                 </Grid>

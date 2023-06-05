@@ -389,7 +389,7 @@ export default function Milestone(props) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please select the start date";
-    } else if (!isNull(stDate) && stDate?.toString() == "Invalid date") {
+    } else if (!isNull(stDate) && stDate?.toString() == "Invalid Date") {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
@@ -407,7 +407,7 @@ export default function Milestone(props) {
       valid = false;
       error.endErr = true;
       error.endMsg = "Please select the end date";
-    } else if (!isNull(enDate) && enDate?.toString() == "Invalid date") {
+    } else if (!isNull(enDate) && enDate?.toString() == "Invalid Date") {
       valid = false;
       error.endErr = true;
       error.endMsg = "Please enter valid date";
@@ -472,8 +472,7 @@ export default function Milestone(props) {
     if (isArray(milestones) && !isEmpty(milestones)) {
       addMilestone();
     } else {
-      validate(false);
-      // toast.warning("Please add atleast one milestone");
+      toast.warning("Please add atleast one milestone");
     }
   };
 
@@ -1165,7 +1164,7 @@ export default function Milestone(props) {
               {buttonLoader ? (
                 <CircularProgress size={26} style={{ color: "#fff" }} />
               ) : (
-                "Save & Continue"
+                "Continue"
               )}
             </Button>
           </Grid>

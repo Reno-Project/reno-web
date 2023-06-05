@@ -72,7 +72,7 @@ export default function Budget(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
-
+  const [deleteIND, setDeleteIND] = useState(null);
   const { setProposalDetails } = authActions;
 
   const initialFormvalues = {
@@ -239,23 +239,26 @@ export default function Budget(props) {
       error.bNameMsg = "Please enter the name less then 50 characters";
     }
 
-    if (isEmpty(state.material_type?.trim())) {
-      valid = false;
-      error.materialTypeErr = true;
-      error.materialTypeMsg = "Please enter the material type";
-    }
-
     const positiveIntRegex = /^[1-9]\d*$/;
     const regex = /^\d+(\.\d+)?$/;
+    const startDate = moment(state?.milestone?.start_date);
+    const endDate = moment(state?.milestone?.end_date);
+    const totalDays = endDate.diff(startDate, "days");
 
     if (
+      isEmpty(state?.material_type?.trim()) &&
+      (isEmpty(state?.material_unit) || isNull(state?.material_unit)) &&
       isEmpty(state.material_unit_price?.toString()) &&
-      isEmpty(state.material_type?.toString()) &&
-      isEmpty(state?.manpower_rate?.toString()) &&
-      isEmpty(state?.days?.toString()) &&
       isEmpty(state?.qty?.toString()) &&
-      isEmpty(state?.material_unit)
+      isEmpty(state?.manpower_rate?.toString()) &&
+      isEmpty(state?.days?.toString())
     ) {
+      if (isEmpty(state.material_type?.trim())) {
+        valid = false;
+        error.materialTypeErr = true;
+        error.materialTypeMsg = "Please enter the material type";
+      }
+
       if (isEmpty(state.material_unit_price?.toString())) {
         valid = false;
         error.materialUnitPriceErr = true;
@@ -282,7 +285,7 @@ export default function Budget(props) {
         error.quantityMsg = "Please enter Quantity less then 100000";
       }
 
-      if (isEmpty(state.material_unit)) {
+      if (isEmpty(state.material_unit) || isNull(state?.material_unit)) {
         valid = false;
         error.unitErr = true;
         error.unitMsg = "Please enter material unit";
@@ -315,75 +318,84 @@ export default function Budget(props) {
         error.daysErr = true;
         error.daysMsg = "Please enter days under 365";
       }
-    }
-
-    if (
-      !isEmpty(state.material_unit_price?.toString()) ||
-      !isEmpty(state.material_unit) ||
-      !isEmpty(state?.qty?.toString())
-    ) {
-      if (!state.material_unit_price) {
-        valid = false;
-        error.materialUnitPriceErr = true;
-        error.materialUnitPriceMsg = "Please enter the material unit price";
-      } else if (
-        !regex.test(state.material_unit_price) ||
-        parseInt(state.material_unit_price) <= 0
+    } else {
+      if (
+        !isEmpty(state.material_type?.trim()) ||
+        !isEmpty(state.material_unit_price?.toString()) ||
+        (!isEmpty(state.material_unit) && !isNull(state?.material_unit)) ||
+        !isEmpty(state?.qty?.toString())
       ) {
-        valid = false;
-        error.materialUnitPriceErr = true;
-        error.materialUnitPriceMsg = "Please enter valid material unit price";
-      }
-      if (isEmpty(state?.qty?.toString())) {
-        valid = false;
-        error.quantityErr = true;
-        error.quantityMsg = "Please select the material qty";
-      } else if (!positiveIntRegex.test(state?.qty)) {
-        valid = false;
-        error.quantityErr = true;
-        error.quantityMsg = "Please enter valid material qty";
-      } else if (state?.qty >= 100000) {
-        valid = false;
-        error.quantityErr = true;
-        error.quantityMsg = "Please enter Quantity less then 100000";
-      }
+        if (isEmpty(state.material_type?.trim())) {
+          valid = false;
+          error.materialTypeErr = true;
+          error.materialTypeMsg = "Please enter the material type";
+        }
 
-      if (isEmpty(state.material_unit)) {
-        valid = false;
-        error.unitErr = true;
-        error.unitMsg = "Please enter material unit";
-      }
-    }
-    if (
-      !isEmpty(state?.manpower_rate?.toString()) ||
-      !isEmpty(state?.days?.toString())
-    ) {
-      if (isEmpty(state?.manpower_rate?.toString())) {
-        valid = false;
-        error.manpowerRateErr = true;
-        error.manpowerRateMsg = "Please enter the manpower rate";
-      } else if (!regex.test(state.manpower_rate)) {
-        valid = false;
-        error.manpowerRateErr = true;
-        error.manpowerRateMsg = "Please enter valid manpower rate";
-      } else if (state?.manpower_rate >= 100000) {
-        valid = false;
-        error.manpowerRateErr = true;
-        error.manpowerRateMsg = "Please enter valid manpower rate under 10000 ";
-      }
+        if (!state.material_unit_price) {
+          valid = false;
+          error.materialUnitPriceErr = true;
+          error.materialUnitPriceMsg = "Please enter the material unit price";
+        } else if (
+          !regex.test(state.material_unit_price) ||
+          parseInt(state.material_unit_price) <= 0
+        ) {
+          valid = false;
+          error.materialUnitPriceErr = true;
+          error.materialUnitPriceMsg = "Please enter valid material unit price";
+        }
+        if (isEmpty(state?.qty?.toString())) {
+          valid = false;
+          error.quantityErr = true;
+          error.quantityMsg = "Please select the material qty";
+        } else if (!positiveIntRegex.test(state?.qty)) {
+          valid = false;
+          error.quantityErr = true;
+          error.quantityMsg = "Please enter valid material qty";
+        } else if (state?.qty >= 100000) {
+          valid = false;
+          error.quantityErr = true;
+          error.quantityMsg = "Please enter Quantity less then 100000";
+        }
 
-      if (isEmpty(state?.days?.toString())) {
-        valid = false;
-        error.daysErr = true;
-        error.daysMsg = "Please select the days";
-      } else if (!positiveIntRegex.test(state?.days)) {
-        valid = false;
-        error.quantityErr = true;
-        error.quantityMsg = "Please enter valid days";
-      } else if (state?.days >= 365) {
-        valid = false;
-        error.daysErr = true;
-        error.daysMsg = "Please enter days under 365";
+        if (isEmpty(state.material_unit)) {
+          valid = false;
+          error.unitErr = true;
+          error.unitMsg = "Please enter material unit";
+        }
+      }
+      if (
+        !isEmpty(state?.manpower_rate?.toString()) ||
+        !isEmpty(state?.days?.toString())
+      ) {
+        if (isEmpty(state?.manpower_rate?.toString())) {
+          valid = false;
+          error.manpowerRateErr = true;
+          error.manpowerRateMsg = "Please enter the manpower rate";
+        } else if (!regex.test(state.manpower_rate)) {
+          valid = false;
+          error.manpowerRateErr = true;
+          error.manpowerRateMsg = "Please enter valid manpower rate";
+        } else if (state?.manpower_rate >= 100000) {
+          valid = false;
+          error.manpowerRateErr = true;
+          error.manpowerRateMsg =
+            "Please enter valid manpower rate under 10000 ";
+        }
+
+        if (isEmpty(state?.days?.toString()) || state?.days <= 0) {
+          valid = false;
+          error.daysErr = true;
+          error.daysMsg = "Please enter the days";
+        } else if (!positiveIntRegex.test(state?.days)) {
+          valid = false;
+          error.quantityErr = true;
+          error.quantityMsg = "Please enter valid days";
+        } else if (state?.days > totalDays) {
+          valid = false;
+          error.daysErr = true;
+          error.daysMsg =
+            "Days can't be more than the total assigned milestone duration";
+        }
       }
     }
 
@@ -584,12 +596,12 @@ export default function Budget(props) {
       return {
         name: item?.name,
         material_type: item?.material_type,
-        material_unit: item?.material_unit,
-        material_unit_price: item?.material_unit_price,
-        qty: item?.qty,
+        material_unit: item?.material_unit || "",
+        material_unit_price: item?.material_unit_price || "0",
+        qty: item?.qty || "0",
         milestone_id: item?.milestone?.id,
-        manpower_rate: item?.manpower_rate,
-        days: item?.days,
+        manpower_rate: item?.manpower_rate || "0",
+        days: item?.days || "0",
         specification: item?.specification,
         image: item?.photo_url,
       };
@@ -707,6 +719,7 @@ export default function Budget(props) {
   }
 
   async function deletePhoto(id, ind) {
+    setDeleteIND(ind);
     try {
       const response = await getApiData(
         `${Setting.endpoints.deleteTemplate}/${id}`,
@@ -714,7 +727,6 @@ export default function Budget(props) {
         {}
       );
       if (response?.success) {
-        toast.success(response?.message);
         const nArr = [...state.photo_url];
         nArr.splice(ind, 1);
         const nArr1 = [...state.photo_origin];
@@ -723,7 +735,10 @@ export default function Budget(props) {
       } else {
         toast.error(response?.message);
       }
+      setDeleteIND(null);
     } catch (error) {
+      setDeleteIND(null);
+
       console.log("ERROR=====>>>>>", error);
       toast.error(error.toString() || "Somthing went wromg try again later");
     }
@@ -809,30 +824,34 @@ export default function Budget(props) {
                   marginRight: 10,
                 }}
               >
-                <HighlightOffOutlined
-                  style={{
-                    zIndex: 10,
-                    cursor: "pointer",
-                    fontSize: 28,
-                    color: "#8C92A4",
-                  }}
-                  onClick={() => {
-                    let uploadID = "";
-                    if (state?.photo_url[index]?.image) {
-                      const nArr = [...state.photo_origin];
-                      const nArr1 = [...state.photo_url];
-                      nArr.splice(index, 1);
-                      nArr1.splice(index, 1);
-                      setState({
-                        ...state,
-                        photo_origin: nArr,
-                        photo_url: nArr1,
-                      });
-                    }
-                    uploadID = state?.photo_url[index]?.image_id;
-                    uploadID?.toString() && deletePhoto(uploadID, index);
-                  }}
-                />
+                {deleteIND === index ? (
+                  <CircularProgress style={{ color: "#274BF1" }} size={26} />
+                ) : (
+                  <HighlightOffOutlined
+                    style={{
+                      zIndex: 10,
+                      cursor: "pointer",
+                      fontSize: 28,
+                      color: "#8C92A4",
+                    }}
+                    onClick={() => {
+                      let uploadID = "";
+                      if (state?.photo_url[index]?.image) {
+                        const nArr = [...state.photo_origin];
+                        const nArr1 = [...state.photo_url];
+                        nArr.splice(index, 1);
+                        nArr1.splice(index, 1);
+                        setState({
+                          ...state,
+                          photo_origin: nArr,
+                          photo_url: nArr1,
+                        });
+                      }
+                      uploadID = state?.photo_url[index]?.image_id;
+                      uploadID?.toString() && deletePhoto(uploadID, index);
+                    }}
+                  />
+                )}
               </div>
             </div>
           );
@@ -844,6 +863,8 @@ export default function Budget(props) {
   function clearErr() {
     setErrObj({
       ...errObj,
+      materialTypeErr: false,
+      materialTypeMsg: "",
       materialUnitPriceErr: false,
       materialUnitPriceMsg: "",
       quantityErr: false,
@@ -1027,11 +1048,7 @@ export default function Budget(props) {
             }
             onChange={(e) => {
               setState({ ...state, material_type: e.target.value });
-              setErrObj({
-                ...errObj,
-                materialTypeErr: false,
-                materialTypeMsg: "",
-              });
+              clearErr();
             }}
             inputProps={{ maxLength: 50 }}
             error={
@@ -1784,7 +1801,7 @@ export default function Budget(props) {
         confirmation={() => {
           addBudget();
         }}
-        message={`Reno has already submitted the proposal to contractor so are you want to send it again?`}
+        message={`Reno has already submitted another proposal that you created for the same project. Are you sure you want to submit this new proposal?`}
       />
 
       <Menu
