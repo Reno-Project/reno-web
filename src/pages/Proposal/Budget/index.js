@@ -223,11 +223,11 @@ export default function Budget(props) {
     const error = { ...errObj };
     let valid = true;
 
-    if (!isArray(state.photo_url) || isEmpty(state.photo_url)) {
-      valid = false;
-      error.photoErr = true;
-      error.photoMsg = "Please upload photo";
-    }
+    // if (!isArray(state.photo_url) || isEmpty(state.photo_url)) {
+    //   valid = false;
+    //   error.photoErr = true;
+    //   error.photoMsg = "Please upload photo";
+    // }
 
     if (isEmpty(state.name?.trim())) {
       valid = false;

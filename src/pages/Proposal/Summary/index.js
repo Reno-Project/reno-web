@@ -137,11 +137,11 @@ export default function Summary(props) {
         error.emailMsg = "Please enter valid email";
       }
 
-      if (!isArray(document) || isEmpty(document)) {
-        valid = false;
-        error.documentErr = true;
-        error.documentMsg = "Please upload document";
-      }
+      // if (!isArray(document) || isEmpty(document)) {
+      //   valid = false;
+      //   error.documentErr = true;
+      //   error.documentMsg = "Please upload document";
+      // }
     }
 
     setErrObj(error);
