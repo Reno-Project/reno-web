@@ -189,7 +189,7 @@ export default function Milestone(props) {
     setmilestoneLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}/${villa?.id}`,
+        `${Setting.endpoints.milestoneProposalList}/${villa?.proposal_id}`,
         "GET",
         {}
       );
@@ -220,7 +220,7 @@ export default function Milestone(props) {
   async function getBudgetList() {
     try {
       const response = await getApiData(
-        `${Setting.endpoints.budgetList}/${villa?.id}`,
+        `${Setting.endpoints.budgetList}/${villa?.proposal_id}`,
         "GET",
         {}
       );
@@ -248,7 +248,7 @@ export default function Milestone(props) {
     });
 
     const data = {
-      proposal_id: villa?.id?.toString(),
+      proposal_id: villa?.proposal_id?.toString(),
       milestone_details: extractedData,
     };
     try {
@@ -401,8 +401,11 @@ export default function Milestone(props) {
       error.startErr = true;
       error.startMsg = "Please select the start date";
     } else if (
-      (!isNull(stDate) && (stDate?.toString() === "Invalid date" || stDate?.toString() === "Invalid Date")) ||
-      (st === "Invalid date" || st === "Invalid Date")
+      (!isNull(stDate) &&
+        (stDate?.toString() === "Invalid date" ||
+          stDate?.toString() === "Invalid Date")) ||
+      st === "Invalid date" ||
+      st === "Invalid Date"
     ) {
       valid = false;
       error.startErr = true;
@@ -419,7 +422,8 @@ export default function Milestone(props) {
       error.endMsg = "Please select the end date";
     } else if (
       !isNull(enDate) &&
-      (enDate?.toString() === "Invalid date" || enDate?.toString() === "Invalid Date")
+      (enDate?.toString() === "Invalid date" ||
+        enDate?.toString() === "Invalid Date")
     ) {
       valid = false;
       error.endErr = true;

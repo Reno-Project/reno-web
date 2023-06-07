@@ -32,7 +32,7 @@ export default function RequestedProposal() {
     : villa?.user_data || {};
   const isSubmitted = location?.state?.status === "submitted";
   const [isPressed, setIsPressed] = useState(false);
-  const [pageLoad, setPageLoad] = useState(false);
+  const [pageLoad, setPageLoad] = useState(true);
 
   const [url, setUrl] = useState("");
   const [imgurl, setImgUrl] = useState("");
@@ -41,7 +41,7 @@ export default function RequestedProposal() {
   const theme = useTheme();
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    isSubmitted && getProjectDetails();
+    getProjectDetails();
   }, []);
 
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
@@ -1531,47 +1531,50 @@ export default function RequestedProposal() {
                     </Grid>
                   )}
 
-                <Grid item container alignContent={"center"} pt={"25px"}>
-                  <Grid item xs={12}>
-                    <Typography className={classes.acctext}>
-                      Project Files:
-                    </Typography>
-                  </Grid>
-                  <Grid item lg={12}>
-                    {villa?.project_image?.map((item, index) => {
-                      return (
-                        <a href={url ? `${url}` : null} target="_blank">
-                          <img
-                            onClick={() => {
-                              if (item?.type?.includes("image")) {
-                                setIsPressed(true);
-                                setImgUrl(item?.image);
-                                setUrl("");
-                              } else {
-                                setUrl(item?.image);
-                                setImgUrl("");
-                              }
-                            }}
-                            alt="logo"
-                            src={
-                              item?.type?.includes("image")
-                                ? item?.image
-                                : Images.pdf
-                            }
-                            style={{
-                              cursor: "pointer",
-                              width: "140px",
-                              height: "140px",
-                              borderRadius: "7px",
-                              margin: "15px 5px",
-                              objectFit: "contain",
-                            }}
-                          />
-                        </a>
-                      );
-                    })}
-                  </Grid>
-                </Grid>
+                {isArray(villa?.project_image) &&
+                  villa?.project_image.length > 0 && (
+                    <Grid item container alignContent={"center"} pt={"25px"}>
+                      <Grid item xs={12}>
+                        <Typography className={classes.acctext}>
+                          Project Files:
+                        </Typography>
+                      </Grid>
+                      <Grid item lg={12}>
+                        {villa?.project_image?.map((item, index) => {
+                          return (
+                            <a href={url ? `${url}` : null} target="_blank">
+                              <img
+                                onClick={() => {
+                                  if (item?.type?.includes("image")) {
+                                    setIsPressed(true);
+                                    setImgUrl(item?.image);
+                                    setUrl("");
+                                  } else {
+                                    setUrl(item?.image);
+                                    setImgUrl("");
+                                  }
+                                }}
+                                alt="logo"
+                                src={
+                                  item?.type?.includes("image")
+                                    ? item?.image
+                                    : Images.pdf
+                                }
+                                style={{
+                                  cursor: "pointer",
+                                  width: "140px",
+                                  height: "140px",
+                                  borderRadius: "7px",
+                                  margin: "15px 5px",
+                                  objectFit: "contain",
+                                }}
+                              />
+                            </a>
+                          );
+                        })}
+                      </Grid>
+                    </Grid>
+                  )}
 
                 {!isSubmitted && (
                   <Grid

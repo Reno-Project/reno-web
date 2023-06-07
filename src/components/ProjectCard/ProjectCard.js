@@ -21,7 +21,9 @@ const ProjectCard = (props) => {
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
-  const createdAt = moment(villa?.createdAt).format("DD-MM-yyyy");
+  const createdAt = moment(villa?.start_date, "DD/MM/YYYY").format(
+    "DD-MM-yyyy"
+  );
   const updatedAt = moment(villa?.updatedAt).format("DD-MM-yyyy");
   const moveInDate = moment(villa?.move_in_date, "YYYY-MM-DD").format(
     "DD.MM.YYYY"
@@ -62,7 +64,7 @@ const ProjectCard = (props) => {
 
           <Typography className={classes.code1}>
             <Typography className={classes.code1} color={"#8C92A4"} mr={0.5}>
-              {requested ? "Created" : "Submitted"}:{" "}
+              {requested ? "Requested" : "Submitted"}:{" "}
             </Typography>{" "}
             {requested ? createdAt : updatedAt}
           </Typography>
@@ -114,7 +116,7 @@ const ProjectCard = (props) => {
             </div>
             <div className={classes.rowJustified}>
               <Typography className={classes.row}>
-                Your move-in date:
+                Client move-in date:
               </Typography>
               {!md && <EastOutlined style={{ color: "#475569" }} />}
               <Typography className={classes.budget}>{moveInDate}</Typography>

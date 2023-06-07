@@ -189,7 +189,7 @@ export default function Summary(props) {
   async function createproposalApicall() {
     setloader(true);
     const data = {
-      proposal_id: villa?.id,
+      proposal_id: villa?.proposal_id,
       scope_of_work: scope,
       project_type: villa?.project_type,
     };

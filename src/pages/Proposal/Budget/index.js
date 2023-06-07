@@ -195,7 +195,7 @@ export default function Budget(props) {
     setBudgetLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.budgetList}/${villa?.id}`,
+        `${Setting.endpoints.budgetList}/${villa?.proposal_id}`,
         "GET",
         {}
       );
@@ -600,7 +600,7 @@ export default function Budget(props) {
   async function getMilestoneList() {
     try {
       const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}/${villa?.id}`,
+        `${Setting.endpoints.milestoneProposalList}/${villa?.proposal_id}`,
         "GET",
         {}
       );
@@ -631,7 +631,7 @@ export default function Budget(props) {
     });
 
     const data = {
-      proposal_id: villa?.id,
+      proposal_id: villa?.proposal_id,
       budget_item: extractedData,
     };
 
@@ -1933,7 +1933,7 @@ export default function Budget(props) {
       {proposalModal && (
         <ProfileSuccessModal
           title="Congrats!"
-          msg="Proposal successfully submitted!"
+          msg="Proposal submitted successfully!"
           btnTitle="Continue"
           visible={proposalModal}
         />
