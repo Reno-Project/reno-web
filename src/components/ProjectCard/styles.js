@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "600 !important",
     fontSize: "21px !important",
     lineHeight: "28px !important",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
   },
   rowJustified: {
     display: "flex",

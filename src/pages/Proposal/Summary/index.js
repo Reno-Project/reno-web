@@ -17,10 +17,9 @@ import theme from "../../../config/theme";
 import Milestone from "../../Proposal/Milestone";
 import Budget from "../../Proposal/Budget";
 import CInput from "../../../components/CInput";
-import _, { cloneDeep, isArray, isEmpty, isObject } from "lodash";
+import _, { isArray, isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
-import ConfirmModel from "../../../components/ConfirmModel";
 import ProposalCard from "../../../components/ProposalCard";
 import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
@@ -73,12 +72,14 @@ export default function Summary(props) {
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
   const [document, setDocument] = useState([]);
+  const [originalDoc, setOriginalDoc] = useState([]);
+  const [uploadLoader, setUploadLoader] = useState(false);
+  const [deleteIND, setDeleteIND] = useState(null);
 
   const [disableMilestone, setDisableMilestone] = useState(true);
   const [disableBudget, setDisableBudget] = useState(true);
   const [loader, setloader] = useState(false);
   const [expertiseList, setExpertiesList] = useState([]);
-  const [dpId, setDpId] = useState("");
 
   useEffect(() => {
     if (
@@ -93,8 +94,8 @@ export default function Summary(props) {
       setName(proposalDetails?.name || "");
       setDescription(proposalDetails?.description || "");
       setEmail(proposalDetails?.email || "");
-
       setDocument(proposalDetails?.project || []);
+      setOriginalDoc(proposalDetails?.project_origin);
       getprojectList();
     } else {
       getprojectList();
@@ -146,70 +147,69 @@ export default function Summary(props) {
 
     setErrObj(error);
     if (valid) {
-      createproposalApicall();
+      if (createProposal) {
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            scope_of_work: scope,
+            project_type: projectType,
+            name,
+            description: description,
+            email,
+            project: document || [],
+            project_origin: originalDoc,
+          })
+        );
+        setDisableMilestone(false);
+
+        setTabValue(1);
+      } else {
+        createproposalApicall();
+      }
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
 
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
   async function createproposalApicall() {
     setloader(true);
-    const filterDocs =
-      (isArray(document) &&
-        !isEmpty(document) &&
-        document?.filter((obj) => !obj.id)) ||
-      [];
-    const data = createProposal
-      ? {
-          scope_of_work: scope,
-          project_type: projectType?.project_name,
-          name,
-          description: description,
-          email,
-          project: filterDocs,
-        }
-      : {
-          proposal_id: villa?.id,
-          scope_of_work: scope,
-          project_type: villa?.project_type,
-        };
+    const data = {
+      proposal_id: villa?.id,
+      scope_of_work: scope,
+      project_type: villa?.project_type,
+    };
 
-    if (createProposal && proposalDetails?.id) {
-      data.id = proposalDetails?.id;
-    }
-
-    const endpoint = createProposal
-      ? Setting.endpoints.directproposal
-      : Setting.endpoints.createproposal;
+    const endpoint = Setting.endpoints.createproposal;
 
     try {
       const response = await getAPIProgressData(endpoint, "POST", data, true);
       if (response?.success) {
-        // toast.success(response?.message);
         const scope_of_work = scope;
-        createProposal
-          ? dispatch(
-              setProposalDetails({
-                ...proposalDetails,
-                id: response?.data?.project_id,
-                scope_of_work,
-                project_type: projectType,
-                name,
-                description: description,
-                email,
-                project: response?.data?.image || [],
-              })
-            )
-          : dispatch(
-              setProposalDetails({
-                ...proposalDetails,
-                scope_of_work,
-                project_type: projectType,
-              })
-            );
+
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            scope_of_work,
+            project_type: projectType,
+          })
+        );
         setDocument(response?.data?.image);
         setDisableMilestone(false);
-        setDpId(response?.data?.proposal_id);
         setTimeout(() => {
           setTabValue(1);
         }, 100);
@@ -221,6 +221,46 @@ export default function Summary(props) {
       console.log("ERROR=====>>>>>", error);
       toast.error(error.toString() || "Something went wrong try again later");
       setloader(false);
+    }
+  }
+
+  async function UploadFile(img) {
+    setUploadLoader(true);
+    const data = {
+      image: img,
+    };
+    try {
+      const response = await getAPIProgressData(
+        Setting.endpoints.uploadTemplate,
+        "POST",
+        data,
+        true
+      );
+      if (response.success) {
+        const nArr = document ? [...document] : [];
+        response?.data?.map((item) => nArr.push(item));
+
+        const nArr1 = originalDoc ? [...originalDoc] : [];
+        for (let i = 0; i < img.length; i++) {
+          const base64Data = await convertToBase64(img[i]);
+          nArr1.push(base64Data);
+        }
+        setDocument(nArr);
+        setOriginalDoc(nArr1);
+
+        setErrObj({
+          ...errObj,
+          photoErr: false,
+          photoMsg: "",
+        });
+      } else {
+        toast.error(response.message);
+      }
+      setUploadLoader("");
+    } catch (error) {
+      console.log("error", error);
+      toast.error(error.toString());
+      setUploadLoader("");
     }
   }
 
@@ -254,27 +294,122 @@ export default function Summary(props) {
   }
 
   async function deletePhoto(id, ind) {
+    setDeleteIND(ind);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.deleteSummaryImage}/${id}`,
+        `${Setting.endpoints.deleteTemplate}/${id}`,
         "GET",
         {}
       );
       if (response?.success) {
-        toast.success(response?.message, { toastId: 11 });
         const nArr = [...document];
         nArr.splice(ind, 1);
+        const nArr1 = [...originalDoc];
+        nArr1.splice(ind, 1);
         setDocument(nArr);
-        dispatch(setProposalDetails({ ...proposalDetails, project: nArr }));
+        setOriginalDoc(nArr1);
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            project: nArr,
+            project_origin: nArr1,
+          })
+        );
       } else {
         toast.error(response?.message);
       }
+      setDeleteIND(null);
     } catch (error) {
+      setDeleteIND(null);
+
       console.log("ERROR=====>>>>>", error);
       toast.error(error.toString() || "Somthing went wromg try again later");
     }
   }
 
+  function displayImagesView() {
+    if (isArray(originalDoc) && document?.length > 0) {
+      return originalDoc?.map((item, index) => {
+        let imgUrl = "";
+        if (item.image) {
+          imgUrl = item.image;
+        } else if (typeof item === "object" && item instanceof Blob) {
+          imgUrl = URL.createObjectURL(item);
+        } else {
+          imgUrl = item;
+        }
+        return (
+          <div
+            style={{
+              display: "flex",
+              border: "1px solid #F2F3F4",
+              borderRadius: 6,
+              marginBottom: 10,
+              padding: 3,
+            }}
+          >
+            <img
+              style={{
+                width: 60,
+                height: 70,
+                borderRadius: 6,
+                marginRight: 20,
+                objectFit: "cover",
+              }}
+              src={imgUrl}
+              alt="Budget Photos"
+            />
+            <div style={{ margin: "auto 0" }}>
+              <Typography
+                style={{
+                  fontFamily: "Roobert-Regular",
+                  fontWeight: "500",
+                  color: "#202939",
+                  fontSize: 18,
+                }}
+              >
+                {item?.name || `Budget Image ${index + 1}` || ""}
+              </Typography>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginLeft: "auto",
+                marginRight: 10,
+              }}
+            >
+              {deleteIND === index ? (
+                <CircularProgress style={{ color: "#274BF1" }} size={26} />
+              ) : (
+                <HighlightOffOutlined
+                  style={{
+                    zIndex: 10,
+                    cursor: "pointer",
+                    fontSize: 28,
+                    color: "#8C92A4",
+                  }}
+                  onClick={() => {
+                    let uploadID = "";
+                    if (document[index]?.image) {
+                      const nArr = [...originalDoc];
+                      const nArr1 = [...document];
+                      nArr.splice(index, 1);
+                      nArr1.splice(index, 1);
+                      setOriginalDoc(nArr);
+                      setDocument(nArr1);
+                    }
+                    uploadID = document[index]?.image_id;
+                    uploadID?.toString() && deletePhoto(uploadID, index);
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        );
+      });
+    }
+  }
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
       <Grid
@@ -487,7 +622,7 @@ export default function Summary(props) {
                         marginBottom: 20,
                       }}
                     >
-                      {false /*uploadLoader */ ? (
+                      {uploadLoader ? (
                         <Grid
                           item
                           container
@@ -556,29 +691,18 @@ export default function Summary(props) {
                                 opacity: 0,
                                 cursor: "pointer",
                               }}
-                              // onChange={(e) => {
-                              //   const chosenFiles = Array.prototype.slice.call(
-                              //     e.target.files
-                              //   );
-                              // if (chosenFiles) {
-                              //   UploadFile(chosenFiles);
-                              // }
-                              // const nArr = document ? [...document] : [];
-                              // chosenFiles.map((item) => nArr.push(item));
-                              // setDocument(nArr);
-
                               onChange={(e) => {
                                 const chosenFiles = Array.prototype.slice.call(
                                   e.target.files
                                 );
-                                const data = [...document];
                                 let showMsg = false;
                                 let limit = false;
+                                const newArr = [...document];
                                 chosenFiles.map((item) => {
                                   const bool = checkImgSize(item);
-                                  if (bool && data.length < 5) {
-                                    data.push(item);
-                                  } else if (data.length >= 4) {
+                                  if (bool && newArr.length < 5) {
+                                    newArr.push(item);
+                                  } else if (newArr.length >= 4) {
                                     limit = true;
                                   } else {
                                     showMsg = true;
@@ -588,16 +712,18 @@ export default function Summary(props) {
                                   toast.error("You can upload maximum 5 files");
                                 } else if (showMsg) {
                                   toast.error(
-                                    "Some certificate you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                                    "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
                                   );
                                 }
-                                setDocument(data);
-                                setErrObj({
-                                  ...errObj,
-                                  documentErr: false,
-                                  documentMsg: "",
-                                });
+                                let shouldUpload =
+                                  isArray(newArr) &&
+                                  !isEmpty(newArr) &&
+                                  newArr?.filter((elem) => !elem?.image_id);
+                                if (shouldUpload) {
+                                  UploadFile(shouldUpload);
+                                }
                               }}
+                              // ref={fileInputRef}
                             />
                             <FormHelperText
                               error={errObj.documentErr}
@@ -615,91 +741,7 @@ export default function Summary(props) {
                               width: "100%",
                             }}
                           >
-                            {isArray(document) &&
-                              document?.length > 0 &&
-                              document?.map((item, index) => {
-                                let imgUrl = "";
-                                if (item?.id && typeof item === "object") {
-                                  imgUrl = item?.image;
-                                } else {
-                                  imgUrl = URL.createObjectURL(item);
-                                }
-                                return (
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      border: "1px solid #F2F3F4",
-                                      borderRadius: 6,
-                                      marginBottom: 10,
-                                      padding: 3,
-                                    }}
-                                  >
-                                    <img
-                                      style={{
-                                        width: 60,
-                                        height: 70,
-                                        borderRadius: 6,
-                                        marginRight: 20,
-                                        objectFit: "cover",
-                                      }}
-                                      src={imgUrl}
-                                      alt="Portfolio Photos"
-                                    />
-                                    <div style={{ margin: "auto 0" }}>
-                                      <Typography
-                                        style={{
-                                          fontFamily: "Roobert-Regular",
-                                          fontWeight: "500",
-                                          color: "#202939",
-                                          fontSize: 18,
-                                        }}
-                                      >
-                                        {item?.name ||
-                                          `Portfolio Image ${index + 1}` ||
-                                          ""}
-                                      </Typography>
-                                    </div>
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        marginLeft: "auto",
-                                        marginRight: 10,
-                                      }}
-                                    >
-                                      <HighlightOffOutlined
-                                        style={{
-                                          zIndex: 10,
-                                          cursor: "pointer",
-                                          fontSize: 28,
-                                          color: "#8C92A4",
-                                        }}
-                                        // onClick={() => {
-                                        //   let uploadID =
-                                        //     document[index]?.image_id;
-                                        //   uploadID &&
-                                        //     deletePhoto(uploadID, index);
-                                        // }}
-                                        onClick={() => {
-                                          if (item?.id) {
-                                            deletePhoto(item?.id, index);
-                                          } else {
-                                            const nArr = [...document];
-                                            nArr.splice(index, 1);
-                                            setDocument(nArr);
-                                            dispatch(
-                                              setProposalDetails({
-                                                ...proposalDetails,
-                                                project: nArr,
-                                              })
-                                            );
-                                          }
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
-                                );
-                              })}
+                            {displayImagesView()}
                           </Grid>
                         </>
                       )}
@@ -752,7 +794,6 @@ export default function Summary(props) {
                 }}
                 villa={villa}
                 createProposal={createProposal}
-                dpId={dpId}
               />
             ) : null}
             {tabValue === 2 ? (
@@ -764,7 +805,6 @@ export default function Summary(props) {
                 }}
                 villa={villa}
                 createProposal={createProposal}
-                dpId={dpId}
               />
             ) : null}
           </Grid>

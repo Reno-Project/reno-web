@@ -59,7 +59,7 @@ const errorObj = {
   amountMsg: "",
 };
 export default function Milestone(props) {
-  const { handleClick = () => null, villa, createProposal, dpId } = props;
+  const { handleClick = () => null, villa, createProposal } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
@@ -114,7 +114,18 @@ export default function Milestone(props) {
         }
       );
     }
-    getMilestoneList();
+    if (createProposal) {
+      if (
+        proposalDetails?.milestone_details?.previous ||
+        (isArray(proposalDetails?.milestone_details?.milestone) &&
+          !isEmpty(proposalDetails?.milestone_details?.milestone))
+      ) {
+        setMilestones(proposalDetails?.milestone_details?.milestone);
+        setState(proposalDetails?.milestone_details?.formvalues);
+      }
+    } else {
+      getMilestoneList();
+    }
   }, []);
 
   useEffect(() => {
@@ -178,9 +189,7 @@ export default function Milestone(props) {
     setmilestoneLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}/${
-          createProposal ? dpId : villa?.id
-        }`,
+        `${Setting.endpoints.milestoneProposalList}/${villa?.id}`,
         "GET",
         {}
       );
@@ -211,7 +220,7 @@ export default function Milestone(props) {
   async function getBudgetList() {
     try {
       const response = await getApiData(
-        `${Setting.endpoints.budgetList}/${createProposal ? dpId : villa?.id}`,
+        `${Setting.endpoints.budgetList}/${villa?.id}`,
         "GET",
         {}
       );
@@ -239,7 +248,7 @@ export default function Milestone(props) {
     });
 
     const data = {
-      proposal_id: createProposal ? dpId : villa?.id?.toString(),
+      proposal_id: villa?.id?.toString(),
       milestone_details: extractedData,
     };
     try {
@@ -393,11 +402,7 @@ export default function Milestone(props) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
-    } else if (
-      moment(stDate, "DD/MM/YYYY").isSameOrBefore(
-        moment(todayDate).format("DD/MM/YYYY")
-      )
-    ) {
+    } else if (moment(stDate, "DD/MM/YYYY").isBefore(moment(todayDate))) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
@@ -470,7 +475,38 @@ export default function Milestone(props) {
 
   const handleSubmit = () => {
     if (isArray(milestones) && !isEmpty(milestones)) {
-      addMilestone();
+      if (createProposal) {
+        const extractedData = milestones?.map((item, ind) => {
+          const { milestone_name, description, start_date, end_date, id } =
+            item;
+          if (id) {
+            return { id, milestone_name, description, start_date, end_date };
+          } else {
+            let idx = ind + 1;
+            return {
+              id: idx,
+              milestone_name,
+              description,
+              start_date,
+              end_date,
+            };
+          }
+        });
+        const milestone_details = {
+          formvalues: state,
+          milestone: extractedData,
+          previous: false,
+        };
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            milestone_details,
+          })
+        );
+        handleClick("next");
+      } else {
+        addMilestone();
+      }
     } else {
       toast.warning("Please add atleast one milestone");
     }
@@ -596,7 +632,7 @@ export default function Milestone(props) {
                     setState({
                       ...state,
                       start_date: moment(e).format("MMMM DD, yyyy"),
-                      enddate: null,
+                      end_date: null,
                     });
                     setErrObj({
                       ...errObj,

@@ -68,7 +68,7 @@ const errorObj = {
 };
 
 export default function Budget(props) {
-  const { handleClick = () => null, villa, createProposal, dpId } = props;
+  const { handleClick = () => null, villa, createProposal } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
@@ -131,7 +131,11 @@ export default function Budget(props) {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    getMilestoneList();
+    if (createProposal) {
+      setMilestones(proposalDetails?.milestone_details?.milestone);
+    } else {
+      getMilestoneList();
+    }
   }, []);
 
   useEffect(() => {
@@ -150,7 +154,28 @@ export default function Budget(props) {
       });
     }
     if (isArray(milestones) && !isEmpty(milestones)) {
-      getBudgetList();
+      if (createProposal) {
+        if (
+          proposalDetails?.budget_details?.previous ||
+          (isArray(proposalDetails?.budget_details?.budgets) &&
+            !isEmpty(proposalDetails?.budget_details?.budgets))
+        ) {
+          const updatedBudgets = proposalDetails?.budget_details?.budgets?.map(
+            (budget) => {
+              const matchingMilestone = milestones.find(
+                (milestone) => milestone.id === budget.milestone.id
+              );
+              if (matchingMilestone) {
+                return { ...budget, milestone: matchingMilestone };
+              }
+              return budget;
+            }
+          );
+          setBudgetDetails(updatedBudgets || []);
+        }
+      } else {
+        getBudgetList();
+      }
     }
   }, [milestones]);
 
@@ -170,7 +195,7 @@ export default function Budget(props) {
     setBudgetLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.budgetList}/${createProposal ? dpId : villa?.id}`,
+        `${Setting.endpoints.budgetList}/${villa?.id}`,
         "GET",
         {}
       );
@@ -575,9 +600,7 @@ export default function Budget(props) {
   async function getMilestoneList() {
     try {
       const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}/${
-          createProposal ? dpId : villa?.id
-        }`,
+        `${Setting.endpoints.milestoneProposalList}/${villa?.id}`,
         "GET",
         {}
       );
@@ -607,16 +630,10 @@ export default function Budget(props) {
       };
     });
 
-    const data = createProposal
-      ? {
-          proposal_id: dpId,
-          email: proposalDetails?.email,
-          budget_item: extractedData,
-        }
-      : {
-          proposal_id: villa?.id,
-          budget_item: extractedData,
-        };
+    const data = {
+      proposal_id: villa?.id,
+      budget_item: extractedData,
+    };
 
     try {
       const response = await getApiData(
@@ -664,12 +681,72 @@ export default function Budget(props) {
     }
   }
 
+  async function createproposalApicall(data) {
+    setsubmitLoader(true);
+
+    try {
+      const response = await getApiData(
+        Setting.endpoints.directproposal,
+        "POST",
+        data
+      );
+
+      if (response.success) {
+        setProposalModal(true);
+        dispatch(setProposalDetails({}));
+      } else {
+        toast.error(response.message);
+      }
+      setsubmitLoader("");
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
+      toast.error(error.toString());
+      setsubmitLoader("");
+    }
+  }
+
   const handleSubmit = () => {
     if (isArray(budgetDetails) && !isEmpty(budgetDetails)) {
-      checkSubmitted();
-      // setVisibleFinal(true);
+      if (createProposal) {
+        const transformedData = {
+          email: proposalDetails?.email,
+          name: proposalDetails?.name,
+          project_type: proposalDetails?.project_type.project_name,
+          exp_id: proposalDetails?.project_type.id,
+          description: proposalDetails?.description,
+          project: proposalDetails?.project,
+          proposal: {
+            scope_of_work: proposalDetails?.scope_of_work,
+            milestone_details:
+              proposalDetails?.milestone_details?.milestone?.map(
+                (milestone) => ({
+                  milestone_name: milestone?.milestone_name,
+                  description: milestone?.description,
+                  start_date: milestone?.start_date,
+                  end_date: milestone?.end_date,
+                  budget_item: proposalDetails?.budget_details?.budgets
+                    ?.filter((item) => item?.milestone?.id === milestone?.id)
+                    .map((item) => ({
+                      name: item?.name,
+                      material_type: item?.material_type,
+                      material_unit: item?.material_unit || "",
+                      material_unit_price: item?.material_unit_price || "0",
+                      qty: item?.qty || "0",
+                      manpower_rate: item?.manpower_rate || "0",
+                      days: item?.days || "0",
+                      specification: item?.specification,
+                      image: item?.photo_url || [],
+                    })),
+                })
+              ),
+          },
+        };
+
+        createproposalApicall(transformedData);
+      } else {
+        checkSubmitted();
+      }
     } else {
-      // validate(false);
       toast.warning("Please add atleast one budget");
     }
   };

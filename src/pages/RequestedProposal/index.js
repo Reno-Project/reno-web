@@ -239,6 +239,20 @@ export default function RequestedProposal() {
                       rowSpacing={2}
                     >
                       {villa?.milestone?.map((milestone, index) => {
+                        let amount = 0;
+                        if (
+                          isArray(milestone?.budget) &&
+                          milestone?.budget.length > 0
+                        ) {
+                          milestone?.budget.forEach((bud) => {
+                            let count =
+                              parseInt(bud?.material_unit_price || 0) *
+                                parseInt(bud?.qty || 0) +
+                              parseInt(bud?.manpower_rate || 0) *
+                                parseInt(bud?.days || 0);
+                            amount += count;
+                          });
+                        }
                         return (
                           <>
                             {villa?.milestone?.lenght > 1 && (
@@ -267,6 +281,23 @@ export default function RequestedProposal() {
                             >
                               <Typography className={classes.accRightText}>
                                 {milestone?.milestone_name}
+                              </Typography>
+                            </Grid>
+                            <Grid item lg={5} sm={12} md={6} xs={12}>
+                              <Typography className={classes.acctext}>
+                                Total milestone amount:
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              lg={7}
+                              sm={12}
+                              md={6}
+                              xs={12}
+                              textAlign={"end"}
+                            >
+                              <Typography className={classes.accRightText}>
+                                AED {amount || 0}
                               </Typography>
                             </Grid>
                             <Grid item lg={6} sm={12} md={6} xs={12}>
@@ -317,7 +348,15 @@ export default function RequestedProposal() {
                               </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                              <Typography className={classes.accRightText}>
+                              <Typography
+                                className={classes.accRightText}
+                                style={{
+                                  backgroundColor: "#F5F6F8",
+                                  padding: "11px 15px",
+                                  gap: "10px",
+                                  margin: "10px 0px",
+                                }}
+                              >
                                 {milestone?.description}
                               </Typography>
                             </Grid>
@@ -389,6 +428,12 @@ export default function RequestedProposal() {
                                       <Typography
                                         px={2}
                                         className={classes.accRightText}
+                                        style={{
+                                          backgroundColor: "#F5F6F8",
+                                          padding: "11px 15px",
+                                          gap: "10px",
+                                          margin: "10px 0px",
+                                        }}
                                       >
                                         {item?.specification}
                                       </Typography>
