@@ -382,6 +382,8 @@ export default function Milestone(props) {
     const enDate = new Date(state?.end_date);
     const todayDate = new Date();
 
+    const st = moment(stDate, "DD/MM/YYYY").format("DD/MM/YYYY");
+
     if (isEmpty(state.milestone_name)) {
       valid = false;
       error.nameErr = true;
@@ -398,11 +400,14 @@ export default function Milestone(props) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please select the start date";
-    } else if (!isNull(stDate) && stDate?.toString() == "Invalid Date") {
+    } else if (
+      (!isNull(stDate) && (stDate?.toString() === "Invalid date" || stDate?.toString() === "Invalid Date")) ||
+      (st === "Invalid date" || st === "Invalid Date")
+    ) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
-    } else if (moment(stDate, "DD/MM/YYYY").isBefore(moment(todayDate))) {
+    } else if (moment(st).isBefore(moment(todayDate).format("DD/MM/YYYY"))) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
@@ -412,7 +417,10 @@ export default function Milestone(props) {
       valid = false;
       error.endErr = true;
       error.endMsg = "Please select the end date";
-    } else if (!isNull(enDate) && enDate?.toString() == "Invalid Date") {
+    } else if (
+      !isNull(enDate) &&
+      (enDate?.toString() === "Invalid date" || enDate?.toString() === "Invalid Date")
+    ) {
       valid = false;
       error.endErr = true;
       error.endMsg = "Please enter valid date";
@@ -440,6 +448,7 @@ export default function Milestone(props) {
         const newArray = [...milestones]; // create a copy of the array
         newArray[selectedBudget?.index] = state; // modify the copy
         setMilestones(newArray);
+        setSelectedBudget({});
         dispatch(
           setProposalDetails({
             ...proposalDetails,
