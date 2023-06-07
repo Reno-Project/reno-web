@@ -59,6 +59,7 @@ export function onMessageListener() {
       const notiData = payload?.notification;
       let metaObj = payload?.data?.meta ? JSON.parse(payload?.data?.meta) : "";
       notiData.type = metaObj?.type || "";
+      notiData.proposal_id = metaObj?.id;
       store.dispatch(authActions.setNotiData(notiData));
       store.dispatch(authActions.displayNotificationPopUp(true));
       setTimeout(() => {
