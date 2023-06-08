@@ -521,7 +521,7 @@ export default function Milestone(props) {
         addMilestone();
       }
     } else {
-      toast.warning("Please add atleast one milestone");
+      toast.warning("Please add at least one milestone");
     }
   };
 

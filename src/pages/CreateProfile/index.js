@@ -442,7 +442,7 @@ const CreateProfile = (props) => {
       setActiveStep((step) => step + 1);
     } else if (step === 2) {
       if (isArray(state.portfolio) && state.portfolio.length === 0) {
-        toast.error("Please upload atleast one image");
+        toast.error("Please upload at least one image");
       } else {
         addPortfolio();
       }

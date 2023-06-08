@@ -415,12 +415,13 @@ export default function Budget(props) {
           valid = false;
           error.quantityErr = true;
           error.quantityMsg = "Please enter valid days";
-        } else if (state?.days > totalDays) {
-          valid = false;
-          error.daysErr = true;
-          error.daysMsg =
-            "Days can't be more than the total assigned milestone duration";
         }
+        //  else if (state?.days > totalDays) {
+        //   valid = false;
+        //   error.daysErr = true;
+        //   error.daysMsg =
+        //     "Days can't be more than the total assigned milestone duration";
+        // }
       }
     }
 
@@ -712,7 +713,7 @@ export default function Budget(props) {
         checkSubmitted();
       }
     } else {
-      toast.warning("Please add atleast one budget");
+      toast.warning("Please add at least one budget");
     }
   };
 
