@@ -32,29 +32,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   activeContainer: {
-    position: "relative",
-    top: -30,
-    left: 65,
-    "@media (max-width:1832px)": {
-      left: 55,
-      top: -28,
-    },
-    "@media (max-width:1538px)": {
-      left: 50,
-      top: -25,
-    },
-    "@media (max-width:1440px)": {
-      left: 50,
-      top: -22,
-    },
-    "@media (max-width:1384px)": {
-      left: 44,
-      top: -21,
-    },
-    "@media (max-width:1194px)": {
-      top: -30,
-      left: 65,
-    },
+    position: "absolute",
+    bottom: 5,
+    right: 5,
   },
   activeStatus: {
     width: 16,
@@ -62,26 +42,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 16,
     backgroundColor: "#32D583",
     border: "1.5px solid #FFFFF",
-    "@media (max-width:1832px)": {
-      width: 14,
-      height: 14,
-      borderRadius: 14,
-    },
-    "@media (max-width:1538px)": {
-      width: 12,
-      height: 12,
-      borderRadius: 12,
-    },
-    "@media (max-width:1440px)": {
-      width: 10,
-      height: 10,
-      borderRadius: 10,
-    },
-    "@media (max-width:1194px)": {
-      width: 16,
-      height: 16,
-      borderRadius: 16,
-    },
   },
   titleText: {
     fontSize: "16px !important",

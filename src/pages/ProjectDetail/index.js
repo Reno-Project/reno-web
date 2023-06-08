@@ -113,13 +113,15 @@ export default function ProjectDetail() {
                 columnGap={2}
               >
                 <Grid item>
-                  <img
-                    src={villa?.Contractor?.profile_url}
-                    alt="chat"
-                    className={classes.imageStyle}
-                  />
-                  <div className={classes.activeContainer}>
-                    <div className={classes.activeStatus}></div>
+                  <div style={{ position: "relative" }}>
+                    <img
+                      src={villa?.Contractor?.profile_url}
+                      alt="chat"
+                      className={classes.imageStyle}
+                    />
+                    <div className={classes.activeContainer}>
+                      <div className={classes.activeStatus}></div>
+                    </div>
                   </div>
                 </Grid>
                 <Grid item container>
@@ -241,6 +243,20 @@ export default function ProjectDetail() {
                     rowSpacing={2}
                   >
                     {villa?.milestone?.map((milestone, index) => {
+                      let amount = 0;
+                      if (
+                        isArray(milestone?.budget) &&
+                        milestone?.budget.length > 0
+                      ) {
+                        milestone?.budget.forEach((bud) => {
+                          let count =
+                            parseInt(bud?.material_unit_price || 0) *
+                              parseInt(bud?.qty || 0) +
+                            parseInt(bud?.manpower_rate || 0) *
+                              parseInt(bud?.days || 0);
+                          amount += count;
+                        });
+                      }
                       return (
                         <>
                           {villa?.milestone?.lenght > 1 && (
@@ -269,6 +285,23 @@ export default function ProjectDetail() {
                           >
                             <Typography className={classes.accRightText}>
                               {milestone?.milestone_name}
+                            </Typography>
+                          </Grid>
+                          <Grid item lg={5} sm={12} md={6} xs={12}>
+                            <Typography className={classes.acctext}>
+                              Total milestone amount:
+                            </Typography>
+                          </Grid>
+                          <Grid
+                            item
+                            lg={7}
+                            sm={12}
+                            md={6}
+                            xs={12}
+                            textAlign={"end"}
+                          >
+                            <Typography className={classes.accRightText}>
+                              AED {amount || 0}
                             </Typography>
                           </Grid>
                           <Grid item lg={6} sm={12} md={6} xs={12}>
@@ -315,7 +348,13 @@ export default function ProjectDetail() {
                             </Typography>
                           </Grid>
                           <Grid item xs={12}>
-                            <Typography className={classes.accRightText}>
+                            <Typography
+                              className={classes.accRightText}
+                              style={{
+                                backgroundColor: "#F5F6F8",
+                                padding: "11px 16px",
+                              }}
+                            >
                               {milestone?.description}
                             </Typography>
                           </Grid>
@@ -336,6 +375,7 @@ export default function ProjectDetail() {
                                     padding: 8,
                                     borderRadius: 8,
                                   }}
+                                  my={0.5}
                                 >
                                   {milestone?.budget?.length > 1 && (
                                     <Grid item xs={12} p={2}>
@@ -344,7 +384,7 @@ export default function ProjectDetail() {
                                         fontWeight={"bold !important"}
                                         className={classes.acctext}
                                       >
-                                        `Budget - {index + 1}`
+                                        Budget - {index + 1}
                                       </Typography>
                                     </Grid>
                                   )}
@@ -371,7 +411,7 @@ export default function ProjectDetail() {
                                       {item?.name}
                                     </Typography>
                                   </Grid>
-                                  <Grid item xs={12} mt={2}>
+                                  <Grid item xs={12}>
                                     <Typography
                                       px={2}
                                       className={classes.acctext}
@@ -383,6 +423,11 @@ export default function ProjectDetail() {
                                     <Typography
                                       px={2}
                                       className={classes.accRightText}
+                                      style={{
+                                        backgroundColor: "#F5F6F8",
+                                        padding: "11px 16px",
+                                        margin: "10px 0px",
+                                      }}
                                     >
                                       {item?.specification}
                                     </Typography>

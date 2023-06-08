@@ -682,8 +682,7 @@ export default function Budget(props) {
   }
 
   async function createproposalApicall(data) {
-    setsubmitLoader(true);
-
+    setButtonLoader(true);
     try {
       const response = await getApiData(
         Setting.endpoints.directproposal,
@@ -697,52 +696,18 @@ export default function Budget(props) {
       } else {
         toast.error(response.message);
       }
-      setsubmitLoader("");
+      setButtonLoader("");
     } catch (error) {
       console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
       toast.error(error.toString());
-      setsubmitLoader("");
+      setButtonLoader("");
     }
   }
 
   const handleSubmit = () => {
     if (isArray(budgetDetails) && !isEmpty(budgetDetails)) {
       if (createProposal) {
-        const transformedData = {
-          email: proposalDetails?.email,
-          name: proposalDetails?.name,
-          project_type: proposalDetails?.project_type.project_name,
-          exp_id: proposalDetails?.project_type.id,
-          description: proposalDetails?.description,
-          project: proposalDetails?.project,
-          proposal: {
-            scope_of_work: proposalDetails?.scope_of_work,
-            milestone_details:
-              proposalDetails?.milestone_details?.milestone?.map(
-                (milestone) => ({
-                  milestone_name: milestone?.milestone_name,
-                  description: milestone?.description,
-                  start_date: milestone?.start_date,
-                  end_date: milestone?.end_date,
-                  budget_item: proposalDetails?.budget_details?.budgets
-                    ?.filter((item) => item?.milestone?.id === milestone?.id)
-                    .map((item) => ({
-                      name: item?.name,
-                      material_type: item?.material_type,
-                      material_unit: item?.material_unit || "",
-                      material_unit_price: item?.material_unit_price || "0",
-                      qty: item?.qty || "0",
-                      manpower_rate: item?.manpower_rate || "0",
-                      days: item?.days || "0",
-                      specification: item?.specification,
-                      image: item?.photo_url || [],
-                    })),
-                })
-              ),
-          },
-        };
-
-        createproposalApicall(transformedData);
+        setVisibleFinal(true);
       } else {
         checkSubmitted();
       }
@@ -1866,7 +1831,47 @@ export default function Budget(props) {
         loader={buttonLoader}
         handleClose={() => setVisibleFinal(false)}
         confirmation={() => {
-          addBudget();
+          if (createProposal) {
+            const transformedData = {
+              email: proposalDetails?.email,
+              name: proposalDetails?.name,
+              project_type: proposalDetails?.project_type.project_name,
+              exp_id: proposalDetails?.project_type.id,
+              description: proposalDetails?.description,
+              project: proposalDetails?.project,
+              proposal: {
+                scope_of_work: proposalDetails?.scope_of_work,
+                milestone_details:
+                  proposalDetails?.milestone_details?.milestone?.map(
+                    (milestone) => ({
+                      milestone_name: milestone?.milestone_name,
+                      description: milestone?.description,
+                      start_date: milestone?.start_date,
+                      end_date: milestone?.end_date,
+                      budget_item: proposalDetails?.budget_details?.budgets
+                        ?.filter(
+                          (item) => item?.milestone?.id === milestone?.id
+                        )
+                        .map((item) => ({
+                          name: item?.name,
+                          material_type: item?.material_type,
+                          material_unit: item?.material_unit || "",
+                          material_unit_price: item?.material_unit_price || "0",
+                          qty: item?.qty || "0",
+                          manpower_rate: item?.manpower_rate || "0",
+                          days: item?.days || "0",
+                          specification: item?.specification,
+                          image: item?.photo_url || [],
+                        })),
+                    })
+                  ),
+              },
+            };
+
+            createproposalApicall(transformedData);
+          } else {
+            addBudget();
+          }
         }}
         message={`Are you sure you want to submit proposal?`}
       />
