@@ -36,6 +36,8 @@ const errorObj = {
   typeMsg: "",
   nameErr: false,
   nameMsg: "",
+  cNameErr: false,
+  cNameMsg: "",
   descriptionErr: false,
   descriptionMsg: "",
   emailErr: false,
@@ -69,6 +71,7 @@ export default function Summary(props) {
   const [scope, setScope] = useState("");
   const [projectType, setProjectType] = useState(null);
   const [name, setName] = useState("");
+  const [customerName, setCustomerName] = useState("");
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
   const [document, setDocument] = useState([]);
@@ -93,9 +96,10 @@ export default function Summary(props) {
       setProjectType(proposalDetails?.project_type || "");
       setName(proposalDetails?.name || "");
       setDescription(proposalDetails?.description || "");
+      setCustomerName(proposalDetails?.customer_name || "");
       setEmail(proposalDetails?.email || "");
-      setDocument(proposalDetails?.project || []);
-      setOriginalDoc(proposalDetails?.project_origin);
+      setOriginalDoc(proposalDetails?.project || []);
+      // setOriginalDoc(proposalDetails?.project_origin);
       getprojectList();
     } else {
       getprojectList();
@@ -123,11 +127,18 @@ export default function Summary(props) {
         error.nameErr = true;
         error.nameMsg = "Please enter project name";
       }
+
       if (isEmpty(description?.trim())) {
         valid = false;
         error.descriptionErr = true;
         error.descriptionMsg = "Please enter project description";
       }
+      if (isEmpty(customerName?.trim())) {
+        valid = false;
+        error.cNameErr = true;
+        error.cNameMsg = "Please enter customer name";
+      }
+
       if (isEmpty(email)) {
         valid = false;
         error.emailErr = true;
@@ -156,8 +167,9 @@ export default function Summary(props) {
             name,
             description: description,
             email,
-            project: document || [],
-            project_origin: originalDoc,
+            customer_name: customerName,
+            project: originalDoc || [],
+            // project_origin: originalDoc,
           })
         );
         setDisableMilestone(false);
@@ -225,43 +237,18 @@ export default function Summary(props) {
   }
 
   async function UploadFile(img) {
-    setUploadLoader(true);
-    const data = {
-      image: img,
-    };
-    try {
-      const response = await getAPIProgressData(
-        Setting.endpoints.uploadTemplate,
-        "POST",
-        data,
-        true
-      );
-      if (response.success) {
-        const nArr = document ? [...document] : [];
-        response?.data?.map((item) => nArr.push(item));
-
-        const nArr1 = originalDoc ? [...originalDoc] : [];
-        for (let i = 0; i < img.length; i++) {
-          const base64Data = await convertToBase64(img[i]);
-          nArr1.push(base64Data);
-        }
-        setDocument(nArr);
-        setOriginalDoc(nArr1);
-
-        setErrObj({
-          ...errObj,
-          photoErr: false,
-          photoMsg: "",
-        });
-      } else {
-        toast.error(response.message);
-      }
-      setUploadLoader("");
-    } catch (error) {
-      console.log("error", error);
-      toast.error(error.toString());
-      setUploadLoader("");
+    const nArr1 = originalDoc ? [...originalDoc] : [];
+    for (let i = 0; i < img.length; i++) {
+      const base64Data = await convertToBase64(img[i]);
+      nArr1.push(base64Data);
     }
+    setOriginalDoc(nArr1);
+
+    setErrObj({
+      ...errObj,
+      photoErr: false,
+      photoMsg: "",
+    });
   }
 
   async function getprojectList() {
@@ -311,8 +298,8 @@ export default function Summary(props) {
         dispatch(
           setProposalDetails({
             ...proposalDetails,
-            project: nArr,
-            project_origin: nArr1,
+            project: nArr1,
+            // project_origin: nArr1,
           })
         );
       } else {
@@ -328,7 +315,7 @@ export default function Summary(props) {
   }
 
   function displayImagesView() {
-    if (isArray(originalDoc) && document?.length > 0) {
+    if (isArray(originalDoc) && originalDoc?.length > 0) {
       return originalDoc?.map((item, index) => {
         let imgUrl = "";
         if (item.image) {
@@ -390,17 +377,15 @@ export default function Summary(props) {
                     color: "#8C92A4",
                   }}
                   onClick={() => {
-                    let uploadID = "";
-                    if (document[index]?.image) {
-                      const nArr = [...originalDoc];
-                      const nArr1 = [...document];
-                      nArr.splice(index, 1);
-                      nArr1.splice(index, 1);
-                      setOriginalDoc(nArr);
-                      setDocument(nArr1);
-                    }
-                    uploadID = document[index]?.image_id;
-                    uploadID?.toString() && deletePhoto(uploadID, index);
+                    const nArr = [...originalDoc];
+                    nArr.splice(index, 1);
+                    setOriginalDoc(nArr);
+                    dispatch(
+                      setProposalDetails({
+                        ...proposalDetails,
+                        project: nArr,
+                      })
+                    );
                   }}
                 />
               )}
@@ -573,6 +558,24 @@ export default function Summary(props) {
                     </Grid>
                     <Grid item xs={12}>
                       <CInput
+                        label="Customer Name"
+                        placeholder="Write here..."
+                        value={customerName}
+                        onChange={(e) => {
+                          setCustomerName(e.target.value);
+                          setErrObj({
+                            ...errObj,
+                            cNameErr: false,
+                            cNameMsg: "",
+                          });
+                        }}
+                        inputProps={{ maxLength: 50 }}
+                        error={errObj.cNameErr}
+                        helpertext={errObj.cNameMsg}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <CInput
                         label="Customer Email"
                         placeholder="Enter email address"
                         value={email}
@@ -697,7 +700,7 @@ export default function Summary(props) {
                                 );
                                 let showMsg = false;
                                 let limit = false;
-                                const newArr = [...document];
+                                const newArr = [...originalDoc];
                                 chosenFiles.map((item) => {
                                   const bool = checkImgSize(item);
                                   if (bool && newArr.length < 5) {
@@ -718,12 +721,13 @@ export default function Summary(props) {
                                 let shouldUpload =
                                   isArray(newArr) &&
                                   !isEmpty(newArr) &&
-                                  newArr?.filter((elem) => !elem?.image_id);
+                                  newArr?.filter(
+                                    (elem) => typeof elem !== "string"
+                                  );
                                 if (shouldUpload) {
                                   UploadFile(shouldUpload);
                                 }
                               }}
-                              // ref={fileInputRef}
                             />
                             <FormHelperText
                               error={errObj.documentErr}

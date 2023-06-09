@@ -30,7 +30,7 @@ import CInput from "../../../components/CInput";
 import { useTheme } from "@emotion/react";
 import Images from "../../../config/images";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import _, { isArray, isEmpty, isNull, isObject } from "lodash";
+import _, { create, isArray, isEmpty, isNull, isObject } from "lodash";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -685,13 +685,15 @@ export default function Budget(props) {
   async function createproposalApicall(data) {
     setButtonLoader(true);
     try {
-      const response = await getApiData(
+      const response = await getAPIProgressData(
         Setting.endpoints.directproposal,
         "POST",
-        data
+        data,
+        true
       );
 
       if (response.success) {
+        setVisibleFinal(false);
         setProposalModal(true);
         dispatch(setProposalDetails({}));
       } else {
@@ -720,6 +722,21 @@ export default function Budget(props) {
   function clearData() {
     setState(initialFormvalues);
     setErrObj(errorObj);
+  }
+
+  async function UploadFileDirectly(img) {
+    const nArr1 = state.photo_origin ? [...state.photo_origin] : [];
+    for (let i = 0; i < img.length; i++) {
+      const base64Data = await convertToBase64(img[i]);
+      nArr1.push(base64Data);
+    }
+    setState({ ...state, photo_origin: nArr1 });
+
+    setErrObj({
+      ...errObj,
+      photoErr: false,
+      photoMsg: "",
+    });
   }
 
   async function UploadFile(img) {
@@ -802,6 +819,50 @@ export default function Budget(props) {
     });
   };
 
+  const convertBase64ToImageFile = (base64String, filename) => {
+    const arr = base64String.split(",");
+    const mimeType = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const uint8Array = new Uint8Array(n);
+
+    while (n--) {
+      uint8Array[n] = bstr.charCodeAt(n);
+    }
+    const file = new File([uint8Array], filename, { type: mimeType });
+
+    // if (meta) {
+    //   file.budget_id = meta;
+    // }
+
+    return file;
+  };
+
+  const convertProjectToFiles = () => {
+    const projectFiles = proposalDetails?.project?.map(
+      (base64String, index) => {
+        const filename = `project_image_${index + 1}.jpg`;
+        return convertBase64ToImageFile(base64String, filename);
+      }
+    );
+
+    return projectFiles;
+  };
+
+  const convertPhotoOriginToFiles = (budget, budInd) => {
+    const photoOriginFiles = budget.photo_origin.map((base64String, index) => {
+      const filename = `photo_origin_${index + 1}.jpg`;
+      // Meta data for photo origin
+      // let obj = {
+      //   budget_id: budInd,
+      //   file: convertBase64ToImageFile(base64String, filename),
+      // };
+      return convertBase64ToImageFile(base64String, filename);
+    });
+
+    return photoOriginFiles;
+  };
+
   function checkImgSize(img) {
     let valid = true;
     if (img.size > 3145728) {
@@ -878,20 +939,29 @@ export default function Budget(props) {
                       color: "#8C92A4",
                     }}
                     onClick={() => {
-                      let uploadID = "";
-                      if (state?.photo_url[index]?.image) {
+                      if (createProposal) {
                         const nArr = [...state.photo_origin];
-                        const nArr1 = [...state.photo_url];
                         nArr.splice(index, 1);
-                        nArr1.splice(index, 1);
                         setState({
                           ...state,
                           photo_origin: nArr,
-                          photo_url: nArr1,
                         });
+                      } else {
+                        let uploadID = "";
+                        if (state?.photo_url[index]?.image) {
+                          const nArr = [...state.photo_origin];
+                          const nArr1 = [...state.photo_url];
+                          nArr.splice(index, 1);
+                          nArr1.splice(index, 1);
+                          setState({
+                            ...state,
+                            photo_origin: nArr,
+                            photo_url: nArr1,
+                          });
+                        }
+                        uploadID = state?.photo_url[index]?.image_id;
+                        uploadID?.toString() && deletePhoto(uploadID, index);
                       }
-                      uploadID = state?.photo_url[index]?.image_id;
-                      uploadID?.toString() && deletePhoto(uploadID, index);
                     }}
                   />
                 )}
@@ -992,7 +1062,9 @@ export default function Budget(props) {
                   );
                   let showMsg = false;
                   let limit = false;
-                  const newArr = [...state?.photo_url];
+                  const newArr = createProposal
+                    ? [...state?.photo_origin]
+                    : [...state?.photo_url];
                   chosenFiles.map((item) => {
                     const bool = checkImgSize(item);
                     if (bool && newArr.length < 5) {
@@ -1010,12 +1082,22 @@ export default function Budget(props) {
                       "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
                     );
                   }
-                  let shouldUpload =
-                    isArray(newArr) &&
-                    !isEmpty(newArr) &&
-                    newArr?.filter((elem) => !elem?.image_id);
-                  if (shouldUpload) {
-                    UploadFile(shouldUpload);
+                  if (createProposal) {
+                    let shouldUpload =
+                      isArray(newArr) &&
+                      !isEmpty(newArr) &&
+                      newArr?.filter((elem) => typeof elem !== "string");
+                    if (shouldUpload) {
+                      UploadFileDirectly(shouldUpload);
+                    }
+                  } else {
+                    let shouldUpload =
+                      isArray(newArr) &&
+                      !isEmpty(newArr) &&
+                      newArr?.filter((elem) => !elem?.image_id);
+                    if (shouldUpload) {
+                      UploadFile(shouldUpload);
+                    }
                   }
                 }}
                 ref={fileInputRef}
@@ -1112,21 +1194,6 @@ export default function Budget(props) {
         </Grid>
         <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
           <Grid item xs={12} md={4} id="Unit">
-            {/* <CInput
-              label="Material unit:"
-              placeholder="Enter material unit"
-              value={state.material_unit}
-              onChange={(e) => {
-                setState({ ...state, material_unit: e.target.value });
-                setErrObj({
-                  ...errObj,
-                  unitErr: false,
-                  unitMsg: "",
-                });
-              }}
-              error={errObj.unitErr}
-              helpertext={errObj.unitMsg}
-            /> */}
             <CAutocomplete
               label="Material unit:"
               placeholder="Enter material unit"
@@ -1477,20 +1544,21 @@ export default function Budget(props) {
               <Grid container className={classes.card}>
                 <Grid item container wrap={sm ? "wrap" : "nowrap"}>
                   <Grid item sx={12} justifyContent={"flex-start"}>
-                    {isArray(item?.photo_url) && !isEmpty(item?.photo_url) && (
-                      <>
-                        <img
-                          style={{
-                            width: md ? 150 : 220,
-                            maxHeight: 170,
-                            objectFit: "contain",
-                            borderRadius: 4,
-                          }}
-                          src={item?.photo_origin[0]}
-                          alt="budget"
-                        />
-                      </>
-                    )}
+                    {isArray(item?.photo_origin) &&
+                      !isEmpty(item?.photo_origin) && (
+                        <>
+                          <img
+                            style={{
+                              width: md ? 150 : 220,
+                              maxHeight: 170,
+                              objectFit: "contain",
+                              borderRadius: 4,
+                            }}
+                            src={item?.photo_origin[0]}
+                            alt="budget"
+                          />
+                        </>
+                      )}
                   </Grid>
                   <Grid
                     item
@@ -1630,24 +1698,6 @@ export default function Budget(props) {
                             >
                               Amount
                             </TableCell>
-                            {/* <TableCell
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                              align="right"
-                            >
-                              Status
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                              align="right"
-                            >
-                              Last Change
-                            </TableCell> */}
                           </TableRow>
                           <TableRow key={"Manpower"}>
                             <TableCell align="right">
@@ -1672,17 +1722,6 @@ export default function Budget(props) {
                                   parseInt(item.days || 0)}
                               </Typography>
                             </TableCell>
-
-                            {/* <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.manpowerStatus || "-"}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.manpowerLastChange || "-"}
-                              </Typography>
-                            </TableCell> */}
                           </TableRow>
                         </TableBody>
                       </Table>
@@ -1833,42 +1872,64 @@ export default function Budget(props) {
         handleClose={() => setVisibleFinal(false)}
         confirmation={() => {
           if (createProposal) {
+            const projectFiles = convertProjectToFiles();
+            const budgetFiles = proposalDetails?.budget_details?.budgets.reduce(
+              (acc, budget, index) => {
+                const photoOriginFiles = convertPhotoOriginToFiles(budget);
+                return [...acc, ...photoOriginFiles];
+              },
+              []
+            );
+            let i = 0;
             const transformedData = {
               email: proposalDetails?.email,
               name: proposalDetails?.name,
+              username: proposalDetails?.customer_name,
               project_type: proposalDetails?.project_type.project_name,
               exp_id: proposalDetails?.project_type.id,
               description: proposalDetails?.description,
-              project: proposalDetails?.project,
-              proposal: {
+              project_image: projectFiles,
+              proposal: JSON.stringify({
                 scope_of_work: proposalDetails?.scope_of_work,
                 milestone_details:
                   proposalDetails?.milestone_details?.milestone?.map(
-                    (milestone) => ({
-                      milestone_name: milestone?.milestone_name,
-                      description: milestone?.description,
-                      start_date: milestone?.start_date,
-                      end_date: milestone?.end_date,
-                      budget_item: proposalDetails?.budget_details?.budgets
-                        ?.filter(
-                          (item) => item?.milestone?.id === milestone?.id
-                        )
-                        .map((item) => ({
-                          name: item?.name,
-                          material_type: item?.material_type,
-                          material_unit: item?.material_unit || "",
-                          material_unit_price: item?.material_unit_price || "0",
-                          qty: item?.qty || "0",
-                          manpower_rate: item?.manpower_rate || "0",
-                          days: item?.days || "0",
-                          specification: item?.specification,
-                          image: item?.photo_url || [],
-                        })),
-                    })
-                  ),
-              },
-            };
+                    (milestone, index) => {
+                      let mainObj = {
+                        milestone_name: milestone?.milestone_name,
+                        description: milestone?.description,
+                        start_date: milestone?.start_date,
+                        end_date: milestone?.end_date,
+                        budget_item: proposalDetails?.budget_details?.budgets
+                          ?.filter(
+                            (item) => item?.milestone?.id === milestone?.id
+                          )
+                          .map((item) => {
+                            const obj = {
+                              name: item?.name,
+                              budget_id: i + 1,
+                              material_type: item?.material_type,
+                              material_unit: item?.material_unit || "",
+                              material_unit_price:
+                                item?.material_unit_price || "0",
+                              qty: item?.qty || "0",
+                              manpower_rate: item?.manpower_rate || "0",
+                              days: item?.days || "0",
+                              specification: item?.specification,
+                            };
+                            i++;
+                            return obj;
+                          }),
+                      };
 
+                      return mainObj;
+                    }
+                  ),
+              }),
+            };
+            proposalDetails?.budget_details?.budgets?.forEach((budget, ind) => {
+              const photoOriginFiles = convertPhotoOriginToFiles(budget);
+              transformedData[`budget_image_${ind + 1}`] = photoOriginFiles;
+            });
             createproposalApicall(transformedData);
           } else {
             addBudget();
