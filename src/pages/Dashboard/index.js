@@ -115,7 +115,9 @@ const Dashboard = (props) => {
           }
         }
       } else {
-        toast.error(response?.message);
+        if (type === "Requested") {
+          toast.error(response?.message);
+        }
       }
       type === "Requested" && setrequestedLoader(false);
       type === "proposal" && setsubmittedLoader(false);
