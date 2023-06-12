@@ -4,7 +4,7 @@ const baseUrl = prod ? "https://api.renohome.io/" : "https://api.renohome.io/";
 export const Setting = {
   baseUrl,
   api: baseUrl,
-
+  //socketUrl:'',
   GOOLE_MAPS_KEY: "AIzaSyBO1ZlrBp68Oj02lrpoF4gJ7DbuzaFQLNA",
   FACEBOOK_APP_ID: "",
   GOOGLE_CLIENT_ID:
@@ -52,6 +52,7 @@ export const Setting = {
     getProject: "api/project/get-projects",
     deleteSummaryImage: "api/user/delete-image",
     alreadySentProposal: "api/project/already-proposal",
+    notificationList:'api/user/notifications-list'
   },
 
   JS_Regex: {
