@@ -10,7 +10,7 @@ export default function BlueAbout() {
   const location = useLocation();
   const { pathname } = location;
 
-  const quickLinks = ["Home", "Our Serives", "About us", "FAQs", "Sign Up"];
+  const quickLinks = ["Home", "Our Services", "About Us", "FAQs", "Sign Up"];
   const supportArr = [
     "Help & Support",
     "Trust & Safety",
@@ -26,7 +26,7 @@ export default function BlueAbout() {
         className={classes.container}
         rowGap={6}
         margin={0}
-        width={"100%"}
+        width={"100%"}   
         maxWidth={"unset"}
         // mb={
         //   pathname === "/contractor-profile" || pathname === "/dashboard"

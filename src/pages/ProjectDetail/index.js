@@ -599,6 +599,46 @@ export default function ProjectDetail() {
                     })}
                   </Grid>
                 </Grid>
+                <Grid
+                  item
+                  container
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  padding={"20px 10px 20px 10px"}
+                >
+                  <Typography
+                    style={{
+                      fontSize: "20px",
+                      lineHeight: "24px",
+                      fontFamily: "Roobert",
+                      fontWeight: "500",
+                    }}
+                  >
+                    Download App
+                  </Typography>
+                </Grid>
+                <Grid container alignItems={"center"} justifyContent={"center"}>
+                  <img
+                    src={Images.ios_store}
+                    alt="ios_store"
+                    style={{ cursor: "pointer", padding: "0px 10px 0px 10px" }}
+                    // onClick={() =>
+                    // {
+                    //   window.open('https://play.google.com/apps/test/com.renohome.io/11', "_blank");
+                    // }}
+                  />
+                  <img
+                    src={Images.googleplay}
+                    alt="googleplay"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      window.open(
+                        "https://play.google.com/apps/test/com.renohome.io/11",
+                        "_blank"
+                      );
+                    }}
+                  />
+                </Grid>
                 {/* 
             <Grid
               item
