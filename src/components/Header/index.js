@@ -146,7 +146,9 @@ function Header(props) {
             )}
 
             <Grid item className={classes.rightLogoContainer} columnGap={1}>
-              {!isEmpty(token) ? (
+              {currentUrl.includes("project/project-details") ? null : !isEmpty(
+                  token
+                ) ? (
                 <>
                   {!sm && (
                     <>
