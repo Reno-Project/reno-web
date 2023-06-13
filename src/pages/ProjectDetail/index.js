@@ -38,7 +38,10 @@ export default function ProjectDetail() {
   const { id } = useParams();
   const classes = useStyles();
   const theme = useTheme();
+
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const md = useMediaQuery(theme.breakpoints.down("md"));
+
   const [villa, setVilla] = useState({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pageLoad, setPageLoad] = useState(true);
@@ -163,7 +166,12 @@ export default function ProjectDetail() {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item container className={classes.contentContainer}>
+              <Grid
+                item
+                container
+                className={classes.contentContainer}
+                paddingTop={md ? "16px" : 0}
+              >
                 <Grid item lg={12} sm={12} md={12} xs={12}>
                   <Typography className={classes.MainTitle}>
                     Project Informations
@@ -174,14 +182,25 @@ export default function ProjectDetail() {
                   container
                   alignItems="center"
                   justifyContent={"flex-end"}
-                  style={{ paddingTop: 25, paddingBottom: 25 }}
+                  style={{
+                    paddingTop: md ? 16 : 25,
+                    paddingBottom: md ? 16 : 25,
+                  }}
                 >
-                  <Grid item lg={5} sm={6} md={6} xs={12} textAlign={"start"}>
+                  <Grid item lg={5} sm={12} md={6} xs={12} textAlign={"start"}>
                     <Typography className={classes.titleStyle}>
                       Project Name:
                     </Typography>
                   </Grid>
-                  <Grid item lg={7} sm={6} md={6} xs={12} textAlign={"end"}>
+                  <Grid
+                    item
+                    lg={7}
+                    sm={12}
+                    md={6}
+                    xs={12}
+                    textAlign={md ? "start" : "end"}
+                    paddingTop={md ? "16px" : 0}
+                  >
                     <Typography className={classes.titleStyleRight}>
                       {villa?.name}
                     </Typography>
@@ -221,14 +240,25 @@ export default function ProjectDetail() {
                   container
                   alignItems="center"
                   justifyContent={"flex-end"}
-                  style={{ paddingTop: 25, paddingBottom: 25 }}
+                  style={{
+                    paddingTop: md ? 16 : 25,
+                    paddingBottom: md ? 0 : 25,
+                  }}
                 >
                   <Grid item lg={5} sm={12} md={6} xs={12}>
                     <Typography className={classes.acctext}>
                       Project Type:
                     </Typography>
                   </Grid>
-                  <Grid item lg={7} sm={12} md={6} xs={9} textAlign={"end"}>
+                  <Grid
+                    item
+                    lg={7}
+                    sm={12}
+                    md={6}
+                    xs={12}
+                    textAlign={md ? "start" : "end"}
+                    paddingTop={md ? "16px" : 0}
+                  >
                     <Typography className={classes.accRightText}>
                       {villa?.project_type}
                     </Typography>
@@ -281,7 +311,8 @@ export default function ProjectDetail() {
                             sm={12}
                             md={6}
                             xs={12}
-                            textAlign={"end"}
+                            textAlign={md ? "start" : "end"}
+                            paddingTop={md ? "16px" : 0}
                           >
                             <Typography className={classes.accRightText}>
                               {milestone?.milestone_name}
@@ -298,7 +329,8 @@ export default function ProjectDetail() {
                             sm={12}
                             md={6}
                             xs={12}
-                            textAlign={"end"}
+                            textAlign={md ? "start" : "end"}
+                            paddingTop={md ? "16px" : 0}
                           >
                             <Typography className={classes.accRightText}>
                               AED {amount || 0}
@@ -325,7 +357,8 @@ export default function ProjectDetail() {
                             sm={12}
                             md={6}
                             xs={12}
-                            textAlign={"end"}
+                            textAlign={md ? "start" : "end"}
+                            paddingTop={md ? "16px" : "0px"}
                           >
                             <Typography
                               component={"span"}
@@ -402,7 +435,9 @@ export default function ProjectDetail() {
                                     sm={12}
                                     md={6}
                                     xs={12}
-                                    textAlign={"end"}
+                                    textAlign={md ? "start" : "end"}
+                                    paddingTop={md ? "16px" : 0}
+                                    paddingBottom={md ? "16px" : 0}
                                   >
                                     <Typography
                                       px={2}
