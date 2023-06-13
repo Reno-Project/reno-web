@@ -617,27 +617,39 @@ export default function ProjectDetail() {
                     Download App
                   </Typography>
                 </Grid>
-                <Grid container alignItems={"center"} justifyContent={"center"}>
-                  <img
-                    src={Images.ios_store}
-                    alt="ios_store"
-                    style={{ cursor: "pointer", padding: "0px 10px 0px 10px" }}
-                    // onClick={() =>
-                    // {
-                    //   window.open('https://play.google.com/apps/test/com.renohome.io/11', "_blank");
-                    // }}
-                  />
-                  <img
-                    src={Images.googleplay}
-                    alt="googleplay"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      window.open(
-                        "https://play.google.com/apps/test/com.renohome.io/11",
-                        "_blank"
-                      );
-                    }}
-                  />
+                <Grid
+                  item
+                  container
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  columnGap={2}
+                >
+                  <Grid item margin={sm ? "2px" : 0}>
+                    <img
+                      src={Images.ios_store}
+                      alt="ios_store"
+                      className={classes.imageButton}
+                      // style={{ cursor: "pointer", padding: "0px 10px 0px 10px" }}
+
+                      // onClick={() =>
+                      // {
+                      //   window.open('https://play.google.com/apps/test/com.renohome.io/11', "_blank");
+                      // }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <img
+                      src={Images.googleplay}
+                      alt="googleplay"
+                      className={classes.imageButton}
+                      onClick={() => {
+                        window.open(
+                          "https://play.google.com/apps/test/com.renohome.io/11",
+                          "_blank"
+                        );
+                      }}
+                    />
+                  </Grid>
                 </Grid>
                 {/* 
             <Grid

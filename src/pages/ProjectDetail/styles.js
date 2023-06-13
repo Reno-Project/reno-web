@@ -137,6 +137,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "18px",
     letterSpacing: "0.6px",
   },
+  imageButton: {
+    cursor: "pointer",
+    // padding: "0px 10px 0px 10px",
+    width:'100%'
+  },
   popupMessage: {
     fontFamily: "Roobert-Regular",
     fontSize: "13px",
