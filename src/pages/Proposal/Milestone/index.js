@@ -307,24 +307,54 @@ export default function Milestone(props) {
   };
 
   const handleDelete = () => {
-    if (selectedBudget?.data?.id) {
-      deleteMilestone();
-    } else {
-      const newItems = [...milestones]; // Create a copy of the array
-      newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
-      setMilestones(newItems);
-      setVisible(false);
-      dispatch(
-        setProposalDetails({
-          ...proposalDetails,
-          milestone_details: {
-            ...proposalDetails.milestone_details,
-            milestone: newItems,
-          },
-        })
-      );
-      handleClose();
-    }
+    // if (selectedBudget?.data?.id) {
+    //   deleteMilestone();
+    // } else {
+    // const newItems = [...milestones]; // Create a copy of the array
+    // newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
+    // setMilestones(newItems);
+    // setVisible(false);
+    // dispatch(
+    //   setProposalDetails({
+    //     ...proposalDetails,
+    //     milestone_details: {
+    //       ...proposalDetails.milestone_details,
+    //       milestone: newItems,
+    //     },
+    //   })
+    // );
+    // handleClose();
+    // }
+    const indices =
+      isArray(budgets) &&
+      !isEmpty(budgets) &&
+      budgets
+        ?.map((item, index) =>
+          item?.milestone?.id === selectedBudget?.data?.id ? index : -1
+        )
+        .filter((index) => index !== -1);
+    let newBudArr =
+      (indices && budgets?.filter((item, index) => !indices.includes(index))) ||
+      [];
+
+    const newItems = [...milestones]; // Create a copy of the array
+    newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
+    setMilestones(newItems);
+    dispatch(
+      setProposalDetails({
+        ...proposalDetails,
+        milestone_details: {
+          ...proposalDetails.milestone_details,
+          milestone: newItems,
+        },
+        budget_details: {
+          ...proposalDetails?.budget_details,
+          budgets: newBudArr,
+        },
+      })
+    );
+    setVisible(false);
+    handleClose();
   };
 
   async function deleteMilestone() {
@@ -353,11 +383,11 @@ export default function Milestone(props) {
             ...proposalDetails,
             milestone_details: {
               ...proposalDetails.milestone_details,
-              milestone: newItems,
+              milestone: newItems || [],
             },
             budget_details: {
               ...proposalDetails?.budget_details,
-              budgets: newBudArr,
+              budgets: newBudArr || [],
             },
           })
         );
@@ -463,10 +493,15 @@ export default function Milestone(props) {
           })
         );
       } else {
-        setMilestones((arr) => [...arr, state]);
+        setMilestones((arr) => [
+          ...arr,
+          { ...state, id: milestones?.length + 1 || 1 },
+        ]);
         let milestone_details = {
           formvalues: {},
-          milestone: milestones ? [...milestones, state] : [state],
+          milestone: milestones
+            ? [...milestones, { ...state, id: milestones?.length + 1 || 1 }]
+            : [{ ...state, id: milestones?.length + 1 || 1 }],
         };
         setTimeout(() => {
           dispatch(
@@ -488,38 +523,37 @@ export default function Milestone(props) {
 
   const handleSubmit = () => {
     if (isArray(milestones) && !isEmpty(milestones)) {
-      if (createProposal) {
-        const extractedData = milestones?.map((item, ind) => {
-          const { milestone_name, description, start_date, end_date, id } =
-            item;
-          if (id) {
-            return { id, milestone_name, description, start_date, end_date };
-          } else {
-            let idx = ind + 1;
-            return {
-              id: idx,
-              milestone_name,
-              description,
-              start_date,
-              end_date,
-            };
-          }
-        });
-        const milestone_details = {
-          formvalues: state,
-          milestone: extractedData,
-          previous: false,
+      // if (createProposal) {
+      const extractedData = milestones?.map((item, ind) => {
+        const { milestone_name, description, start_date, end_date, id } = item;
+        // if (id) {
+        //   return { id, milestone_name, description, start_date, end_date };
+        // } else {
+        // let idx = ind + 1;
+        return {
+          id,
+          milestone_name,
+          description,
+          start_date,
+          end_date,
         };
-        dispatch(
-          setProposalDetails({
-            ...proposalDetails,
-            milestone_details,
-          })
-        );
-        handleClick("next");
-      } else {
-        addMilestone();
-      }
+        // }
+      });
+      const milestone_details = {
+        formvalues: state,
+        milestone: extractedData,
+        previous: false,
+      };
+      dispatch(
+        setProposalDetails({
+          ...proposalDetails,
+          milestone_details,
+        })
+      );
+      handleClick("next");
+      // } else {
+      //   addMilestone();
+      // }
     } else {
       toast.warning("Please add at least one milestone");
     }

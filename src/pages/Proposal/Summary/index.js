@@ -172,12 +172,18 @@ export default function Summary(props) {
             // project_origin: originalDoc,
           })
         );
-        setDisableMilestone(false);
-
-        setTabValue(1);
       } else {
-        createproposalApicall();
+        // createproposalApicall();
+        dispatch(
+          setProposalDetails({
+            ...proposalDetails,
+            scope_of_work: scope,
+            project_type: projectType,
+          })
+        );
       }
+      setDisableMilestone(false);
+      setTabValue(1);
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }

@@ -131,11 +131,11 @@ export default function Budget(props) {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (createProposal) {
-      setMilestones(proposalDetails?.milestone_details?.milestone);
-    } else {
-      getMilestoneList();
-    }
+    // if (createProposal) {
+    setMilestones(proposalDetails?.milestone_details?.milestone);
+    // } else {
+    //   getMilestoneList();
+    // }
   }, []);
 
   useEffect(() => {
@@ -299,7 +299,7 @@ export default function Budget(props) {
       if (isEmpty(state?.qty?.toString())) {
         valid = false;
         error.quantityErr = true;
-        error.quantityMsg = "Please select the material qty";
+        error.quantityMsg = "Please enter the material qty";
       } else if (!positiveIntRegex.test(state?.qty)) {
         valid = false;
         error.quantityErr = true;
@@ -333,7 +333,7 @@ export default function Budget(props) {
       if (isEmpty(state?.days?.toString())) {
         valid = false;
         error.daysErr = true;
-        error.daysMsg = "Please select the days";
+        error.daysMsg = "Please enter the days";
       } else if (!positiveIntRegex.test(state?.days)) {
         valid = false;
         error.daysErr = true;
@@ -371,7 +371,7 @@ export default function Budget(props) {
         if (isEmpty(state?.qty?.toString())) {
           valid = false;
           error.quantityErr = true;
-          error.quantityMsg = "Please select the material qty";
+          error.quantityMsg = "Please enter the material qty";
         } else if (!positiveIntRegex.test(state?.qty)) {
           valid = false;
           error.quantityErr = true;
@@ -413,8 +413,8 @@ export default function Budget(props) {
           error.daysMsg = "Please enter the days";
         } else if (!positiveIntRegex.test(state?.days)) {
           valid = false;
-          error.quantityErr = true;
-          error.quantityMsg = "Please enter valid days";
+          error.daysErr = true;
+          error.daysMsg = "Please enter valid days";
         }
         //  else if (state?.days > totalDays) {
         //   valid = false;
@@ -616,31 +616,93 @@ export default function Budget(props) {
   async function addBudget() {
     setButtonLoader(true);
     setAlreadySubmittedPopLoader(true);
-    const extractedData = budgetDetails?.map((item) => {
-      return {
-        name: item?.name,
-        material_type: item?.material_type,
-        material_unit: item?.material_unit || "",
-        material_unit_price: item?.material_unit_price || "0",
-        qty: item?.qty || "0",
-        milestone_id: item?.milestone?.id,
-        manpower_rate: item?.manpower_rate || "0",
-        days: item?.days || "0",
-        specification: item?.specification,
-        image: item?.photo_url,
-      };
-    });
+    // const extractedData = budgetDetails?.map((item) => {
+    //   return {
+    //     name: item?.name,
+    //     material_type: item?.material_type,
+    //     material_unit: item?.material_unit || "",
+    //     material_unit_price: item?.material_unit_price || "0",
+    //     qty: item?.qty || "0",
+    //     milestone_id: item?.milestone?.id,
+    //     manpower_rate: item?.manpower_rate || "0",
+    //     days: item?.days || "0",
+    //     specification: item?.specification,
+    //     image: item?.photo_url,
+    //   };
+    // });
 
-    const data = {
+    // const data = {
+    //   proposal_id: villa?.proposal_id,
+    //   budget_item: extractedData,
+    // };
+    let i = 0;
+    const transformedData = {
       proposal_id: villa?.proposal_id,
-      budget_item: extractedData,
-    };
+      project_type: villa?.project_type,
+      exp_id: villa?.exp_id,
+      scope_of_work: proposalDetails?.scope_of_work,
+      milestone_details: JSON.stringify(
+        proposalDetails?.milestone_details?.milestone?.map(
+          (milestone, index) => {
+            let mainObj = {
+              milestone_name: milestone?.milestone_name,
+              description: milestone?.description,
+              start_date: milestone?.start_date,
+              end_date: milestone?.end_date,
+              budget_item: proposalDetails?.budget_details?.budgets
+                ?.filter((item) => item?.milestone?.id === milestone?.id)
+                .map((item) => {
+                  const obj = {
+                    name: item?.name,
+                    budget_id: i + 1,
+                    material_type: item?.material_type,
+                    material_unit: item?.material_unit || "",
+                    material_unit_price: item?.material_unit_price || "0",
+                    qty: item?.qty || "0",
+                    manpower_rate: item?.manpower_rate || "0",
+                    days: item?.days || "0",
+                    specification: item?.specification,
+                  };
+                  i++;
+                  return obj;
+                }),
+            };
 
+            return mainObj;
+          }
+        )
+      ),
+    };
+    proposalDetails?.budget_details?.budgets?.forEach((budget, ind) => {
+      const photoOriginFiles = convertPhotoOriginToFiles(budget);
+      transformedData[`budget_image_${ind + 1}`] = photoOriginFiles;
+    });
+    // const extractedData = budgetDetails?.map((item) => {
+    //   return {
+    //     name: item?.name,
+    //     material_type: item?.material_type,
+    //     material_unit: item?.material_unit || "",
+    //     material_unit_price: item?.material_unit_price || "0",
+    //     qty: item?.qty || "0",
+    //     milestone_id: item?.milestone?.id,
+    //     manpower_rate: item?.manpower_rate || "0",
+    //     days: item?.days || "0",
+    //     specification: item?.specification,
+    //     image: item?.photo_url,
+    //   };
+    // });
+
+    // const data = {
+    //   proposal_id: villa?.proposal_id,
+    //   budget_item: extractedData,
+    // };
+    console.log("transformedData====>>>>>", transformedData);
     try {
-      const response = await getApiData(
-        Setting.endpoints.createBudget,
+      const response = await getAPIProgressData(
+        Setting.endpoints.createproposal,
         "POST",
-        data
+        transformedData,
+        true
       );
 
       if (response.success) {
@@ -939,29 +1001,29 @@ export default function Budget(props) {
                       color: "#8C92A4",
                     }}
                     onClick={() => {
-                      if (createProposal) {
-                        const nArr = [...state.photo_origin];
-                        nArr.splice(index, 1);
-                        setState({
-                          ...state,
-                          photo_origin: nArr,
-                        });
-                      } else {
-                        let uploadID = "";
-                        if (state?.photo_url[index]?.image) {
-                          const nArr = [...state.photo_origin];
-                          const nArr1 = [...state.photo_url];
-                          nArr.splice(index, 1);
-                          nArr1.splice(index, 1);
-                          setState({
-                            ...state,
-                            photo_origin: nArr,
-                            photo_url: nArr1,
-                          });
-                        }
-                        uploadID = state?.photo_url[index]?.image_id;
-                        uploadID?.toString() && deletePhoto(uploadID, index);
-                      }
+                      // if (createProposal) {
+                      const nArr = [...state.photo_origin];
+                      nArr.splice(index, 1);
+                      setState({
+                        ...state,
+                        photo_origin: nArr,
+                      });
+                      // } else {
+                      //   let uploadID = "";
+                      //   if (state?.photo_url[index]?.image) {
+                      //     const nArr = [...state.photo_origin];
+                      //     const nArr1 = [...state.photo_url];
+                      //     nArr.splice(index, 1);
+                      //     nArr1.splice(index, 1);
+                      //     setState({
+                      //       ...state,
+                      //       photo_origin: nArr,
+                      //       photo_url: nArr1,
+                      //     });
+                      //   }
+                      //   uploadID = state?.photo_url[index]?.image_id;
+                      //   uploadID?.toString() && deletePhoto(uploadID, index);
+                      // }
                     }}
                   />
                 )}
@@ -1082,23 +1144,23 @@ export default function Budget(props) {
                       "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
                     );
                   }
-                  if (createProposal) {
-                    let shouldUpload =
-                      isArray(newArr) &&
-                      !isEmpty(newArr) &&
-                      newArr?.filter((elem) => typeof elem !== "string");
-                    if (shouldUpload) {
-                      UploadFileDirectly(shouldUpload);
-                    }
-                  } else {
-                    let shouldUpload =
-                      isArray(newArr) &&
-                      !isEmpty(newArr) &&
-                      newArr?.filter((elem) => !elem?.image_id);
-                    if (shouldUpload) {
-                      UploadFile(shouldUpload);
-                    }
+                  // if (createProposal) {
+                  let shouldUpload =
+                    isArray(newArr) &&
+                    !isEmpty(newArr) &&
+                    newArr?.filter((elem) => typeof elem !== "string");
+                  if (shouldUpload) {
+                    UploadFileDirectly(shouldUpload);
                   }
+                  // } else {
+                  //   let shouldUpload =
+                  //     isArray(newArr) &&
+                  //     !isEmpty(newArr) &&
+                  //     newArr?.filter((elem) => !elem?.image_id);
+                  //   if (shouldUpload) {
+                  //     UploadFile(shouldUpload);
+                  //   }
+                  // }
                 }}
                 ref={fileInputRef}
               />
@@ -1873,13 +1935,6 @@ export default function Budget(props) {
         confirmation={() => {
           if (createProposal) {
             const projectFiles = convertProjectToFiles();
-            const budgetFiles = proposalDetails?.budget_details?.budgets.reduce(
-              (acc, budget, index) => {
-                const photoOriginFiles = convertPhotoOriginToFiles(budget);
-                return [...acc, ...photoOriginFiles];
-              },
-              []
-            );
             let i = 0;
             const transformedData = {
               email: proposalDetails?.email,
