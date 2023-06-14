@@ -228,12 +228,14 @@ const ContractorProfile = (props) => {
     </div>
   ) : (
     <div className={classes.main}>
-      <Grid item>
-        <img
-          src={profileData?.contractor_data?.portfolio[0].image || ""}
-          className={classes.coverStyle}
-        />
-      </Grid>
+      {profileData?.contractor_data?.portfolio[0]?.image && (
+        <Grid item>
+          <img
+            src={profileData?.contractor_data?.portfolio[0]?.image || ""}
+            className={classes.coverStyle}
+          />
+        </Grid>
+      )}
       <Grid
         container
         style={{
