@@ -170,7 +170,14 @@ function Header(props) {
                       "pending" ? null : ( // </Button> //   Become contarctor // > //   style={{ padding: "6px 6px", fontSize: "14px" }} //   color="primary" //   variant="contained" //   }} //     logout("signup"); //   onClick={() => { // <Button
                         <>
                           <Grid item>
-                            <Button variant="contained">Projects</Button>
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                navigate("/manage-project");
+                              }}
+                            >
+                              Projects
+                            </Button>
                           </Grid>
                           <Grid item>
                             <IconButton>

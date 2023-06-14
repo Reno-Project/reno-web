@@ -16,7 +16,13 @@ import { EastOutlined } from "@mui/icons-material";
 import moment from "moment";
 
 const ProjectCard = (props) => {
-  const { villa = {}, requested = false, onClick = () => {} } = props;
+  const {
+    villa = {},
+    requested = false,
+    submitted = false,
+    manageProject = false,
+    onClick = () => {},
+  } = props;
   const classes = useStyles();
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
@@ -64,7 +70,12 @@ const ProjectCard = (props) => {
 
           <Typography className={classes.code1}>
             <Typography className={classes.code1} color={"#8C92A4"} mr={0.5}>
-              {requested ? "Requested" : "Submitted"}:{" "}
+              {manageProject
+                ? "Order Date"
+                : requested
+                ? "Requested"
+                : "Submitted"}
+              :{" "}
             </Typography>{" "}
             {requested ? createdAt : updatedAt}
           </Typography>
@@ -83,30 +94,33 @@ const ProjectCard = (props) => {
             {villa?.form_json[0]?.size || 0} sqm
           </Typography>
         </div> */}
-        <div style={{ width: "100%", margin: "10px 0px" }}>
-          <Divider style={{ color: "#F2F3F4" }} />
-        </div>
-        <Typography className={classes.company}>
-          <img
-            src={nData?.profile_url}
-            width={"28px"}
-            height={"28px"}
-            alt="profile_logo"
-            style={{ margin: 0, marginRight: 8, borderRadius: "100%" }}
-          />{" "}
-          {nData?.username}
-          {nData?.submitted_by_reno
-            ? null
-            : nData?.is_email_verified && (
-                <img
-                  src={Images.verified}
-                  alt="verified"
-                  style={{ marginLeft: 8 }}
-                />
-              )}
-        </Typography>
-
-        {!requested && (
+        {!manageProject && (
+          <>
+            <div style={{ width: "100%", margin: "10px 0px" }}>
+              <Divider style={{ color: "#F2F3F4" }} />
+            </div>
+            <Typography className={classes.company}>
+              <img
+                src={nData?.profile_url}
+                width={"28px"}
+                height={"28px"}
+                alt="profile_logo"
+                style={{ margin: 0, marginRight: 8, borderRadius: "100%" }}
+              />{" "}
+              {nData?.username}
+              {nData?.submitted_by_reno
+                ? null
+                : nData?.is_email_verified && (
+                    <img
+                      src={Images.verified}
+                      alt="verified"
+                      style={{ marginLeft: 8 }}
+                    />
+                  )}
+            </Typography>
+          </>
+        )}
+        {submitted && (
           <>
             <div className={classes.rowJustified}>
               <Typography className={classes.row}>Budget:</Typography>
@@ -120,6 +134,29 @@ const ProjectCard = (props) => {
               </Typography>
               {!md && <EastOutlined style={{ color: "#475569" }} />}
               <Typography className={classes.budget}>{moveInDate}</Typography>
+            </div>
+          </>
+        )}
+        {manageProject && (
+          <>
+            <div style={{ width: "100%", margin: "10px 0px" }}>
+              <Divider style={{ color: "#F2F3F4" }} />
+            </div>
+            <div className={classes.rowJustified}>
+              <Typography className={classes.row}>Customer name:</Typography>
+              <Typography className={classes.budget}>Milan Ramin Jr</Typography>
+            </div>
+            <div className={classes.rowJustified}>
+              <Typography className={classes.row}>Price:</Typography>
+              <Typography className={classes.budget}>AED 1,000.00</Typography>
+            </div>
+            <div className={classes.rowJustified}>
+              <Typography className={classes.row}>Start Date:</Typography>
+              <Typography className={classes.budget}>22.02.2023</Typography>
+            </div>
+            <div className={classes.rowJustified}>
+              <Typography className={classes.row}>End Date:</Typography>
+              <Typography className={classes.budget}>22.02.2023</Typography>
             </div>
           </>
         )}

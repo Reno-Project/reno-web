@@ -356,7 +356,7 @@ const Dashboard = (props) => {
           </Grid>
 
           {onGoingLoader ? (
-            <on
+            <div
               style={{
                 width: "100%",
                 display: "flex",
@@ -366,7 +366,7 @@ const Dashboard = (props) => {
               }}
             >
               <CircularProgress size={40} />
-            </on>
+            </div>
           ) : isArray(villaDetails) && !isEmpty(villaDetails) ? (
             <div className={classes.scrollableDiv}>
               <Slider {...settings} ref={oSliderRef}>
@@ -556,6 +556,7 @@ const Dashboard = (props) => {
                             state: { villa, status: "submitted" },
                           });
                         }}
+                        submitted
                       />
                     </div>
                   );

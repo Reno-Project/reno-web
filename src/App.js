@@ -29,7 +29,9 @@ import { Box, Grid } from "@mui/material";
 import Notifications from "./pages/Notifications";
 import RequestedProposal from "./pages/RequestedProposal";
 import Summary from "./pages/Proposal/Summary";
+import OnGoing from "./pages/OnGoing/Summary";
 import ProjectDetail from "./pages/ProjectDetail";
+import ManageProject from "./pages/ManageProject";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
@@ -91,9 +93,14 @@ function App() {
                         element={<Notifications />}
                       />
                       <Route path={"/create-proposal"} element={<Summary />} />
+                      <Route path={"/ongoing-project"} element={<OnGoing />} />
                       <Route
                         path={"/request-proposal"}
                         element={<RequestedProposal />}
+                      />
+                      <Route
+                        path={"/manage-project"}
+                        element={<ManageProject />}
                       />
                       <Route
                         path="*"

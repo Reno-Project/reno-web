@@ -239,7 +239,7 @@ export default function ProposalCard(props) {
             <AccordionDetails>
               <Grid item container alignContent={"center"}>
                 <Grid item lg={12}>
-                  {villa?.project_image.map((item, index) => {
+                  {villa?.project_image?.map((item, index) => {
                     return (
                       <a href={url ? `${url}` : null} target="_blank">
                         <img

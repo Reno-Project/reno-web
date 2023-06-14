@@ -1649,7 +1649,7 @@ export default function Budget(props) {
                       <Typography fontFamily={"ElMEssiri-Regular"}>
                         AED {amounts[index] || 0}
                       </Typography>
-                      <Typography
+                      {/* <Typography
                         fontFamily={"ElMEssiri-Regular"}
                         style={{
                           display: "flex",
@@ -1660,7 +1660,7 @@ export default function Budget(props) {
                           Last updated:
                         </Typography>
                         {moment(item?.updatedAt).format("MMMM DD, YYYY")}
-                      </Typography>
+                      </Typography> */}
                     </Grid>
                     <Grid item container justifyContent={"flex-start"}>
                       <ListItemButton

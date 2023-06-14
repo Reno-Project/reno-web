@@ -17,13 +17,13 @@ const useStyles = makeStyles((theme) => ({
       },
     },
     [theme.breakpoints.down("sm")]: {
-      minWidth: "90%",
+      minWidth: 280,
       flexDirection: "column",
       alignItems: "flex-start",
       "& > *": {
         padding: "4px 0px",
       },
-      width: "95% ",
+      width: 200,
     },
   },
   name: {

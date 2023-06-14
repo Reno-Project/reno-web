@@ -52,7 +52,8 @@ export const Setting = {
     getProject: "api/project/get-projects",
     deleteSummaryImage: "api/user/delete-image",
     alreadySentProposal: "api/project/already-proposal",
-    notificationList:'api/user/notifications-list'
+    notificationList: "api/user/notifications-list",
+    paymentList: "api/stripe/payment-transaction-list",
   },
 
   JS_Regex: {
