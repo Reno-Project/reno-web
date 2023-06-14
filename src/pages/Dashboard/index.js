@@ -34,8 +34,6 @@ import "slick-carousel/slick/slick-theme.css";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
-const villaDetails = [];
-
 const Dashboard = (props) => {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -53,6 +51,7 @@ const Dashboard = (props) => {
   const md = useMediaQuery(theme.breakpoints.down("md"));
   const lg = useMediaQuery(theme.breakpoints.down("lg"));
 
+  const [ongoingProjects, setOngoingProjects] = useState([]);
   const [requestedProposal, setRequestedProposal] = useState([]);
   const [submittedProposal, setSubmittedProposal] = useState([]);
 
@@ -66,6 +65,7 @@ const Dashboard = (props) => {
     onMessageListener();
     requestedProposalApiCall("proposal", true);
     requestedProposalApiCall("Requested", true);
+    requestedProposalApiCall("ongoing", true);
 
     return () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -98,7 +98,7 @@ const Dashboard = (props) => {
   async function requestedProposalApiCall(type, bool) {
     type === "Requested" && setrequestedLoader(true);
     type === "proposal" && setsubmittedLoader(true);
-    type === "onGoing" && setonGoingLoader(true);
+    type === "ongoing" && setonGoingLoader(true);
     try {
       const response = await getApiData(
         `${Setting.endpoints.listcontractorproject}?status=${type}`,
@@ -107,7 +107,9 @@ const Dashboard = (props) => {
       );
       if (response?.success) {
         if (isArray(response?.data) && !isEmpty(response?.data)) {
-          type === "Requested"
+          type === "ongoing"
+            ? setOngoingProjects(response?.data)
+            : type === "Requested"
             ? setRequestedProposal(response?.data)
             : setSubmittedProposal(response?.data);
           if (bool) {
@@ -121,13 +123,13 @@ const Dashboard = (props) => {
       }
       type === "Requested" && setrequestedLoader(false);
       type === "proposal" && setsubmittedLoader(false);
-      type === "onGoing" && setonGoingLoader(false);
+      type === "ongoing" && setonGoingLoader(false);
     } catch (error) {
       console.log("ERROR=====>>>>>", error);
       toast.error(error.toString());
       type === "Requested" && setrequestedLoader(false);
       type === "proposal" && setsubmittedLoader(false);
-      type === "onGoing" && setonGoingLoader(false);
+      type === "ongoing" && setonGoingLoader(false);
     }
   }
 
@@ -334,10 +336,10 @@ const Dashboard = (props) => {
                   justifyContent: "center",
                 }}
               >
-                {villaDetails.length}
+                {ongoingProjects?.length || 0}
               </div>
             </div>
-            {isArray(villaDetails) && !isEmpty(villaDetails) && (
+            {isArray(ongoingProjects) && !isEmpty(ongoingProjects) && (
               <div style={{ display: "flex", alignItems: "center" }}>
                 <IconButton
                   style={{ border: `1px solid #F2F3F4`, marginRight: 8 }}
@@ -367,19 +369,13 @@ const Dashboard = (props) => {
             >
               <CircularProgress size={40} />
             </div>
-          ) : isArray(villaDetails) && !isEmpty(villaDetails) ? (
-            <div className={classes.scrollableDiv}>
+          ) : isArray(ongoingProjects) && !isEmpty(ongoingProjects) ? (
+            <div className={classes.sliderCon}>
               <Slider {...settings} ref={oSliderRef}>
-                {villaDetails.map((villa, index) => {
+                {ongoingProjects?.map((ongoingData, index) => {
                   return (
-                    <div
-                      style={{
-                        width: sm ? "100%" : "unset",
-                        minWidth: sm ? "100%" : "unset",
-                      }}
-                      key={`Ongoing_projects_${index}`}
-                    >
-                      <ProjectCard vill={villa} />
+                    <div key={`Ongoing_projects_${index}`}>
+                      <ProjectCard villa={ongoingData} />
                     </div>
                   );
                 })}
