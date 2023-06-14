@@ -55,6 +55,9 @@ const ManageProject = (props) => {
   const { userData } = useSelector((state) => state.auth);
 
   const [filter, setFilter] = useState("");
+  const [onGoingCount, setOnGoingCount] = useState([]);
+  const [proposalSubmitedCount, setProposalSubmitedCount] = useState([]);
+  const [submitRequestCount, setSubmitRequestCount] = useState([]);
   const [tabData, setTabData] = useState([
     {
       createdAt: "2023-05-31T09:25:35.953Z",
@@ -332,11 +335,23 @@ const ManageProject = (props) => {
       if (response?.success) {
         if (isArray(response?.data) && !isEmpty(response?.data)) {
           setTabData(response?.data);
+          if (type === "ongoing") {
+            setOnGoingCount(response?.data);
+          }
+          if (type === "proposal") {
+            setProposalSubmitedCount(response?.data);
+          }
+          if (type === "Requested") {
+            setSubmitRequestCount(response?.data);
+          }
         }
       } else {
         if (type === "Requested") {
           toast.error(response?.message);
         }
+        setOnGoingCount([]);
+        setProposalSubmitedCount([]);
+        setProposalSubmitedCount([]);
       }
       setTabLoader(false);
     } catch (error) {
@@ -409,7 +424,7 @@ const ManageProject = (props) => {
                         justifyContent: "center",
                       }}
                     >
-                      {18}
+                      {onGoingCount?.length || 0}
                     </span>
                   </Typography>
                 }
@@ -454,7 +469,7 @@ const ManageProject = (props) => {
                         justifyContent: "center",
                       }}
                     >
-                      {12}
+                      {proposalSubmitedCount?.length || 0}
                     </span>
                   </Typography>
                 }
@@ -476,7 +491,7 @@ const ManageProject = (props) => {
                         justifyContent: "center",
                       }}
                     >
-                      {410}
+                      {submitRequestCount?.length || 0}
                     </span>
                   </Typography>
                 }
