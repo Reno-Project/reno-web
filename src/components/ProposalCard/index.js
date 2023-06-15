@@ -1,23 +1,12 @@
-import {
-  Grid,
-  Tab,
-  Tabs,
-  Typography,
-  Button,
-  useMediaQuery,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Grid, Tab, Tabs, Typography, useMediaQuery } from "@mui/material";
+import React, { useState } from "react";
 import useStyles from "./styles";
 import Images from "../../config/images";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-
-import theme, { color } from "../../config/theme";
-
+import theme from "../../config/theme";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { isArray, isEmpty } from "lodash";
 
 import ImageViewer from "../../components/ImageViewer";
 
@@ -69,7 +58,8 @@ export default function ProposalCard(props) {
             <span
               variant="contained"
               style={{
-                backgroundColor: "#E9B55C",
+                backgroundColor:
+                  villa?.status === "ongoing" ? "#5CC385" : "#E9B55C",
                 padding: 8,
                 fontSize: "10px",
                 letterSpacing: "1.5px",
@@ -78,7 +68,7 @@ export default function ProposalCard(props) {
                 color: "#FFFFFF",
               }}
             >
-              REQUEST
+              {villa?.status === "ongoing" ? "ONGOING" : "REQUEST"}
             </span>
           </Grid>
         </Grid>
