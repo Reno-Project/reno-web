@@ -375,7 +375,14 @@ const Dashboard = (props) => {
                 {ongoingProjects?.map((ongoingData, index) => {
                   return (
                     <div key={`Ongoing_projects_${index}`}>
-                      <ProjectCard villa={ongoingData} />
+                      <ProjectCard
+                        villa={ongoingData}
+                        onClick={() => {
+                          navigate("/ongoing-project", {
+                            state: { villa: ongoingData },
+                          });
+                        }}
+                      />
                     </div>
                   );
                 })}

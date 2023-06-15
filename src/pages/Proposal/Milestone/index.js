@@ -189,7 +189,7 @@ export default function Milestone(props) {
     setmilestoneLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}/${villa?.proposal_id}`,
+        `${Setting.endpoints.milestoneProposalList}?proposal_id=${villa?.proposal_id}`,
         "GET",
         {}
       );

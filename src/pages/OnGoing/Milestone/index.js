@@ -30,12 +30,7 @@ import {
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
 import { color } from "../../../config/theme";
-import CInput from "../../../components/CInput";
 import { useTheme } from "@emotion/react";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -67,10 +62,14 @@ export default function Milestone(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [tabValue, setTabValue] = useState(0);
-  const percentageReleased = (1000 / 1500) * 100;
+  const percentageReleased =
+    (villa?.milestone_budget_data[0]?.paid_amount /
+      (villa?.milestone_budget_data[0]?.paid_amount +
+        villa?.milestone_budget_data[0]?.remaing_amount)) *
+    100;
   const percentageRemaining = 100 - percentageReleased;
 
-  const [selectedBudget, setSelectedBudget] = useState({});
+  const [selectedMilestone, setSelectedMilestone] = useState({});
 
   const [errObj, setErrObj] = useState(errorObj);
 
@@ -95,33 +94,23 @@ export default function Milestone(props) {
 
   const [visibleEditModal, setVisibleEditModal] = useState(false);
   const [btnUpdateLoader, setBtnUpdateLoader] = useState("");
-  const [pendingBudget, setPendingBudget] = useState([]);
-  const [ongoingBudget, setongoingBudget] = useState([]);
-  const [deliveryBudget, setdeliveryBudget] = useState([]);
-  const [completedBudget, setcompletedBudget] = useState([]);
 
   const [pendingMilestone, setPendingMilestone] = useState([]);
   const [ongoingMilestone, setongoingMilestone] = useState([]);
   const [deliveryMilestone, setdeliveryMilestone] = useState([]);
   const [completedMilestone, setcompletedMilestone] = useState([]);
 
-  const [pendingLoader, setPendingLoader] = useState([]);
-  const [ongoingLoader, setongoingLoader] = useState([]);
-  const [deliveryLoader, setdeliveryLoader] = useState([]);
-  const [completedLoader, setcompletedLoader] = useState([]);
+  const [pendingLoader, setPendingLoader] = useState(true);
+  const [ongoingLoader, setongoingLoader] = useState(true);
+  const [deliveryLoader, setdeliveryLoader] = useState(true);
+  const [completedLoader, setcompletedLoader] = useState(true);
+  const [paymentLoader, setpaymentLoader] = useState(false);
 
   useEffect(() => {
     getMilestoneList("ongoing");
-    getBudgetList("ongoing");
-
     getMilestoneList("delivery");
-    getBudgetList("delivery");
-
     getMilestoneList("completed");
-    getBudgetList("completed");
-
     getMilestoneList("pending");
-    getBudgetList("pending");
   }, []);
 
   async function getMilestoneList(type) {
@@ -176,37 +165,28 @@ export default function Milestone(props) {
     }
   }
 
-  async function getBudgetList(type) {
+  async function paymentRequest() {
+    setpaymentLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.budgetList}/${villa?.proposal_id}`,
+        `${Setting.endpoints.paymentRequest}?payment_id=${selectedMilestone?.data?.payment_id}`,
         "GET",
         {}
       );
       if (response.success) {
-        if (
-          isArray(response?.data?.budget) &&
-          !isEmpty(response?.data?.budget)
-        ) {
-          if (type === "pending") {
-            setPendingBudget(response?.data?.budget);
-          } else if (type === "ongoing") {
-            setongoingBudget(response?.data?.budget);
-          } else if (type === "delivery") {
-            setdeliveryBudget(response?.data?.budget);
-          } else if (type === "completed") {
-            setcompletedBudget(response?.data?.budget);
-          }
-        }
+        getMilestoneList("pending");
+        setVisible(false);
       }
+      setpaymentLoader(false);
     } catch (error) {
       console.log("err===>", error);
+      setpaymentLoader(false);
     }
   }
 
   const handleRowClick = (event, budget, index) => {
     setAnchorEl(event.currentTarget);
-    setSelectedBudget({
+    setSelectedMilestone({
       data: budget,
       index: index,
     });
@@ -214,7 +194,11 @@ export default function Milestone(props) {
 
   const handleClose = () => {
     setAnchorEl(null);
-    setSelectedBudget(null);
+    setSelectedMilestone(null);
+  };
+
+  const handePayment = () => {
+    setVisible(true);
   };
 
   const handleChange = (e, i, type) => {
@@ -517,7 +501,7 @@ export default function Milestone(props) {
               <Grid item lg={12} sm={12} md={12} xs={12}>
                 <Typography className={classes.acctext}>New Amount:</Typography>
                 <Typography className={classes.accRightText}>
-                  AED 2,000
+                  AED {0}
                 </Typography>
               </Grid>
             </Grid>
@@ -537,7 +521,7 @@ export default function Milestone(props) {
                   Original amount:
                 </Typography>
                 <Typography className={classes.accRightText}>
-                  AED 1,750
+                  AED {villa?.budget || 0}
                 </Typography>
               </Grid>
             </Grid>
@@ -555,23 +539,27 @@ export default function Milestone(props) {
               style={{ width: `${percentageReleased}%` }}
             >
               <Typography variant="body1" style={{ color: "#ffffff" }}>
-                Released: AED {1000}
+                Released: AED{" "}
+                {villa?.milestone_budget_data[0]?.paid_amount?.toFixed(2)}
               </Typography>
             </Grid>
-            <Grid
-              item
-              container
-              alignItems="center"
-              margin={0}
-              p={2}
-              justifyContent="center"
-              bgcolor={"#475569"}
-              style={{ width: `${percentageRemaining}%` }}
-            >
-              <Typography variant="body1" style={{ color: "#ffffff" }}>
-                In escrow: AED {1500 - 1000}
-              </Typography>
-            </Grid>
+            {percentageRemaining === 0 ? null : (
+              <Grid
+                item
+                container
+                alignItems="center"
+                margin={0}
+                p={2}
+                justifyContent="center"
+                bgcolor={"#475569"}
+                style={{ width: `${percentageRemaining}%` }}
+              >
+                <Typography variant="body1" style={{ color: "#ffffff" }}>
+                  In escrow: AED{" "}
+                  {villa?.milestone_budget_data[0]?.remaing_amount?.toFixed(2)}
+                </Typography>
+              </Grid>
+            )}
           </Grid>
           <Grid item container justifyContent={"space-between"}>
             <Grid
@@ -590,7 +578,9 @@ export default function Milestone(props) {
                   Paid amount:
                 </Typography>
                 <Typography className={classes.accRightText}>
-                  AED 1,500
+                  AED{" "}
+                  {villa?.milestone_budget_data[0]?.paid_amount?.toFixed(2) ||
+                    0}
                 </Typography>
               </Grid>
             </Grid>
@@ -610,7 +600,10 @@ export default function Milestone(props) {
                   Remaining amount:
                 </Typography>
                 <Typography className={classes.accRightText}>
-                  AED 500
+                  AED{" "}
+                  {villa?.milestone_budget_data[0]?.remaing_amount?.toFixed(
+                    2
+                  ) || 0}
                 </Typography>
               </Grid>
             </Grid>
@@ -959,11 +952,13 @@ export default function Milestone(props) {
                       <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
                         {milestone?.milestone_name}
                       </Typography>
-                      <IconButton
-                        onClick={(e) => handleRowClick(e, milestone, index)}
-                      >
-                        <MoreVertIcon />
-                      </IconButton>
+                      {milestone?.payment_status === "pending" && (
+                        <IconButton
+                          onClick={(e) => handleRowClick(e, milestone, index)}
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
+                      )}
                     </Grid>
                     <Grid
                       item
@@ -1084,9 +1079,9 @@ export default function Milestone(props) {
                           />
                         </ListItem>
                       </List>
-                      {isArray(pendingBudget) &&
-                        !isEmpty(pendingBudget) &&
-                        pendingBudget?.map((item, index) => {
+                      {isArray(milestone?.budget) &&
+                        !isEmpty(milestone?.budget) &&
+                        milestone?.budget?.map((item, index) => {
                           if (item?.milestone_id === milestone?.id) {
                             return (
                               <Grid
@@ -1100,8 +1095,8 @@ export default function Milestone(props) {
                                   md={3}
                                   justifyContent={"flex-start"}
                                 >
-                                  {isArray(item?.images) &&
-                                    !isEmpty(item?.images) && (
+                                  {isArray(item?.buget_image) &&
+                                    !isEmpty(item?.buget_image) && (
                                       <>
                                         <img
                                           style={{
@@ -1110,7 +1105,7 @@ export default function Milestone(props) {
                                             objectFit: "contain",
                                             borderRadius: 4,
                                           }}
-                                          src={item?.images[0]?.image}
+                                          src={item?.buget_image[0]?.image}
                                           alt="budget"
                                         />
                                       </>
@@ -1489,9 +1484,9 @@ export default function Milestone(props) {
                           />
                         </ListItem>
                       </List>
-                      {isArray(ongoingBudget) &&
-                        !isEmpty(ongoingBudget) &&
-                        ongoingBudget?.map((item, index) => {
+                      {isArray(milestone?.budget) &&
+                        !isEmpty(milestone?.budget) &&
+                        milestone?.budget?.map((item, index) => {
                           if (item?.milestone_id === milestone?.id) {
                             return (
                               <Grid
@@ -1505,8 +1500,8 @@ export default function Milestone(props) {
                                   md={3}
                                   justifyContent={"flex-start"}
                                 >
-                                  {isArray(item?.images) &&
-                                    !isEmpty(item?.images) && (
+                                  {isArray(item?.buget_image) &&
+                                    !isEmpty(item?.buget_image) && (
                                       <>
                                         <img
                                           style={{
@@ -1515,7 +1510,7 @@ export default function Milestone(props) {
                                             objectFit: "contain",
                                             borderRadius: 4,
                                           }}
-                                          src={item?.images[0]?.image}
+                                          src={item?.buget_image[0]?.image}
                                           alt="budget"
                                         />
                                       </>
@@ -1894,9 +1889,9 @@ export default function Milestone(props) {
                           />
                         </ListItem>
                       </List>
-                      {isArray(deliveryBudget) &&
-                        !isEmpty(deliveryBudget) &&
-                        deliveryBudget?.map((item, index) => {
+                      {isArray(milestone?.budget) &&
+                        !isEmpty(milestone?.budget) &&
+                        milestone?.budget?.map((item, index) => {
                           if (item?.milestone_id === milestone?.id) {
                             return (
                               <Grid
@@ -1910,8 +1905,8 @@ export default function Milestone(props) {
                                   md={3}
                                   justifyContent={"flex-start"}
                                 >
-                                  {isArray(item?.images) &&
-                                    !isEmpty(item?.images) && (
+                                  {isArray(item?.buget_image) &&
+                                    !isEmpty(item?.buget_image) && (
                                       <>
                                         <img
                                           style={{
@@ -1920,7 +1915,7 @@ export default function Milestone(props) {
                                             objectFit: "contain",
                                             borderRadius: 4,
                                           }}
-                                          src={item?.images[0]?.image}
+                                          src={item?.buget_image[0]?.image}
                                           alt="budget"
                                         />
                                       </>
@@ -2299,9 +2294,9 @@ export default function Milestone(props) {
                           />
                         </ListItem>
                       </List>
-                      {isArray(completedBudget) &&
-                        !isEmpty(completedBudget) &&
-                        completedBudget?.map((item, index) => {
+                      {isArray(milestone?.budget) &&
+                        !isEmpty(milestone?.budget) &&
+                        milestone?.budget?.map((item, index) => {
                           if (item?.milestone_id === milestone?.id) {
                             return (
                               <Grid
@@ -2315,8 +2310,8 @@ export default function Milestone(props) {
                                   md={3}
                                   justifyContent={"flex-start"}
                                 >
-                                  {isArray(item?.images) &&
-                                    !isEmpty(item?.images) && (
+                                  {isArray(item?.buget_image) &&
+                                    !isEmpty(item?.buget_image) && (
                                       <>
                                         <img
                                           style={{
@@ -2325,7 +2320,7 @@ export default function Milestone(props) {
                                             objectFit: "contain",
                                             borderRadius: 4,
                                           }}
-                                          src={item?.images[0]?.image}
+                                          src={item?.buget_image[0]?.image}
                                           alt="budget"
                                         />
                                       </>
@@ -2544,7 +2539,7 @@ export default function Milestone(props) {
             )}
           </Grid>
         )}
-        <Grid item container alignItems={"center"}>
+        {/* <Grid item container alignItems={"center"}>
           <Button
             variant="contained"
             onClick={() => {
@@ -2556,7 +2551,7 @@ export default function Milestone(props) {
             />
             Milestone
           </Button>
-        </Grid>
+        </Grid> */}
         {/* <Grid
           pt={2}
           item
@@ -2599,11 +2594,12 @@ export default function Milestone(props) {
       </Grid>
       <ConfirmModel
         visible={visible}
+        loader={paymentLoader}
         handleClose={() => setVisible(false)}
         confirmation={() => {
-          // handleDelete();
+          paymentRequest();
         }}
-        message={`Are you sure you want to delete ${selectedBudget?.data?.milestone_name} milestone?`}
+        message={`Are you sure you want to make a payment request?`}
       />
       <Menu
         id={`budget-menu`}
@@ -2645,7 +2641,7 @@ export default function Milestone(props) {
           vertical: "bottom",
         }}
       >
-        <MenuItem /*onClick={handleEdit}*/>Request Payment</MenuItem>
+        <MenuItem onClick={handePayment}>Request Payment</MenuItem>
       </Menu>
 
       {/* Edit details Modal */}
@@ -2688,7 +2684,7 @@ export default function Milestone(props) {
                     onClick={() => {
                       setVisibleEditModal(false);
                       // clearData();
-                      setSelectedBudget(null);
+                      setSelectedMilestone(null);
                     }}
                     disabled={btnUpdateLoader === "update"}
                   >
