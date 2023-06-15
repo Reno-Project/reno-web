@@ -24,14 +24,15 @@ const useStyles = makeStyles((theme) => ({
     borderCollapse: "collapse",
     "& td": {
       borderBottom: `1px solid ${theme.palette.divider}`,
-      textAlign: "center",
+      textAlign: "start",
       border: "none !important",
       background: "transparent !important",
       width: 100,
       padding: "4px 0px",
     },
     "& th": {
-      color: color.LightSurface,
+      color: color.secondary,
+      fontSize: 14,
     },
   },
   cardValueTexy: {
@@ -49,13 +50,13 @@ const useStyles = makeStyles((theme) => ({
   },
   acctext: {
     fontFamily: "Roobert-Regular !important",
-    fontSize: "14px !important",
+    fontSize: "16px !important",
     lineHeight: "20px !important",
     fontWeight: "400 !important",
   },
   accRightText: {
     fontFamily: "Roobert-Regular !important",
-    fontSize: "14px !important",
+    fontSize: "18px !important",
     lineHeight: "24px !important",
     fontWeight: "500 !important",
     "& img": {
