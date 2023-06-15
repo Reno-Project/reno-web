@@ -133,7 +133,7 @@ const OtpInput = (props) => {
           </Typography>
           <Typography className={classes.description}>
             Please enter code that was sent to{" "}
-            {is2Fa
+            {fromType === "phone"
               ? `+${locationState?.phone_code} ${locationState?.phone_no}`
               : locationState?.email || ""}
           </Typography>
