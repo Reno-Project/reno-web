@@ -26,6 +26,7 @@ import {
   Backdrop,
   Tabs,
   Tab,
+  Tooltip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
@@ -62,11 +63,12 @@ export default function Milestone(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [tabValue, setTabValue] = useState(0);
-  const percentageReleased =
-    (villa?.milestone_budget_data[0]?.paid_amount /
-      (villa?.milestone_budget_data[0]?.paid_amount +
-        villa?.milestone_budget_data[0]?.remaing_amount)) *
-    100;
+  const percentageReleased = 10;
+  // ((villa?.milestone_budget_data?.paid_amount || 0) /
+  //   ((villa?.milestone_budget_data?.paid_amount || 0) +
+  //     (villa?.milestone_budget_data?.remaing_amount || 0))) *
+  // 100;
+
   const percentageRemaining = 100 - percentageReleased;
 
   const [selectedMilestone, setSelectedMilestone] = useState({});
@@ -521,46 +523,123 @@ export default function Milestone(props) {
                   Original amount:
                 </Typography>
                 <Typography className={classes.accRightText}>
-                  AED {villa?.budget || 0}
+                  AED {villa?.budget?.toFixed(2) || 0}
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
 
-          <Grid item container justifyContent="space-between" pb={2}>
+          <Grid
+            item
+            container
+            justifyContent="space-between"
+            pb={2}
+            wrap="nowrap"
+          >
+            {/* {percentageReleased === 100 && ( */}
+            <Tooltip title={`Released: AED ${0}`} arrow>
+              <div
+                style={{
+                  width: `${percentageReleased}%`,
+                  display: "flex",
+                  height: 50,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: color.primary,
+                  cursor: "pointer",
+                }}
+              >
+                {percentageReleased > 20 ? (
+                  <Typography variant="body1" style={{ color: "#ffffff" }}>
+                    Released: AED{" "}
+                    {
+                      /*villa?.milestone_budget_data?.paid_amount?.toFixed(2)*/ 0
+                    }
+                  </Typography>
+                ) : (
+                  <Typography variant="body1" style={{ color: "#ffffff" }}>
+                    {
+                      /*villa?.milestone_budget_data?.paid_amount?.toFixed(2)*/ 0
+                    }
+                  </Typography>
+                )}
+              </div>
+            </Tooltip>
+            {/* )} */}
+            {/* {percentageRemaining === 100 && ( */}
+
+            <Tooltip title={`In escrow: AED ${0}`} arrow>
+              <div
+                style={{
+                  width: `${percentageRemaining}%`,
+                  height: 50,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#475569",
+                  cursor: "pointer",
+                }}
+              >
+                {percentageRemaining > 20 ? (
+                  <Typography variant="body1" style={{ color: "#ffffff" }}>
+                    In escrow: AED{" "}
+                    {villa?.milestone_budget_data?.escrow_amount?.toFixed(2) ||
+                      0}
+                  </Typography>
+                ) : (
+                  <Typography variant="body1" style={{ color: "#ffffff" }}>
+                    {villa?.milestone_budget_data?.escrow_amount?.toFixed(2) ||
+                      0}
+                  </Typography>
+                )}
+              </div>
+            </Tooltip>
+
+            {/* )} */}
+          </Grid>
+          {percentageReleased === 0 && percentageRemaining === 0 ? null : (
             <Grid
               item
-              container
-              alignItems="center"
-              justifyContent="center"
-              margin={0}
-              p={2}
-              bgcolor={color.primary}
-              style={{ width: `${percentageReleased}%` }}
+              contaier
+              sx={12}
+              style={{ width: "100%", paddingBottom: 16 }}
             >
-              <Typography variant="body1" style={{ color: "#ffffff" }}>
-                Released: AED{" "}
-                {villa?.milestone_budget_data[0]?.paid_amount?.toFixed(2)}
-              </Typography>
-            </Grid>
-            {percentageRemaining === 0 ? null : (
-              <Grid
-                item
-                container
-                alignItems="center"
-                margin={0}
-                p={2}
-                justifyContent="center"
-                bgcolor={"#475569"}
-                style={{ width: `${percentageRemaining}%` }}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  justifyContent: "flex-end",
+                }}
               >
-                <Typography variant="body1" style={{ color: "#ffffff" }}>
-                  In escrow: AED{" "}
-                  {villa?.milestone_budget_data[0]?.remaing_amount?.toFixed(2)}
-                </Typography>
-              </Grid>
-            )}
-          </Grid>
+                <span
+                  style={{
+                    width: 20,
+                    height: 5,
+                    backgroundColor: color.primary,
+                    marginRight: 8,
+                  }}
+                />
+                <Typography>Released Amount</Typography>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <span
+                  style={{
+                    width: 20,
+                    height: 5,
+                    marginRight: 8,
+                    backgroundColor: "#475569",
+                  }}
+                />
+                <Typography>In escrow Amount</Typography>
+              </div>
+            </Grid>
+          )}
           <Grid item container justifyContent={"space-between"}>
             <Grid
               item
@@ -579,8 +658,7 @@ export default function Milestone(props) {
                 </Typography>
                 <Typography className={classes.accRightText}>
                   AED{" "}
-                  {villa?.milestone_budget_data[0]?.paid_amount?.toFixed(2) ||
-                    0}
+                  {villa?.milestone_budget_data?.paid_amount?.toFixed(2) || 0}
                 </Typography>
               </Grid>
             </Grid>
@@ -601,9 +679,8 @@ export default function Milestone(props) {
                 </Typography>
                 <Typography className={classes.accRightText}>
                   AED{" "}
-                  {villa?.milestone_budget_data[0]?.remaing_amount?.toFixed(
-                    2
-                  ) || 0}
+                  {villa?.milestone_budget_data?.remaing_amount?.toFixed(2) ||
+                    0}
                 </Typography>
               </Grid>
             </Grid>
@@ -1359,11 +1436,11 @@ export default function Milestone(props) {
                       <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
                         {milestone?.milestone_name}
                       </Typography>
-                      <IconButton
+                      {/* <IconButton
                         onClick={(e) => handleRowClick(e, milestone, index)}
                       >
                         <MoreVertIcon />
-                      </IconButton>
+                      </IconButton> */}
                     </Grid>
                     <Grid
                       item
@@ -1764,11 +1841,11 @@ export default function Milestone(props) {
                       <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
                         {milestone?.milestone_name}
                       </Typography>
-                      <IconButton
+                      {/* <IconButton
                         onClick={(e) => handleRowClick(e, milestone, index)}
                       >
                         <MoreVertIcon />
-                      </IconButton>
+                      </IconButton> */}
                     </Grid>
                     <Grid
                       item
@@ -2169,11 +2246,11 @@ export default function Milestone(props) {
                       <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
                         {milestone?.milestone_name}
                       </Typography>
-                      <IconButton
+                      {/* <IconButton
                         onClick={(e) => handleRowClick(e, milestone, index)}
                       >
                         <MoreVertIcon />
-                      </IconButton>
+                      </IconButton> */}
                     </Grid>
                     <Grid
                       item
