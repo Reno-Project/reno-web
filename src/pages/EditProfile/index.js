@@ -1110,6 +1110,7 @@ export default function EditProfile() {
                 </Grid>
                 <Grid item xs={6}>
                   <Button
+                    disabled={buttonLoader}
                     style={{ minWidth: "135px", width: "100%" }}
                     variant="contained"
                     onClick={() => validation1()}
@@ -1370,6 +1371,7 @@ export default function EditProfile() {
                 </Grid>
                 <Grid item xs={6}>
                   <Button
+                    disabled={buttonLoader}
                     style={{ minWidth: "135px", width: "100%" }}
                     variant="contained"
                     onClick={() => editContractorDetailsApiCall()}
@@ -1501,6 +1503,7 @@ export default function EditProfile() {
                 </Grid>
                 <Grid item xs={6}>
                   <Button
+                    disabled={buttonLoader}
                     style={{ minWidth: "135px", width: "100%" }}
                     variant="contained"
                     onClick={() => editContractorDetailsApiCall()}
@@ -1652,6 +1655,7 @@ export default function EditProfile() {
                 </Grid>
                 <Grid item xs={6}>
                   <Button
+                    disabled={buttonLoader}
                     style={{ minWidth: "135px", width: "100%" }}
                     variant="contained"
                     onClick={() => validation4()}
@@ -1870,6 +1874,7 @@ export default function EditProfile() {
                 </Grid> */}
                 <Grid item xs={12}>
                   <Button
+                    disabled={buttonLoader}
                     style={{ minWidth: "135px", width: "100%" }}
                     variant="contained"
                     onClick={() => continueStep(5)}
