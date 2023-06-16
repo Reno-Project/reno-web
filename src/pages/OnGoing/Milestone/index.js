@@ -198,8 +198,32 @@ export default function Milestone(props) {
         {}
       );
       if (response.success) {
-        getMilestoneList("pending");
+        handleClose();
         setVisible(false);
+        getMilestoneList("pending");
+      }
+      setpaymentLoader(false);
+    } catch (error) {
+      console.log("err===>", error);
+      setpaymentLoader(false);
+    }
+  }
+
+  async function submitMilestone() {
+    setpaymentLoader(true);
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.submitMilestone}/${selectedMilestone?.data?.id}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        handleClose();
+        setVisible(false);
+        getMilestoneList("ongoing");
+        setTimeout(() => {
+          getMilestoneList("delivery");
+        }, 100);
       }
       setpaymentLoader(false);
     } catch (error) {
@@ -1469,11 +1493,11 @@ export default function Milestone(props) {
                       <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
                         {milestone?.milestone_name}
                       </Typography>
-                      {/* <IconButton
+                      <IconButton
                         onClick={(e) => handleRowClick(e, milestone, index)}
                       >
                         <MoreVertIcon />
-                      </IconButton> */}
+                      </IconButton>
                     </Grid>
                     <Grid
                       item
@@ -2707,9 +2731,17 @@ export default function Milestone(props) {
         loader={paymentLoader}
         handleClose={() => setVisible(false)}
         confirmation={() => {
-          paymentRequest();
+          if (tabValue === 0) {
+            paymentRequest();
+          } else if (tabValue === 1) {
+            submitMilestone();
+          }
         }}
-        message={`Are you sure you want to make a payment request?`}
+        message={
+          tabValue === 0
+            ? `Are you sure you want to make a payment request?`
+            : `Are you sure you want to submit this milestone?`
+        }
       />
       <Menu
         id={`budget-menu`}
@@ -2751,7 +2783,9 @@ export default function Milestone(props) {
           vertical: "bottom",
         }}
       >
-        <MenuItem onClick={handePayment}>Request Payment</MenuItem>
+        <MenuItem onClick={handePayment}>
+          {tabValue === 0 ? "Request Payment" : "Submit Milestone"}
+        </MenuItem>
       </Menu>
 
       {/* Edit details Modal */}

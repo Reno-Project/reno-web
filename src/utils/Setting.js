@@ -56,6 +56,7 @@ export const Setting = {
     paymentList: "api/stripe/payment-transaction-list",
     paymentRequest: "api/contractor/add-payment-request",
     milestoneCount: "api/project/project-common-data",
+    submitMilestone: "api/project/milestone-delivery",
   },
 
   JS_Regex: {

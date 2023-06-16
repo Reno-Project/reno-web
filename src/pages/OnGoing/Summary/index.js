@@ -1657,7 +1657,7 @@ export default function Summary(props) {
                                           <div
                                             style={{
                                               width: "100%",
-                                              paddingTop: 14,
+                                              padding: "14px 0px",
                                             }}
                                           >
                                             <Divider />
@@ -1872,7 +1872,7 @@ export default function Summary(props) {
                                           <div
                                             style={{
                                               width: "100%",
-                                              paddingTop: 14,
+                                              padding: "14px 0px",
                                             }}
                                           >
                                             <Divider />
@@ -1885,14 +1885,6 @@ export default function Summary(props) {
                           </>
                         )}
                     </Grid>
-                    <div
-                      style={{
-                        width: "100%",
-                        padding: "14px 0px",
-                      }}
-                    >
-                      <Divider />
-                    </div>
                     <Grid item container justifyContent={"space-between"}>
                       <Grid
                         item
