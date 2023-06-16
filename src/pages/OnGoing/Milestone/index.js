@@ -63,15 +63,22 @@ export default function Milestone(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [tabValue, setTabValue] = useState(0);
-  const percentageReleased = 10;
-  // ((villa?.milestone_budget_data?.paid_amount || 0) /
-  //   ((villa?.milestone_budget_data?.paid_amount || 0) +
-  //     (villa?.milestone_budget_data?.remaing_amount || 0))) *
-  // 100;
-
-  const percentageRemaining = 100 - percentageReleased;
+  const percentageReleased =
+    villa?.milestone_budget_data?.released_amount === 0 &&
+    villa?.milestone_budget_data?.escrow_amount === 0
+      ? 0
+      : ((villa?.milestone_budget_data?.released_amount || 0) /
+          ((villa?.milestone_budget_data?.released_amount || 0) +
+            (villa?.milestone_budget_data?.escrow_amount || 0))) *
+        100;
+  const percentageRemaining =
+    villa?.milestone_budget_data?.released_amount === 0 &&
+    villa?.milestone_budget_data?.escrow_amount === 0
+      ? 0
+      : 100 - percentageReleased;
 
   const [selectedMilestone, setSelectedMilestone] = useState({});
+  const [milestoneCount, setMilestoneCount] = useState({});
 
   const [errObj, setErrObj] = useState(errorObj);
 
@@ -113,6 +120,7 @@ export default function Milestone(props) {
     getMilestoneList("delivery");
     getMilestoneList("completed");
     getMilestoneList("pending");
+    getMilestoneCount();
   }, []);
 
   async function getMilestoneList(type) {
@@ -163,6 +171,20 @@ export default function Milestone(props) {
       } else if (type === "completed") {
         setcompletedLoader(false);
       }
+      console.log("err===>", error);
+    }
+  }
+  async function getMilestoneCount(type) {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.milestoneCount}?proposal_id=${villa?.proposal_id}`,
+        "GET",
+        {}
+      );
+      if (response.success) {
+        setMilestoneCount(response?.data);
+      }
+    } catch (error) {
       console.log("err===>", error);
     }
   }
@@ -503,7 +525,7 @@ export default function Milestone(props) {
               <Grid item lg={12} sm={12} md={12} xs={12}>
                 <Typography className={classes.acctext}>New Amount:</Typography>
                 <Typography className={classes.accRightText}>
-                  AED {villa?.milestone_budget_data[0]?.next_payment || 0}
+                  AED {villa?.milestone_budget_data?.next_payment || 0}
                 </Typography>
               </Grid>
             </Grid>
@@ -529,78 +551,74 @@ export default function Milestone(props) {
             </Grid>
           </Grid>
 
-          <Grid
-            item
-            container
-            justifyContent="space-between"
-            pb={2}
-            wrap="nowrap"
-          >
-            {/* {percentageReleased === 100 && ( */}
-            <Tooltip
-              title={`Released: AED ${
-                villa?.milestone_budget_data[0]?.released_amount || 0
-              }`}
-              arrow
+          {percentageReleased === 0 && percentageRemaining === 0 ? null : (
+            <Grid
+              item
+              container
+              justifyContent="space-between"
+              pb={2}
+              wrap="nowrap"
             >
-              <div
-                style={{
-                  width: `${percentageReleased}%`,
-                  display: "flex",
-                  height: 50,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: color.primary,
-                  cursor: "pointer",
-                }}
+              <Tooltip
+                title={`Released: AED ${
+                  villa?.milestone_budget_data?.released_amount || 0
+                }`}
+                arrow
               >
-                {percentageReleased > 20 ? (
-                  <Typography variant="body1" style={{ color: "#ffffff" }}>
-                    Released: AED{" "}
-                    {villa?.milestone_budget_data[0]?.released_amount || 0}
-                  </Typography>
-                ) : (
-                  <Typography variant="body1" style={{ color: "#ffffff" }}>
-                    {villa?.milestone_budget_data[0]?.released_amount || 0}
-                  </Typography>
-                )}
-              </div>
-            </Tooltip>
-            {/* )} */}
-            {/* {percentageRemaining === 100 && ( */}
-
-            <Tooltip
-              title={`In escrow: AED ${
-                villa?.milestone_budget_data?.escrow_amount || 0
-              }`}
-              arrow
-            >
-              <div
-                style={{
-                  width: `${percentageRemaining}%`,
-                  height: 50,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "#475569",
-                  cursor: "pointer",
-                }}
+                <div
+                  style={{
+                    width: `${percentageReleased}%`,
+                    display: "flex",
+                    height: 50,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: color.primary,
+                    cursor: "pointer",
+                  }}
+                >
+                  {percentageReleased > 20 ? (
+                    <Typography variant="body1" style={{ color: "#ffffff" }}>
+                      Released: AED{" "}
+                      {villa?.milestone_budget_data?.released_amount || 0}
+                    </Typography>
+                  ) : (
+                    <Typography variant="body1" style={{ color: "#ffffff" }}>
+                      {villa?.milestone_budget_data?.released_amount || 0}
+                    </Typography>
+                  )}
+                </div>
+              </Tooltip>
+              <Tooltip
+                title={`In escrow: AED ${
+                  villa?.milestone_budget_data?.escrow_amount || 0
+                }`}
+                arrow
               >
-                {percentageRemaining > 20 ? (
-                  <Typography variant="body1" style={{ color: "#ffffff" }}>
-                    In escrow: AED{" "}
-                    {villa?.milestone_budget_data?.escrow_amount || 0}
-                  </Typography>
-                ) : (
-                  <Typography variant="body1" style={{ color: "#ffffff" }}>
-                    {villa?.milestone_budget_data?.escrow_amount || 0}
-                  </Typography>
-                )}
-              </div>
-            </Tooltip>
-
-            {/* )} */}
-          </Grid>
+                <div
+                  style={{
+                    width: `${percentageRemaining}%`,
+                    height: 50,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#475569",
+                    cursor: "pointer",
+                  }}
+                >
+                  {percentageRemaining > 20 ? (
+                    <Typography variant="body1" style={{ color: "#ffffff" }}>
+                      In escrow: AED{" "}
+                      {villa?.milestone_budget_data?.escrow_amount || 0}
+                    </Typography>
+                  ) : (
+                    <Typography variant="body1" style={{ color: "#ffffff" }}>
+                      {villa?.milestone_budget_data?.escrow_amount || 0}
+                    </Typography>
+                  )}
+                </div>
+              </Tooltip>
+            </Grid>
+          )}
           {percentageReleased === 0 && percentageRemaining === 0 ? null : (
             <Grid
               item
@@ -661,7 +679,7 @@ export default function Milestone(props) {
                   Paid amount:
                 </Typography>
                 <Typography className={classes.accRightText}>
-                  AED {villa?.milestone_budget_data[0]?.paid_amount || 0}
+                  AED {villa?.milestone_budget_data?.paid_amount || 0}
                 </Typography>
               </Grid>
             </Grid>
@@ -681,7 +699,7 @@ export default function Milestone(props) {
                   Remaining amount:
                 </Typography>
                 <Typography className={classes.accRightText}>
-                  AED {villa?.milestone_budget_data[0]?.remaing_amount || 0}
+                  AED {villa?.milestone_budget_data?.remaing_amount || 0}
                 </Typography>
               </Grid>
             </Grid>
@@ -726,7 +744,9 @@ export default function Milestone(props) {
                   <Typography className={classes.titleText}>
                     Completed
                   </Typography>
-                  <Typography className={classes.cardValueTexy}>4</Typography>
+                  <Typography className={classes.cardValueTexy}>
+                    {milestoneCount?.completed || 0}
+                  </Typography>
                 </Grid>
               </Grid>
               <Grid
@@ -753,7 +773,9 @@ export default function Milestone(props) {
                   <Typography className={classes.titleText}>
                     Delivered
                   </Typography>
-                  <Typography className={classes.cardValueTexy}>6</Typography>
+                  <Typography className={classes.cardValueTexy}>
+                    {milestoneCount?.delivery || 0}
+                  </Typography>
                 </Grid>
               </Grid>
               <Grid
@@ -778,7 +800,9 @@ export default function Milestone(props) {
                 </Grid>
                 <Grid item pl={1}>
                   <Typography className={classes.titleText}>Ongoing</Typography>
-                  <Typography className={classes.cardValueTexy}>2</Typography>
+                  <Typography className={classes.cardValueTexy}>
+                    {milestoneCount?.ongoing || 0}
+                  </Typography>
                 </Grid>
               </Grid>
               <Grid
@@ -803,7 +827,9 @@ export default function Milestone(props) {
                 </Grid>
                 <Grid item pl={1}>
                   <Typography className={classes.titleText}>Delayed</Typography>
-                  <Typography className={classes.cardValueTexy}>14</Typography>
+                  <Typography className={classes.cardValueTexy}>
+                    {milestoneCount?.delay || 0}
+                  </Typography>
                 </Grid>
               </Grid>
               <Grid
@@ -828,7 +854,9 @@ export default function Milestone(props) {
                 </Grid>
                 <Grid item pl={1}>
                   <Typography className={classes.titleText}>New</Typography>
-                  <Typography className={classes.cardValueTexy}>14</Typography>
+                  <Typography className={classes.cardValueTexy}>
+                    {milestoneCount?.new_milestones || 0}
+                  </Typography>
                 </Grid>
               </Grid>
               <Grid
@@ -855,7 +883,9 @@ export default function Milestone(props) {
                   <Typography className={classes.titleText}>
                     Not Started
                   </Typography>
-                  <Typography className={classes.cardValueTexy}>3</Typography>
+                  <Typography className={classes.cardValueTexy}>
+                    {milestoneCount?.pending || 0}
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -883,7 +913,9 @@ export default function Milestone(props) {
               </Grid>
               <Grid item pl={1}>
                 <Typography className={classes.titleText}>Cancelled</Typography>
-                <Typography className={classes.cardValueTexy}>5</Typography>
+                <Typography className={classes.cardValueTexy}>
+                  {milestoneCount?.cancelled || 0}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>

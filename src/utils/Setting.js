@@ -55,6 +55,7 @@ export const Setting = {
     notificationList: "api/user/notifications-list",
     paymentList: "api/stripe/payment-transaction-list",
     paymentRequest: "api/contractor/add-payment-request",
+    milestoneCount: "api/project/project-common-data",
   },
 
   JS_Regex: {
