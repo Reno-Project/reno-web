@@ -68,7 +68,12 @@ const errorObj = {
 };
 
 export default function Budget(props) {
-  const { handleClick = () => null, villa, createProposal } = props;
+  const {
+    handleClick = () => null,
+    villa,
+    createProposal,
+    fromManageProject,
+  } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
@@ -2058,6 +2063,7 @@ export default function Budget(props) {
           msg="Proposal submitted successfully!"
           btnTitle="Continue"
           visible={proposalModal}
+          navigatePath={fromManageProject ? "/manage-project" : ""}
         />
       )}
 

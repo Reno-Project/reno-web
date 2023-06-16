@@ -503,7 +503,7 @@ export default function Milestone(props) {
               <Grid item lg={12} sm={12} md={12} xs={12}>
                 <Typography className={classes.acctext}>New Amount:</Typography>
                 <Typography className={classes.accRightText}>
-                  AED {0}
+                  AED {villa?.milestone_budget_data[0]?.next_payment || 0}
                 </Typography>
               </Grid>
             </Grid>
@@ -523,7 +523,7 @@ export default function Milestone(props) {
                   Original amount:
                 </Typography>
                 <Typography className={classes.accRightText}>
-                  AED {villa?.budget?.toFixed(2) || 0}
+                  AED {villa?.budget || 0}
                 </Typography>
               </Grid>
             </Grid>
@@ -537,7 +537,12 @@ export default function Milestone(props) {
             wrap="nowrap"
           >
             {/* {percentageReleased === 100 && ( */}
-            <Tooltip title={`Released: AED ${0}`} arrow>
+            <Tooltip
+              title={`Released: AED ${
+                villa?.milestone_budget_data[0]?.released_amount || 0
+              }`}
+              arrow
+            >
               <div
                 style={{
                   width: `${percentageReleased}%`,
@@ -552,15 +557,11 @@ export default function Milestone(props) {
                 {percentageReleased > 20 ? (
                   <Typography variant="body1" style={{ color: "#ffffff" }}>
                     Released: AED{" "}
-                    {
-                      /*villa?.milestone_budget_data?.paid_amount?.toFixed(2)*/ 0
-                    }
+                    {villa?.milestone_budget_data[0]?.released_amount || 0}
                   </Typography>
                 ) : (
                   <Typography variant="body1" style={{ color: "#ffffff" }}>
-                    {
-                      /*villa?.milestone_budget_data?.paid_amount?.toFixed(2)*/ 0
-                    }
+                    {villa?.milestone_budget_data[0]?.released_amount || 0}
                   </Typography>
                 )}
               </div>
@@ -568,7 +569,12 @@ export default function Milestone(props) {
             {/* )} */}
             {/* {percentageRemaining === 100 && ( */}
 
-            <Tooltip title={`In escrow: AED ${0}`} arrow>
+            <Tooltip
+              title={`In escrow: AED ${
+                villa?.milestone_budget_data?.escrow_amount || 0
+              }`}
+              arrow
+            >
               <div
                 style={{
                   width: `${percentageRemaining}%`,
@@ -583,13 +589,11 @@ export default function Milestone(props) {
                 {percentageRemaining > 20 ? (
                   <Typography variant="body1" style={{ color: "#ffffff" }}>
                     In escrow: AED{" "}
-                    {villa?.milestone_budget_data?.escrow_amount?.toFixed(2) ||
-                      0}
+                    {villa?.milestone_budget_data?.escrow_amount || 0}
                   </Typography>
                 ) : (
                   <Typography variant="body1" style={{ color: "#ffffff" }}>
-                    {villa?.milestone_budget_data?.escrow_amount?.toFixed(2) ||
-                      0}
+                    {villa?.milestone_budget_data?.escrow_amount || 0}
                   </Typography>
                 )}
               </div>
@@ -657,8 +661,7 @@ export default function Milestone(props) {
                   Paid amount:
                 </Typography>
                 <Typography className={classes.accRightText}>
-                  AED{" "}
-                  {villa?.milestone_budget_data?.paid_amount?.toFixed(2) || 0}
+                  AED {villa?.milestone_budget_data[0]?.paid_amount || 0}
                 </Typography>
               </Grid>
             </Grid>
@@ -678,9 +681,7 @@ export default function Milestone(props) {
                   Remaining amount:
                 </Typography>
                 <Typography className={classes.accRightText}>
-                  AED{" "}
-                  {villa?.milestone_budget_data?.remaing_amount?.toFixed(2) ||
-                    0}
+                  AED {villa?.milestone_budget_data[0]?.remaing_amount || 0}
                 </Typography>
               </Grid>
             </Grid>

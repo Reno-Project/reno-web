@@ -53,7 +53,8 @@ export default function Summary(props) {
   const location = useLocation();
 
   const createProposal = location?.state?.create_proposal || false;
-  const villa = location?.state ? location?.state : {};
+  const villa = location?.state?.villa ? location?.state?.villa : {};
+  const fromManageProject = location?.state?.fromManageProject || false;
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
     : villa?.user_data || {};
@@ -815,6 +816,7 @@ export default function Summary(props) {
                 }}
                 villa={villa}
                 createProposal={createProposal}
+                fromManageProject={fromManageProject}
               />
             ) : null}
           </Grid>

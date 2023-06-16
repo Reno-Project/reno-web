@@ -308,14 +308,8 @@ const ManageProject = (props) => {
                 {tabVal === 0
                   ? "Ongoing"
                   : tabVal === 1
-                  ? "Delayed"
-                  : tabVal === 2
                   ? "Proposal Submitted"
-                  : tabVal === 3
-                  ? "Submitted request"
-                  : tabVal === 4
-                  ? "Pending request"
-                  : "Completed"}
+                  : "Submitted request"}
               </Typography>
             </div>
           </Grid>
@@ -498,11 +492,13 @@ const ManageProject = (props) => {
                           manageProject
                           villa={villa}
                           onClick={() => {
-                            if (tabVal === 0) {
-                              navigate("/ongoing-project", {
-                                state: { villa },
-                              });
-                            }
+                            dispatch(setProposalDetails({}));
+                            navigate("/request-proposal", {
+                              state: {
+                                villa,
+                                status: "submitted",
+                              },
+                            });
                           }}
                         />
                       </div>
@@ -538,11 +534,13 @@ const ManageProject = (props) => {
                           manageProject
                           villa={villa}
                           onClick={() => {
-                            if (tabVal === 0) {
-                              navigate("/ongoing-project", {
-                                state: { villa },
-                              });
-                            }
+                            dispatch(setProposalDetails({}));
+                            navigate("/request-proposal", {
+                              state: {
+                                villa,
+                                activeScreen: "/manage-project",
+                              },
+                            });
                           }}
                         />
                       </div>

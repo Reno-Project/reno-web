@@ -14,6 +14,7 @@ function ProfileSuccessModal(props) {
     title = "Thank you!",
     msg = "We will review your profile and let you know once your profile is approved",
     btnTitle = "Start Exploring",
+    navigatePath = "",
   } = props;
   const { userData } = useSelector((state) => state.auth);
   const classes = useStyles();
@@ -68,7 +69,9 @@ function ProfileSuccessModal(props) {
                 fullWidth
                 disabled={isDisable}
                 onClick={() => {
-                  navigate("/dashboard");
+                  navigatePath
+                    ? navigate(navigatePath)
+                    : navigate("/dashboard");
                   setIsOpen(!isOpen);
                 }}
               >

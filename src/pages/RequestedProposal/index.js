@@ -31,6 +31,7 @@ export default function RequestedProposal() {
     ? villa?.reno_data || {}
     : villa?.user_data || {};
   const isSubmitted = location?.state?.status === "submitted";
+  const fromManageProject = location?.state?.activeScreen === "/manage-project";
   const [isPressed, setIsPressed] = useState(false);
   const [pageLoad, setPageLoad] = useState(true);
 
@@ -46,7 +47,6 @@ export default function RequestedProposal() {
 
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const md = useMediaQuery(theme.breakpoints.down("md"));
-
 
   async function getProjectDetails() {
     setPageLoad(true);
@@ -160,7 +160,14 @@ export default function RequestedProposal() {
                 </Grid>
               </Grid>
               <Grid item container className={classes.contentContainer}>
-                <Grid item lg={12} sm={12} md={12} xs={12} paddingTop={md ? '16px' : 0}>
+                <Grid
+                  item
+                  lg={12}
+                  sm={12}
+                  md={12}
+                  xs={12}
+                  paddingTop={md ? "16px" : 0}
+                >
                   <Typography className={classes.MainTitle}>
                     Project Informations
                   </Typography>
@@ -170,14 +177,25 @@ export default function RequestedProposal() {
                   container
                   alignItems="center"
                   justifyContent={"flex-end"}
-                  style={{ paddingTop: md ? 16 : 25, paddingBottom: md ? 16 : 25 }}
+                  style={{
+                    paddingTop: md ? 16 : 25,
+                    paddingBottom: md ? 16 : 25,
+                  }}
                 >
                   <Grid item lg={5} sm={12} md={6} xs={12} textAlign={"start"}>
                     <Typography className={classes.titleStyle}>
                       Project Name:
                     </Typography>
                   </Grid>
-                  <Grid item lg={7} sm={12} md={6} xs={12} textAlign={ md ? "start" : "end"} paddingTop={md ? '16px' : 0}>
+                  <Grid
+                    item
+                    lg={7}
+                    sm={12}
+                    md={6}
+                    xs={12}
+                    textAlign={md ? "start" : "end"}
+                    paddingTop={md ? "16px" : 0}
+                  >
                     <Typography className={classes.titleStyleRight}>
                       {villa?.name}
                     </Typography>
@@ -217,14 +235,25 @@ export default function RequestedProposal() {
                   container
                   alignItems="center"
                   justifyContent={"flex-end"}
-                  style={{ paddingTop: md ? 16 : 25, paddingBottom: md ? 16 : 25 }}
+                  style={{
+                    paddingTop: md ? 16 : 25,
+                    paddingBottom: md ? 16 : 25,
+                  }}
                 >
                   <Grid item lg={5} sm={12} md={6} xs={12}>
                     <Typography className={classes.acctext}>
                       Project Type:
                     </Typography>
                   </Grid>
-                  <Grid item lg={7} sm={12} md={6} xs={12} textAlign={ md ? "start" : "end"}  paddingTop={md ? '16px' : 0}>
+                  <Grid
+                    item
+                    lg={7}
+                    sm={12}
+                    md={6}
+                    xs={12}
+                    textAlign={md ? "start" : "end"}
+                    paddingTop={md ? "16px" : 0}
+                  >
                     <Typography className={classes.accRightText}>
                       {villa?.project_type}
                     </Typography>
@@ -279,7 +308,8 @@ export default function RequestedProposal() {
                               sm={12}
                               md={6}
                               xs={12}
-                              textAlign={ md ? "start" : "end"}  paddingTop={md ? '16px' : 0}
+                              textAlign={md ? "start" : "end"}
+                              paddingTop={md ? "16px" : 0}
                             >
                               <Typography className={classes.accRightText}>
                                 {milestone?.milestone_name}
@@ -296,7 +326,8 @@ export default function RequestedProposal() {
                               sm={12}
                               md={6}
                               xs={12}
-                              textAlign={ md ? "start" : "end"}  paddingTop={md ? '16px' : 0}
+                              textAlign={md ? "start" : "end"}
+                              paddingTop={md ? "16px" : 0}
                             >
                               <Typography className={classes.accRightText}>
                                 AED {amount || 0}
@@ -325,8 +356,8 @@ export default function RequestedProposal() {
                               sm={12}
                               md={6}
                               xs={12}
-                              textAlign={ md ? 'start' : "end"}
-                              paddingTop={md ? '16px' : '0px'}
+                              textAlign={md ? "start" : "end"}
+                              paddingTop={md ? "16px" : "0px"}
                             >
                               <Typography
                                 component={"span"}
@@ -614,7 +645,15 @@ export default function RequestedProposal() {
                         )}
                       </Typography>
                     </Grid>
-                    <Grid item lg={6} sm={12} md={6} xs={12} textAlign={ md ? 'start' : "end"} paddingTop={md ? '16px' : '0px'}>
+                    <Grid
+                      item
+                      lg={6}
+                      sm={12}
+                      md={6}
+                      xs={12}
+                      textAlign={md ? "start" : "end"}
+                      paddingTop={md ? "16px" : "0px"}
+                    >
                       <Typography
                         component={"span"}
                         className={classes.acctext}
@@ -657,7 +696,9 @@ export default function RequestedProposal() {
                                   lg={7}
                                   sm={12}
                                   md={6}
-                                  xs={12} textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  xs={12}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   {item?.unit_type?.id == 1 ? (
                                     <Typography
@@ -689,7 +730,9 @@ export default function RequestedProposal() {
                                   lg={7}
                                   sm={12}
                                   md={6}
-                                  xs={12}textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  xs={12}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.size}
@@ -705,7 +748,9 @@ export default function RequestedProposal() {
                                   lg={7}
                                   sm={12}
                                   md={6}
-                                  xs={12}textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  xs={12}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.floors}
@@ -721,7 +766,9 @@ export default function RequestedProposal() {
                                   lg={7}
                                   sm={12}
                                   md={6}
-                                  xs={12} textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  xs={12}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.bedrooms}
@@ -737,7 +784,9 @@ export default function RequestedProposal() {
                                   lg={7}
                                   sm={12}
                                   md={6}
-                                  xs={12} textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  xs={12}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.bathrooms}
@@ -753,7 +802,9 @@ export default function RequestedProposal() {
                                   lg={7}
                                   sm={12}
                                   md={6}
-                                  xs={12} textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0} 
+                                  xs={12}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.kitchen}
@@ -769,7 +820,9 @@ export default function RequestedProposal() {
                                   lg={7}
                                   sm={12}
                                   md={6}
-                                  xs={12} textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  xs={12}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   {item?.preferred_style?.map(
                                     (item1, index) => (
@@ -809,7 +862,8 @@ export default function RequestedProposal() {
                                   sm={12}
                                   md={6}
                                   xs={12}
-                                  textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   {item?.unit_type?.id == 1 ? (
                                     <Typography
@@ -842,7 +896,8 @@ export default function RequestedProposal() {
                                   sm={12}
                                   md={6}
                                   xs={12}
-                                  textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.size}
@@ -859,7 +914,8 @@ export default function RequestedProposal() {
                                   sm={12}
                                   md={6}
                                   xs={12}
-                                  textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.floors}
@@ -876,7 +932,8 @@ export default function RequestedProposal() {
                                   sm={12}
                                   md={6}
                                   xs={12}
-                                  textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.bedrooms}
@@ -893,7 +950,8 @@ export default function RequestedProposal() {
                                   sm={12}
                                   md={6}
                                   xs={12}
-                                  textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.bathrooms}
@@ -910,7 +968,8 @@ export default function RequestedProposal() {
                                   sm={12}
                                   md={6}
                                   xs={12}
-                                  textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.kitchen}
@@ -927,7 +986,8 @@ export default function RequestedProposal() {
                                   sm={12}
                                   md={6}
                                   xs={12}
-                                  textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   {item?.require_service?.map(
                                     (item1, index) => (
@@ -967,7 +1027,8 @@ export default function RequestedProposal() {
                                   sm={12}
                                   md={6}
                                   xs={12}
-                                  textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.size}
@@ -984,7 +1045,8 @@ export default function RequestedProposal() {
                                   sm={12}
                                   md={6}
                                   xs={12}
-                                  textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   {item?.include?.map((item1, index) => (
                                     <div
@@ -1036,7 +1098,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1061,7 +1124,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1086,7 +1150,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1111,7 +1176,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1136,7 +1202,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1162,7 +1229,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1185,7 +1253,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1208,7 +1277,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1231,7 +1301,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1252,7 +1323,8 @@ export default function RequestedProposal() {
                                   sm={12}
                                   md={6}
                                   xs={12}
-                                  textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   {item?.include_Appliances?.map(
                                     (item1, index) => (
@@ -1322,7 +1394,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1347,7 +1420,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1372,7 +1446,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1396,7 +1471,8 @@ export default function RequestedProposal() {
                                   sm={12}
                                   md={6}
                                   xs={12}
-                                  textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                  textAlign={md ? "start" : "end"}
+                                  paddingTop={md ? "7px" : 0}
                                 >
                                   <Typography className={classes.accRightText}>
                                     {item?.size}
@@ -1415,7 +1491,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1438,7 +1515,8 @@ export default function RequestedProposal() {
                                       sm={12}
                                       md={6}
                                       xs={12}
-                                      textAlign={ md ? "start" : "end"}  paddingTop={md ? '7px' : 0}
+                                      textAlign={md ? "start" : "end"}
+                                      paddingTop={md ? "7px" : 0}
                                     >
                                       <Typography
                                         className={classes.accRightText}
@@ -1465,7 +1543,7 @@ export default function RequestedProposal() {
                         sm={12}
                         md={6}
                         xs={12}
-                        paddingBottom={md ? '5px' : "14px"}
+                        paddingBottom={md ? "5px" : "14px"}
                       >
                         <Typography className={classes.acctext}>
                           Project Budget:
@@ -1477,8 +1555,9 @@ export default function RequestedProposal() {
                         lg={7}
                         sm={12}
                         md={6}
-                        xs={12} textAlign={ md ? "start" : "end"}  
-                        paddingBottom={md ? '5px' : "14px"}
+                        xs={12}
+                        textAlign={md ? "start" : "end"}
+                        paddingBottom={md ? "5px" : "14px"}
                       >
                         <Typography className={classes.accRightText}>
                           AED {villa?.budget || 0}
@@ -1493,7 +1572,7 @@ export default function RequestedProposal() {
                         sm={12}
                         md={6}
                         xs={12}
-                        paddingBottom={ md ? '5px' : "14px"}
+                        paddingBottom={md ? "5px" : "14px"}
                       >
                         <Typography className={classes.acctext}>
                           Project Location:
@@ -1506,9 +1585,9 @@ export default function RequestedProposal() {
                         sm={12}
                         md={6}
                         xs={12}
-                        justifyContent={ md ? 'flex-start' : "flex-end"}
+                        justifyContent={md ? "flex-start" : "flex-end"}
                         wrap="nowrap"
-                        paddingBottom={md ? '5px' : "14px"}
+                        paddingBottom={md ? "5px" : "14px"}
                       >
                         <Typography className={classes.linkText}>
                           {villa?.location}
@@ -1595,7 +1674,12 @@ export default function RequestedProposal() {
                         fullWidth
                         onClick={() => {
                           window.scrollTo({ top: 0, behavior: "smooth" });
-                          navigate("/create-proposal", { state: villa });
+                          navigate("/create-proposal", {
+                            state: {
+                              villa,
+                              fromManageProject,
+                            },
+                          });
                         }}
                       >
                         Submit proposal
