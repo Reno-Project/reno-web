@@ -1029,7 +1029,7 @@ export default function Milestone(props) {
                       fontSize: 12,
                     }}
                   >
-                    {_.find(milestoneCount, { type: "pending" }).value || 0}
+                    {_.find(milestoneCount, { type: "pending" })?.value || 0}
                   </span>
                 </Typography>
               }
@@ -1052,7 +1052,7 @@ export default function Milestone(props) {
                       fontSize: 12,
                     }}
                   >
-                    {_.find(milestoneCount, { type: "ongoing" }).value || 0}
+                    {_.find(milestoneCount, { type: "ongoing" })?.value || 0}
                   </span>
                 </Typography>
               }
@@ -1075,7 +1075,7 @@ export default function Milestone(props) {
                       fontSize: 12,
                     }}
                   >
-                    {_.find(milestoneCount, { type: "delivery" }).value || 0}
+                    {_.find(milestoneCount, { type: "delivery" })?.value || 0}
                   </span>
                 </Typography>
               }
@@ -1099,7 +1099,7 @@ export default function Milestone(props) {
                       fontSize: 12,
                     }}
                   >
-                    {_.find(milestoneCount, { type: "completed" }).value || 0}
+                    {_.find(milestoneCount, { type: "completed" })?.value || 0}
                   </span>
                 </Typography>
               }
