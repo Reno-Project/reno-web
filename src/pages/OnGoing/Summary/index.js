@@ -476,7 +476,7 @@ export default function Summary(props) {
                             >
                               <Divider />
                             </div>
-                            {projectDetails?.exp_id == 2
+                            {projectDetails?.exp_id == 1
                               ? projectDetails?.form_json?.map(
                                   (item, index) => {
                                     return (
@@ -1280,7 +1280,7 @@ export default function Summary(props) {
                                     );
                                   }
                                 )
-                              : projectDetails?.exp_id == 1
+                              : projectDetails?.exp_id == 2
                               ? projectDetails?.form_json?.map(
                                   (item, index) => {
                                     const objectWithCheckIconTrue =
