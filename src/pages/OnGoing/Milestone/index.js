@@ -79,6 +79,7 @@ export default function Milestone(props) {
 
   const [selectedMilestone, setSelectedMilestone] = useState({});
   const [milestoneCount, setMilestoneCount] = useState([]);
+  const [counterLoader, setCounterLoader] = useState(true);
 
   const [errObj, setErrObj] = useState(errorObj);
 
@@ -122,15 +123,6 @@ export default function Milestone(props) {
     getMilestoneList("pending");
   }, []);
 
-  useEffect(() => {
-    getMilestoneCount();
-  }, [
-    pendingMilestone,
-    ongoingMilestone,
-    deliveryMilestone,
-    completedMilestone,
-  ]);
-
   async function getMilestoneList(type, bool) {
     if (type === "pending") {
       setPendingLoader(true);
@@ -154,19 +146,18 @@ export default function Milestone(props) {
           } else if (type === "ongoing") {
             setongoingMilestone(response?.data);
           } else if (type === "delivery") {
+            if (bool) {
+              setongoingMilestone([]);
+              setTimeout(() => {
+                getMilestoneList("ongoing");
+              }, 500);
+            }
             setdeliveryMilestone(response?.data);
           } else if (type === "completed") {
             setcompletedMilestone(response?.data);
           }
         }
-       if(bool)
-       {
-        setTimeout(() => {
-          
-          getMilestoneList("delivery");
-        }, 1000);
-      } 
-        
+        getMilestoneCount();
       }
       if (type === "pending") {
         setPendingLoader(false);
@@ -191,6 +182,7 @@ export default function Milestone(props) {
     }
   }
   async function getMilestoneCount(type) {
+    setCounterLoader(true);
     try {
       const response = await getApiData(
         `${Setting.endpoints.milestoneCount}?proposal_id=${villa?.proposal_id}`,
@@ -202,9 +194,11 @@ export default function Milestone(props) {
           setMilestoneCount(response?.data);
         }
       }
+      setCounterLoader(false);
     } catch (error) {
       console.log("err===>", error);
     }
+    setCounterLoader(false);
   }
 
   async function paymentRequest() {
@@ -238,7 +232,7 @@ export default function Milestone(props) {
       if (response.success) {
         handleClose();
         setVisible(false);
-        getMilestoneList("ongoing", true);
+        getMilestoneList("delivery", true);
       }
       setpaymentLoader(false);
     } catch (error) {
@@ -757,60 +751,82 @@ export default function Milestone(props) {
             <Typography className={classes.MainTitle}>Milestones</Typography>
           </Grid>
 
-          {isArray(milestoneCount) && !isEmpty(milestoneCount) && (
-            <Grid item container rowGap={2}>
-              <Grid item container columnGap={1} rowGap={2}>
-                {milestoneCount?.map((item, ind) => {
-                  return (
-                    <Grid
-                      item
-                      container
-                      xs={12}
-                      sm={5.8}
-                      md={3.9}
-                      style={{
-                        padding: 20,
-                        borderTopRightRadius: 16,
-                        borderBottomLeftRadius: 16,
-                        borderWidth: 1,
-                        borderStyle: "solid",
-                        borderColor: color.borderColor,
-                        margin: 0,
-                      }}
-                      wrap="nowrap"
-                    >
-                      <Grid item>
-                        <img
-                          src={
-                            item?.type === "cancelled"
-                              ? Images.FileBlock
-                              : item?.type === "delivery"
-                              ? Images.FilePaste
-                              : item?.type === "new_milestones"
-                              ? Images.FileAdd
-                              : item?.type === "ongoing"
-                              ? Images.FileEdit
-                              : item?.type === "pending"
-                              ? Images.FileVerified
-                              : item?.type === "not_started"
-                              ? Images.FileUnknown
-                              : Images.FileVerified
-                          }
-                          alt="completed"
-                        />
-                      </Grid>
-                      <Grid item pl={1}>
-                        <Typography className={classes.titleText}>
-                          {_.capitalize(item?.type?.replace("_", " "))}
-                        </Typography>
-                        <Typography className={classes.cardValueTexy}>
-                          {item?.value || 0}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  );
-                })}
-                {/* <Grid
+          {counterLoader ? (
+            <Grid
+              item
+              container
+              justifyContent={"center"}
+              alignItems={"center"}
+              sx={12}
+              minHeight={220}
+            >
+              <CircularProgress style={{ color: "#274BF1" }} size={26} />
+            </Grid>
+          ) : (
+            isArray(milestoneCount) &&
+            !isEmpty(milestoneCount) && (
+              <Grid item container rowGap={2}>
+                <Grid item container columnGap={1} rowGap={2}>
+                  {milestoneCount?.map((item, ind) => {
+                    if (
+                      item?.type === "pending" ||
+                      item?.type === "ongoing" ||
+                      item?.type === "delivery" ||
+                      item?.type === "completed"
+                    ) {
+                      return (
+                        <Grid
+                          item
+                          container
+                          xs={12}
+                          sm={5.8}
+                          md={3.9}
+                          style={{
+                            padding: 20,
+                            borderTopRightRadius: 16,
+                            borderBottomLeftRadius: 16,
+                            borderWidth: 1,
+                            borderStyle: "solid",
+                            borderColor: color.borderColor,
+                            margin: 0,
+                          }}
+                          wrap="nowrap"
+                        >
+                          <Grid item>
+                            <img
+                              src={
+                                item?.type === "cancelled"
+                                  ? Images.FileBlock
+                                  : item?.type === "delivery"
+                                  ? Images.FilePaste
+                                  : item?.type === "new_milestones"
+                                  ? Images.FileAdd
+                                  : item?.type === "ongoing"
+                                  ? Images.FileEdit
+                                  : item?.type === "pending"
+                                  ? Images.FileVerified
+                                  : item?.type === "not_started"
+                                  ? Images.FileUnknown
+                                  : Images.FileVerified
+                              }
+                              alt="completed"
+                            />
+                          </Grid>
+                          <Grid item pl={1}>
+                            <Typography className={classes.titleText}>
+                              {_.capitalize(item?.type?.replace("_", " "))}
+                            </Typography>
+                            <Typography className={classes.cardValueTexy}>
+                              {item?.value || 0}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
+                  {/* <Grid
                 item
                 container
                 xs={12}
@@ -949,10 +965,10 @@ export default function Milestone(props) {
                   </Typography>
                 </Grid>
               </Grid> */}
-              </Grid>
+                </Grid>
 
-              {/* </Grid> */}
-              {/* <Grid
+                {/* </Grid> */}
+                {/* <Grid
               item
               container
               xs={12}
@@ -979,7 +995,8 @@ export default function Milestone(props) {
                 </Typography>
               </Grid>
             </Grid> */}
-            </Grid>
+              </Grid>
+            )
           )}
         </Grid>
         {/* {renderMilestoneCreateForm("form")} */}
@@ -997,7 +1014,7 @@ export default function Milestone(props) {
             <Tab
               label={
                 <Typography style={{ display: "flex", alignItems: "center" }}>
-                  Not Started
+                  pending
                   <span
                     style={{
                       padding: "2px 8px",
@@ -1012,7 +1029,7 @@ export default function Milestone(props) {
                       fontSize: 12,
                     }}
                   >
-                    {pendingMilestone?.length || 0}
+                    {_.find(milestoneCount, { type: "pending" }).value || 0}
                   </span>
                 </Typography>
               }
@@ -1035,7 +1052,7 @@ export default function Milestone(props) {
                       fontSize: 12,
                     }}
                   >
-                    {ongoingMilestone?.length || 0}
+                    {_.find(milestoneCount, { type: "ongoing" }).value || 0}
                   </span>
                 </Typography>
               }
@@ -1058,7 +1075,7 @@ export default function Milestone(props) {
                       fontSize: 12,
                     }}
                   >
-                    {deliveryMilestone?.length || 0}
+                    {_.find(milestoneCount, { type: "delivery" }).value || 0}
                   </span>
                 </Typography>
               }
@@ -1082,7 +1099,7 @@ export default function Milestone(props) {
                       fontSize: 12,
                     }}
                   >
-                    {completedMilestone?.length || 0}
+                    {_.find(milestoneCount, { type: "completed" }).value || 0}
                   </span>
                 </Typography>
               }
