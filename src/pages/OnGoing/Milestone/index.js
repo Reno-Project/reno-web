@@ -78,40 +78,7 @@ export default function Milestone(props) {
       : 100 - percentageReleased;
 
   const [selectedMilestone, setSelectedMilestone] = useState({});
-  const [milestoneCount, setMilestoneCount] = useState([
-    {
-      type: "cancelled",
-      value: 0,
-    },
-    {
-      type: "completed",
-      value: 2,
-    },
-    {
-      type: "delivery",
-      value: 0,
-    },
-    {
-      type: "new_milestones",
-      value: 0,
-    },
-    {
-      type: "ongoing",
-      value: 0,
-    },
-    {
-      type: "pending",
-      value: 0,
-    },
-    {
-      type: "not_started",
-      value: 0,
-    },
-    {
-      type: "pending_approval",
-      value: 0,
-    },
-  ]);
+  const [milestoneCount, setMilestoneCount] = useState([]);
 
   const [errObj, setErrObj] = useState(errorObj);
 
@@ -192,7 +159,14 @@ export default function Milestone(props) {
             setcompletedMilestone(response?.data);
           }
         }
-        bool && getMilestoneList("delivery");
+       if(bool)
+       {
+        setTimeout(() => {
+          
+          getMilestoneList("delivery");
+        }, 1000);
+      } 
+        
       }
       if (type === "pending") {
         setPendingLoader(false);
