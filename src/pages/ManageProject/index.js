@@ -60,6 +60,7 @@ const ManageProject = (props) => {
   const [onGoingLoader, setOnGoingLoader] = useState(true);
   const [proposalSubmitedLoader, setProposalSubmitedLoader] = useState(true);
   const [submitRequestLoader, setSubmitRequestLoader] = useState(true);
+  const [searchFilter, setSearchFilter] = useState("");
 
   const [tabVal, setTabVal] = useState(0);
 
@@ -75,7 +76,9 @@ const ManageProject = (props) => {
     type === "proposal" && setProposalSubmitedLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.listcontractorproject}?status=${type}`,
+        `${Setting.endpoints.listcontractorproject}?status=${type}&search=${
+          bool ? "" : searchFilter
+        }`,
         "get",
         {}
       );
@@ -323,26 +326,47 @@ const ManageProject = (props) => {
             rowGap={2}
           >
             <Grid item container rowGap={2}>
-              <Grid item mr={2}>
-                <TextField
-                  fullWidth
-                  placeholder="Search"
-                  className={classes.inputFieldStyle}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <div style={{ lineHeight: 0 }}>
-                          <Search style={{ fontSize: 20 }} />
-                        </div>
-                      </InputAdornment>
-                    ),
-                  }}
-                  // value={searchFilter}
-                  // onChange={(v) => {
-                  //   isEmpty(v.target.value) && getFleetList(true);
-                  //   setSearchFilter(v?.target?.value);
-                  // }}
-                />
+              <Grid item container style={{ width: "unset", margin: 0 }}>
+                <Grid item mr={2}>
+                  <TextField
+                    fullWidth
+                    placeholder="Search"
+                    className={classes.inputFieldStyle}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <div style={{ lineHeight: 0 }}>
+                            <Search style={{ fontSize: 20 }} />
+                          </div>
+                        </InputAdornment>
+                      ),
+                    }}
+                    value={searchFilter}
+                    onChange={(v) => {
+                      if (isEmpty(v.target.value)) {
+                        tabVal === 0 && getTabList("ongoing", true);
+                        tabVal === 1 && getTabList("proposal", true);
+                        tabVal === 2 && getTabList("Requested", true);
+                      }
+                      setSearchFilter(v?.target?.value);
+                    }}
+                  />
+                </Grid>
+                <Grid item mr={2}>
+                  <Button
+                    variant="contained"
+                    style={{ backgroundColor: color.secondary }}
+                    onClick={() => {
+                      if (!isEmpty(searchFilter)) {
+                        tabVal === 0 && getTabList("ongoing", false);
+                        tabVal === 1 && getTabList("proposal", false);
+                        tabVal === 2 && getTabList("Requested", false);
+                      }
+                    }}
+                  >
+                    Search
+                  </Button>
+                </Grid>
               </Grid>
               <Grid item>
                 <Select
@@ -390,7 +414,10 @@ const ManageProject = (props) => {
                   !isEmpty(submitRequestCount) && (
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <IconButton
-                        style={{ border: `1px solid #F2F3F4`, marginRight: 8 }}
+                        style={{
+                          border: `1px solid #F2F3F4`,
+                          marginRight: 8,
+                        }}
                         onClick={() => rSliderRef.current.slickPrev()}
                       >
                         <KeyboardArrowLeftIcon style={{ color: "#363853" }} />
@@ -411,7 +438,10 @@ const ManageProject = (props) => {
                   !isEmpty(proposalSubmitedCount) && (
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <IconButton
-                        style={{ border: `1px solid #F2F3F4`, marginRight: 8 }}
+                        style={{
+                          border: `1px solid #F2F3F4`,
+                          marginRight: 8,
+                        }}
                         onClick={() => sSliderRef.current.slickPrev()}
                       >
                         <KeyboardArrowLeftIcon style={{ color: "#363853" }} />

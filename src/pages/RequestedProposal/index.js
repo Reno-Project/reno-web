@@ -116,7 +116,7 @@ export default function RequestedProposal() {
                     <div className={classes.activeStatus}></div>
                   </div>
                 </div>
-                <Grid item container>
+                <Grid item container style={{ width: "100%", margin: 0 }}>
                   <Grid item lg={9} md={9} sm={9} xs={9}>
                     <Typography className={classes.titleText}>
                       {nData?.username}
