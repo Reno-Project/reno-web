@@ -159,6 +159,14 @@ const ManageProject = (props) => {
               allowScrollButtonsMobile
               value={tabVal}
               onChange={(v, b) => {
+                if (!isEmpty(searchFilter)) {
+                  setSearchFilter("");
+                  setTimeout(() => {
+                    tabVal === 0 && getTabList("ongoing", true);
+                    tabVal === 1 && getTabList("proposal", true);
+                    tabVal === 2 && getTabList("Requested", true);
+                  }, 500);
+                }
                 setTabVal(b);
               }}
             >
