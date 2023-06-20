@@ -38,8 +38,8 @@ const Images = {
   fb_white: "/assets/images/fb_white.svg",
   twitter: "/assets/images/twitter.svg",
   insta_white: "/assets/images/insta_white.svg",
-  ios_store: "/assets/images/ios_store.png",
-  googleplay: "/assets/images/googlePlay.png",
+  ios_store:'/assets/images/ios_store.png',
+  googleplay:'/assets/images/googlePlay.png',
 
   icon1: "/assets/images/icon1.svg",
   icon2: "/assets/images/icon2.svg",
@@ -80,6 +80,15 @@ const Images = {
   FileEdit: "/assets/images/file-edit.svg",
   FileAdd: "/assets/images/file-add.svg",
   FileBlock: "/assets/images/file-block.svg",
+  editIcon:"/assets/images/content.png",
+  pictureUpload:"/assets/images/content.svg",
+  fileUpload:"/assets/images/fileLink.svg",
+  send:"/assets/images/Send.svg",
+  mute:"/assets/images/bell.svg",
+  search:"/assets/images/search.svg",
+  people:"/assets/images/people.png",
+  doc:"/assets/images/Document.png",
+  dots:'/assets/images/Dots.svg'
 };
 
 export default Images;

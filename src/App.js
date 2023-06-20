@@ -32,6 +32,7 @@ import Summary from "./pages/Proposal/Summary";
 import OnGoing from "./pages/OnGoing/Summary";
 import ProjectDetail from "./pages/ProjectDetail";
 import ManageProject from "./pages/ManageProject";
+import ChatScreen from "./pages/ChatScreen";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
@@ -101,6 +102,10 @@ function App() {
                       <Route
                         path={"/manage-project"}
                         element={<ManageProject />}
+                      />
+                        <Route
+                        path={"/chat"}
+                        element={<ChatScreen/>}
                       />
                       <Route
                         path="*"

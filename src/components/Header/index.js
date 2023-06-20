@@ -180,7 +180,7 @@ function Header(props) {
                             </Button>
                           </Grid>
                           <Grid item>
-                            <IconButton>
+                            <IconButton onClick={() => navigate("/chat")}>
                               <img src={Images.chatico} alt="chat" />
                             </IconButton>
                           </Grid>
