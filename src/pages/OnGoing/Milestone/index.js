@@ -781,7 +781,8 @@ export default function Milestone(props) {
                           container
                           xs={12}
                           sm={5.8}
-                          md={3.9}
+                          md={5.8}
+                          lg={3.9}
                           style={{
                             padding: 20,
                             borderTopRightRadius: 16,
