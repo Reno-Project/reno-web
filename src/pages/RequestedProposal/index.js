@@ -230,17 +230,14 @@ export default function RequestedProposal() {
                     </Typography>
                   </Grid>
                 </Grid>
+
                 <Grid
                   item
                   container
                   alignItems="center"
                   justifyContent={"flex-end"}
-                  style={{
-                    paddingTop: md ? 16 : 25,
-                    paddingBottom: md ? 16 : 25,
-                  }}
                 >
-                  <Grid item lg={5} sm={12} md={6} xs={12}>
+                  <Grid item lg={5} sm={12} md={6} xs={12} pt={2}>
                     <Typography className={classes.acctext}>
                       Project Type:
                     </Typography>
@@ -251,15 +248,41 @@ export default function RequestedProposal() {
                     sm={12}
                     md={6}
                     xs={12}
+                    pt={2}
                     textAlign={md ? "start" : "end"}
-                    paddingTop={md ? "16px" : 0}
                   >
                     <Typography className={classes.accRightText}>
                       {villa?.project_type}
                     </Typography>
                   </Grid>
                 </Grid>
-
+                {isSubmitted && (
+                  <Grid
+                    item
+                    container
+                    alignItems="center"
+                    justifyContent={"flex-end"}
+                  >
+                    <Grid item lg={5} sm={12} md={6} xs={12} pt={2}>
+                      <Typography className={classes.acctext}>
+                        Scope of work:
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      item
+                      lg={7}
+                      sm={12}
+                      md={6}
+                      xs={12}
+                      pt={2}
+                      textAlign={md ? "start" : "end"}
+                    >
+                      <Typography className={classes.accRightText}>
+                        {villa?.scope_of_work}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                )}
                 {isSubmitted &&
                   isArray(villa?.milestone) &&
                   !isEmpty(villa?.milestone) && (
@@ -326,8 +349,8 @@ export default function RequestedProposal() {
                               sm={12}
                               md={6}
                               xs={12}
+                              pt={2}
                               textAlign={md ? "start" : "end"}
-                              paddingTop={md ? "16px" : 0}
                             >
                               <Typography className={classes.accRightText}>
                                 AED {amount || 0}
@@ -357,7 +380,6 @@ export default function RequestedProposal() {
                               md={6}
                               xs={12}
                               textAlign={md ? "start" : "end"}
-                              paddingTop={md ? "16px" : "0px"}
                             >
                               <Typography
                                 component={"span"}
@@ -381,13 +403,12 @@ export default function RequestedProposal() {
                                 Description:
                               </Typography>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} style={{ paddingTop: 0 }}>
                               <Typography
                                 className={classes.accRightText}
                                 style={{
                                   backgroundColor: "#F5F6F8",
                                   padding: "11px 15px",
-                                  gap: "10px",
                                   margin: "10px 0px",
                                 }}
                               >
@@ -628,7 +649,7 @@ export default function RequestedProposal() {
                   )}
                 {!isSubmitted && (
                   <>
-                    <Grid item lg={6} sm={12} md={6} xs={12}>
+                    <Grid item lg={6} sm={12} md={6} xs={12} pt={2}>
                       <Typography
                         component={"span"}
                         className={classes.acctext}
@@ -651,8 +672,8 @@ export default function RequestedProposal() {
                       sm={12}
                       md={6}
                       xs={12}
+                      pt={2}
                       textAlign={md ? "start" : "end"}
-                      paddingTop={md ? "16px" : "0px"}
                     >
                       <Typography
                         component={"span"}

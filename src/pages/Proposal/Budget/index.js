@@ -229,7 +229,7 @@ export default function Budget(props) {
         ) {
           const modifiedArray = response?.data?.map((item) => ({
             ...item,
-            photo_origin: item.photo_url,
+            photo_origin: item.photo_origin,
           }));
           setBudgetDetails(modifiedArray);
         } else {
@@ -806,70 +806,70 @@ export default function Budget(props) {
     });
   }
 
-  async function UploadFile(img) {
-    setUploadLoader(true);
-    const data = {
-      image: img,
-    };
-    try {
-      const response = await getAPIProgressData(
-        Setting.endpoints.uploadTemplate,
-        "POST",
-        data,
-        true
-      );
-      if (response.success) {
-        const nArr = state.photo_url ? [...state.photo_url] : [];
-        response?.data?.map((item) => nArr.push(item));
+  // async function UploadFile(img) {
+  //   setUploadLoader(true);
+  //   const data = {
+  //     image: img,
+  //   };
+  //   try {
+  //     const response = await getAPIProgressData(
+  //       Setting.endpoints.uploadTemplate,
+  //       "POST",
+  //       data,
+  //       true
+  //     );
+  //     if (response.success) {
+  //       const nArr = state.photo_url ? [...state.photo_url] : [];
+  //       response?.data?.map((item) => nArr.push(item));
 
-        const nArr1 = state.photo_origin ? [...state.photo_origin] : [];
-        for (let i = 0; i < img.length; i++) {
-          const base64Data = await convertToBase64(img[i]);
-          nArr1.push(base64Data);
-        }
-        setState({ ...state, photo_url: nArr, photo_origin: nArr1 });
+  //       const nArr1 = state.photo_origin ? [...state.photo_origin] : [];
+  //       for (let i = 0; i < img.length; i++) {
+  //         const base64Data = await convertToBase64(img[i]);
+  //         nArr1.push(base64Data);
+  //       }
+  //       setState({ ...state, photo_url: nArr, photo_origin: nArr1 });
 
-        setErrObj({
-          ...errObj,
-          photoErr: false,
-          photoMsg: "",
-        });
-      } else {
-        toast.error(response.message);
-      }
-      setUploadLoader("");
-    } catch (error) {
-      console.log("error", error);
-      toast.error(error.toString());
-      setUploadLoader("");
-    }
-  }
+  //       setErrObj({
+  //         ...errObj,
+  //         photoErr: false,
+  //         photoMsg: "",
+  //       });
+  //     } else {
+  //       toast.error(response.message);
+  //     }
+  //     setUploadLoader("");
+  //   } catch (error) {
+  //     console.log("error", error);
+  //     toast.error(error.toString());
+  //     setUploadLoader("");
+  //   }
+  // }
 
-  async function deletePhoto(id, ind) {
-    setDeleteIND(ind);
-    try {
-      const response = await getApiData(
-        `${Setting.endpoints.deleteTemplate}/${id}`,
-        "GET",
-        {}
-      );
-      if (response?.success) {
-        const nArr = [...state.photo_url];
-        nArr.splice(ind, 1);
-        const nArr1 = [...state.photo_origin];
-        nArr1.splice(ind, 1);
-        setState({ ...state, photo_url: nArr, photo_origin: nArr1 });
-      } else {
-        toast.error(response?.message);
-      }
-      setDeleteIND(null);
-    } catch (error) {
-      setDeleteIND(null);
+  // async function deletePhoto(id, ind) {
+  //   setDeleteIND(ind);
+  //   try {
+  //     const response = await getApiData(
+  //       `${Setting.endpoints.deleteTemplate}/${id}`,
+  //       "GET",
+  //       {}
+  //     );
+  //     if (response?.success) {
+  //       const nArr = [...state.photo_url];
+  //       nArr.splice(ind, 1);
+  //       const nArr1 = [...state.photo_origin];
+  //       nArr1.splice(ind, 1);
+  //       setState({ ...state, photo_url: nArr, photo_origin: nArr1 });
+  //     } else {
+  //       toast.error(response?.message);
+  //     }
+  //     setDeleteIND(null);
+  //   } catch (error) {
+  //     setDeleteIND(null);
 
-      console.log("ERROR=====>>>>>", error);
-      toast.error(error.toString() || "Somthing went wromg try again later");
-    }
-  }
+  //     console.log("ERROR=====>>>>>", error);
+  //     toast.error(error.toString() || "Somthing went wromg try again later");
+  //   }
+  // }
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -1129,9 +1129,7 @@ export default function Budget(props) {
                   );
                   let showMsg = false;
                   let limit = false;
-                  const newArr = createProposal
-                    ? [...state?.photo_origin]
-                    : [...state?.photo_url];
+                  const newArr = [...state?.photo_origin];
                   chosenFiles.map((item) => {
                     const bool = checkImgSize(item);
                     if (bool && newArr.length < 5) {
@@ -1182,7 +1180,7 @@ export default function Budget(props) {
         <Grid
           item
           style={{
-            marginTop: state?.photo_url?.length > 0 && 40,
+            marginTop: state?.photo_origin?.length > 0 && 40,
             overflowY: "scroll",
             maxHeight: 500,
             width: "100%",

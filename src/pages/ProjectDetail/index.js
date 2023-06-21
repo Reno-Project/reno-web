@@ -240,12 +240,8 @@ export default function ProjectDetail() {
                   container
                   alignItems="center"
                   justifyContent={"flex-end"}
-                  style={{
-                    paddingTop: md ? 16 : 25,
-                    paddingBottom: md ? 0 : 25,
-                  }}
                 >
-                  <Grid item lg={5} sm={12} md={6} xs={12}>
+                  <Grid item lg={5} sm={12} md={6} xs={12} pt={2}>
                     <Typography className={classes.acctext}>
                       Project Type:
                     </Typography>
@@ -257,14 +253,38 @@ export default function ProjectDetail() {
                     md={6}
                     xs={12}
                     textAlign={md ? "start" : "end"}
-                    paddingTop={md ? "16px" : 0}
+                    pt={2}
                   >
                     <Typography className={classes.accRightText}>
                       {villa?.project_type}
                     </Typography>
                   </Grid>
                 </Grid>
-
+                <Grid
+                  item
+                  container
+                  alignItems="center"
+                  justifyContent={"flex-end"}
+                >
+                  <Grid item lg={5} sm={12} md={6} xs={12} pt={2}>
+                    <Typography className={classes.acctext}>
+                      Scope of work:
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    lg={7}
+                    sm={12}
+                    md={6}
+                    xs={12}
+                    pt={2}
+                    textAlign={md ? "start" : "end"}
+                  >
+                    <Typography className={classes.accRightText}>
+                      {villa?.scope_of_work}
+                    </Typography>
+                  </Grid>
+                </Grid>
                 {isArray(villa?.milestone) && !isEmpty(villa?.milestone) && (
                   <Grid
                     item
