@@ -114,18 +114,18 @@ export default function Milestone(props) {
         }
       );
     }
-    if (createProposal) {
-      if (
-        proposalDetails?.milestone_details?.previous ||
-        (isArray(proposalDetails?.milestone_details?.milestone) &&
-          !isEmpty(proposalDetails?.milestone_details?.milestone))
-      ) {
-        setMilestones(proposalDetails?.milestone_details?.milestone);
-        setState(proposalDetails?.milestone_details?.formvalues);
-      }
-    } else {
-      getMilestoneList();
+    // if (createProposal) {
+    if (
+      proposalDetails?.milestone_details?.previous ||
+      (isArray(proposalDetails?.milestone_details?.milestone) &&
+        !isEmpty(proposalDetails?.milestone_details?.milestone))
+    ) {
+      setMilestones(proposalDetails?.milestone_details?.milestone || []);
+      setState(proposalDetails?.milestone_details?.formvalues);
     }
+    // } else {
+    //   getMilestoneList();
+    // }
   }, []);
 
   useEffect(() => {

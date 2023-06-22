@@ -159,28 +159,28 @@ export default function Budget(props) {
       });
     }
     if (isArray(milestones) && !isEmpty(milestones)) {
-      if (createProposal) {
-        if (
-          proposalDetails?.budget_details?.previous ||
-          (isArray(proposalDetails?.budget_details?.budgets) &&
-            !isEmpty(proposalDetails?.budget_details?.budgets))
-        ) {
-          const updatedBudgets = proposalDetails?.budget_details?.budgets?.map(
-            (budget) => {
-              const matchingMilestone = milestones.find(
-                (milestone) => milestone.id === budget.milestone.id
-              );
-              if (matchingMilestone) {
-                return { ...budget, milestone: matchingMilestone };
-              }
-              return budget;
+      // if (createProposal) {
+      if (
+        proposalDetails?.budget_details?.previous ||
+        (isArray(proposalDetails?.budget_details?.budgets) &&
+          !isEmpty(proposalDetails?.budget_details?.budgets))
+      ) {
+        const updatedBudgets = proposalDetails?.budget_details?.budgets?.map(
+          (budget) => {
+            const matchingMilestone = milestones.find(
+              (milestone) => milestone.id === budget.milestone.id
+            );
+            if (matchingMilestone) {
+              return { ...budget, milestone: matchingMilestone };
             }
-          );
-          setBudgetDetails(updatedBudgets || []);
-        }
-      } else {
-        getBudgetList();
+            return budget;
+          }
+        );
+        setBudgetDetails(updatedBudgets || []);
       }
+      // } else {
+      //   getBudgetList();
+      // }
     }
   }, [milestones]);
 
@@ -224,8 +224,8 @@ export default function Budget(props) {
           setBudgetDetails(updatedBudgets || []);
         } else if (
           !proposalDetails?.budget_details?.previous &&
-          isArray(response?.data) &&
-          !isEmpty(response?.data)
+          isArray(response?.data?.budget) &&
+          !isEmpty(response?.data?.budget)
         ) {
           const modifiedArray = response?.data?.map((item) => ({
             ...item,
