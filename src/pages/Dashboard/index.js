@@ -377,6 +377,7 @@ const Dashboard = (props) => {
                     <div key={`Ongoing_projects_${index}`}>
                       <ProjectCard
                         villa={ongoingData}
+                        type="ongoing"
                         onClick={() => {
                           navigate("/ongoing-project", {
                             state: { villa: ongoingData },
@@ -465,7 +466,7 @@ const Dashboard = (props) => {
                     >
                       <ProjectCard
                         villa={villa}
-                        requested
+                        type="requested"
                         onClick={() => {
                           dispatch(setProposalDetails({}));
                           navigate("/request-proposal", { state: { villa } });
@@ -559,7 +560,7 @@ const Dashboard = (props) => {
                             state: { villa, status: "submitted" },
                           });
                         }}
-                        submitted
+                        type="submitted"
                       />
                     </div>
                   );

@@ -268,6 +268,31 @@ export default function ProjectDetail() {
                 >
                   <Grid item lg={5} sm={12} md={6} xs={12} pt={2}>
                     <Typography className={classes.acctext}>
+                      Total Proposal Amount:
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    lg={7}
+                    sm={12}
+                    md={6}
+                    xs={12}
+                    pt={2}
+                    textAlign={md ? "start" : "end"}
+                  >
+                    <Typography className={classes.accRightText}>
+                      AED {villa?.budget || 0}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid
+                  item
+                  container
+                  alignItems="center"
+                  justifyContent={"flex-end"}
+                >
+                  <Grid item lg={5} sm={12} md={6} xs={12} pt={2}>
+                    <Typography className={classes.acctext}>
                       Scope of work:
                     </Typography>
                   </Grid>

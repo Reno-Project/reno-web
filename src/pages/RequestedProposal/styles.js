@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
   },
   acctext: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Roobert-Regular",
     fontSize: "16px !important",
     lineHeight: "20px !important",
     fontWeight: "400 !important",

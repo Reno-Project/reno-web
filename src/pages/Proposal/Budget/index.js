@@ -1273,7 +1273,16 @@ export default function Budget(props) {
                 setState({ ...state, material_unit: newValue });
                 clearErr();
               }}
-              options={["tonns", "Kg", "g", "lbs", "liter", "ml", "sqm"]}
+              options={[
+                "tonns",
+                "Kg",
+                "g",
+                "lbs",
+                "liter",
+                "ml",
+                "sqm",
+                "item",
+              ]}
               getOptionLabel={(option) => option}
               error={
                 mode === "modal" && visibleEditModal

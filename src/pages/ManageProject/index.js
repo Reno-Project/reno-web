@@ -486,7 +486,7 @@ const ManageProject = (props) => {
                     return (
                       <div key={`Submitted_Proposal_${index}`}>
                         <ProjectCard
-                          manageProject
+                          type="manageProject"
                           villa={villa}
                           onClick={() => {
                             if (tabVal === 0) {
@@ -529,6 +529,7 @@ const ManageProject = (props) => {
                         <ProjectCard
                           manageProject
                           villa={villa}
+                          type="requested"
                           onClick={() => {
                             dispatch(setProposalDetails({}));
                             navigate("/request-proposal", {
@@ -569,8 +570,8 @@ const ManageProject = (props) => {
                     return (
                       <div key={`Submitted_Proposal_${index}`}>
                         <ProjectCard
-                          manageProject
                           villa={villa}
+                          type="submitted"
                           onClick={() => {
                             dispatch(setProposalDetails({}));
                             navigate("/request-proposal", {

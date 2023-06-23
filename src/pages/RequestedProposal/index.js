@@ -257,31 +257,57 @@ export default function RequestedProposal() {
                   </Grid>
                 </Grid>
                 {isSubmitted && (
-                  <Grid
-                    item
-                    container
-                    alignItems="center"
-                    justifyContent={"flex-end"}
-                  >
-                    <Grid item lg={5} sm={12} md={6} xs={12} pt={2}>
-                      <Typography className={classes.acctext}>
-                        Scope of work:
-                      </Typography>
-                    </Grid>
+                  <>
                     <Grid
                       item
-                      lg={7}
-                      sm={12}
-                      md={6}
-                      xs={12}
-                      pt={2}
-                      textAlign={md ? "start" : "end"}
+                      container
+                      alignItems="center"
+                      justifyContent={"flex-end"}
                     >
-                      <Typography className={classes.accRightText}>
-                        {villa?.scope_of_work}
-                      </Typography>
+                      <Grid item lg={5} sm={12} md={6} xs={12} pt={2}>
+                        <Typography className={classes.acctext}>
+                          Total Proposal Amount
+                        </Typography>
+                      </Grid>
+                      <Grid
+                        item
+                        lg={7}
+                        sm={12}
+                        md={6}
+                        xs={12}
+                        pt={2}
+                        textAlign={md ? "start" : "end"}
+                      >
+                        <Typography className={classes.accRightText}>
+                          AED {villa?.budget || 0}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                  </Grid>
+                    <Grid item container justifyContent={"flex-end"}>
+                      <Grid item lg={5} sm={12} md={6} xs={12} pt={2}>
+                        <Typography className={classes.acctext}>
+                          Scope of work:
+                        </Typography>
+                      </Grid>
+                      <Grid
+                        item
+                        lg={7}
+                        sm={12}
+                        md={6}
+                        xs={12}
+                        pt={2}
+                        textAlign={
+                          md || villa?.scope_of_work?.length > 120
+                            ? "start"
+                            : "end"
+                        }
+                      >
+                        <Typography className={classes.accRightText}>
+                          {villa?.scope_of_work}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </>
                 )}
                 {isSubmitted &&
                   isArray(villa?.milestone) &&

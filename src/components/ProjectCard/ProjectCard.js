@@ -16,21 +16,20 @@ import { EastOutlined } from "@mui/icons-material";
 import moment from "moment";
 
 const ProjectCard = (props) => {
-  const {
-    villa = {},
-    requested = false,
-    submitted = false,
-    manageProject = false,
-    onClick = () => {},
-  } = props;
+  const { villa = {}, type = "", onClick = () => {} } = props;
+  const manageProject = type === "manageProject";
+  const submitted = type === "submitted";
+  const requested = type === "requested";
+  const ongoing = type === "ongoing";
   const classes = useStyles();
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
   const createdAt = moment(villa?.start_date, "DD/MM/YYYY").format(
-    "DD-MM-yyyy"
+    "DD.MM.YYYY"
   );
-  const updatedAt = moment(villa?.updatedAt).format("DD-MM-yyyy");
+  const endDate = moment(villa?.end_date, "DD/MM/YYYY").format("DD.MM.YYYY");
+  const updatedAt = moment(villa?.updatedAt).format("DD.MM.YYYY");
   const moveInDate = moment(villa?.move_in_date, "YYYY-MM-DD").format(
     "DD.MM.YYYY"
   );
@@ -70,7 +69,7 @@ const ProjectCard = (props) => {
 
           <Typography className={classes.code1}>
             <Typography className={classes.code1} color={"#8C92A4"} mr={0.5}>
-              {manageProject
+              {manageProject || ongoing
                 ? "Order Date"
                 : requested
                 ? "Requested"
@@ -120,14 +119,20 @@ const ProjectCard = (props) => {
             </Typography>
           </>
         )}
+
+        {!manageProject && (
+          <div className={classes.rowJustified}>
+            <Typography className={classes.row}>
+              {requested ? "Client Budget" : "Budget"}:
+            </Typography>
+            <Typography className={classes.budget}>
+              AED {villa?.budget || 0}
+            </Typography>
+          </div>
+        )}
+
         {submitted && (
           <>
-            <div className={classes.rowJustified}>
-              <Typography className={classes.row}>Budget:</Typography>
-              <Typography className={classes.budget}>
-                AED {villa?.budget || 0}
-              </Typography>
-            </div>
             <div className={classes.rowJustified}>
               <Typography className={classes.row}>
                 Client move-in date:
@@ -144,19 +149,23 @@ const ProjectCard = (props) => {
             </div>
             <div className={classes.rowJustified}>
               <Typography className={classes.row}>Customer name:</Typography>
-              <Typography className={classes.budget}>Milan Ramin Jr</Typography>
+              <Typography className={classes.budget}>
+                {villa?.user_data?.username}
+              </Typography>
             </div>
             <div className={classes.rowJustified}>
-              <Typography className={classes.row}>Price:</Typography>
-              <Typography className={classes.budget}>AED 1,000.00</Typography>
+              <Typography className={classes.row}>Budget :</Typography>
+              <Typography className={classes.budget}>
+                AED {villa?.budget || 0}
+              </Typography>
             </div>
             <div className={classes.rowJustified}>
               <Typography className={classes.row}>Start Date:</Typography>
-              <Typography className={classes.budget}>22.02.2023</Typography>
+              <Typography className={classes.budget}>{createdAt}</Typography>
             </div>
             <div className={classes.rowJustified}>
               <Typography className={classes.row}>End Date:</Typography>
-              <Typography className={classes.budget}>22.02.2023</Typography>
+              <Typography className={classes.budget}>{endDate}</Typography>
             </div>
           </>
         )}

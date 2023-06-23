@@ -489,7 +489,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -548,7 +547,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -593,7 +591,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -632,7 +629,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -677,7 +673,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -716,7 +711,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -761,7 +755,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -788,7 +781,12 @@ export default function Summary(props) {
                                               sm={6}
                                               md={6}
                                               xs={12}
-                                              textAlign="end"
+                                              textAlign={
+                                                item?.preferred_style?.length >
+                                                3
+                                                  ? "start"
+                                                  : "end"
+                                              }
                                             >
                                               {item?.preferred_style?.map(
                                                 (item1, index) => (
@@ -835,7 +833,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -894,7 +891,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -939,7 +935,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -978,7 +973,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -1023,7 +1017,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -1062,7 +1055,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -1107,7 +1099,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -1134,7 +1125,12 @@ export default function Summary(props) {
                                               sm={6}
                                               md={6}
                                               xs={12}
-                                              textAlign="end"
+                                              textAlign={
+                                                item?.require_service?.length >
+                                                3
+                                                  ? "start"
+                                                  : "end"
+                                              }
                                             >
                                               {item?.require_service?.map(
                                                 (item1, index) => (
@@ -1181,7 +1177,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -1220,7 +1215,6 @@ export default function Summary(props) {
                                           <Grid
                                             item
                                             container
-                                            alignItems="center"
                                             justifyContent={"flex-end"}
                                             margin={0}
                                             xl={5.8}
@@ -1247,7 +1241,11 @@ export default function Summary(props) {
                                               sm={6}
                                               md={6}
                                               xs={12}
-                                              textAlign="end"
+                                              textAlign={
+                                                item?.include?.length > 3
+                                                  ? "start"
+                                                  : "end"
+                                              }
                                             >
                                               {item?.include?.map(
                                                 (item1, index) => (
@@ -1911,7 +1909,6 @@ export default function Summary(props) {
                       <Grid
                         item
                         container
-                        alignItems="center"
                         justifyContent={"flex-end"}
                         margin={0}
                         xl={6}
@@ -1921,7 +1918,12 @@ export default function Summary(props) {
                       >
                         {isArray(projectDetails?.project_image) &&
                           projectDetails?.project_image.length > 0 && (
-                            <Grid item container alignContent={"center"}>
+                            <Grid
+                              item
+                              container
+                              alignContent={"flex-start"}
+                              alignItems={"flex-start"}
+                            >
                               <Grid item xs={12}>
                                 <Typography className={classes.acctext}>
                                   Project Files:
