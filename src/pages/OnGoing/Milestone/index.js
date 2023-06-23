@@ -1173,8 +1173,8 @@ export default function Milestone(props) {
                         </Typography>
                         <Typography fontFamily={"ElMessiri-SemiBold"}>
                           {milestone?.payment_status === "pending"
-                            ? "pending"
-                            : "requested"}
+                            ? "Pending"
+                            : "Requested"}
                         </Typography>
                       </Grid>
                       <Grid item xl={4}>
@@ -1590,7 +1590,7 @@ export default function Milestone(props) {
                           Status
                         </Typography>
                         <Typography fontFamily={"ElMessiri-SemiBold"}>
-                          {milestone?.status || "-"}
+                          {_.capitalize(milestone?.status) || "-"}
                         </Typography>
                       </Grid>
                       <Grid item xl={4}>
@@ -2411,7 +2411,7 @@ export default function Milestone(props) {
                           Status
                         </Typography>
                         <Typography fontFamily={"ElMessiri-SemiBold"}>
-                          {milestone?.status || "-"}
+                          {_.capitalize(milestone?.status) || "-"}
                         </Typography>
                       </Grid>
                       <Grid item xl={4}>
