@@ -1172,7 +1172,9 @@ export default function Milestone(props) {
                           Status
                         </Typography>
                         <Typography fontFamily={"ElMessiri-SemiBold"}>
-                          {milestone?.payment_status === "pending"
+                          {milestone?.payment_status === "approve-request"
+                            ? "Payment under review"
+                            : milestone?.payment_status === "pending"
                             ? "Pending"
                             : "Requested"}
                         </Typography>
