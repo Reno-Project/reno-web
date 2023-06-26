@@ -600,7 +600,10 @@ export default function Milestone(props) {
               >
                 <div
                   style={{
-                    width: `${percentageReleased}%`,
+                    width:
+                      percentageReleased === 0
+                        ? "20px"
+                        : `${percentageReleased}%`,
                     display: "flex",
                     height: 50,
                     alignItems: "center",
@@ -609,7 +612,7 @@ export default function Milestone(props) {
                     cursor: "pointer",
                   }}
                 >
-                  {percentageReleased === 0 ? null : percentageReleased > 20 ? (
+                  {percentageReleased > 20 ? (
                     <Typography variant="body1" style={{ color: "#ffffff" }}>
                       Released: AED{" "}
                       {villa?.milestone_budget_data?.released_amount || 0}
@@ -629,7 +632,10 @@ export default function Milestone(props) {
               >
                 <div
                   style={{
-                    width: `${percentageRemaining}%`,
+                    width:
+                      percentageRemaining === 0
+                        ? "20px"
+                        : `${percentageRemaining}%`,
                     height: 50,
                     display: "flex",
                     alignItems: "center",
@@ -638,8 +644,7 @@ export default function Milestone(props) {
                     cursor: "pointer",
                   }}
                 >
-                  {percentageRemaining === 0 ? null : percentageRemaining >
-                    20 ? (
+                  {percentageRemaining > 20 ? (
                     <Typography variant="body1" style={{ color: "#ffffff" }}>
                       In escrow: AED{" "}
                       {villa?.milestone_budget_data?.escrow_amount || 0}

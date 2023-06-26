@@ -38,7 +38,6 @@ export default function Summary(props) {
   const { proposalDetails } = useSelector((state) => state.auth);
   const location = useLocation();
 
-  const createProposal = location?.state?.create_proposal || false;
   const villa = location?.state ? location?.state?.villa : {};
   const [pageLoad, setPageLoad] = useState(true);
   const [projectDetails, setProjectDetails] = useState({});
@@ -99,25 +98,24 @@ export default function Summary(props) {
           columnGap={1}
           rowGap={1}
           flexDirection="row-reverse"
-          justifyContent={!createProposal && !md ? "space-between" : "center"}
+          justifyContent={!md ? "space-between" : "center"}
           boxSizing={"border-box"}
         >
-          {!createProposal && (
-            <Grid
-              item
-              container
-              xs={isMobile ? 11 : 10}
-              sm={10}
-              md={4}
-              xl={3}
-              className={classes.MainContainer}
-            >
-              <ProposalCard villa={villa} />
-            </Grid>
-          )}
           <Grid
             item
-            xs={createProposal ? 12 : isMobile ? 11 : 10}
+            container
+            xs={isMobile ? 11 : 10}
+            sm={10}
+            md={4}
+            xl={3}
+            className={classes.MainContainer}
+          >
+            <ProposalCard villa={projectDetails} from="ongoing" />
+          </Grid>
+
+          <Grid
+            item
+            xs={isMobile ? 11 : 10}
             sm={10}
             md={7.8}
             xl={8}
@@ -141,7 +139,7 @@ export default function Summary(props) {
                   <Tab label="Milestone" disabled={disableMilestone} />
                   {/* <Tab label="Budget" /> */}
                   {/* <Tab label="Change log" /> */}
-                  {/* <Tab label="Payment History" /> */}
+                  <Tab label="Payment History" />
                   {/* <Tab label="Members" /> */}
                 </Tabs>
               </Grid>
@@ -2406,7 +2404,6 @@ export default function Summary(props) {
                     }
                   }}
                   villa={projectDetails}
-                  createProposal={createProposal}
                 />
               ) : null}
               {tabValue === 2 ? (
@@ -2417,7 +2414,6 @@ export default function Summary(props) {
                     }
                   }}
                   villa={projectDetails}
-                  createProposal={createProposal}
                 />
               ) : null}
               {tabValue === 3 ? <PaymentHistoryList villa={villa} /> : null}

@@ -16,7 +16,8 @@ const errorObj = {
 };
 
 export default function ProposalCard(props) {
-  const { villa } = props;
+  const { villa, from } = props;
+
   const classes = useStyles();
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
@@ -180,7 +181,10 @@ export default function ProposalCard(props) {
                 </Grid>
                 <Grid item lg={8} sm={8} md={8} xs={8} textAlign={"end"}>
                   <Typography className={classes.accRightText}>
-                    AED {villa?.budget || 0}
+                    AED{" "}
+                    {(from === "ongoing"
+                      ? villa?.client_budget
+                      : villa?.budget) || 0}
                   </Typography>
                 </Grid>
                 <Grid item lg={4} sm={4} md={4} xs={4}>
