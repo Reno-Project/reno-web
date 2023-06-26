@@ -63,19 +63,42 @@ export default function Milestone(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [tabValue, setTabValue] = useState(0);
-  const percentageReleased =
-    villa?.milestone_budget_data?.released_amount === 0 &&
-    villa?.milestone_budget_data?.escrow_amount === 0
-      ? 0
-      : ((villa?.milestone_budget_data?.released_amount || 0) /
-          ((villa?.milestone_budget_data?.released_amount || 0) +
-            (villa?.milestone_budget_data?.escrow_amount || 0))) *
-        100;
-  const percentageRemaining =
-    villa?.milestone_budget_data?.released_amount === 0 &&
-    villa?.milestone_budget_data?.escrow_amount === 0
-      ? 0
-      : 100 - percentageReleased;
+  const Released = villa?.milestone_budget_data?.released_amount || 0;
+  const Escrow = villa?.milestone_budget_data?.escrow_amount || 0;
+  const Due = villa?.milestone_budget_data?.due_amount || 0;
+  const Total = _.isNumber(villa?.budget) ? villa?.budget : villa?.budget || 0;
+  const ReleasedPercentage =
+    (Released / Total) * 100 >= 100 && (Released / Total) * 100 <= 0
+      ? "100"
+      : `${(Released / Total) * 100}`;
+  const EscrowPercentage =
+    (Escrow / Total) * 100 >= 100 && (Escrow / Total) * 100 <= 0
+      ? "100"
+      : `${(Escrow / Total) * 100}`;
+  const DuePercentage =
+    (Due / Total) * 100 >= 100 && (Due / Total) * 100 <= 0
+      ? "100"
+      : `${(Due / Total) * 100}`;
+
+  const calculateWidth1 = (progress) => {
+    if (progress >= 33.33) {
+      return progress;
+    } else {
+      return "33.33";
+    }
+  };
+
+  const sumPercentage =
+    parseFloat(calculateWidth1(ReleasedPercentage)) +
+    parseFloat(calculateWidth1(EscrowPercentage)) +
+    parseFloat(calculateWidth1(DuePercentage));
+
+  const adjustedProgress1 =
+    (parseFloat(calculateWidth1(ReleasedPercentage)) / sumPercentage) * 100;
+  const adjustedProgress2 =
+    (parseFloat(calculateWidth1(EscrowPercentage)) / sumPercentage) * 100;
+  const adjustedProgress3 =
+    (parseFloat(calculateWidth1(DuePercentage)) / sumPercentage) * 100;
 
   const [selectedMilestone, setSelectedMilestone] = useState({});
   const [milestoneCount, setMilestoneCount] = useState([]);
@@ -584,7 +607,7 @@ export default function Milestone(props) {
             </Grid>
           </Grid>
 
-          {percentageReleased === 0 && percentageRemaining === 0 ? null : (
+          {/* {percentageReleased === 0 && percentageRemaining === 0 ? null : (
             <Grid
               item
               container
@@ -656,6 +679,29 @@ export default function Milestone(props) {
                   )}
                 </div>
               </Tooltip>
+              <Tooltip title={`Due amount: AED ${dueAmount}`} arrow>
+                <div
+                  style={{
+                    width: "20px",
+                    height: 50,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "red",
+                    cursor: "pointer",
+                  }}
+                >
+                  {dueAmount > 20 ? (
+                    <Typography variant="body1" style={{ color: "#ffffff" }}>
+                      Due amount: AED {dueAmount}
+                    </Typography>
+                  ) : (
+                    <Typography variant="body1" style={{ color: "#ffffff" }}>
+                      {dueAmount}
+                    </Typography>
+                  )}
+                </div>
+              </Tooltip>
             </Grid>
           )}
           {percentageReleased === 0 && percentageRemaining === 0 ? null : (
@@ -700,7 +746,130 @@ export default function Milestone(props) {
                 <Typography>In escrow Amount</Typography>
               </div>
             </Grid>
+          )} */}
+          <Grid container justifyContent="space-between" pb={2} wrap="nowrap">
+            <div
+              style={{
+                width: `${Math.round(adjustedProgress1)}%`,
+                display: "flex",
+                height: 50,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: color.primary,
+              }}
+            >
+              {!md ? (
+                <Typography variant="body1" style={{ color: "#ffffff" }}>
+                  Released: AED {Released}
+                </Typography>
+              ) : (
+                <Typography variant="body1" style={{ color: "#ffffff" }}>
+                  {Released}
+                </Typography>
+              )}
+            </div>
+            <div
+              style={{
+                width: `${Math.round(adjustedProgress2)}%`,
+                display: "flex",
+                height: 50,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: color.cardDescColor,
+              }}
+            >
+              {!md ? (
+                <Typography variant="body1" style={{ color: "#ffffff" }}>
+                  In Escrow: AED {Escrow}
+                </Typography>
+              ) : (
+                <Typography variant="body1" style={{ color: "#ffffff" }}>
+                  {Escrow}
+                </Typography>
+              )}
+            </div>
+            <div
+              style={{
+                width: `${Math.round(adjustedProgress3)}%`,
+                display: "flex",
+                height: 50,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: color.verydarkgrey,
+              }}
+            >
+              {!md ? (
+                <Typography variant="body1" style={{ color: "#ffffff" }}>
+                  Due: AED {Due}
+                </Typography>
+              ) : (
+                <Typography variant="body1" style={{ color: "#ffffff" }}>
+                  {Due}
+                </Typography>
+              )}
+            </div>
+          </Grid>
+          {md && (
+            <Grid
+              item
+              contaier
+              sx={12}
+              style={{
+                width: "100%",
+                paddingBottom: 16,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                }}
+              >
+                <span
+                  style={{
+                    width: 20,
+                    height: 5,
+                    backgroundColor: color.primary,
+                    marginRight: 8,
+                  }}
+                />
+                <Typography>Released Amount</Typography>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                }}
+              >
+                <span
+                  style={{
+                    width: 20,
+                    height: 5,
+                    marginRight: 8,
+                    backgroundColor: color.cardDescColor,
+                  }}
+                />
+                <Typography>In escrow Amount</Typography>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                }}
+              >
+                <span
+                  style={{
+                    width: 20,
+                    height: 5,
+                    marginRight: 8,
+                    backgroundColor: color.verydarkgrey,
+                  }}
+                />
+                <Typography>Due Amount</Typography>
+              </div>
+            </Grid>
           )}
+
           <Grid item container justifyContent={"space-between"}>
             <Grid
               item
