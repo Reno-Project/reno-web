@@ -139,7 +139,7 @@ export default function Summary(props) {
                   <Tab label="Milestone" disabled={disableMilestone} />
                   {/* <Tab label="Budget" /> */}
                   {/* <Tab label="Change log" /> */}
-                  <Tab label="Payment History" />
+                  {/* <Tab label="Payment History" /> */}
                   {/* <Tab label="Members" /> */}
                 </Tabs>
               </Grid>
