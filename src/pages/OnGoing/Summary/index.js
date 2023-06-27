@@ -139,7 +139,7 @@ export default function Summary(props) {
                   <Tab label="Milestone" disabled={disableMilestone} />
                   {/* <Tab label="Budget" /> */}
                   {/* <Tab label="Change log" /> */}
-                  {/* <Tab label="Payment History" /> */}
+                  <Tab label="Payment History" disabled={disableMilestone} />
                   {/* <Tab label="Members" /> */}
                 </Tabs>
               </Grid>
@@ -2406,7 +2406,7 @@ export default function Summary(props) {
                   villa={projectDetails}
                 />
               ) : null}
-              {tabValue === 2 ? (
+              {/* {tabValue === 2 ? (
                 <Budget
                   handleClick={(type, data) => {
                     if (type === "back") {
@@ -2415,8 +2415,8 @@ export default function Summary(props) {
                   }}
                   villa={projectDetails}
                 />
-              ) : null}
-              {tabValue === 3 ? <PaymentHistoryList villa={villa} /> : null}
+              ) : null} */}
+              {tabValue === 2 ? <PaymentHistoryList villa={villa} /> : null}
             </Grid>
           </Grid>
         </Grid>

@@ -1,4 +1,5 @@
 import {
+  Box,
   CircularProgress,
   Divider,
   Grid,
@@ -21,111 +22,43 @@ import _, { isArray, isEmpty } from "lodash";
 import { Setting } from "../../../utils/Setting";
 import { getApiData } from "../../../utils/APIHelper";
 import moment from "moment";
+import { DataGrid, GridPagination, GridToolbar } from "@mui/x-data-grid";
 
 const PaymentHistory = (props) => {
   const { villa } = props;
   const classes = useStyles();
   const [budgetDetails, setBudgetDetails] = useState([]);
   const [tabValue, setTabValue] = useState(0);
+  const [initialPayment, setInitialPayment] = useState({});
 
-  const [payments, setPayments] = useState([
-    {
-      updatedAt: "2023-06-07T11:52:18.730Z",
-      id: 257,
-      name: "B1",
-      material_type: "marble",
-      material_unit: "tonns",
-      material_unit_price: 2100,
-      qty: 100,
-      milestone_id: 234,
-      manpower_rate: 10,
-      days: 11,
-      specification:
-        "Architecto dolor sunt magnam beatae. Exercitationem perferendis dolorem animi est molestias voluptas tempore odit dolor. Dolorum quam qui eum perferendis quibusdam et at consequatur.",
-      total_item: 210110,
-      status: "pending",
-      images: [
-        {
-          id: 819,
-          image:
-            "https://static.renohome.io/documents/a11df96d-fd10-41a2-898a-28f2ca439742",
-          type: "image/png",
-        },
-        {
-          id: 820,
-          image:
-            "https://static.renohome.io/documents/dae9e998-9ed6-4740-a5cd-66c5d10bcb57",
-          type: "image/png",
-        },
-        {
-          id: 821,
-          image:
-            "https://static.renohome.io/documents/7affcaee-ad9b-4450-9e4f-8c180df7b934",
-          type: "image/png",
-        },
-      ],
-    },
-    {
-      updatedAt: "2023-06-07T11:52:18.740Z",
-      id: 258,
-      name: "B1m2",
-      material_type: "adasd",
-      material_unit: "Kg",
-      material_unit_price: 2100,
-      qty: 10,
-      milestone_id: 239,
-      manpower_rate: 101,
-      days: 10,
-      specification: "sdfsdf",
-      total_item: 22010,
-      status: "pending",
-      images: [
-        {
-          id: 817,
-          image:
-            "https://static.renohome.io/documents/fe41525b-edef-496e-a44a-ca474bbc22bf",
-          type: "image/png",
-        },
-        {
-          id: 818,
-          image:
-            "https://static.renohome.io/documents/1fb8106d-e11d-45eb-b575-eee3f9625831",
-          type: "image/png",
-        },
-        {
-          id: 822,
-          image:
-            "https://static.renohome.io/documents/5456faa6-cafc-4c40-bbbb-fd493389c5a3",
-          type: "image/png",
-        },
-      ],
-    },
-  ]);
-  const [paymentLoader, setPaymentLoader] = useState(false);
+  const [payments, setPayments] = useState([]);
+  const [pageLoad, setPageLoad] = useState(false);
   const percentageReleased = (750 / 1500) * 100;
   const percentageRemaining = 100 - percentageReleased;
 
   useEffect(() => {
-    // getPaymentList();
+    getPaymentList("");
+    getPaymentList("initial_payment");
   }, []);
-  async function getPaymentList() {
-    setPaymentLoader(true);
+  async function getPaymentList(type) {
+    setPageLoad(true);
+    const url = !isEmpty(type)
+      ? `${Setting.endpoints.paymentList}?proposal_id=${villa?.proposal_id}&type=${type}`
+      : `${Setting.endpoints.paymentList}?proposal_id=${villa?.proposal_id}`;
     try {
-      const response = await getApiData(
-        `${Setting.endpoints.paymentList}?${villa?.proposal_id}`,
-        "GET",
-        {}
-      );
+      const response = await getApiData(url, "GET", {});
       if (response.success) {
-        if (isArray(response?.data) && !isEmpty(response?.data)) {
+        if (type === "initial_payment") {
+          setInitialPayment(response?.data);
+        } else if (isArray(response?.data) && !isEmpty(response?.data)) {
           setPayments(response?.data);
         } else {
           setPayments([]);
         }
       }
-      setPaymentLoader(false);
+      setPageLoad(false);
     } catch (error) {
-      setPaymentLoader(false);
+      setPageLoad(false);
       console.log("err===>", error);
     }
   }
@@ -151,9 +84,147 @@ const PaymentHistory = (props) => {
     setBudgetDetails(dummyarr);
   };
 
+  const columns = [
+    {
+      field: "createdAt",
+      headerName: "Date",
+      width: 220,
+      renderCell: (params) => {
+        return (
+          <Typography>
+            {moment(params?.row?.createdAt).format("MMM DD, YYYY")}
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "payment_transaction_id",
+      headerName: "Payment Transaction ID",
+      flex: 1,
+      minWidth: 220,
+    },
+
+    {
+      field: "customer_payment",
+      headerName: "Customer Payment",
+      width: 160,
+      renderCell: (params) => (
+        <Typography fontSize={14}>
+          AED {params?.row?.customer_payment || 0}
+        </Typography>
+      ),
+    },
+    {
+      field: "payment_status",
+      headerName: "Payment Status",
+      width: 160,
+    },
+  ];
+
+  function StatusFilterHeader() {
+    return (
+      <select>
+        <option value="">All</option>
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+      </select>
+    );
+  }
+
   return (
-    <Grid container>
-      <Grid item container className={classes.contentContainer} mt={2}>
+    <Grid container className={classes.MainContainer}>
+      {pageLoad ? (
+        <div className={classes.dataMain}>
+          <CircularProgress style={{ color: color.primary }} />
+        </div>
+      ) : (
+        <>
+          <Grid item container className={classes.card}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                variant="h5"
+                style={{
+                  fontFamily: "ElMessiri-SemiBold",
+                }}
+              >
+                Initial Payment
+              </Typography>
+
+              <Typography
+                variant="h5"
+                style={{
+                  fontFamily: "ElMessiri-SemiBold",
+                }}
+              >
+                AED {initialPayment?.customer_payment || ""}
+              </Typography>
+            </Grid>
+            <div style={{ width: "100%" }}>
+              <Divider sx={{ my: 2 }} />
+            </div>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Grid
+                item
+                sx={{ alignItems: "center", justifyContent: "center" }}
+              >
+                <Typography variant="caption" color={"#8C92A4"}>
+                  Requested
+                </Typography>
+                <Typography fontFamily={"ElMessiri-SemiBold"}>
+                  {moment(initialPayment?.updatedAt).format("MMM DD, YYYY")}
+                </Typography>
+              </Grid>
+
+              <Grid
+                item
+                sx={{
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                  textAlign: "end",
+                }}
+              >
+                <Typography variant="caption" color={"#8C92A4"}>
+                  {initialPayment?.payment_status === "approve-request"
+                    ? "Under Review"
+                    : "Paid"}
+                </Typography>
+                <Typography fontFamily={"ElMessiri-SemiBold"}>
+                  {moment(initialPayment?.updatedAt).format("MMM DD, YYYY")}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <DataGrid
+            rows={payments}
+            columns={columns}
+            rowSelection={false}
+            pageSizeOptions={[10, 25, 100]}
+            components={{
+              Pagination: GridPagination,
+            }}
+          />
+        </>
+      )}
+      {/* <Grid item container className={classes.contentContainer} mt={2}>
         <Grid item lg={12} sm={12} md={12} xs={12} pb={2}>
           <Typography className={classes.MainTitle}>Payment</Typography>
         </Grid>
@@ -452,7 +523,7 @@ const PaymentHistory = (props) => {
             );
           })
         )}
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

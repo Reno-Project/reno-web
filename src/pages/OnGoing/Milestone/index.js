@@ -747,7 +747,7 @@ export default function Milestone(props) {
               </div>
             </Grid>
           )} */}
-          <Grid container justifyContent="space-between" pb={2} wrap="nowrap">
+          <Grid container pb={2} wrap="nowrap" width={"99.99999999999999%"}>
             <div
               style={{
                 width: `${Math.round(adjustedProgress1)}%`,
@@ -1317,7 +1317,8 @@ export default function Milestone(props) {
                       <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
                         {milestone?.milestone_name}
                       </Typography>
-                      {milestone?.payment_status === "pending" && (
+                      {(milestone?.payment_status === "pending" ||
+                        milestone?.payment_status === "") && (
                         <IconButton
                           onClick={(e) => handleRowClick(e, milestone, index)}
                         >
@@ -1348,7 +1349,8 @@ export default function Milestone(props) {
                         <Typography fontFamily={"ElMessiri-SemiBold"}>
                           {milestone?.payment_status === "approve-request"
                             ? "Payment under review"
-                            : milestone?.payment_status === "pending"
+                            : milestone?.payment_status === "pending" ||
+                              milestone?.payment_status === ""
                             ? "Pending"
                             : "Requested"}
                         </Typography>

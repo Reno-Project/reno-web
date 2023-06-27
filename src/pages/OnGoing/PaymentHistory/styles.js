@@ -14,11 +14,23 @@ const useStyles = makeStyles((theme) => ({
   //     color: color.LightSurface,
   //   },
   // },
+  MainContainer: {
+    width: "100%",
+    height: "max-content",
+  },
+  dataMain: {
+    width: "100%",
+    marginTop: 20,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 500,
+  },
   card: {
     border: `1px solid ${color.borderColor}`,
     borderRadius: 8,
-    padding: 8,
-    margin: "8px 0px !important ",
+    padding: 16,
+    margin: "20px 0px !important ",
   },
   customtable: {
     borderCollapse: "collapse",
