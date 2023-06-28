@@ -1317,13 +1317,32 @@ export default function Milestone(props) {
                       <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
                         {milestone?.milestone_name}
                       </Typography>
-                      {(milestone?.payment_status === "pending" ||
-                        milestone?.payment_status === "") && (
+
+                      {milestone?.payment_status === "pending" ||
+                      milestone?.payment_status === "" ? (
                         <IconButton
                           onClick={(e) => handleRowClick(e, milestone, index)}
                         >
                           <MoreVertIcon />
                         </IconButton>
+                      ) : (
+                        <div
+                          style={{
+                            padding: 8,
+                            border: `1px solid ${color.primary}`,
+                            backgroundColor: color.primary,
+                            borderRadius: 4,
+                            width: "max-content",
+                          }}
+                        >
+                          <span style={{ color: color.white }}>
+                            {milestone?.payment_status === "completed"
+                              ? "Paid"
+                              : milestone?.payment_status === "requested"
+                              ? "Requested"
+                              : "Payment under review"}
+                          </span>
+                        </div>
                       )}
                     </Grid>
                     <Grid
@@ -1347,12 +1366,13 @@ export default function Milestone(props) {
                           Status
                         </Typography>
                         <Typography fontFamily={"ElMessiri-SemiBold"}>
-                          {milestone?.payment_status === "approve-request"
+                          {/* {milestone?.payment_status === "approve-request"
                             ? "Payment under review"
                             : milestone?.payment_status === "pending" ||
                               milestone?.payment_status === ""
                             ? "Pending"
-                            : "Requested"}
+                            : "Requested"} */}
+                          Pending
                         </Typography>
                       </Grid>
                       <Grid item xl={4}>
