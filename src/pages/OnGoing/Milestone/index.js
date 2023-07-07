@@ -45,6 +45,9 @@ import { getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import Images from "../../../config/images";
 import NoData from "../../../components/NoData";
+import CInput from "../../../components/CInput";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 const errorObj = {
   nameErr: false,
@@ -124,6 +127,14 @@ export default function Milestone(props) {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [visibleDelete, setVisibleDelete] = useState(false);
+
+  const [state, setState] = useState({
+    milestone_name: "",
+    description: "",
+    start_date: null,
+    end_date: null,
+  });
 
   const [visibleEditModal, setVisibleEditModal] = useState(false);
   const [btnUpdateLoader, setBtnUpdateLoader] = useState("");
@@ -279,6 +290,7 @@ export default function Milestone(props) {
 
   const handePayment = () => {
     setVisible(true);
+    setState(selectedMilestone.data);
   };
 
   const handleChange = (e, i, type) => {
@@ -300,268 +312,337 @@ export default function Milestone(props) {
       : setongoingMilestone(dummyarr);
   };
 
-  // function renderMilestoneCreateForm(mode) {
-  //   return (
-  //     <>
-  //       <Grid item xs={12} id="name" mt={2}>
-  //         <CInput
-  //           label="Milestone Name"
-  //           placeholder="Enter Milestone Name..."
-  //           value={
-  //             mode === "modal" && visibleEditModal
-  //               ? state.milestone_name
-  //               : mode === "form" && visibleEditModal
-  //               ? ""
-  //               : state.milestone_name
-  //           }
-  //           onChange={(e) => {
-  //             setState({ ...state, milestone_name: e.target.value });
-  //             setErrObj({
-  //               ...errObj,
-  //               nameErr: false,
-  //               nameMsg: "",
-  //             });
-  //           }}
-  //           inputProps={{ maxLength: 50 }}
-  //           error={
-  //             mode === "modal" && visibleEditModal
-  //               ? errObj.nameErr
-  //               : mode === "form" && visibleEditModal
-  //               ? ""
-  //               : errObj.nameErr
-  //           }
-  //           helpertext={
-  //             mode === "modal" && visibleEditModal
-  //               ? errObj.nameMsg
-  //               : mode === "form" && visibleEditModal
-  //               ? ""
-  //               : errObj.nameMsg
-  //           }
-  //         />
-  //       </Grid>
-  //       <Grid item xs={12} id="desctiption">
-  //         <CInput
-  //           multiline={true}
-  //           rows={3}
-  //           label="Description:"
-  //           placeholder="Write description here..."
-  //           value={
-  //             mode === "modal" && visibleEditModal
-  //               ? state.description
-  //               : mode === "form" && visibleEditModal
-  //               ? ""
-  //               : state.description
-  //           }
-  //           onChange={(e) => {
-  //             setState({ ...state, description: e.target.value });
-  //             setErrObj({
-  //               ...errObj,
-  //               descriptionErr: false,
-  //               descriptionMsg: "",
-  //             });
-  //           }}
-  //           error={
-  //             mode === "modal" && visibleEditModal
-  //               ? errObj.descriptionErr
-  //               : mode === "form" && visibleEditModal
-  //               ? ""
-  //               : errObj.descriptionErr
-  //           }
-  //           helpertext={
-  //             mode === "modal" && visibleEditModal
-  //               ? errObj.descriptionMsg
-  //               : mode === "form" && visibleEditModal
-  //               ? ""
-  //               : errObj.descriptionMsg
-  //           }
-  //         />
-  //       </Grid>
-  //       <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
-  //         <Grid item xs={12} md={6} mb={2}>
-  //           <FormControl
-  //             variant="standard"
-  //             fullWidth
-  //             error={
-  //               mode === "modal" && visibleEditModal
-  //                 ? errObj.startErr
-  //                 : mode === "form" && visibleEditModal
-  //                 ? ""
-  //                 : errObj.startErr
-  //             }
-  //             style={{ position: "relative" }}
-  //           >
-  //             <InputLabel shrink htmlFor="start-date">
-  //               Start Date:
-  //             </InputLabel>
-  //             <LocalizationProvider dateAdapter={AdapterDateFns}>
-  //               <DatePicker
-  //                 disablePast
-  //                 value={
-  //                   mode === "modal" && visibleEditModal
-  //                     ? new Date(state.start_date)
-  //                     : mode === "form" && visibleEditModal
-  //                     ? null
-  //                     : state.start_date
-  //                     ? new Date(state?.start_date)
-  //                     : null
-  //                 }
-  //                 onChange={(e, v) => {
-  //                   setState({
-  //                     ...state,
-  //                     start_date: moment(e).format("MMMM DD, yyyy"),
-  //                     end_date: null,
-  //                   });
-  //                   setErrObj({
-  //                     ...errObj,
-  //                     startErr: false,
-  //                     startMsg: "",
-  //                   });
-  //                 }}
-  //                 sx={{
-  //                   width: "100%",
-  //                   marginTop: "24px",
-  //                 }}
-  //                 format="MMMM dd, yyyy"
-  //                 slotProps={{
-  //                   textField: {
-  //                     helperText:
-  //                       mode === "modal" && visibleEditModal
-  //                         ? errObj.startMsg
-  //                         : mode === "form" && visibleEditModal
-  //                         ? ""
-  //                         : errObj.startMsg,
-  //                     error:
-  //                       mode === "modal" && visibleEditModal
-  //                         ? errObj.startErr
-  //                         : mode === "form" && visibleEditModal
-  //                         ? ""
-  //                         : errObj.startErr,
-  //                     id: "start-date",
-  //                   },
-  //                 }}
-  //               />
-  //             </LocalizationProvider>
-  //           </FormControl>
-  //         </Grid>
-  //         <Grid item xs={12} md={6} mb={2}>
-  //           <FormControl
-  //             variant="standard"
-  //             fullWidth
-  //             error={
-  //               mode === "modal" && visibleEditModal
-  //                 ? errObj.endErr
-  //                 : mode === "form" && visibleEditModal
-  //                 ? ""
-  //                 : errObj.endErr
-  //             }
-  //             style={{ position: "relative" }}
-  //           >
-  //             <InputLabel shrink htmlFor="end-date">
-  //               End Date:
-  //             </InputLabel>
-  //             <LocalizationProvider dateAdapter={AdapterDateFns}>
-  //               <DatePicker
-  //                 minDate={new Date(state?.start_date)}
-  //                 value={
-  //                   mode === "modal" && visibleEditModal
-  //                     ? new Date(state.end_date)
-  //                     : mode === "form" && visibleEditModal
-  //                     ? null
-  //                     : state?.end_date
-  //                     ? new Date(state?.end_date)
-  //                     : null
-  //                 }
-  //                 onChange={(e) => {
-  //                   setState({
-  //                     ...state,
-  //                     end_date: moment(e).format("MMMM DD, yyyy"),
-  //                   });
-  //                   setErrObj({
-  //                     ...errObj,
-  //                     endErr: false,
-  //                     endMsg: "",
-  //                   });
-  //                 }}
-  //                 sx={{
-  //                   width: "100%",
-  //                   marginTop: "24px",
-  //                 }}
-  //                 slotProps={{
-  //                   textField: {
-  //                     helperText:
-  //                       mode === "modal" && visibleEditModal
-  //                         ? errObj.endMsg
-  //                         : mode === "form" && visibleEditModal
-  //                         ? ""
-  //                         : errObj.endMsg,
-  //                     error:
-  //                       mode === "modal" && visibleEditModal
-  //                         ? errObj.endErr
-  //                         : mode === "form" && visibleEditModal
-  //                         ? ""
-  //                         : errObj.endErr,
-  //                     id: "end-date",
-  //                   },
-  //                 }}
-  //                 format="MMMM dd, yyyy"
-  //               />
-  //             </LocalizationProvider>
-  //           </FormControl>
-  //         </Grid>
-  //       </Grid>
-  //       {/* <Grid item xs={12} id="amount">
-  //         <CInput
-  //           type={"number"}
-  //           label="Milestone Amount:"
-  //           placeholder="Amount "
-  //           value={state.amount}
-  //           inputProps={{
-  //             onWheel: (event) => event.currentTarget.blur(),
-  //           }}
-  //           onChange={(e) => {
-  //             setState({ ...state, amount: e.target.value });
-  //             setErrObj({
-  //               ...errObj,
-  //               amountErr: false,
-  //               amountMsg: "",
-  //             });
-  //           }}
-  //           error={errObj.amountErr}
-  //           helpertext={errObj.amountMsg}
-  //         />
-  //       </Grid> */}
-  //     </>
-  //   );
-  // }
+  const handleEdit = (data, index) => {
+    setVisibleEditModal(true);
+
+    setState(selectedMilestone?.data);
+  };
+  function renderMilestoneCreateForm(mode) {
+    return (
+      <>
+        <Grid item xs={12} id="name" mt={2}>
+          <CInput
+            label="Milestone Name"
+            placeholder="Enter Milestone Name..."
+            value={
+              mode === "modal" && visibleEditModal
+                ? state.milestone_name
+                : mode === "form" && visibleEditModal
+                ? ""
+                : state.milestone_name
+            }
+            onChange={(e) => {
+              setState({ ...state, milestone_name: e.target.value });
+              setErrObj({
+                ...errObj,
+                nameErr: false,
+                nameMsg: "",
+              });
+            }}
+            inputProps={{ maxLength: 50 }}
+            error={
+              mode === "modal" && visibleEditModal
+                ? errObj.nameErr
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.nameErr
+            }
+            helpertext={
+              mode === "modal" && visibleEditModal
+                ? errObj.nameMsg
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.nameMsg
+            }
+          />
+        </Grid>
+        <Grid item xs={12} id="desctiption">
+          <CInput
+            multiline={true}
+            rows={3}
+            label="Description:"
+            placeholder="Write description here..."
+            value={
+              mode === "modal" && visibleEditModal
+                ? state.description
+                : mode === "form" && visibleEditModal
+                ? ""
+                : state.description
+            }
+            onChange={(e) => {
+              setState({ ...state, description: e.target.value });
+              setErrObj({
+                ...errObj,
+                descriptionErr: false,
+                descriptionMsg: "",
+              });
+            }}
+            error={
+              mode === "modal" && visibleEditModal
+                ? errObj.descriptionErr
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.descriptionErr
+            }
+            helpertext={
+              mode === "modal" && visibleEditModal
+                ? errObj.descriptionMsg
+                : mode === "form" && visibleEditModal
+                ? ""
+                : errObj.descriptionMsg
+            }
+          />
+        </Grid>
+        <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
+          <Grid item xs={12} md={6} mb={2}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              error={
+                mode === "modal" && visibleEditModal
+                  ? errObj.startErr
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.startErr
+              }
+              style={{ position: "relative" }}
+            >
+              <InputLabel shrink htmlFor="start-date">
+                Start Date:
+              </InputLabel>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  disablePast
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? new Date(state.start_date)
+                      : mode === "form" && visibleEditModal
+                      ? null
+                      : state.start_date
+                      ? new Date(state?.start_date)
+                      : null
+                  }
+                  onChange={(e, v) => {
+                    setState({
+                      ...state,
+                      start_date: moment(e).format("MMMM DD, yyyy"),
+                      end_date: null,
+                    });
+                    setErrObj({
+                      ...errObj,
+                      startErr: false,
+                      startMsg: "",
+                    });
+                  }}
+                  sx={{
+                    width: "100%",
+                    marginTop: "24px",
+                  }}
+                  format="MMMM dd, yyyy"
+                  slotProps={{
+                    textField: {
+                      helperText:
+                        mode === "modal" && visibleEditModal
+                          ? errObj.startMsg
+                          : mode === "form" && visibleEditModal
+                          ? ""
+                          : errObj.startMsg,
+                      error:
+                        mode === "modal" && visibleEditModal
+                          ? errObj.startErr
+                          : mode === "form" && visibleEditModal
+                          ? ""
+                          : errObj.startErr,
+                      id: "start-date",
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={6} mb={2}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              error={
+                mode === "modal" && visibleEditModal
+                  ? errObj.endErr
+                  : mode === "form" && visibleEditModal
+                  ? ""
+                  : errObj.endErr
+              }
+              style={{ position: "relative" }}
+            >
+              <InputLabel shrink htmlFor="end-date">
+                End Date:
+              </InputLabel>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  minDate={new Date(state?.start_date)}
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? new Date(state.end_date)
+                      : mode === "form" && visibleEditModal
+                      ? null
+                      : state?.end_date
+                      ? new Date(state?.end_date)
+                      : null
+                  }
+                  onChange={(e) => {
+                    setState({
+                      ...state,
+                      end_date: moment(e).format("MMMM DD, yyyy"),
+                    });
+                    setErrObj({
+                      ...errObj,
+                      endErr: false,
+                      endMsg: "",
+                    });
+                  }}
+                  sx={{
+                    width: "100%",
+                    marginTop: "24px",
+                  }}
+                  slotProps={{
+                    textField: {
+                      helperText:
+                        mode === "modal" && visibleEditModal
+                          ? errObj.endMsg
+                          : mode === "form" && visibleEditModal
+                          ? ""
+                          : errObj.endMsg,
+                      error:
+                        mode === "modal" && visibleEditModal
+                          ? errObj.endErr
+                          : mode === "form" && visibleEditModal
+                          ? ""
+                          : errObj.endErr,
+                      id: "end-date",
+                    },
+                  }}
+                  format="MMMM dd, yyyy"
+                />
+              </LocalizationProvider>
+            </FormControl>
+          </Grid>
+        </Grid>
+        {/* <Grid item xs={12} id="amount">
+          <CInput
+            type={"number"}
+            label="Milestone Amount:"
+            placeholder="Amount "
+            value={state.amount}
+            inputProps={{
+              onWheel: (event) => event.currentTarget.blur(),
+            }}
+            onChange={(e) => {
+              setState({ ...state, amount: e.target.value });
+              setErrObj({
+                ...errObj,
+                amountErr: false,
+                amountMsg: "",
+              });
+            }}
+            error={errObj.amountErr}
+            helpertext={errObj.amountMsg}
+          />
+        </Grid> */}
+      </>
+    );
+  }
+
+  const validate = (isUpdateModalVisible) => {
+    const error = { ...errObj };
+    let valid = true;
+
+    const stDate = new Date(state?.start_date);
+    const enDate = new Date(state?.end_date);
+    const todayDate = new Date();
+
+    const st = moment(stDate, "DD/MM/YYYY").format("DD/MM/YYYY");
+
+    if (isEmpty(state.milestone_name)) {
+      valid = false;
+      error.nameErr = true;
+      error.nameMsg = "Please enter the name";
+    }
+
+    if (isEmpty(state.description)) {
+      valid = false;
+      error.descriptionErr = true;
+      error.descriptionMsg = "Please enter description";
+    }
+
+    if (isNull(state?.start_date)) {
+      valid = false;
+      error.startErr = true;
+      error.startMsg = "Please select the start date";
+    } else if (
+      (!isNull(stDate) &&
+        (stDate?.toString() === "Invalid date" ||
+          stDate?.toString() === "Invalid Date")) ||
+      st === "Invalid date" ||
+      st === "Invalid Date"
+    ) {
+      valid = false;
+      error.startErr = true;
+      error.startMsg = "Please enter valid date";
+    } else if (moment(st).isBefore(moment(todayDate).format("DD/MM/YYYY"))) {
+      valid = false;
+      error.startErr = true;
+      error.startMsg = "Please enter valid date";
+    }
+
+    if (isNull(state.end_date)) {
+      valid = false;
+      error.endErr = true;
+      error.endMsg = "Please select the end date";
+    } else if (
+      !isNull(enDate) &&
+      (enDate?.toString() === "Invalid date" ||
+        enDate?.toString() === "Invalid Date")
+    ) {
+      valid = false;
+      error.endErr = true;
+      error.endMsg = "Please enter valid date";
+    } else if (stDate > enDate) {
+      valid = false;
+      error.endErr = true;
+      error.endMsg = "Please enter valid date";
+    }
+
+    setErrObj(error);
+    if (valid) {
+      if (isUpdateModalVisible) {
+        setVisibleEditModal(false);
+      }
+      if (
+        _.isObject(selectedMilestone?.data) &&
+        !_.isEmpty(selectedMilestone?.data)
+      ) {
+        // const newArray = [...pendingMilestone]; // create a copy of the array
+        // newArray[selectedMilestone?.index] = state; // modify the copy
+        // setPendingMilestone(newArray);
+        // setSelectedMilestone({});
+      }
+      clearData();
+    }
+  };
+
+  function clearData() {
+    setState({
+      milestone_name: "",
+      description: "",
+      start_date: null,
+      end_date: null,
+    });
+    setErrObj(errorObj);
+    handleClose();
+  }
 
   return (
     <>
       <Grid container>
-        {/* <Grid
-          item
-          container
-          xs={12}
-          pb={2}
-          pt={"25px"}
-          justifyContent={"space-between"}
-        >
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "ElMessiri-SemiBold",
-            }}
-          >
-            Total Milestones Amount
-          </Typography>
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "ElMessiri-SemiBold",
-            }}
-          >
-            AED {amounts.reduce((acc, curr) => acc + curr, 0)}
-          </Typography>
-        </Grid> */}
         <Grid item container className={classes.contentContainer} mt={2}>
           <Grid item lg={12} sm={12} md={12} xs={12} pb={2}>
             <Typography className={classes.MainTitle}>Budget</Typography>
@@ -607,146 +688,6 @@ export default function Milestone(props) {
             </Grid>
           </Grid>
 
-          {/* {percentageReleased === 0 && percentageRemaining === 0 ? null : (
-            <Grid
-              item
-              container
-              justifyContent="space-between"
-              pb={2}
-              wrap="nowrap"
-            >
-              <Tooltip
-                title={`Released: AED ${
-                  villa?.milestone_budget_data?.released_amount || 0
-                }`}
-                arrow
-              >
-                <div
-                  style={{
-                    width:
-                      percentageReleased === 0
-                        ? "20px"
-                        : `${percentageReleased}%`,
-                    display: "flex",
-                    height: 50,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: color.primary,
-                    cursor: "pointer",
-                  }}
-                >
-                  {percentageReleased > 20 ? (
-                    <Typography variant="body1" style={{ color: "#ffffff" }}>
-                      Released: AED{" "}
-                      {villa?.milestone_budget_data?.released_amount || 0}
-                    </Typography>
-                  ) : (
-                    <Typography variant="body1" style={{ color: "#ffffff" }}>
-                      {villa?.milestone_budget_data?.released_amount || 0}
-                    </Typography>
-                  )}
-                </div>
-              </Tooltip>
-              <Tooltip
-                title={`In escrow: AED ${
-                  villa?.milestone_budget_data?.escrow_amount || 0
-                }`}
-                arrow
-              >
-                <div
-                  style={{
-                    width:
-                      percentageRemaining === 0
-                        ? "20px"
-                        : `${percentageRemaining}%`,
-                    height: 50,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "#475569",
-                    cursor: "pointer",
-                  }}
-                >
-                  {percentageRemaining > 20 ? (
-                    <Typography variant="body1" style={{ color: "#ffffff" }}>
-                      In escrow: AED{" "}
-                      {villa?.milestone_budget_data?.escrow_amount || 0}
-                    </Typography>
-                  ) : (
-                    <Typography variant="body1" style={{ color: "#ffffff" }}>
-                      {villa?.milestone_budget_data?.escrow_amount || 0}
-                    </Typography>
-                  )}
-                </div>
-              </Tooltip>
-              <Tooltip title={`Due amount: AED ${dueAmount}`} arrow>
-                <div
-                  style={{
-                    width: "20px",
-                    height: 50,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "red",
-                    cursor: "pointer",
-                  }}
-                >
-                  {dueAmount > 20 ? (
-                    <Typography variant="body1" style={{ color: "#ffffff" }}>
-                      Due amount: AED {dueAmount}
-                    </Typography>
-                  ) : (
-                    <Typography variant="body1" style={{ color: "#ffffff" }}>
-                      {dueAmount}
-                    </Typography>
-                  )}
-                </div>
-              </Tooltip>
-            </Grid>
-          )}
-          {percentageReleased === 0 && percentageRemaining === 0 ? null : (
-            <Grid
-              item
-              contaier
-              sx={12}
-              style={{ width: "100%", paddingBottom: 16 }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <span
-                  style={{
-                    width: 20,
-                    height: 5,
-                    backgroundColor: color.primary,
-                    marginRight: 8,
-                  }}
-                />
-                <Typography>Released Amount</Typography>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <span
-                  style={{
-                    width: 20,
-                    height: 5,
-                    marginRight: 8,
-                    backgroundColor: "#475569",
-                  }}
-                />
-                <Typography>In escrow Amount</Typography>
-              </div>
-            </Grid>
-          )} */}
           <Grid container pb={2} wrap="nowrap" width={"99.99999999999999%"}>
             <div
               style={{
@@ -1002,175 +943,7 @@ export default function Milestone(props) {
                       return null;
                     }
                   })}
-                  {/* <Grid
-                item
-                container
-                xs={12}
-                sm={5.8}
-                md={3.9}
-                style={{
-                  padding: 20,
-                  borderTopRightRadius: 16,
-                  borderBottomLeftRadius: 16,
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: color.borderColor,
-                  margin: 0,
-                }}
-                wrap="nowrap"
-              >
-                <Grid item>
-                  <img src={Images.FilePaste} alt="completed" />
                 </Grid>
-                <Grid item pl={1}>
-                  <Typography className={classes.titleText}>
-                    Delivered
-                  </Typography>
-                  <Typography className={classes.cardValueTexy}>
-                    {milestoneCount?.delivery || 0}
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                container
-                xs={12}
-                sm={5.8}
-                md={3.9}
-                style={{
-                  padding: 20,
-                  borderTopRightRadius: 16,
-                  borderBottomLeftRadius: 16,
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: color.borderColor,
-                  margin: 0,
-                }}
-                wrap="nowrap"
-              >
-                <Grid item>
-                  <img src={Images.FileEdit} alt="completed" />
-                </Grid>
-                <Grid item pl={1}>
-                  <Typography className={classes.titleText}>Ongoing</Typography>
-                  <Typography className={classes.cardValueTexy}>
-                    {milestoneCount?.ongoing || 0}
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                container
-                xs={12}
-                sm={5.8}
-                md={3.9}
-                style={{
-                  padding: 20,
-                  borderTopRightRadius: 16,
-                  borderBottomLeftRadius: 16,
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: color.borderColor,
-                  margin: 0,
-                }}
-                wrap="nowrap"
-              >
-                <Grid item>
-                  <img src={Images.FileAdd} alt="completed" />
-                </Grid>
-                <Grid item pl={1}>
-                  <Typography className={classes.titleText}>Delayed</Typography>
-                  <Typography className={classes.cardValueTexy}>
-                    {milestoneCount?.delay || 0}
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                container
-                xs={12}
-                sm={5.8}
-                md={3.9}
-                style={{
-                  padding: 20,
-                  borderTopRightRadius: 16,
-                  borderBottomLeftRadius: 16,
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: color.borderColor,
-                  margin: 0,
-                }}
-                wrap="nowrap"
-              >
-                <Grid item>
-                  <img src={Images.FileAdd} alt="completed" />
-                </Grid>
-                <Grid item pl={1}>
-                  <Typography className={classes.titleText}>New</Typography>
-                  <Typography className={classes.cardValueTexy}>
-                    {milestoneCount?.new_milestones || 0}
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                container
-                xs={12}
-                sm={5.8}
-                md={3.9}
-                style={{
-                  padding: 20,
-                  borderTopRightRadius: 16,
-                  borderBottomLeftRadius: 16,
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  borderColor: color.borderColor,
-                  margin: 0,
-                }}
-                wrap="nowrap"
-              >
-                <Grid item>
-                  <img src={Images.FileUnknown} alt="completed" />
-                </Grid>
-                <Grid item pl={1}>
-                  <Typography className={classes.titleText}>
-                    Not Started
-                  </Typography>
-                  <Typography className={classes.cardValueTexy}>
-                    {milestoneCount?.pending || 0}
-                  </Typography>
-                </Grid>
-              </Grid> */}
-                </Grid>
-
-                {/* </Grid> */}
-                {/* <Grid
-              item
-              container
-              xs={12}
-              sm={5.8}
-              md={3.9}
-              style={{
-                padding: 20,
-                borderTopRightRadius: 16,
-                borderBottomLeftRadius: 16,
-                borderWidth: 1,
-                borderStyle: "solid",
-                borderColor: color.borderColor,
-                margin: 0,
-              }}
-              wrap="nowrap"
-            >
-              <Grid item>
-                <img src={Images.FileBlock} alt="completed" />
-              </Grid>
-              <Grid item pl={1}>
-                <Typography className={classes.titleText}>Cancelled</Typography>
-                <Typography className={classes.cardValueTexy}>
-                  {milestoneCount?.cancelled || 0}
-                </Typography>
-              </Grid>
-            </Grid> */}
               </Grid>
             )
           )}
@@ -1314,36 +1087,52 @@ export default function Milestone(props) {
                       justifyContent={"space-between"}
                       wrap="nowrap"
                     >
-                      <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
-                        {milestone?.milestone_name}
-                      </Typography>
-
-                      {milestone?.payment_status === "pending" ||
-                      milestone?.payment_status === "" ? (
+                      <div>
+                        <Typography
+                          variant="h6"
+                          fontFamily={"ElMessiri-Regular"}
+                        >
+                          {milestone?.milestone_name}
+                        </Typography>
+                      </div>
+                      {/* {milestone?.payment_status === "pending" ||
+                      milestone?.payment_status === "" ? ( */}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          wrap: "no-wrap",
+                        }}
+                      >
+                        {milestone?.payment_status === "pending" ||
+                        milestone?.payment_status === "" ? null : (
+                          <div
+                            style={{
+                              padding: 8,
+                              border: `1px solid ${color.primary}`,
+                              backgroundColor: color.primary,
+                              borderRadius: 4,
+                              width: "max-content",
+                            }}
+                          >
+                            <span style={{ color: color.white }}>
+                              {milestone?.payment_status === "completed"
+                                ? "Paid"
+                                : milestone?.payment_status === "requested"
+                                ? "Requested"
+                                : "Payment under review"}
+                            </span>
+                          </div>
+                        )}
                         <IconButton
                           onClick={(e) => handleRowClick(e, milestone, index)}
                         >
                           <MoreVertIcon />
                         </IconButton>
-                      ) : (
-                        <div
-                          style={{
-                            padding: 8,
-                            border: `1px solid ${color.primary}`,
-                            backgroundColor: color.primary,
-                            borderRadius: 4,
-                            width: "max-content",
-                          }}
-                        >
-                          <span style={{ color: color.white }}>
-                            {milestone?.payment_status === "completed"
-                              ? "Paid"
-                              : milestone?.payment_status === "requested"
-                              ? "Requested"
-                              : "Payment under review"}
-                          </span>
-                        </div>
-                      )}
+                      </div>
+                      {/* ) : ( */}
+
+                      {/* )} */}
                     </Grid>
                     <Grid
                       item
@@ -2312,28 +2101,26 @@ export default function Milestone(props) {
                                 className={classes.card}
                                 rowGap={2}
                               >
-                                <Grid
-                                  item
-                                  xs={12}
-                                  md={3}
-                                  justifyContent={"flex-start"}
-                                >
-                                  {isArray(item?.buget_image) &&
-                                    !isEmpty(item?.buget_image) && (
-                                      <>
-                                        <img
-                                          style={{
-                                            width: "100%",
-                                            height: 170,
-                                            objectFit: "contain",
-                                            borderRadius: 4,
-                                          }}
-                                          src={item?.buget_image[0]?.image}
-                                          alt="budget"
-                                        />
-                                      </>
-                                    )}
-                                </Grid>
+                                {isArray(item?.buget_image) &&
+                                  !isEmpty(item?.buget_image) && (
+                                    <Grid
+                                      item
+                                      xs={12}
+                                      md={3}
+                                      justifyContent={"flex-start"}
+                                    >
+                                      <img
+                                        style={{
+                                          width: "100%",
+                                          height: 170,
+                                          objectFit: "contain",
+                                          borderRadius: 4,
+                                        }}
+                                        src={item?.buget_image[0]?.image}
+                                        alt="budget"
+                                      />
+                                    </Grid>
+                                  )}
                                 <Grid item container xs={12} md={9}>
                                   <Grid item container xs={12}>
                                     <Typography
@@ -2963,58 +2750,6 @@ export default function Milestone(props) {
             )}
           </Grid>
         )}
-        {/* <Grid item container alignItems={"center"}>
-          <Button
-            variant="contained"
-            onClick={() => {
-              // validate(false);
-            }}
-          >
-            <AddCircleOutlineOutlinedIcon
-              style={{ color: color.white, marginRight: 4 }}
-            />
-            Milestone
-          </Button>
-        </Grid> */}
-        {/* <Grid
-          pt={2}
-          item
-          container
-          columnGap={1}
-          rowGap={1}
-          justifyContent={"space-between"}
-        >
-          <Grid item sm={5.9} xs={12}>
-            <Button
-              variant="outlined"
-              fullWidth
-              sx={{ boxShadow: "none" }}
-              onClick={() => {
-                const milestone_details = {
-                  formvalues: state,
-                  milestone: milestones,
-                  previous: true,
-                };
-                dispatch(
-                  setProposalDetails({ ...proposalDetails, milestone_details })
-                );
-
-                handleClick("back");
-              }}
-            >
-              Previous Step
-            </Button>
-          </Grid>
-          <Grid item sm={5.9} xs={12}>
-            <Button variant="contained" fullWidth onClick={handleSubmit}>
-              {buttonLoader ? (
-                <CircularProgress size={26} style={{ color: "#fff" }} />
-              ) : (
-                "Continue"
-              )}
-            </Button>
-          </Grid>
-        </Grid> */}
       </Grid>
       <ConfirmModel
         visible={visible}
@@ -3032,6 +2767,14 @@ export default function Milestone(props) {
             ? `Are you sure you want to make a payment request?`
             : `Are you sure you want to submit this milestone?`
         }
+      />
+      <ConfirmModel
+        visible={visibleDelete}
+        handleClose={() => setVisibleDelete(false)}
+        confirmation={() => {
+          // handleDelete();
+        }}
+        message={`Are you sure you want to delete ${selectedMilestone?.data?.milestone_name} milestone?`}
       />
       <Menu
         id={`budget-menu`}
@@ -3073,8 +2816,39 @@ export default function Milestone(props) {
           vertical: "bottom",
         }}
       >
-        <MenuItem onClick={handePayment}>
-          {tabValue === 0 ? "Request Payment" : "Submit Milestone"}
+        {tabValue === 0 && (
+          <MenuItem
+            disabled={
+              selectedMilestone?.data?.payment_status === "pending" ||
+              selectedMilestone?.data?.payment_status === ""
+                ? false
+                : true
+            }
+            onClick={() => {
+              if (
+                selectedMilestone?.data?.payment_status === "pending" ||
+                selectedMilestone?.data?.payment_status === ""
+              ) {
+              }
+              handePayment();
+            }}
+          >
+            {selectedMilestone?.data?.payment_status === "pending" ||
+            selectedMilestone?.data?.payment_status === ""
+              ? "Request Payment"
+              : "Requested for payment"}
+          </MenuItem>
+        )}
+        {tabValue !== 0 && (
+          <MenuItem onClick={handePayment}>Submit Milestone</MenuItem>
+        )}
+        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+        <MenuItem
+          onClick={() => {
+            setVisibleDelete(true);
+          }}
+        >
+          Delete
         </MenuItem>
       </Menu>
 
@@ -3086,7 +2860,7 @@ export default function Milestone(props) {
             return null;
           } else {
             setVisibleEditModal(false);
-            // clearData();
+            clearData();
           }
         }}
         closeAfterTransition
@@ -3101,7 +2875,7 @@ export default function Milestone(props) {
                 Update Milestone Details
               </Typography>
               <Grid item xs={12}>
-                {/* {renderMilestoneCreateForm("modal")} */}
+                {renderMilestoneCreateForm("modal")}
               </Grid>
 
               <Grid
@@ -3117,7 +2891,7 @@ export default function Milestone(props) {
                     style={{ marginTop: 20, marginBottom: 20 }}
                     onClick={() => {
                       setVisibleEditModal(false);
-                      // clearData();
+                      clearData();
                       setSelectedMilestone(null);
                     }}
                     disabled={btnUpdateLoader === "update"}
@@ -3133,7 +2907,7 @@ export default function Milestone(props) {
                     fullWidth
                     style={{ marginTop: 20, marginBottom: 20 }}
                     onClick={() => {
-                      // validate(true);
+                      validate(true);
                     }}
                     disabled={btnUpdateLoader === "update"}
                   >

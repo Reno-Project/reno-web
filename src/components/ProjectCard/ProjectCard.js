@@ -36,13 +36,14 @@ const ProjectCard = (props) => {
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
     : villa?.user_data || {};
-
+  const ispdf = villa?.project_image[0]?.type === "application/pdf";
   return (
     <Card key={villa?.id} className={classes.card} onClick={onClick}>
       <CardMedia
         component="img"
         height="140"
-        image={villa?.project_image[0]?.image}
+        image={ispdf ? Images.pdf : villa?.project_image[0]?.image}
+        style={{ objectFit: ispdf ? "contain" : "cover" }}
         alt={"project_image"}
       />
       <CardContent>
