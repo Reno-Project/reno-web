@@ -27,6 +27,7 @@ import {
   Tabs,
   Tab,
   Tooltip,
+  FormHelperText,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
@@ -41,13 +42,17 @@ import ConfirmModel from "../../../components/ConfirmModel";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
-import { getApiData } from "../../../utils/APIHelper";
+import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import Images from "../../../config/images";
 import NoData from "../../../components/NoData";
 import CInput from "../../../components/CInput";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { useNavigate } from "react-router-dom";
+import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
+import { useRef } from "react";
+import CAutocomplete from "../../../components/CAutocomplete";
 
 const errorObj = {
   nameErr: false,
@@ -60,12 +65,38 @@ const errorObj = {
   endMsg: "",
   amountErr: false,
   amountMsg: "",
+  bNameErr: false,
+  bNameMsg: "",
+  materialTypeErr: false,
+  materialTypeMsg: "",
+  materialUnitPriceErr: false,
+  materialUnitPriceMsg: "",
+  quantityErr: false,
+  quantityMsg: "",
+  unitErr: false,
+  unitMsg: "",
+  daysErr: false,
+  daysMsg: "",
+  manpowerRateErr: false,
+  manpowerRateMsg: "",
+  manpowerMilestoneErr: false,
+  manpowerMilestoneMsg: "",
+  specificationsErr: false,
+  specificationsMsg: "",
+  photoErr: false,
+  photoMsg: "",
 };
 export default function Milestone(props) {
   const { handleClick = () => null, villa } = props;
+  console.log("villa", villa);
+  const fileInputRef = useRef();
+
   const classes = useStyles();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [tabValue, setTabValue] = useState(0);
+  const [uploadLoader, setUploadLoader] = useState(false);
+
   const Released = villa?.milestone_budget_data?.released_amount || 0;
   const Escrow = villa?.milestone_budget_data?.escrow_amount || 0;
   const Due = villa?.milestone_budget_data?.due_amount || 0;
@@ -104,6 +135,7 @@ export default function Milestone(props) {
     (parseFloat(calculateWidth1(DuePercentage)) / sumPercentage) * 100;
 
   const [selectedMilestone, setSelectedMilestone] = useState({});
+  const [selectedBudget, setSelectedBudget] = useState({});
   const [milestoneCount, setMilestoneCount] = useState([]);
   const [counterLoader, setCounterLoader] = useState(true);
 
@@ -126,6 +158,7 @@ export default function Milestone(props) {
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElBudget, setAnchorElBudget] = useState(null);
   const [visible, setVisible] = useState(false);
   const [visibleDelete, setVisibleDelete] = useState(false);
 
@@ -136,14 +169,32 @@ export default function Milestone(props) {
     end_date: null,
   });
 
-  const [visibleEditModal, setVisibleEditModal] = useState(false);
-  const [btnUpdateLoader, setBtnUpdateLoader] = useState("");
+  const [stateBudget, setStateBudget] = useState({
+    name: "",
+    photo_url: [],
+    buget_image: [],
+    material_type: "",
+    material_unit: "",
+    material_unit_price: "",
+    qty: "",
+    manpower_rate: "",
+    days: "",
+    milestone: null,
+    specification: "",
+  });
+  console.log("stateBudget", stateBudget);
 
+  const [visibleEditModal, setVisibleEditModal] = useState(false);
+  const [visibleBudgetModal, setVisibleBudgetModal] = useState(false);
+  const [visibleAddBudget, setVisibleAddBudget] = useState(false);
+  const [btnUpdateLoader, setBtnUpdateLoader] = useState("");
+  const [deleteIND, setDeleteIND] = useState(null);
   const [pendingMilestone, setPendingMilestone] = useState([]);
   const [ongoingMilestone, setongoingMilestone] = useState([]);
   const [deliveryMilestone, setdeliveryMilestone] = useState([]);
   const [completedMilestone, setcompletedMilestone] = useState([]);
-
+  const [milestoneName, setMilestoneName] = useState([]);
+  const [visibleDeleteBudget, setVisibleDeleteBudget] = useState(false);
   const [pendingLoader, setPendingLoader] = useState(true);
   const [ongoingLoader, setongoingLoader] = useState(true);
   const [deliveryLoader, setdeliveryLoader] = useState(true);
@@ -287,7 +338,20 @@ export default function Milestone(props) {
     setAnchorEl(null);
     setSelectedMilestone(null);
   };
+  const handleRowClick1 = (event, milestoneDetail, budget, index) => {
+    setAnchorElBudget(event.currentTarget);
+    setSelectedBudget({
+      data: budget,
+      milestoneDetail: milestoneDetail,
+      index: index,
+    });
+    setMilestoneName(milestoneDetail);
+  };
 
+  const handleClose1 = () => {
+    setAnchorElBudget(null);
+    setSelectedBudget(null);
+  };
   const handePayment = () => {
     setVisible(true);
     setState(selectedMilestone.data);
@@ -314,8 +378,12 @@ export default function Milestone(props) {
 
   const handleEdit = (data, index) => {
     setVisibleEditModal(true);
-
     setState(selectedMilestone?.data);
+  };
+  const handleEditBudget = (data, index) => {
+    setVisibleAddBudget(false);
+    setVisibleBudgetModal(true);
+    setStateBudget(selectedBudget?.data);
   };
   function renderMilestoneCreateForm(mode) {
     return (
@@ -526,32 +594,632 @@ export default function Milestone(props) {
             </FormControl>
           </Grid>
         </Grid>
-        {/* <Grid item xs={12} id="amount">
-          <CInput
-            type={"number"}
-            label="Milestone Amount:"
-            placeholder="Amount "
-            value={state.amount}
-            inputProps={{
-              onWheel: (event) => event.currentTarget.blur(),
-            }}
-            onChange={(e) => {
-              setState({ ...state, amount: e.target.value });
-              setErrObj({
-                ...errObj,
-                amountErr: false,
-                amountMsg: "",
-              });
-            }}
-            error={errObj.amountErr}
-            helpertext={errObj.amountMsg}
-          />
-        </Grid> */}
       </>
     );
   }
+  function checkImgSize(img) {
+    let valid = true;
+    if (img && img.size && img.size > 3145728) {
+      valid = false;
+    } else {
+      valid = true;
+    }
+    return valid;
+  }
 
-  const validate = (isUpdateModalVisible) => {
+  function clearErr() {
+    setErrObj({
+      ...errObj,
+      materialTypeErr: false,
+      materialTypeMsg: "",
+      materialUnitPriceErr: false,
+      materialUnitPriceMsg: "",
+      quantityErr: false,
+      quantityMsg: "",
+      unitErr: false,
+      unitMsg: "",
+      daysErr: false,
+      daysMsg: "",
+      manpowerRateErr: false,
+      manpowerRateMsg: "",
+    });
+  }
+  function displayImagesView(mode) {
+    if (
+      isArray(stateBudget?.buget_image) &&
+      stateBudget?.buget_image?.length > 0
+    ) {
+      if (mode === "form" && visibleBudgetModal) {
+        return null;
+      } else {
+        return (
+          isArray(stateBudget?.buget_image) &&
+          !isEmpty(stateBudget?.buget_image) &&
+          stateBudget?.buget_image?.map((item, index) => {
+            let imgUrl = "";
+            if (item.image) {
+              imgUrl = item.image;
+            } else if (typeof item === "object" && item instanceof Blob) {
+              imgUrl = URL.createObjectURL(item);
+            } else {
+              imgUrl = item;
+            }
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  border: "1px solid #F2F3F4",
+                  borderRadius: 6,
+                  marginBottom: 10,
+                  padding: 3,
+                }}
+              >
+                <img
+                  style={{
+                    width: 60,
+                    height: 70,
+                    borderRadius: 6,
+                    marginRight: 20,
+                    objectFit: "cover",
+                  }}
+                  src={imgUrl}
+                  alt="Budget Photos"
+                />
+                <div style={{ margin: "auto 0" }}>
+                  <Typography
+                    style={{
+                      fontFamily: "Roobert-Regular",
+                      fontWeight: "500",
+                      color: "#202939",
+                      fontSize: 18,
+                    }}
+                  >
+                    {item?.name || `Budget Image ${index + 1}` || ""}
+                  </Typography>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginLeft: "auto",
+                    marginRight: 10,
+                  }}
+                >
+                  {deleteIND === index ? (
+                    <CircularProgress style={{ color: "#274BF1" }} size={26} />
+                  ) : (
+                    <HighlightOffOutlined
+                      style={{
+                        zIndex: 10,
+                        cursor: "pointer",
+                        fontSize: 28,
+                        color: "#8C92A4",
+                      }}
+                      onClick={() => {
+                        // if (createProposal) {
+                        const nArr = [...stateBudget.buget_image];
+                        nArr.splice(index, 1);
+                        setStateBudget({
+                          ...stateBudget,
+                          buget_image: nArr,
+                        });
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })
+        );
+      }
+    }
+  }
+  async function UploadFileDirectly(img) {
+    const nArr1 = stateBudget.buget_image ? [...stateBudget.buget_image] : [];
+    for (let i = 0; i < img.length; i++) {
+      nArr1.push(img[i]);
+    }
+    setStateBudget({ ...stateBudget, buget_image: nArr1 });
+
+    setErrObj({
+      ...errObj,
+      photoErr: false,
+      photoMsg: "",
+    });
+  }
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+  function renderBudgetCreateForm(mode) {
+    return (
+      <>
+        <Grid
+          item
+          xs={12}
+          style={{
+            position: "relative",
+          }}
+        >
+          {uploadLoader &&
+          ((mode === "form" && visibleBudgetModal) ||
+            (mode === "modal" && visibleBudgetModal)) ? (
+            <Grid
+              item
+              container
+              justifyContent={"center"}
+              alignItems={"center"}
+              sx={12}
+              minHeight={220}
+            >
+              <CircularProgress style={{ color: "#274BF1" }} size={26} />
+            </Grid>
+          ) : (
+            <>
+              <div
+                style={{
+                  backgroundColor: "#F9F9FA",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  height: 170,
+                  border: errObj.photoErr ? "1px solid red" : "none",
+                  borderRadius: 4,
+                }}
+              >
+                <ImageOutlined
+                  style={{
+                    color: "grey",
+                    marginBottom: 20,
+                    fontSize: 30,
+                  }}
+                />
+                <InputLabel>
+                  <b>Upload Photo</b>
+                </InputLabel>
+                <InputLabel style={{ fontSize: 12 }}>
+                  {"PNG, JPG, (max size 1200*800)"}
+                </InputLabel>
+              </div>
+              <input
+                type="file"
+                accept="image/jpeg, image/png, image/jpg"
+                multiple
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  opacity: 0,
+                  cursor: "pointer",
+                }}
+                onChange={(e) => {
+                  const chosenFiles = Array.prototype.slice.call(
+                    e.target.files
+                  );
+                  let showMsg = false;
+                  let limit = false;
+                  const newArr = [...stateBudget?.buget_image];
+                  chosenFiles.map((item) => {
+                    const bool = checkImgSize(item);
+                    if (bool && newArr.length < 5) {
+                      newArr.push(item);
+                    } else if (newArr.length >= 4) {
+                      limit = true;
+                    } else {
+                      showMsg = true;
+                    }
+                  });
+                  if (limit) {
+                    toast.error("You can upload maximum 5 files");
+                  } else if (showMsg) {
+                    toast.error(
+                      "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                    );
+                  }
+                  // if (createProposal) {
+                  let shouldUpload =
+                    isArray(newArr) &&
+                    !isEmpty(newArr) &&
+                    newArr?.filter((elem) => typeof elem !== "string");
+                  if (shouldUpload) {
+                    UploadFileDirectly(shouldUpload);
+                  }
+                }}
+                ref={fileInputRef}
+              />
+              <FormHelperText
+                error={errObj.photoErr}
+                style={{ fontFamily: "Roobert-Regular" }}
+              >
+                {errObj.photoMsg}
+              </FormHelperText>
+            </>
+          )}
+        </Grid>
+
+        <Grid
+          item
+          style={{
+            marginTop: stateBudget?.buget_image?.length > 0 && 40,
+            overflowY: "scroll",
+            maxHeight: 500,
+            width: "100%",
+          }}
+        >
+          {displayImagesView(mode)}
+        </Grid>
+        <Grid item xs={12} id="bName" mt={2}>
+          <CInput
+            label="Budget Name"
+            placeholder="Enter Budget Name..."
+            value={
+              mode === "modal" && visibleBudgetModal
+                ? stateBudget.name
+                : mode === "form" && visibleBudgetModal
+                ? ""
+                : stateBudget.name
+            }
+            onChange={(e) => {
+              setStateBudget({ ...stateBudget, name: e.target.value });
+              setErrObj({
+                ...errObj,
+                bNameErr: false,
+                bNameMsg: "",
+              });
+            }}
+            inputProps={{ maxLength: 50 }}
+            error={
+              mode === "modal" && visibleBudgetModal
+                ? errObj.bNameErr
+                : mode === "form" && visibleBudgetModal
+                ? ""
+                : errObj.bNameErr
+            }
+            helpertext={
+              mode === "modal" && visibleBudgetModal
+                ? errObj.bNameMsg
+                : mode === "form" && visibleBudgetModal
+                ? ""
+                : errObj.bNameMsg
+            }
+          />
+        </Grid>
+
+        <Grid item xs={12} id="material_type">
+          <CInput
+            label="Material type:"
+            placeholder="marble, wood, etc..."
+            value={
+              mode === "modal" && visibleBudgetModal
+                ? stateBudget.material_type
+                : mode === "form" && visibleBudgetModal
+                ? ""
+                : stateBudget.material_type
+            }
+            onChange={(e) => {
+              setStateBudget({ ...stateBudget, material_type: e.target.value });
+              clearErr();
+            }}
+            inputProps={{ maxLength: 50 }}
+            error={
+              mode === "modal" && visibleBudgetModal
+                ? errObj.materialTypeErr
+                : mode === "form" && visibleBudgetModal
+                ? ""
+                : errObj.materialTypeErr
+            }
+            helpertext={
+              mode === "modal" && visibleBudgetModal
+                ? errObj.materialTypeMsg
+                : mode === "form" && visibleBudgetModal
+                ? ""
+                : errObj.materialTypeMsg
+            }
+          />
+        </Grid>
+        <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
+          <Grid item xs={12} md={4} id="Unit">
+            <CAutocomplete
+              label="Material unit:"
+              placeholder="Enter material unit"
+              value={
+                mode === "modal" && visibleBudgetModal
+                  ? stateBudget.material_unit
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : stateBudget?.material_unit
+              }
+              onChange={(e, newValue) => {
+                setStateBudget({ ...stateBudget, material_unit: newValue });
+                clearErr();
+              }}
+              options={[
+                "tonns",
+                "Kg",
+                "g",
+                "lbs",
+                "liter",
+                "ml",
+                "sqm",
+                "item",
+              ]}
+              getOptionLabel={(option) => option}
+              error={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.unitErr
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.unitErr
+              }
+              helpertext={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.unitMsg
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.unitMsg
+              }
+            />
+          </Grid>
+          <Grid item xs={12} md={4} id="price">
+            <CInput
+              label="Material unit price"
+              placeholder="Enter amount here...."
+              value={
+                mode === "modal" && visibleBudgetModal
+                  ? stateBudget.material_unit_price == 0
+                    ? ""
+                    : stateBudget.material_unit_price
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : stateBudget.material_unit_price
+              }
+              type="number"
+              onChange={(e) => {
+                const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
+                  Number(e.target.value)
+                );
+                if (bool) {
+                  setStateBudget({
+                    ...stateBudget,
+                    material_unit_price: e.target.value,
+                  });
+                }
+                clearErr();
+              }}
+              error={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.materialUnitPriceErr
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.materialUnitPriceErr
+              }
+              helpertext={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.materialUnitPriceMsg
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.materialUnitPriceMsg
+              }
+            />
+          </Grid>
+
+          <Grid item xs={12} md={4} id="qty">
+            <CInput
+              label="Quantity"
+              placeholder="Enter quantity here...."
+              value={
+                mode === "modal" && visibleBudgetModal
+                  ? stateBudget.qty == 0
+                    ? ""
+                    : stateBudget.qty
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : stateBudget.qty
+              }
+              type="tel"
+              onChange={(e) => {
+                const bool = /^[0-9]+$/.test(Number(e.target.value));
+                if (bool) {
+                  setStateBudget({ ...stateBudget, qty: e.target.value });
+                }
+                clearErr();
+              }}
+              inputProps={{
+                pattern: "[0-9]*", // Allow only digits
+                inputMode: "numeric", // Show numeric keyboard on mobile devices
+              }}
+              error={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.quantityErr
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.quantityErr
+              }
+              helpertext={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.quantityMsg
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.quantityMsg
+              }
+            />
+          </Grid>
+        </Grid>
+
+        <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
+          <Grid item xs={12} md={4} id="rate">
+            <CInput
+              label="Manpower rate"
+              placeholder="Enter amount here...."
+              value={
+                mode === "modal" && visibleBudgetModal
+                  ? stateBudget.manpower_rate
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : stateBudget.manpower_rate
+              }
+              type="number"
+              onChange={(e) => {
+                const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
+                  Number(e.target.value)
+                );
+                if (bool) {
+                  setStateBudget({
+                    ...stateBudget,
+                    manpower_rate: e.target.value,
+                  });
+                }
+                clearErr();
+              }}
+              error={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.manpowerRateErr
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.manpowerRateErr
+              }
+              helpertext={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.manpowerRateMsg
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.manpowerRateMsg
+              }
+            />
+          </Grid>
+
+          <Grid item xs={12} md={4} id="days">
+            <CInput
+              label="Days"
+              placeholder="Enter Days"
+              value={
+                mode === "modal" && visibleBudgetModal
+                  ? stateBudget.days
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : stateBudget.days
+              }
+              type="tel"
+              onChange={(e) => {
+                const bool = /^[0-9]+$/.test(Number(e.target.value));
+                if (bool) {
+                  setStateBudget({ ...stateBudget, days: e.target.value });
+                }
+                clearErr();
+              }}
+              inputProps={{
+                pattern: "[0-9]*", // Allow only digits
+                inputMode: "numeric", // Show numeric keyboard on mobile devices
+              }}
+              error={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.daysErr
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.daysErr
+              }
+              helpertext={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.daysMsg
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.daysMsg
+              }
+            />
+          </Grid>
+          <Grid item xs={12} md={4} id="manpowerMilestone">
+            <CAutocomplete
+              label="Milestone"
+              placeholder="Select milestone"
+              value={
+                mode === "modal" && visibleBudgetModal
+                  ? stateBudget?.milestone || milestoneName
+                  : mode === "form" && visibleBudgetModal
+                  ? stateBudget?.milestone
+                  : stateBudget?.milestone
+              }
+              onChange={(e, newValue) => {
+                setStateBudget({ ...stateBudget, milestone: newValue });
+                setErrObj({
+                  ...errObj,
+                  manpowerMilestoneErr: false,
+                  manpowerMilestoneMsg: "",
+                });
+              }}
+              options={milestoneName}
+              getOptionLabel={(option) => option.milestone_name}
+              error={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.manpowerMilestoneErr
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.manpowerMilestoneErr
+              }
+              helpertext={
+                mode === "modal" && visibleBudgetModal
+                  ? errObj.manpowerMilestoneMsg
+                  : mode === "form" && visibleBudgetModal
+                  ? ""
+                  : errObj.manpowerMilestoneMsg
+              }
+            />
+          </Grid>
+        </Grid>
+        <Grid item xs={12} id="description">
+          <CInput
+            multiline={true}
+            rows={3}
+            label="Specifications:"
+            placeholder="Write here..."
+            value={
+              mode === "modal" && visibleBudgetModal
+                ? stateBudget.specification
+                : mode === "form" && visibleBudgetModal
+                ? ""
+                : stateBudget.specification
+            }
+            onChange={(e) => {
+              setStateBudget({ ...stateBudget, specification: e.target.value });
+              setErrObj({
+                ...errObj,
+                specificationsErr: false,
+                specificationsMsg: "",
+              });
+            }}
+            error={
+              mode === "modal" && visibleBudgetModal
+                ? errObj.specificationsErr
+                : mode === "form" && visibleBudgetModal
+                ? ""
+                : errObj.specificationsErr
+            }
+            helpertext={
+              mode === "modal" && visibleBudgetModal
+                ? errObj.specificationsMsg
+                : mode === "form" && visibleBudgetModal
+                ? ""
+                : errObj.specificationsMsg
+            }
+          />
+        </Grid>
+      </>
+    );
+  }
+  const validateMilestone = (isUpdateModalVisible) => {
     const error = { ...errObj };
     let valid = true;
 
@@ -614,7 +1282,8 @@ export default function Milestone(props) {
     setErrObj(error);
     if (valid) {
       if (isUpdateModalVisible) {
-        setVisibleEditModal(false);
+        setVisibleBudgetModal(false);
+        updateMilestoneApiCall(state);
       }
       if (
         _.isObject(selectedMilestone?.data) &&
@@ -628,7 +1297,229 @@ export default function Milestone(props) {
       clearData();
     }
   };
+  const validate = (isUpdateModalVisible) => {
+    const error = { ...errObj };
+    let valid = true;
+    const stDate = new Date(state?.start_date);
+    const enDate = new Date(state?.end_date);
+    const todayDate = new Date();
+    const st = moment(stDate, "DD/MM/YYYY").format("DD/MM/YYYY");
 
+    if (isEmpty(stateBudget?.name?.trim())) {
+      valid = false;
+      error.bNameErr = true;
+      error.bNameMsg = "Please enter the name";
+    } else if (stateBudget?.name?.length > 50) {
+      valid = false;
+      error.bNameErr = true;
+      error.bNameMsg = "Please enter the name less then 50 characters";
+    }
+
+    const positiveIntRegex = /^[1-9]\d*$/;
+    const regex = /^\d+(\.\d+)?$/;
+
+    if (
+      isEmpty(stateBudget?.material_type?.trim()) &&
+      (isEmpty(stateBudget?.material_unit) ||
+        isNull(stateBudget?.material_unit)) &&
+      isEmpty(stateBudget?.material_unit_price?.toString()) &&
+      isEmpty(stateBudget?.qty?.toString()) &&
+      isEmpty(stateBudget?.manpower_rate?.toString()) &&
+      isEmpty(stateBudget?.days?.toString())
+    ) {
+      if (isEmpty(stateBudget.material_type?.trim())) {
+        valid = false;
+        error.materialTypeErr = true;
+        error.materialTypeMsg = "Please enter the material type";
+      }
+
+      if (isEmpty(stateBudget.material_unit_price?.toString())) {
+        valid = false;
+        error.materialUnitPriceErr = true;
+        error.materialUnitPriceMsg = "Please enter the material unit price";
+      } else if (
+        !regex.test(stateBudget.material_unit_price) ||
+        parseInt(stateBudget.material_unit_price) <= 0
+      ) {
+        valid = false;
+        error.materialUnitPriceErr = true;
+        error.materialUnitPriceMsg = "Please enter valid material unit price";
+      }
+      if (isEmpty(stateBudget?.qty?.toString())) {
+        valid = false;
+        error.quantityErr = true;
+        error.quantityMsg = "Please enter the material qty";
+      } else if (!positiveIntRegex.test(stateBudget?.qty)) {
+        valid = false;
+        error.quantityErr = true;
+        error.quantityMsg = "Please enter valid material qty";
+      } else if (stateBudget?.qty >= 100000) {
+        valid = false;
+        error.quantityErr = true;
+        error.quantityMsg = "Please enter Quantity less then 100000";
+      }
+
+      if (
+        isEmpty(stateBudget.material_unit) ||
+        isNull(stateBudget?.material_unit)
+      ) {
+        valid = false;
+        error.unitErr = true;
+        error.unitMsg = "Please enter material unit";
+      }
+
+      if (isEmpty(stateBudget?.manpower_rate?.toString())) {
+        valid = false;
+        error.manpowerRateErr = true;
+        error.manpowerRateMsg = "Please enter the manpower rate";
+      } else if (!regex.test(stateBudget?.manpower_rate)) {
+        valid = false;
+        error.manpowerRateErr = true;
+        error.manpowerRateMsg = "Please enter valid manpower rate";
+      } else if (stateBudget?.manpower_rate >= 100000) {
+        valid = false;
+        error.manpowerRateErr = true;
+        error.manpowerRateMsg = "Please enter valid manpower rate under 10000 ";
+      }
+
+      if (isEmpty(stateBudget?.days?.toString())) {
+        valid = false;
+        error.daysErr = true;
+        error.daysMsg = "Please enter the days";
+      } else if (!positiveIntRegex.test(stateBudget?.days)) {
+        valid = false;
+        error.daysErr = true;
+        error.daysErr = "Please enter valid days";
+      } else if (stateBudget?.days >= 365) {
+        valid = false;
+        error.daysErr = true;
+        error.daysMsg = "Please enter days under 365";
+      }
+    } else {
+      if (
+        !isEmpty(stateBudget.material_type?.trim()) ||
+        !isEmpty(stateBudget.material_unit_price?.toString()) ||
+        (!isEmpty(stateBudget.material_unit) &&
+          !isNull(stateBudget?.material_unit)) ||
+        !isEmpty(stateBudget?.qty?.toString())
+      ) {
+        if (isEmpty(stateBudget.material_type?.trim())) {
+          valid = false;
+          error.materialTypeErr = true;
+          error.materialTypeMsg = "Please enter the material type";
+        }
+
+        if (!stateBudget.material_unit_price) {
+          valid = false;
+          error.materialUnitPriceErr = true;
+          error.materialUnitPriceMsg = "Please enter the material unit price";
+        } else if (
+          !regex.test(stateBudget.material_unit_price) ||
+          parseInt(stateBudget.material_unit_price) <= 0
+        ) {
+          valid = false;
+          error.materialUnitPriceErr = true;
+          error.materialUnitPriceMsg = "Please enter valid material unit price";
+        }
+        if (isEmpty(stateBudget?.qty?.toString())) {
+          valid = false;
+          error.quantityErr = true;
+          error.quantityMsg = "Please enter the material qty";
+        } else if (!positiveIntRegex.test(stateBudget?.qty)) {
+          valid = false;
+          error.quantityErr = true;
+          error.quantityMsg = "Please enter valid material qty";
+        } else if (stateBudget?.qty >= 100000) {
+          valid = false;
+          error.quantityErr = true;
+          error.quantityMsg = "Please enter Quantity less then 100000";
+        }
+
+        if (isEmpty(stateBudget.material_unit)) {
+          valid = false;
+          error.unitErr = true;
+          error.unitMsg = "Please enter material unit";
+        }
+      }
+      if (
+        !isEmpty(stateBudget?.manpower_rate?.toString()) ||
+        !isEmpty(stateBudget?.days?.toString())
+      ) {
+        if (isEmpty(stateBudget?.manpower_rate?.toString())) {
+          valid = false;
+          error.manpowerRateErr = true;
+          error.manpowerRateMsg = "Please enter the manpower rate";
+        } else if (!regex.test(stateBudget.manpower_rate)) {
+          valid = false;
+          error.manpowerRateErr = true;
+          error.manpowerRateMsg = "Please enter valid manpower rate";
+        } else if (stateBudget?.manpower_rate >= 100000) {
+          valid = false;
+          error.manpowerRateErr = true;
+          error.manpowerRateMsg =
+            "Please enter valid manpower rate under 10000 ";
+        }
+
+        if (isEmpty(stateBudget?.days?.toString()) || stateBudget?.days <= 0) {
+          valid = false;
+          error.daysErr = true;
+          error.daysMsg = "Please enter the days";
+        } else if (!positiveIntRegex.test(stateBudget?.days)) {
+          valid = false;
+          error.daysErr = true;
+          error.daysMsg = "Please enter valid days";
+        }
+        //  else if (stateBudget?.days > totalDays) {
+        //   valid = false;
+        //   error.daysErr = true;
+        //   error.daysMsg =
+        //     "Days can't be more than the total assigned milestone duration";
+        // }
+      }
+    }
+    if (visibleAddBudget) {
+      if (
+        isEmpty(stateBudget?.milestone?.id?.toString()) ||
+        stateBudget?.milestone === undefined ||
+        stateBudget?.milestone === ""
+      ) {
+        valid = false;
+        error.manpowerMilestoneErr = true;
+        error.manpowerMilestoneMsg = "Please select the milestone";
+      }
+    } else {
+      if (isEmpty(stateBudget?.milestone_id?.toString())) {
+        valid = false;
+        error.manpowerMilestoneErr = true;
+        error.manpowerMilestoneMsg = "Please select the milestone";
+      }
+    }
+
+    if (isEmpty(stateBudget?.specification)) {
+      valid = false;
+      error.specificationsErr = true;
+      error.specificationsMsg = "Please enter the specification";
+    }
+
+    setErrObj(error);
+
+    if (valid) {
+      if (isUpdateModalVisible) {
+        createSingleBudgetApiCall(stateBudget);
+        updateSingleBudgetApiCall(stateBudget);
+      }
+      if (
+        _.isObject(selectedMilestone?.data) &&
+        !_.isEmpty(selectedMilestone?.data)
+      ) {
+        // const newArray = [...pendingMilestone]; // create a copy of the array
+        // newArray[selectedMilestone?.index] = state; // modify the copy
+        // setPendingMilestone(newArray);
+        // setSelectedMilestone({});
+      }
+      clearData();
+    }
+  };
   function clearData() {
     setState({
       milestone_name: "",
@@ -639,7 +1530,165 @@ export default function Milestone(props) {
     setErrObj(errorObj);
     handleClose();
   }
+  async function updateMilestoneApiCall(dataOfMilestone) {
+    setAnchorEl(null);
+    setBtnUpdateLoader("update");
+    const data = {
+      status: dataOfMilestone?.status,
+      id: dataOfMilestone?.id,
+      milestone_name: dataOfMilestone?.milestone_name,
+      start_date: dataOfMilestone?.start_date,
+      end_date: dataOfMilestone?.end_date,
+      amount: dataOfMilestone?.amount,
+    };
+    const endpoint = Setting.endpoints.updateMilestone;
 
+    try {
+      const response = await getApiData(endpoint, "POST", data);
+      if (response?.success) {
+        setTimeout(() => {
+          setVisibleEditModal(false);
+          toast.success(response?.message);
+          getMilestoneList("pending");
+        }, 1000);
+      } else {
+        toast.error(response?.message);
+      }
+      setBtnUpdateLoader("");
+    } catch (error) {
+      setBtnUpdateLoader("");
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error.toString() || "Something went wrong try again later");
+    }
+  }
+
+  async function createSingleBudgetApiCall(dataOfBudget) {
+    setAnchorElBudget(null);
+    setBtnUpdateLoader("update");
+    const data = {
+      proposal_id: villa?.proposal_id,
+      name: dataOfBudget?.name,
+      material_type: dataOfBudget?.material_type,
+      material_unit: dataOfBudget?.material_unit,
+      material_unit_price: dataOfBudget?.material_unit_price,
+      qty: dataOfBudget?.qty,
+      milestone_id: dataOfBudget?.milestone?.id,
+      manpower_rate: dataOfBudget?.manpower_rate,
+      days: dataOfBudget?.days,
+      specification: dataOfBudget?.specification,
+      image: dataOfBudget.buget_image,
+    };
+
+    const endpoint = Setting.endpoints.createSingleBudget;
+
+    try {
+      const response = await getAPIProgressData(endpoint, "POST", data, true);
+      if (response?.success) {
+        setTimeout(() => {
+          setVisibleBudgetModal(false);
+          toast.success(response?.message);
+          getMilestoneList("pending");
+        }, 1000);
+      } else {
+        toast.error(response?.message);
+      }
+      setBtnUpdateLoader("");
+    } catch (error) {
+      setBtnUpdateLoader("");
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error.toString() || "Something went wrong try again later");
+    }
+  }
+  async function updateSingleBudgetApiCall(dataOfBudgetUpdate) {
+    setAnchorElBudget(null);
+    setBtnUpdateLoader("update");
+    const data = {
+      status: dataOfBudgetUpdate?.status,
+      id: dataOfBudgetUpdate?.id,
+      name: dataOfBudgetUpdate?.name,
+      material_type: dataOfBudgetUpdate?.material_type,
+      material_unit: dataOfBudgetUpdate?.material_unit,
+      material_unit_price: dataOfBudgetUpdate?.material_unit_price,
+      qty: dataOfBudgetUpdate?.qty,
+      milestone_id: dataOfBudgetUpdate?.milestone_id,
+      manpower_rate: dataOfBudgetUpdate?.manpower_rate,
+      days: dataOfBudgetUpdate?.days,
+      specification: dataOfBudgetUpdate?.specification,
+      image: dataOfBudgetUpdate?.buget_image,
+    };
+
+    const endpoint = Setting.endpoints.updateSingleBudget;
+
+    try {
+      const response = await getAPIProgressData(endpoint, "POST", data, true);
+      if (response?.success) {
+        setTimeout(() => {
+          setVisibleBudgetModal(false);
+          toast.success(response?.message);
+          getMilestoneList("pending");
+        }, 1000);
+      } else {
+        toast.error(response?.message);
+      }
+      setBtnUpdateLoader("");
+    } catch (error) {
+      setBtnUpdateLoader("");
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error.toString() || "Something went wrong try again later");
+    }
+  }
+  async function handleDeleteBudget(budgetId) {
+    setAnchorElBudget(null);
+    setAnchorEl(null);
+    setBtnUpdateLoader("update");
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.budgetDelete}/${budgetId}`,
+        "GET",
+        {}
+      );
+      if (response?.success) {
+        setTimeout(() => {
+          setVisibleDeleteBudget(false);
+          toast.success(response?.message);
+          getMilestoneList("pending");
+        }, 1000);
+      } else {
+        toast.error(response?.message);
+      }
+      setBtnUpdateLoader("");
+    } catch (error) {
+      setBtnUpdateLoader("");
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error.toString() || "Something went wrong try again later");
+    }
+  }
+  async function handleDeleteMilestone(milestoneId) {
+    setAnchorElBudget(null);
+    setAnchorEl(null);
+    setBtnUpdateLoader("update");
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.milestoneDelete}/${milestoneId}`,
+        "GET",
+        {}
+      );
+      if (response?.success) {
+        setTimeout(() => {
+          setVisibleDelete(false);
+          toast.success(response?.message);
+          getMilestoneList("pending");
+        }, 1000);
+      } else {
+        toast.error(response?.message);
+      }
+      setBtnUpdateLoader("");
+    } catch (error) {
+      setBtnUpdateLoader("");
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error.toString() || "Something went wrong try again later");
+    }
+  }
   return (
     <>
       <Grid container>
@@ -952,109 +2001,137 @@ export default function Milestone(props) {
         <Grid item container py={2}>
           <Typography className={classes.MainTitle}>Items:</Typography>
         </Grid>
-        <Grid item xs={12} style={{ borderBottom: "1px solid #F2F3F4" }}>
-          <Tabs
-            value={tabValue}
-            variant="scrollable"
-            onChange={(v, b) => {
-              setTabValue(b);
-            }}
-          >
-            <Tab
-              label={
-                <Typography style={{ display: "flex", alignItems: "center" }}>
-                  pending
-                  <span
-                    style={{
-                      padding: "2px 8px",
-                      margin: "0px 8px",
-                      backgroundColor: "#E9B55C",
-                      color: color.white,
-                      fontWeight: "bold",
-                      borderRadius: 22,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 12,
-                    }}
-                  >
-                    {_.find(milestoneCount, { type: "pending" })?.value || 0}
-                  </span>
-                </Typography>
-              }
-            />
-            <Tab
-              label={
-                <Typography style={{ display: "flex", alignItems: "center" }}>
-                  Ongoing
-                  <span
-                    style={{
-                      padding: "2px 8px",
-                      margin: "0px 8px",
-                      backgroundColor: "#274BF1",
-                      color: color.white,
-                      fontWeight: "bold",
-                      borderRadius: 22,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 12,
-                    }}
-                  >
-                    {_.find(milestoneCount, { type: "ongoing" })?.value || 0}
-                  </span>
-                </Typography>
-              }
-            />
-            <Tab
-              label={
-                <Typography style={{ display: "flex", alignItems: "center" }}>
-                  Delivered
-                  <span
-                    style={{
-                      padding: "2px 8px",
-                      margin: "0px 8px",
-                      backgroundColor: "#9C64E8",
-                      color: color.white,
-                      fontWeight: "bold",
-                      borderRadius: 22,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 12,
-                    }}
-                  >
-                    {_.find(milestoneCount, { type: "delivery" })?.value || 0}
-                  </span>
-                </Typography>
-              }
-            />
+        <Grid
+          item
+          container
+          xs={12}
+          style={{ borderBottom: "1px solid #F2F3F4" }}
+          justifyContent={"space-between"}
+        >
+          <Grid item xs={12}>
+            <Tabs
+              value={tabValue}
+              variant="scrollable"
+              onChange={(v, b) => {
+                setTabValue(b);
+              }}
+            >
+              <Tab
+                label={
+                  <Typography style={{ display: "flex", alignItems: "center" }}>
+                    pending
+                    <span
+                      style={{
+                        padding: "2px 8px",
+                        margin: "0px 8px",
+                        backgroundColor: "#E9B55C",
+                        color: color.white,
+                        fontWeight: "bold",
+                        borderRadius: 22,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 12,
+                      }}
+                    >
+                      {_.find(milestoneCount, { type: "pending" })?.value || 0}
+                    </span>
+                  </Typography>
+                }
+              />
+              <Tab
+                label={
+                  <Typography style={{ display: "flex", alignItems: "center" }}>
+                    Ongoing
+                    <span
+                      style={{
+                        padding: "2px 8px",
+                        margin: "0px 8px",
+                        backgroundColor: "#274BF1",
+                        color: color.white,
+                        fontWeight: "bold",
+                        borderRadius: 22,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 12,
+                      }}
+                    >
+                      {_.find(milestoneCount, { type: "ongoing" })?.value || 0}
+                    </span>
+                  </Typography>
+                }
+              />
+              <Tab
+                label={
+                  <Typography style={{ display: "flex", alignItems: "center" }}>
+                    Delivered
+                    <span
+                      style={{
+                        padding: "2px 8px",
+                        margin: "0px 8px",
+                        backgroundColor: "#9C64E8",
+                        color: color.white,
+                        fontWeight: "bold",
+                        borderRadius: 22,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 12,
+                      }}
+                    >
+                      {_.find(milestoneCount, { type: "delivery" })?.value || 0}
+                    </span>
+                  </Typography>
+                }
+              />
 
-            <Tab
-              label={
-                <Typography style={{ display: "flex", alignItems: "center" }}>
-                  Completed
-                  <span
-                    style={{
-                      padding: "2px 8px",
-                      margin: "0px 8px",
-                      backgroundColor: "#5CC385",
-                      color: color.white,
-                      fontWeight: "bold",
-                      borderRadius: 22,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 12,
-                    }}
-                  >
-                    {_.find(milestoneCount, { type: "completed" })?.value || 0}
-                  </span>
-                </Typography>
-              }
-            />
-          </Tabs>
+              <Tab
+                label={
+                  <Typography style={{ display: "flex", alignItems: "center" }}>
+                    Completed
+                    <span
+                      style={{
+                        padding: "2px 8px",
+                        margin: "0px 8px",
+                        backgroundColor: "#5CC385",
+                        color: color.white,
+                        fontWeight: "bold",
+                        borderRadius: 22,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 12,
+                      }}
+                    >
+                      {_.find(milestoneCount, { type: "completed" })?.value ||
+                        0}
+                    </span>
+                  </Typography>
+                }
+              />
+            </Tabs>
+          </Grid>
         </Grid>
+        {villa?.is_modified && (
+          <Grid item xs={12} textAlign={"end"}>
+            <Button
+              color="primary"
+              variant="contained"
+              style={{ marginTop: 20, marginBottom: 10 }}
+              onClick={() =>
+                navigate("/create-proposal", {
+                  state: {
+                    villa,
+                    // fromManageProject,
+                  },
+                })
+              }
+            >
+              Add Milestone
+            </Button>
+          </Grid>
+        )}
         {tabValue === 0 && (
           <Grid container>
             {pendingLoader ? (
@@ -1301,7 +2378,12 @@ export default function Milestone(props) {
                                         : 9
                                     }
                                   >
-                                    <Grid item container xs={12}>
+                                    <Grid
+                                      item
+                                      container
+                                      xs={12}
+                                      justifyContent={"space-between"}
+                                    >
                                       <Typography
                                         fontFamily={"ElMEssiri-Regular"}
                                         fontWeight="bold"
@@ -1309,6 +2391,18 @@ export default function Milestone(props) {
                                       >
                                         {item?.name}
                                       </Typography>
+                                      <IconButton
+                                        onClick={(e) => {
+                                          handleRowClick1(
+                                            e,
+                                            milestone,
+                                            item,
+                                            index
+                                          );
+                                        }}
+                                      >
+                                        <MoreVertIcon />
+                                      </IconButton>
                                     </Grid>
                                     <TableContainer
                                       style={{
@@ -1506,6 +2600,33 @@ export default function Milestone(props) {
                             );
                           }
                         })}
+                      {villa?.is_modified && (
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          style={{ marginTop: 20, marginBottom: 10 }}
+                          onClick={() => {
+                            setVisibleBudgetModal(true);
+                            setVisibleAddBudget(true);
+                            setMilestoneName([milestone]);
+                            setStateBudget({
+                              name: "",
+                              photo_url: [],
+                              buget_image: [],
+                              material_type: "",
+                              material_unit: "",
+                              material_unit_price: "",
+                              qty: "",
+                              manpower_rate: "",
+                              days: "",
+                              milestone: milestone,
+                              specification: "",
+                            });
+                          }}
+                        >
+                          Add Budget
+                        </Button>
+                      )}
                     </Collapse>
                   </Card>
                 );
@@ -2130,6 +3251,12 @@ export default function Milestone(props) {
                                     >
                                       {item?.name}
                                     </Typography>
+                                    <IconButton
+                                      onClick={() => {}}
+                                      //   handleRowClick(e, milestone, index)
+                                    >
+                                      <MoreVertIcon />
+                                    </IconButton>
                                   </Grid>
                                   <TableContainer
                                     style={{
@@ -2752,29 +3879,22 @@ export default function Milestone(props) {
         )}
       </Grid>
       <ConfirmModel
-        visible={visible}
-        loader={paymentLoader}
-        handleClose={() => setVisible(false)}
+        visible={visibleDeleteBudget}
+        handleClose={() => setVisibleDeleteBudget(false)}
         confirmation={() => {
-          if (tabValue === 0) {
-            paymentRequest();
-          } else if (tabValue === 1) {
-            submitMilestone();
-          }
+          handleDeleteBudget(selectedBudget?.data?.id);
         }}
-        message={
-          tabValue === 0
-            ? `Are you sure you want to make a payment request?`
-            : `Are you sure you want to submit this milestone?`
-        }
+        message={`Are you sure you want to delete ${selectedBudget?.data?.name} Budget?`}
+        loader={btnUpdateLoader === "update" ? true : false}
       />
       <ConfirmModel
         visible={visibleDelete}
         handleClose={() => setVisibleDelete(false)}
         confirmation={() => {
-          // handleDelete();
+          handleDeleteMilestone(selectedMilestone?.data?.id);
         }}
         message={`Are you sure you want to delete ${selectedMilestone?.data?.milestone_name} milestone?`}
+        loader={btnUpdateLoader === "update" ? true : false}
       />
       <Menu
         id={`budget-menu`}
@@ -2842,8 +3962,22 @@ export default function Milestone(props) {
         {tabValue !== 0 && (
           <MenuItem onClick={handePayment}>Submit Milestone</MenuItem>
         )}
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
         <MenuItem
+          disabled={
+            selectedMilestone?.data?.payment_status === "completed"
+              ? true
+              : false
+          }
+          onClick={handleEdit}
+        >
+          Edit
+        </MenuItem>
+        <MenuItem
+          disabled={
+            selectedMilestone?.data?.payment_status === "completed"
+              ? true
+              : false
+          }
           onClick={() => {
             setVisibleDelete(true);
           }}
@@ -2851,7 +3985,69 @@ export default function Milestone(props) {
           Delete
         </MenuItem>
       </Menu>
-
+      <Menu
+        id={`budget-menu1`}
+        anchorEl={anchorElBudget}
+        open={Boolean(anchorElBudget)}
+        onClose={handleClose1}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            mt: 1.5,
+            "& .MuiAvatar-root": {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            "&:before": {
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{
+          horizontal: "right",
+          vertical: "top",
+        }}
+        anchorOrigin={{
+          horizontal: "right",
+          vertical: "bottom",
+        }}
+      >
+        <MenuItem
+          disabled={
+            selectedMilestone?.data?.payment_status === "completed"
+              ? true
+              : false
+          }
+          onClick={handleEditBudget}
+        >
+          Edit
+        </MenuItem>
+        <MenuItem
+          disabled={
+            selectedMilestone?.data?.payment_status === "completed"
+              ? true
+              : false
+          }
+          onClick={() => {
+            setVisibleDeleteBudget(true);
+          }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
       {/* Edit details Modal */}
       <Modal
         open={visibleEditModal}
@@ -2907,7 +4103,7 @@ export default function Milestone(props) {
                     fullWidth
                     style={{ marginTop: 20, marginBottom: 20 }}
                     onClick={() => {
-                      validate(true);
+                      validateMilestone(true);
                     }}
                     disabled={btnUpdateLoader === "update"}
                   >
@@ -2923,6 +4119,88 @@ export default function Milestone(props) {
           </Box>
         </Fade>
       </Modal>
+      {visibleBudgetModal ? (
+        <Modal
+          open={visibleBudgetModal}
+          onClose={() => {
+            if (btnUpdateLoader === "update") {
+              return null;
+            } else {
+              setVisibleBudgetModal(false);
+            }
+            clearData();
+          }}
+          closeAfterTransition
+          disableAutoFocus
+          slotProps={{ backdrop: Backdrop }}
+          style={{ overflowY: "scroll" }}
+        >
+          <Fade in={visibleBudgetModal}>
+            <Box sx={style}>
+              <Grid
+                container
+                style={{ height: 600, overflow: "auto" }}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Typography className={classes.forgotHeaderText}>
+                  {visibleAddBudget
+                    ? "Add Budget Details"
+                    : "Update Budget Details"}
+                </Typography>
+                <Grid item xs={12}>
+                  {visibleAddBudget
+                    ? renderBudgetCreateForm("modal")
+                    : renderBudgetCreateForm("modal")}
+                </Grid>
+              </Grid>
+              <Grid
+                item
+                container
+                columnGap={1}
+                justifyContent={"space-between"}
+                alignItems="end"
+              >
+                <Grid item xs={5.7}>
+                  <Button
+                    color="primary"
+                    fullWidth
+                    style={{ marginTop: 20, marginBottom: 20 }}
+                    onClick={() => {
+                      setVisibleAddBudget(false);
+                      setVisibleBudgetModal(false);
+                      clearData();
+                    }}
+                  >
+                    Close
+                  </Button>
+                </Grid>
+
+                <Grid item xs={5.7}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    style={{ marginTop: 20, marginBottom: 20 }}
+                    onClick={() => {
+                      setVisibleAddBudget(false);
+                      validate(true);
+                    }}
+                  >
+                    {btnUpdateLoader === "update" ? (
+                      <CircularProgress style={{ color: "#fff" }} size={26} />
+                    ) : visibleAddBudget ? (
+                      "Add"
+                    ) : (
+                      "Update"
+                    )}
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+          </Fade>
+        </Modal>
+      ) : null}
     </>
   );
 }

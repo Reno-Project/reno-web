@@ -1,10 +1,12 @@
 const prod = process.env.NODE_ENV === "production";
-const baseUrl = prod ? "https://api.renohome.io/" : "https://api.renohome.io/";
+const baseUrl = prod
+  ? "http://192.168.0.168:3000/"
+  : "https://api.renohome.io/";
 
 export const Setting = {
   baseUrl,
   api: baseUrl,
-  //socketUrl:'',
+  socketURL: "https://reno-home.azurewebsites.net", ///'https://reno-home.azurewebsites.net',
   GOOLE_MAPS_KEY: "AIzaSyBO1ZlrBp68Oj02lrpoF4gJ7DbuzaFQLNA",
   FACEBOOK_APP_ID: "",
   GOOGLE_CLIENT_ID:
@@ -57,6 +59,11 @@ export const Setting = {
     paymentRequest: "api/contractor/add-payment-request",
     milestoneCount: "api/project/project-common-data",
     submitMilestone: "api/project/milestone-delivery",
+    updateMilestone: "api/project/single-milestone-update",
+    createSingleBudget: "api/project/create-single-proposal-budget-item",
+    updateSingleBudget: "/api/project/single-proposal-budget-update",
+    budgetDelete: "api/project/delete-budget-item",
+    milestoneDelete: "api/project/milestone-proposal-delete",
   },
 
   JS_Regex: {

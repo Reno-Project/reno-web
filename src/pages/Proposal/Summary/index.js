@@ -54,6 +54,7 @@ export default function Summary(props) {
 
   const createProposal = location?.state?.create_proposal || false;
   const villa = location?.state?.villa ? location?.state?.villa : {};
+  console.log("villa", villa?.status);
   const fromManageProject = location?.state?.fromManageProject || false;
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
@@ -469,7 +470,8 @@ export default function Summary(props) {
                     variant="contained"
                     style={{
                       marginTop: 3,
-                      backgroundColor: "#E9B55C",
+                      backgroundColor:
+                  villa?.status === "ongoing" ? "#5CC385" : "#E9B55C",
                       padding: 8,
                       fontSize: "10px",
                       letterSpacing: "1.5px",
@@ -478,7 +480,7 @@ export default function Summary(props) {
                       color: "#FFFFFF",
                     }}
                   >
-                    REQUEST
+                     {villa?.status === "ongoing" ? "ONGOING" : "REQUEST"}
                   </span>
                 </Grid>
                 <Grid item lg={3} md={3} sm={6} xs={6}>
