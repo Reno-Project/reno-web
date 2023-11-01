@@ -3,14 +3,22 @@ import { Button, Divider, Grid, Modal, Typography } from "@mui/material";
 import React from "react";
 import { isMobile } from "react-device-detect";
 import Cselect from "../../components/CSelect";
+import { useState } from "react";
 
 export default function Cmodal(props) {
+  const[selectedLanguage,setSelectedLanguage]=useState("");
+
   const {
     visible = false,
     handleClose = () => null,
     loader = false,
     currency = "",
   } = props;
+
+  const handleSelectLanguage = (e) => {
+    console.log(">>>>> e", e);
+    setSelectedLanguage(e)
+  };
 
   return (
     <Modal
@@ -111,6 +119,8 @@ export default function Cmodal(props) {
                     "German",
                   ]}
                   placeholder="Select prefered language"
+                  handleSelect={handleSelectLanguage}
+                  value={selectedLanguage}
                 />
               </>
             )}
@@ -128,7 +138,7 @@ export default function Cmodal(props) {
               </Button>
             </Grid>
             <Grid item xs={3}>
-              <Button fullWidth variant="contained">
+              <Button fullWidth variant="contained" onClick={handleClose}>
                 Save
               </Button>
             </Grid>
