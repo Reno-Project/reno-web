@@ -340,13 +340,13 @@ function Header(props) {
                           <AttachMoneyOutlined style={{ marginRight: 10 }} />
                           Currency
                         </MenuItem>
-                        <MenuItem
+                        {/* <MenuItem
                           className={classes.logoutTextStyle}
                           onClick={() => setMopen("language")}
                         >
                           <TranslateOutlined style={{ marginRight: 10 }} />
                           Language
-                        </MenuItem>
+                        </MenuItem> */}
                         <MenuItem className={classes.logoutTextStyle}>
                           <AccountBalanceWalletOutlined
                             style={{ marginRight: 10 }}
