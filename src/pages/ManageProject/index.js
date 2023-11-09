@@ -93,6 +93,10 @@ const ManageProject = (props) => {
           if (type === "Requested") {
             setSubmitRequestCount(response?.data);
           }
+        } else {
+          setOnGoingCount([]);
+          setProposalSubmitedCount([]);
+          setSubmitRequestCount([]);
         }
       } else {
         if (type === "Requested") {
@@ -100,7 +104,7 @@ const ManageProject = (props) => {
         }
         setOnGoingCount([]);
         setProposalSubmitedCount([]);
-        setProposalSubmitedCount([]);
+        setSubmitRequestCount([]);
       }
       type === "ongoing" && setOnGoingLoader(false);
       type === "Requested" && setSubmitRequestLoader(false);
@@ -124,6 +128,7 @@ const ManageProject = (props) => {
     swipeToSlide: false,
     variableWidth: true,
   };
+  console.log(">>> proposalSubmitedCount ", proposalSubmitedCount);
   return (
     <>
       <Grid
