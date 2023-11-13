@@ -8,7 +8,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import ImageViewer from "../../components/ImageViewer";
+import ImageViewer from "../ImageViewer";
 
 const errorObj = {
   scpErr: false,

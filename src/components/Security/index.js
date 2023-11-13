@@ -8,7 +8,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Images from "../../config/images";
-import CInput from "../../components/CInput";
+import CInput from "../CInput";
 import useStyles from "./styles";
 import { styled } from "@mui/material/styles";
 import { toast } from "react-toastify";

@@ -2,7 +2,7 @@ import { CloseOutlined } from "@mui/icons-material";
 import { Button, Divider, Grid, Modal, Typography } from "@mui/material";
 import React from "react";
 import { isMobile } from "react-device-detect";
-import Cselect from "../../components/CSelect";
+import Cselect from "../CSelect";
 import { useState } from "react";
 
 export default function Cmodal(props) {

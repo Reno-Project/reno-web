@@ -33,6 +33,7 @@ import OnGoing from "./pages/OnGoing/Summary";
 import ProjectDetail from "./pages/ProjectDetail";
 import ManageProject from "./pages/ManageProject";
 import ChatScreen from "./pages/ChatScreen";
+import Billing from "./pages/Billing";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
@@ -92,6 +93,10 @@ function App() {
                       <Route
                         path={"/notifications"}
                         element={<Notifications />}
+                      />
+                      <Route
+                        path={"/billing"}
+                        element={<Billing />}
                       />
                       <Route path={"/create-proposal"} element={<Summary />} />
                       <Route path={"/ongoing-project"} element={<OnGoing />} />
