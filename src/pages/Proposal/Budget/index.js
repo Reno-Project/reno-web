@@ -1883,6 +1883,7 @@ export default function Budget(props) {
       <ConfirmModel
         visible={visibleFinal}
         loader={buttonLoader}
+        title={"Submit"}
         handleClose={() => setVisibleFinal(false)}
         confirmation={() => {
           if (createProposal) {
@@ -2007,7 +2008,7 @@ export default function Budget(props) {
       {proposalModal && (
         <ProfileSuccessModal
           title="Congrats!"
-          msg="Proposal submitted successfully!"
+          msg="Proposal successfully submitted!"
           btnTitle="Continue"
           visible={proposalModal}
           navigatePath={fromManageProject ? "/manage-project" : ""}

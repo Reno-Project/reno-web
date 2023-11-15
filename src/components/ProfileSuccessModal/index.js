@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { isEmpty } from "lodash";
 import Images from "../../config/images";
 import useStyles from "./styles";
+import "./index.css";
 
 function ProfileSuccessModal(props) {
   const {
@@ -54,16 +55,15 @@ function ProfileSuccessModal(props) {
         closeAfterTransition
         disableAutoFocus
         slotProps={{ backdrop: Backdrop }}
-        style={{ overflowY: "scroll" }}
+        style={{ overflowY: "scroll"}}
+        className="container"
       >
         <Fade in={isOpen}>
           <Box sx={style}>
             <div className={classes.container}>
               <img src={Images.success} alt="success_img" />
-              <Typography className={classes.titleTextStyle}>
-                {title}
-              </Typography>
-              <Typography className={classes.descTextStyle}>{msg}</Typography>
+              <Typography className={"title"}>{title}</Typography>
+              <Typography className={"descTextStyle"}>{msg}</Typography>
               <Button
                 variant="contained"
                 fullWidth
