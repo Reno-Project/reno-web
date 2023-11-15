@@ -78,3 +78,10 @@
     url("./assets/fonts/Roobert-Regular.ttf") format("truetype");
   font-weight: 400;
 }
+
+@font-face {
+  font-family: "Poppins-Regular";
+  src: local("Poppins-Regular"),
+    url("./assets/fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: 600;
+}

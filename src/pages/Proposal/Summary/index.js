@@ -28,6 +28,7 @@ import { isMobile, isTablet } from "react-device-detect";
 import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
 import CAutocomplete from "../../../components/CAutocomplete";
 import moment from "moment";
+import "./index.css";
 
 const errorObj = {
   scpErr: false,
@@ -405,6 +406,7 @@ export default function Summary(props) {
   }
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
+      <div className="title">Submit Proposal</div>
       <Grid
         container
         columnGap={1}
@@ -435,62 +437,6 @@ export default function Summary(props) {
           xl={8}
           className={classes.MainContainer}
         >
-          {!createProposal && (
-            <Grid
-              item
-              container
-              wrap={sm ? "wrap" : "nowrap"}
-              alignItems={"center"}
-              columnGap={2}
-            >
-              <Grid item>
-                <img
-                  src={nData?.profile_url || ""}
-                  alt="logo"
-                  className={classes.imageStyle}
-                />
-                <div className={classes.activeContainer}>
-                  <div className={classes.activeStatus}></div>
-                </div>
-              </Grid>
-
-              <Grid container>
-                <Grid item lg={9} md={9} sm={9} xs={9}>
-                  <Typography className={classes.titleText}>
-                    {nData?.username}
-                  </Typography>
-                </Grid>
-                <Grid item lg={3} md={3} sm={3} xs={3} textAlign={"end"}>
-                  <Typography className={classes.requestDate}>
-                    Request Date
-                  </Typography>
-                </Grid>
-                <Grid item lg={9} md={9} sm={6} xs={6}>
-                  <span
-                    variant="contained"
-                    style={{
-                      marginTop: 3,
-                      backgroundColor:
-                  villa?.status === "ongoing" ? "#5CC385" : "#E9B55C",
-                      padding: 8,
-                      fontSize: "10px",
-                      letterSpacing: "1.5px",
-                      lineHeight: "16px",
-                      borderRadius: 4,
-                      color: "#FFFFFF",
-                    }}
-                  >
-                     {villa?.status === "ongoing" ? "ONGOING" : "REQUEST"}
-                  </span>
-                </Grid>
-                <Grid item lg={3} md={3} sm={6} xs={6}>
-                  <Typography className={classes.dateStyle}>
-                    {moment(villa?.project?.createdAt).format("MMMM DD, YYYY")}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          )}
           <Grid item container className={classes.contentContainer} id="scope">
             <Grid item xs={12} style={{ borderBottom: "1px solid #F2F3F4" }}>
               <Tabs
@@ -609,7 +555,7 @@ export default function Summary(props) {
                 >
                   <CInput
                     multiline={true}
-                    rows={3}
+                    rows={1}
                     label="Scope of work"
                     placeholder="Write here..."
                     value={scope}
@@ -767,30 +713,27 @@ export default function Summary(props) {
                   container
                   columnGap={1}
                   rowGap={1}
-                  justifyContent={"space-between"}
+                  justifyContent={"end"}
                 >
-                  <Grid item sm={5.9} xs={12}>
-                    <Button
-                      variant="outlined"
-                      fullWidth
-                      sx={{ boxShadow: "none" }}
-                      onClick={() => {
-                        navigate(-1);
-                        dispatch(setProposalDetails({}));
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </Grid>
-                  <Grid item sm={5.9} xs={12}>
-                    <Button variant="contained" fullWidth onClick={validation}>
-                      {loader ? (
-                        <CircularProgress style={{ color: "#fff" }} size={26} />
-                      ) : (
-                        "Continue"
-                      )}
-                    </Button>
-                  </Grid>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    sx={{ boxShadow: "none" }}
+                    onClick={() => {
+                      navigate(-1);
+                      dispatch(setProposalDetails({}));
+                    }}
+                  >
+                    Cancel
+                  </Button>
+
+                  <Button variant="contained" onClick={validation} size="small">
+                    {loader ? (
+                      <CircularProgress style={{ color: "#fff" }} size={26} />
+                    ) : (
+                      "Continue"
+                    )}
+                  </Button>
                 </Grid>
               </>
             ) : null}
