@@ -347,11 +347,14 @@ function Header(props) {
                           <TranslateOutlined style={{ marginRight: 10 }} />
                           Language
                         </MenuItem> */}
-                        <MenuItem className={classes.logoutTextStyle}>
+                        <MenuItem className={classes.logoutTextStyle} onClick={()=>{
+                             handleClose();
+                             navigate("/billing");
+                        }}>
                           <AccountBalanceWalletOutlined
                             style={{ marginRight: 10 }}
                           />
-                          Billing History
+                          Billing Information
                         </MenuItem>
                       </>
                     )}

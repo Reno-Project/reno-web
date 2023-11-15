@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { isMobile } from "react-device-detect";
+import "./index.css";
 
 export default function ConfirmModel(props) {
   const {
@@ -61,9 +62,9 @@ export default function ConfirmModel(props) {
           )}
           <Typography
             style={{
-              color: "#0D1522 ",
-              fontFamily: "Roobert-Regular",
-              fontSize: "18px",
+              color: "#0D1522",
+              fontFamily: "Poppins-Regular",
+              fontSize: "16px",
               letterSpacing: "0.5px",
               lineHeight: "24px",
               fontWeight: "500",
@@ -83,9 +84,9 @@ export default function ConfirmModel(props) {
           marginTop={"10px"}
         >
           <Grid item xs={6}>
-            <Button fullWidth variant="outlined" onClick={handleClose}>
+            <div  className="cancel"  onClick={handleClose}>
               Cancel
-            </Button>
+            </div>
           </Grid>
           <Grid item xs={6}>
             <Button fullWidth variant="contained" onClick={confirmation}>

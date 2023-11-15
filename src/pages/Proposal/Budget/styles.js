@@ -20,6 +20,12 @@ const useStyles = makeStyles((theme) => ({
     padding: 8,
     margin: "8px 0px !important ",
   },
+  customCard: {
+    borderRadius: "8px",
+    border: "1px solid var(--Divider-2, #E8E8E8)",
+    background: "#F5F6F8",
+    padding: "24px",
+  },
   customtable: {
     borderCollapse: "collapse",
     "& td": {

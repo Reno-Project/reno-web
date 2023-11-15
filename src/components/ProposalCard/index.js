@@ -8,7 +8,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import ImageViewer from "../../components/ImageViewer";
+import ImageViewer from "../ImageViewer";
 
 const errorObj = {
   scpErr: false,
@@ -38,7 +38,7 @@ export default function ProposalCard(props) {
         container
         wrap={sm ? "wrap" : "nowrap"}
         alignItems={"center"}
-        justifyContent={"center"}
+        justifyContent={"space-around"}
         columnGap={2}
       >
         <Grid item lg={4} md={4} sm={4} xs={12}>

@@ -1,8 +1,4 @@
-const prod = process.env.NODE_ENV === "production";
-const baseUrl = prod
-  ? "http://192.168.0.168:3000/"
-  : "https://api.renohome.io/";
-
+const baseUrl = process.env.REACT_APP_BASE_URL
 export const Setting = {
   baseUrl,
   api: baseUrl,
