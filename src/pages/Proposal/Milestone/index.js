@@ -24,6 +24,7 @@ import {
   Fade,
   Box,
   Backdrop,
+  Alert,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
@@ -45,6 +46,7 @@ import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
 import { getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
+import "./index.css";
 
 const errorObj = {
   nameErr: false,
@@ -575,7 +577,7 @@ export default function Milestone(props) {
       <>
         <Grid item xs={12} id="name" mt={2}>
           <CInput
-            label="Milestone Name"
+            label={<span className="fieldTitle">Milestone Name</span>}
             placeholder="Enter Milestone Name..."
             value={
               mode === "modal" && visibleEditModal
@@ -613,7 +615,7 @@ export default function Milestone(props) {
           <CInput
             multiline={true}
             rows={3}
-            label="Description:"
+            label={<span className="fieldTitle">Description:</span>}
             placeholder="Write description here..."
             value={
               mode === "modal" && visibleEditModal
@@ -660,9 +662,9 @@ export default function Milestone(props) {
               }
               style={{ position: "relative" }}
             >
-              <InputLabel shrink htmlFor="start-date">
+              <span className="fieldTitle" htmlFor="start-date">
                 Start Date:
-              </InputLabel>
+              </span>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   disablePast
@@ -689,7 +691,7 @@ export default function Milestone(props) {
                   }}
                   sx={{
                     width: "100%",
-                    marginTop: "24px",
+                    marginTop: "6px",
                   }}
                   format="MMMM dd, yyyy"
                   slotProps={{
@@ -726,9 +728,9 @@ export default function Milestone(props) {
               }
               style={{ position: "relative" }}
             >
-              <InputLabel shrink htmlFor="end-date">
+              <span className="fieldTitle" htmlFor="end-date">
                 End Date:
-              </InputLabel>
+              </span>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   minDate={new Date(state?.start_date)}
@@ -754,7 +756,7 @@ export default function Milestone(props) {
                   }}
                   sx={{
                     width: "100%",
-                    marginTop: "24px",
+                    marginTop: "6px",
                   }}
                   slotProps={{
                     textField: {
@@ -815,36 +817,25 @@ export default function Milestone(props) {
           pt={"25px"}
           justifyContent={"space-between"}
         >
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "ElMessiri-SemiBold",
-            }}
-          >
-            Total Milestones Amount
-          </Typography>
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "ElMessiri-SemiBold",
-            }}
-          >
-            AED {amounts.reduce((acc, curr) => acc + curr, 0)}
-          </Typography>
+          <div className={"alert"}>
+            {" "}
+            <span className="label">Total Milestones Created</span>
+            <span className="cur">
+              AED {amounts.reduce((acc, curr) => acc + curr, 0)}
+            </span>
+          </div>
         </Grid>
         {renderMilestoneCreateForm("form")}
         <Grid item container alignItems={"center"}>
-          <Button
-            variant="contained"
+          <div
+            className="btnSubmit"
             onClick={() => {
               validate(false);
             }}
           >
-            <AddCircleOutlineOutlinedIcon
-              style={{ color: color.white, marginRight: 4 }}
-            />
+            <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
             Add Milestone
-          </Button>
+          </div>
         </Grid>
         {milestoneLoader ? (
           <Grid
@@ -860,357 +851,348 @@ export default function Milestone(props) {
         ) : (
           isArray(milestones) &&
           !isEmpty(milestones) && (
-            <Grid container>
-              {milestones.map((milestone, index) => {
-                return (
-                  <Card
-                    sx={{
-                      width: "100%",
-                      my: 2,
-                      p: 2,
-                      boxShadow: "none",
-                      border: `1px solid ${color.borderColor}`,
-                      borderRadius: "8px",
-                    }}
-                  >
-                    <Grid
-                      item
-                      container
-                      justifyContent={"space-between"}
-                      wrap="nowrap"
+            <>
+              {/* <Grid>
+                <Divider style={{ marginTop: 28, marginBottom: 28 }} />
+              </Grid> */}
+
+              <div className="secondaryTitle">Added Milestone</div>
+
+              <Grid container>
+                {milestones.map((milestone, index) => {
+                  return (
+                    <Card
+                      sx={{
+                        width: "100%",
+                        my: 2,
+                        p: 2,
+                        boxShadow: "none",
+                        border: `1px solid ${color.borderColor}`,
+                        borderRadius: "8px",
+                      }}
                     >
-                      <Typography variant="h6" fontFamily={"ElMessiri-Regular"}>
-                        {milestone?.milestone_name}
-                      </Typography>
-                      <IconButton
-                        onClick={(e) => handleRowClick(e, milestone, index)}
+                      <Grid
+                        item
+                        container
+                        justifyContent={"space-between"}
+                        wrap="nowrap"
                       >
-                        <MoreVertIcon />
-                      </IconButton>
-                    </Grid>
-                    <Grid
-                      item
-                      container
-                      justifyContent={"space-between"}
-                      py={2}
-                    >
-                      <Grid item xl={6}>
-                        <Typography variant="caption" color={"#8C92A4"}>
-                          End date
-                        </Typography>
-                        <Typography fontFamily={"ElMessiri-SemiBold"}>
-                          {milestone.end_date
-                            ? moment(milestone.end_date).format("MMMM DD, YYYY")
-                            : "-"}
-                        </Typography>
+                        <span className="milestoneHeader">
+                          {milestone?.milestone_name}
+                        </span>
+                        <IconButton
+                          onClick={(e) => handleRowClick(e, milestone, index)}
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
                       </Grid>
-                      <Grid item xl={6} textAlign={"end"}>
-                        <Typography variant="caption" color={"#8C92A4"}>
-                          Amount
-                        </Typography>
-                        <Typography fontFamily={"ElMessiri-SemiBold"}>
-                          {`AED ${amounts[index]}` || `AED 0`}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <div style={{ width: "100%", paddingBottom: 16 }}>
-                      <Divider />
-                    </div>
-                    <Grid item container xl={12}>
-                      <Typography
-                        style={{
-                          color: color.primary,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          width: "100%",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          handleChange(milestone, index);
-                        }}
+                      <Grid
+                        item
+                        container
+                        justifyContent={"space-between"}
+                        py={2}
                       >
-                        View Details
-                        {milestone?.expanded ? (
-                          <ExpandLessIcon sx={{ ml: 1 }} />
-                        ) : (
-                          <ExpandMoreIcon sx={{ ml: 1 }} />
-                        )}
-                      </Typography>
-                    </Grid>
-                    <Collapse
-                      in={milestone?.expanded}
-                      timeout="auto"
-                      unmountOnExit
-                    >
-                      <List>
-                        <ListItem>
-                          <ListItemText
-                            primary="Description"
-                            secondary={milestone.description}
-                            primaryTypographyProps={{
-                              variant: "caption",
-                              color: "#8C92A4",
-                            }}
-                            secondaryTypographyProps={{
-                              fontFamily: "ElMessiri-SemiBold",
-                              color: "rgba(0, 0, 0, 0.87)",
-                            }}
-                          />
-                        </ListItem>
+                        <Grid item xl={6}>
+                          <div className="endDate">End date</div>
+                          <div className="endDateValue">
+                            {milestone.end_date
+                              ? moment(milestone.end_date).format(
+                                  "MMMM DD, YYYY"
+                                )
+                              : "-"}
+                          </div>
+                        </Grid>
+                        <Grid item xl={6}>
+                          <div className="endDate">Amount</div>
+                          <div className="endDateValue">
+                            {`AED ${amounts[index]}` || `AED 0`}
+                          </div>
+                        </Grid>
+                      </Grid>
+                      <div style={{ width: "100%", paddingBottom: 16 }}>
                         <Divider />
-                        <ListItem>
-                          <ListItemText
-                            primary="Start Date"
-                            secondary={
-                              milestone.start_date
-                                ? moment(milestone.start_date).format(
-                                    "MMMM DD, YYYY"
-                                  )
-                                : "-"
-                            }
-                            primaryTypographyProps={{
-                              variant: "caption",
-                              color: "#8C92A4",
-                            }}
-                            secondaryTypographyProps={{
-                              fontFamily: "ElMessiri-SemiBold",
-                              color: "rgba(0, 0, 0, 0.87)",
-                            }}
-                          />
-                          <ListItemText
-                            style={{ textAlign: "end" }}
-                            primary="End Date"
-                            secondary={
-                              milestone.end_date
-                                ? moment(milestone.end_date).format(
-                                    "MMMM DD, YYYY"
-                                  )
-                                : "-"
-                            }
-                            primaryTypographyProps={{
-                              variant: "caption",
-                              color: "#8C92A4",
-                            }}
-                            secondaryTypographyProps={{
-                              fontFamily: "ElMessiri-SemiBold",
-                              color: "rgba(0, 0, 0, 0.87)",
-                            }}
-                          />
-                        </ListItem>
-                      </List>
-                      {isArray(budgets) &&
-                        !isEmpty(budgets) &&
-                        budgets?.map((item, index) => {
-                          if (item?.milestone?.id === milestone?.id) {
-                            return (
-                              <Grid container className={classes.card}>
-                                <Grid item container xs={12}>
-                                  <Typography
-                                    fontFamily={"ElMEssiri-Regular"}
-                                    fontWeight="bold"
-                                    pl={1}
-                                  >
-                                    {item?.name}
-                                  </Typography>
-                                </Grid>
-                                <TableContainer
-                                  style={{
-                                    padding: 10,
-                                    boxSizing: "border-box",
-                                  }}
-                                >
-                                  <Table className={classes.customtable}>
+                      </div>
+                      <Grid item container xl={12}>
+                        <Typography
+                          style={{
+                            display: "flex",
+                            alignItems: "start",
+                            justifyContent: "start",
+                            width: "100%",
+                            cursor: "pointer",
+                          }}
+                          className="viewDetails"
+                          onClick={() => {
+                            handleChange(milestone, index);
+                          }}
+                        >
+                          View Details
+                          {milestone?.expanded ? (
+                            <ExpandLessIcon sx={{ ml: 1 }} />
+                          ) : (
+                            <ExpandMoreIcon sx={{ ml: 1 }} />
+                          )}
+                        </Typography>
+                      </Grid>
+                      <Collapse
+                        in={milestone?.expanded}
+                        timeout="auto"
+                        unmountOnExit
+                      >
+                        <List>
+                          <ListItem>
+                            <ListItemText
+                              primary="Description"
+                              secondary={milestone.description}
+                              primaryTypographyProps={{className:"endDate"}}
+                              secondaryTypographyProps={{className:"endDateValue"}}
+                            />
+                          </ListItem>
+                          <Divider />
+                          <ListItem>
+                            <ListItemText
+                              primary="Start Date"
+                              secondary={
+                                milestone.start_date
+                                  ? moment(milestone.start_date).format(
+                                      "MMMM DD, YYYY"
+                                    )
+                                  : "-"
+                              }
+                              primaryTypographyProps={{className:"endDate"}}
+                              secondaryTypographyProps={{className:"endDateValue"}}
+                            />
+                            <ListItemText
+                              style={{ textAlign: "end" }}
+                              className="endDate"
+                              primary="End Date"
+                              
+                              secondary={
+                                milestone.end_date
+                                  ? moment(milestone.end_date).format(
+                                      "MMMM DD, YYYY"
+                                    )
+                                  : "-"
+                              }
+                              primaryTypographyProps={{className:"endDate"}}
+                              secondaryTypographyProps={{className:"endDateValue"}}
+                            />
+                          </ListItem>
+                        </List>
+                        {isArray(budgets) &&
+                          !isEmpty(budgets) &&
+                          budgets?.map((item, index) => {
+                            if (item?.milestone?.id === milestone?.id) {
+                              return (
+                                <Grid container className={classes.card}>
+                                  <Grid item container xs={12}>
                                     <Typography
                                       fontFamily={"ElMEssiri-Regular"}
-                                      fontSize={18}
+                                      fontWeight="bold"
+                                      pl={1}
                                     >
-                                      Manpower
+                                      {item?.name}
                                     </Typography>
-                                    <TableBody>
-                                      <TableRow>
-                                        <TableCell
-                                          style={{
-                                            color: color.captionText,
-                                            fontFamily:
-                                              "Roobert-Regular !important",
-                                          }}
-                                          align="right"
-                                        >
-                                          Manpower rate
-                                        </TableCell>
-
-                                        <TableCell
-                                          style={{
-                                            color: color.captionText,
-                                            fontFamily:
-                                              "Roobert-Regular !important",
-                                          }}
-                                          align="right"
-                                        >
-                                          Days
-                                        </TableCell>
-                                        <TableCell
-                                          style={{
-                                            color: color.captionText,
-                                            fontFamily:
-                                              "Roobert-Regular !important",
-                                          }}
-                                          align="right"
-                                        >
-                                          Amount
-                                        </TableCell>
-                                      </TableRow>
-                                      <TableRow key={"Manpower"}>
-                                        <TableCell align="right">
-                                          <Typography
-                                            fontFamily={"ElMessiri-Regular"}
-                                          >
-                                            {item?.manpower_rate || "-"}
-                                          </Typography>
-                                        </TableCell>
-                                        <TableCell align="right">
-                                          <Typography
-                                            fontFamily={"ElMessiri-Regular"}
-                                          >
-                                            {item?.days || "-"}
-                                          </Typography>
-                                        </TableCell>
-                                        <TableCell align="right">
-                                          <Typography
-                                            fontFamily={"ElMessiri-Regular"}
-                                          >
-                                            AED{" "}
-                                            {parseInt(item.manpower_rate || 0) *
-                                              parseInt(item.days || 0)}
-                                          </Typography>
-                                        </TableCell>
-                                      </TableRow>
-                                    </TableBody>
-                                  </Table>
-                                  <div
+                                  </Grid>
+                                  <TableContainer
                                     style={{
-                                      width: "100%",
-                                      padding: "10px 0px 14px 0px",
+                                      padding: 10,
+                                      boxSizing: "border-box",
                                     }}
                                   >
-                                    <Divider />
-                                  </div>
-                                  <Table className={classes.customtable}>
-                                    <Typography
-                                      fontFamily={"ElMEssiri-Regular"}
-                                      fontSize={18}
+                                    <Table className={classes.customtable}>
+                                      <Typography
+                                        fontFamily={"ElMEssiri-Regular"}
+                                        fontSize={18}
+                                      >
+                                        Manpower
+                                      </Typography>
+                                      <TableBody>
+                                        <TableRow>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Roobert-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Manpower rate
+                                          </TableCell>
+
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Roobert-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Days
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Roobert-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Amount
+                                          </TableCell>
+                                        </TableRow>
+                                        <TableRow key={"Manpower"}>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"ElMessiri-Regular"}
+                                            >
+                                              {item?.manpower_rate || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"ElMessiri-Regular"}
+                                            >
+                                              {item?.days || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"ElMessiri-Regular"}
+                                            >
+                                              AED{" "}
+                                              {parseInt(
+                                                item.manpower_rate || 0
+                                              ) * parseInt(item.days || 0)}
+                                            </Typography>
+                                          </TableCell>
+                                        </TableRow>
+                                      </TableBody>
+                                    </Table>
+                                    <div
+                                      style={{
+                                        width: "100%",
+                                        padding: "10px 0px 14px 0px",
+                                      }}
                                     >
-                                      Material
-                                    </Typography>
-                                    <TableBody>
-                                      <TableRow>
-                                        <TableCell
-                                          align="right"
-                                          style={{
-                                            color: color.captionText,
-                                            fontFamily:
-                                              "Roobert-Regular !important",
-                                          }}
-                                        >
-                                          Material Type
-                                        </TableCell>
-                                        <TableCell
-                                          align="right"
-                                          style={{
-                                            color: color.captionText,
-                                            fontFamily:
-                                              "Roobert-Regular !important",
-                                          }}
-                                        >
-                                          Material Unit
-                                        </TableCell>
-                                        <TableCell
-                                          style={{
-                                            color: color.captionText,
-                                            fontFamily:
-                                              "Roobert-Regular !important",
-                                          }}
-                                          align="right"
-                                        >
-                                          Unit Price
-                                        </TableCell>
-                                        <TableCell
-                                          style={{
-                                            color: color.captionText,
-                                            fontFamily:
-                                              "Roobert-Regular !important",
-                                          }}
-                                          align="right"
-                                        >
-                                          Quantity
-                                        </TableCell>
-                                        <TableCell
-                                          style={{
-                                            color: color.captionText,
-                                            fontFamily:
-                                              "Roobert-Regular !important",
-                                          }}
-                                          align="right"
-                                        >
-                                          Amount
-                                        </TableCell>
-                                      </TableRow>
-                                      <TableRow key={"Manpower"}>
-                                        <TableCell align="right">
-                                          <Typography
-                                            fontFamily={"ElMessiri-Regular"}
+                                      <Divider />
+                                    </div>
+                                    <Table className={classes.customtable}>
+                                      <Typography
+                                        fontFamily={"ElMEssiri-Regular"}
+                                        fontSize={18}
+                                      >
+                                        Material
+                                      </Typography>
+                                      <TableBody>
+                                        <TableRow>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Roobert-Regular !important",
+                                            }}
                                           >
-                                            {item?.material_type || "-"}
-                                          </Typography>
-                                        </TableCell>
+                                            Material Type
+                                          </TableCell>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Roobert-Regular !important",
+                                            }}
+                                          >
+                                            Material Unit
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Roobert-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Unit Price
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Roobert-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Quantity
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Roobert-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Amount
+                                          </TableCell>
+                                        </TableRow>
+                                        <TableRow key={"Manpower"}>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"ElMessiri-Regular"}
+                                            >
+                                              {item?.material_type || "-"}
+                                            </Typography>
+                                          </TableCell>
 
-                                        <TableCell align="right">
-                                          <Typography
-                                            fontFamily={"ElMessiri-Regular"}
-                                          >
-                                            {item?.material_unit || "-"}
-                                          </Typography>
-                                        </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"ElMessiri-Regular"}
+                                            >
+                                              {item?.material_unit || "-"}
+                                            </Typography>
+                                          </TableCell>
 
-                                        <TableCell align="right">
-                                          <Typography
-                                            fontFamily={"ElMessiri-Regular"}
-                                          >
-                                            AED{" "}
-                                            {item?.material_unit_price || "0"}
-                                          </Typography>
-                                        </TableCell>
-                                        <TableCell align="right">
-                                          <Typography
-                                            fontFamily={"ElMessiri-Regular"}
-                                          >
-                                            {item?.qty || "-"}
-                                          </Typography>
-                                        </TableCell>
-                                        <TableCell align="right">
-                                          <Typography
-                                            fontFamily={"ElMessiri-Regular"}
-                                          >
-                                            AED{" "}
-                                            {parseInt(
-                                              item.material_unit_price || 0
-                                            ) * parseInt(item.qty || 0)}
-                                          </Typography>
-                                        </TableCell>
-                                      </TableRow>
-                                    </TableBody>
-                                  </Table>
-                                </TableContainer>
-                              </Grid>
-                            );
-                          }
-                        })}
-                    </Collapse>
-                  </Card>
-                );
-              })}
-            </Grid>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"ElMessiri-Regular"}
+                                            >
+                                              AED{" "}
+                                              {item?.material_unit_price || "0"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"ElMessiri-Regular"}
+                                            >
+                                              {item?.qty || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"ElMessiri-Regular"}
+                                            >
+                                              AED{" "}
+                                              {parseInt(
+                                                item.material_unit_price || 0
+                                              ) * parseInt(item.qty || 0)}
+                                            </Typography>
+                                          </TableCell>
+                                        </TableRow>
+                                      </TableBody>
+                                    </Table>
+                                  </TableContainer>
+                                </Grid>
+                              );
+                            }
+                          })}
+                      </Collapse>
+                    </Card>
+                  );
+                })}
+              </Grid>
+            </>
           )
         )}
         <Grid
@@ -1224,7 +1206,7 @@ export default function Milestone(props) {
           <Grid item sm={5.9} xs={12}>
             <Button
               variant="outlined"
-              fullWidth
+              size="small"
               sx={{ boxShadow: "none" }}
               onClick={() => {
                 const milestone_details = {
@@ -1242,8 +1224,8 @@ export default function Milestone(props) {
               Previous Step
             </Button>
           </Grid>
-          <Grid item sm={5.9} xs={12}>
-            <Button variant="contained" fullWidth onClick={handleSubmit}>
+          <Grid item sm={5.9} xs={12} className="conBtn">
+            <Button variant="contained"  size="small" onClick={handleSubmit}>
               {buttonLoader ? (
                 <CircularProgress size={26} style={{ color: "#fff" }} />
               ) : (
