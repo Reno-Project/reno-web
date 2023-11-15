@@ -43,6 +43,7 @@ import ConfirmModel from "../../../components/ConfirmModel";
 import CAutocomplete from "../../../components/CAutocomplete";
 import ProfileSuccessModal from "../../../components/ProfileSuccessModal";
 import moment from "moment";
+import "./index.css";
 
 const errorObj = {
   bNameErr: false,
@@ -1122,6 +1123,7 @@ export default function Budget(props) {
                   bottom: 0,
                   opacity: 0,
                   cursor: "pointer",
+                  width: "100%",
                 }}
                 onChange={(e) => {
                   const chosenFiles = Array.prototype.slice.call(
@@ -1190,7 +1192,7 @@ export default function Budget(props) {
         </Grid>
         <Grid item xs={12} id="bName" mt={2}>
           <CInput
-            label="Budget Name"
+            label={<span className="fieldTitle">Budget Name</span>}
             placeholder="Enter Budget Name..."
             value={
               mode === "modal" && visibleEditModal
@@ -1227,7 +1229,7 @@ export default function Budget(props) {
 
         <Grid item xs={12} id="material_type">
           <CInput
-            label="Material type:"
+            label={<span className="fieldTitle">Material type:</span>}
             placeholder="marble, wood, etc..."
             value={
               mode === "modal" && visibleEditModal
@@ -1260,7 +1262,7 @@ export default function Budget(props) {
         <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
           <Grid item xs={12} md={4} id="Unit">
             <CAutocomplete
-              label="Material unit:"
+              label={<span className="fieldTitle">Material unit:</span>}
               placeholder="Enter material unit"
               value={
                 mode === "modal" && visibleEditModal
@@ -1302,7 +1304,7 @@ export default function Budget(props) {
           </Grid>
           <Grid item xs={12} md={4} id="price">
             <CInput
-              label="Material unit price"
+              label={<span className="fieldTitle">Material unit price</span>}
               placeholder="Enter amount here...."
               value={
                 mode === "modal" && visibleEditModal
@@ -1340,10 +1342,9 @@ export default function Budget(props) {
               }
             />
           </Grid>
-
           <Grid item xs={12} md={4} id="qty">
             <CInput
-              label="Quantity"
+              label={<span className="fieldTitle">Quantity</span>}
               placeholder="Enter quantity here...."
               value={
                 mode === "modal" && visibleEditModal
@@ -1385,7 +1386,7 @@ export default function Budget(props) {
         <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
           <Grid item xs={12} md={4} id="rate">
             <CInput
-              label="Manpower rate"
+              label={<span className="fieldTitle">Manpower rate</span>}
               placeholder="Enter amount here...."
               value={
                 mode === "modal" && visibleEditModal
@@ -1423,7 +1424,7 @@ export default function Budget(props) {
 
           <Grid item xs={12} md={4} id="days">
             <CInput
-              label="Days"
+              label={<span className="fieldTitle">Days</span>}
               placeholder="Enter Days"
               value={
                 mode === "modal" && visibleEditModal
@@ -1462,7 +1463,7 @@ export default function Budget(props) {
           </Grid>
           <Grid item xs={12} md={4} id="manpowerMilestone">
             <CAutocomplete
-              label="Milestone"
+              label={<span className="fieldTitle">Milestone</span>}
               placeholder="Select milestone"
               value={
                 mode === "modal" && visibleEditModal
@@ -1501,8 +1502,8 @@ export default function Budget(props) {
         <Grid item xs={12} id="description">
           <CInput
             multiline={true}
-            rows={3}
-            label="Specifications:"
+            rows={2}
+            label={<span className="fieldTitle">Specifications:</span>}
             placeholder="Write here..."
             value={
               mode === "modal" && visibleEditModal
@@ -1542,28 +1543,10 @@ export default function Budget(props) {
   return (
     <>
       <Grid container>
-        <Grid
-          item
-          container
-          xs={12}
-          justifyContent={"space-between"}
-          pt={"25px"}
-          pb={2}
-        >
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "ElMessiri-SemiBold",
-            }}
-          >
-            Total Budget amount
-          </Typography>
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "ElMessiri-SemiBold",
-            }}
-          >
+        <div className={"alert"}>
+          {" "}
+          <span className="label"> Total Budget amount</span>
+          <span className="cur">
             AED{" "}
             {(isArray(budgetDetails) &&
               !isEmpty(budgetDetails) &&
@@ -1575,23 +1558,21 @@ export default function Budget(props) {
                 return acc + amount;
               }, 0)) ||
               0}
-          </Typography>
-        </Grid>
+          </span>
+        </div>
 
         {renderBudgetCreateForm("form")}
 
         <Grid item container alignItems={"center"} mb={2}>
-          <Button
-            variant="contained"
+          <div
+            className="btnSubmit"
             onClick={() => {
               validate(false);
             }}
           >
-            <AddCircleOutlineOutlinedIcon
-              style={{ color: color.white, marginRight: 4 }}
-            />
+            <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
             Add Budget
-          </Button>
+          </div>
         </Grid>
         {budgetLoader ? (
           <Grid
@@ -1606,73 +1587,89 @@ export default function Budget(props) {
           </Grid>
         ) : (
           isArray(budgetDetails) &&
-          !isEmpty(budgetDetails) &&
-          budgetDetails?.map((item, index) => {
-            const milestoneValue = item?.milestone_id
-              ? milestones?.find((e, i) => {
-                  return e?.id === item?.milestone_id;
-                })
-              : item?.milestone;
+          !isEmpty(budgetDetails) && (
+            <>
+              <div className="secondaryTitle">Added Budget Items</div>
 
-            return (
-              <Grid container className={classes.card}>
-                <Grid item container wrap={sm ? "wrap" : "nowrap"}>
-                  <Grid item sx={12} justifyContent={"flex-start"}>
-                    {isArray(item?.photo_origin) &&
-                      !isEmpty(item?.photo_origin) && (
-                        <>
-                          <img
-                            style={{
-                              width: md ? 150 : 220,
-                              maxHeight: 170,
-                              objectFit: "contain",
-                              borderRadius: 4,
-                            }}
-                            src={item?.photo_origin[0]}
-                            alt="budget"
-                          />
-                        </>
-                      )}
-                  </Grid>
-                  <Grid
-                    item
-                    container
-                    sx={12}
-                    p={sm ? "10px" : 2}
-                    justifyContent={sm ? "flex-start" : "flex-end"}
-                  >
-                    <Grid
-                      item
-                      container
-                      justifyContent={"space-between"}
-                      alignItems={"flex-start"}
-                      wrap="nowrap"
-                    >
-                      <Typography variant="h5" fontFamily={"ElMessiri-Regular"}>
-                        {item?.name || "-"}
-                      </Typography>
-                      <IconButton
-                        onClick={(e) => handleRowClick(e, item, index)}
+              {budgetDetails?.map((item, index) => {
+                const milestoneValue = item?.milestone_id
+                  ? milestones?.find((e, i) => {
+                      return e?.id === item?.milestone_id;
+                    })
+                  : item?.milestone;
+
+                return (
+                  <Grid container className={classes.customCard}>
+                    <Grid item container wrap={sm ? "wrap" : "nowrap"}>
+                      <Grid item sx={12} justifyContent={"flex-start"}>
+                        {isArray(item?.photo_origin) &&
+                          !isEmpty(item?.photo_origin) && (
+                            <>
+                              <img
+                                style={{
+                                  width: md ? 150 : 220,
+                                  maxHeight: 170,
+                                  objectFit: "contain",
+                                  borderRadius: 4,
+                                }}
+                                src={item?.photo_origin[0]}
+                                alt="budget"
+                              />
+                            </>
+                          )}
+                      </Grid>
+                      <Grid
+                        item
+                        container
+                        sx={12}
+                        p={sm ? "10px" : 2}
+                        justifyContent={sm ? "flex-start" : "flex-end"}
                       >
-                        <MoreVertIcon fontSize="20px" color="red" />
-                      </IconButton>
-                    </Grid>
-                    <Grid item textAlign={sm ? "start" : "end"}>
-                      <Typography fontFamily={"ElMEssiri-Regular"}>
-                        AED {amounts[index] || 0}
-                      </Typography>
-                      {/* <Typography
-                        fontFamily={"ElMEssiri-Regular"}
-                        style={{
-                          display: "flex",
-                          alignItems: "baseline",
-                        }}
-                      >
-                        <Typography fontFamily={"Roobert-Regular"} mr={1}>
-                          Last updated:
-                        </Typography>
-                        {moment(item?.updatedAt).format("MMMM DD, YYYY")}
-                      </Typography> */}
+                        <Grid
+                          item
+                          container
+                          flexDirection={"column"}
+                          wrap="nowrap"
+                        >
+                          <div className="detailsHeader">
+                            <span className="budgetName">
+                              {item?.name || "-"}
+                            </span>
+                            <IconButton
+                              onClick={(e) => handleRowClick(e, item, index)}
+                            >
+                              <MoreVertIcon fontSize="20px" color="red" />
+                            </IconButton>
+                          </div>
+
+                          <div className="spec">
+                            {item?.specification || "-"}
+                          </div>
+                        </Grid>
+
+                        {/* <Grid item textAlign={sm ? "start" : "end"}>
+                          <Typography fontFamily={"ElMEssiri-Regular"}>
+                            AED {amounts[index] || 0}
+                          </Typography>
+                        </Grid> */}
+                        <div className="detailsContent">
+                          <dic md={3} className="firstItem">
+                            <div className="detailLabel"> Amount</div>
+                            <div className="detailValue">
+                              {" "}
+                              AED {amounts[index] || 0}
+                            </div>
+                          </dic>
+                          <div md={4} className="secondItem">
+                            <div className="detailLabel"> Status</div>
+                            <div className="detailValue"> Completed</div>
+                          </div>
+                          <div md={3} className="lastItem">
+                            <div className="detailLabel"> Payment Date</div>
+                            <div className="detailValue"> March 01, 2023</div>
+                          </div>
+                        </div>
+                      </Grid>
                     </Grid>
                     <Grid item container justifyContent={"flex-start"}>
                       <ListItemButton
@@ -1692,212 +1689,155 @@ export default function Budget(props) {
                         )}
                       </ListItemButton>
                     </Grid>
-                  </Grid>
-                </Grid>
-                <Collapse
-                  in={item?.expanded}
-                  timeout="auto"
-                  unmountOnExit
-                  style={{ width: "100%" }}
-                >
-                  {/* <CardContent
+                    <Collapse
+                      in={item?.expanded}
+                      timeout="auto"
+                      unmountOnExit
+                      style={{ width: "100%" }}
+                    >
+                      {/* <CardContent
                     style={{
                       position: "relative",
                       boxSizing: "border-box",
                       width: "100%",
                     }}
                   > */}
-                  <Grid item padding={"10px 10px 0px 10px"}>
-                    <Typography fontFamily={"ElMEssiri-Regular"} fontSize={18}>
-                      Specifications
-                    </Typography>
-                    <Typography>{item?.specification || "-"}</Typography>
-                    <div
-                      style={{
-                        width: "100%",
-                        paddingTop: 14,
-                        paddingBottom: 4,
-                      }}
-                    >
-                      <Divider />
-                    </div>
-                  </Grid>
-                  <div className="responsive-table">
-                    <TableContainer
-                      style={{ padding: 10, boxSizing: "border-box" }}
-                    >
-                      <Table className={classes.customtable}>
-                        <Typography
-                          fontFamily={"ElMEssiri-Regular"}
-                          fontSize={18}
+                      <Grid item padding={"10px 10px 0px 10px"}>
+                        <div className="budgetName">Specifications</div>
+                        <div className="detailValue">
+                          {item?.specification || "-"}
+                        </div>
+                        <div
+                          style={{
+                            width: "100%",
+                            paddingTop: 14,
+                            paddingBottom: 4,
+                          }}
                         >
-                          Manpower
-                        </Typography>
-                        <TableBody>
-                          <TableRow>
-                            <TableCell
-                              align="right"
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                            >
-                              Milestone
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                              align="right"
-                            >
-                              Manpower rate
-                            </TableCell>
+                          <Divider />
+                        </div>
+                      </Grid>
+                      <div className="responsive-table">
+                        <TableContainer
+                          style={{ padding: 10, boxSizing: "border-box" }}
+                        >
+                          <Table className={classes.customtable}>
+                            <Typography className="budgetName">
+                              Manpower
+                            </Typography>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="right">
+                                  <div className="endDate">Milestone</div>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <div className="endDate"> Manpower rate</div>
+                                </TableCell>
 
-                            <TableCell
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                              align="right"
-                            >
-                              Days
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                              align="right"
-                            >
-                              Amount
-                            </TableCell>
-                          </TableRow>
-                          <TableRow key={"Manpower"}>
-                            <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                {milestoneValue?.milestone_name || "-"}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.manpower_rate || "-"}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.days || "-"}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                AED{" "}
-                                {parseInt(item.manpower_rate || 0) *
-                                  parseInt(item.days || 0)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                        </TableBody>
-                      </Table>
-                      <div
-                        style={{ width: "100%", padding: "10px 0px 14px 0px" }}
-                      >
-                        <Divider />
+                                <TableCell align="right">
+                                  <div className="endDate"> Days</div>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <div className="endDate"> Amount</div>
+                                </TableCell>
+                              </TableRow>
+                              <TableRow key={"Manpower"}>
+                                <TableCell align="right">
+                                  <div className="endDateValue">
+                                    {milestoneValue?.milestone_name || "-"}
+                                  </div>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <div className="endDateValue">
+                                    {item?.manpower_rate || "-"}
+                                  </div>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <div className="endDateValue">
+                                    {item?.days || "-"}
+                                  </div>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <div className="endDateValue">
+                                    AED{" "}
+                                    {parseInt(item.manpower_rate || 0) *
+                                      parseInt(item.days || 0)}
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                          <div
+                            style={{
+                              width: "100%",
+                              padding: "10px 0px 14px 0px",
+                            }}
+                          >
+                            <Divider />
+                          </div>
+                          <Table className={classes.customtable}>
+                            <Typography className="budgetName">
+                              Material
+                            </Typography>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="right">
+                                  <div className="endDate"> Material Type</div>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <div className="endDate"> Material Unit</div>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <div className="endDate"> Unit Price</div>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <div className="endDate"> Quantity</div>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <div className="endDate"> Amount</div>
+                                </TableCell>
+                              </TableRow>
+                              <TableRow key={"Manpower"}>
+                                <TableCell align="right">
+                                  <div className="endDateValue">
+                                    {item?.material_type || "-"}
+                                  </div>
+                                </TableCell>
+
+                                <TableCell align="right">
+                                  <div className="endDateValue">
+                                    {item?.material_unit || "-"}
+                                  </div>
+                                </TableCell>
+
+                                <TableCell align="right">
+                                  <div className="endDateValue">
+                                    AED {item?.material_unit_price || "0"}
+                                  </div>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <div className="endDateValue">
+                                    {item?.qty || "-"}
+                                  </div>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <div className="endDateValue">
+                                    AED{" "}
+                                    {parseInt(item.material_unit_price || 0) *
+                                      parseInt(item.qty || 0)}
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
                       </div>
-                      <Table className={classes.customtable}>
-                        <Typography
-                          fontFamily={"ElMEssiri-Regular"}
-                          fontSize={18}
-                        >
-                          Material
-                        </Typography>
-                        <TableBody>
-                          <TableRow>
-                            <TableCell
-                              align="right"
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                            >
-                              Material Type
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                            >
-                              Material Unit
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                              align="right"
-                            >
-                              Unit Price
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                              align="right"
-                            >
-                              Quantity
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
-                              }}
-                              align="right"
-                            >
-                              Amount
-                            </TableCell>
-                          </TableRow>
-                          <TableRow key={"Manpower"}>
-                            <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.material_type || "-"}
-                              </Typography>
-                            </TableCell>
-
-                            <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.material_unit || "-"}
-                              </Typography>
-                            </TableCell>
-
-                            <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                AED {item?.material_unit_price || "0"}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                {item?.qty || "-"}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
-                                AED{" "}
-                                {parseInt(item.material_unit_price || 0) *
-                                  parseInt(item.qty || 0)}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </div>
-                </Collapse>
-              </Grid>
-            );
-          })
+                    </Collapse>
+                  </Grid>
+                );
+              })}
+            </>
+          )
         )}
         <Grid
           pt={2}
@@ -1910,7 +1850,7 @@ export default function Budget(props) {
           <Grid item sm={5.9} xs={12}>
             <Button
               variant="outlined"
-              fullWidth
+              size="small"
               sx={{ boxShadow: "none" }}
               onClick={() => {
                 updateRedux();
@@ -1920,8 +1860,8 @@ export default function Budget(props) {
               Previous Step
             </Button>
           </Grid>
-          <Grid item sm={5.9} xs={12}>
-            <Button variant="contained" fullWidth onClick={handleSubmit}>
+          <Grid item sm={5.9} xs={12} className="conBtn">
+            <Button variant="contained" size="small" onClick={handleSubmit}>
               {submitLoader ? (
                 <CircularProgress style={{ color: "#fff" }} size={26} />
               ) : (
