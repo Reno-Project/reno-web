@@ -52,7 +52,7 @@ const PhoneVerify = (props) => {
     try {
       const response = await getApiData(Setting.endpoints.verifyOtp, "POST", {
         otp: code,
-        verify_type: "phone",
+        verify_type: "email",
       });
 
       if (response.success) {
@@ -85,7 +85,7 @@ const PhoneVerify = (props) => {
     try {
       const response = await getApiData(Setting.endpoints.resendOtp, "POST", {
         email: locationState?.email,
-        verify_type: "phone",
+        verify_type: "email",
       });
 
       if (response.success) {
