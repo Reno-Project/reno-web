@@ -155,16 +155,17 @@ function Header(props) {
                       {userData?.contractor_data?.profile_completed ===
                         "pending" ||
                       currentUrl?.includes("otp-verify") ? null : (
-                        <CInput
-                          placeholder="Search..."
-                          endAdornment={
-                            <InputAdornment position="end">
-                              <IconButton>
-                                <SearchRoundedIcon />
-                              </IconButton>
-                            </InputAdornment>
-                          }
-                        />
+                        <></>
+                        // <CInput
+                        //   placeholder="Search..."
+                        //   endAdornment={
+                        //     <InputAdornment position="end">
+                        //       <IconButton>
+                        //         <SearchRoundedIcon />
+                        //       </IconButton>
+                        //     </InputAdornment>
+                        //   }
+                        // />
                       )}
                       {userData?.contractor_data?.profile_completed ===
                       "pending" ? null : ( // </Button> //   Become contarctor // > //   style={{ padding: "6px 6px", fontSize: "14px" }} //   color="primary" //   variant="contained" //   }} //     logout("signup"); //   onClick={() => { // <Button
@@ -196,11 +197,12 @@ function Header(props) {
                   currentUrl?.includes("otp-verify") ||
                   userData?.contractor_data?.profile_completed ===
                     "pending" ? null : (
-                    <Grid item>
-                      <IconButton onClick={() => navigate("/notifications")}>
-                        <img src={Images.BellSimple} alt="notification" />
-                      </IconButton>
-                    </Grid>
+                      <></>
+                    // <Grid item>
+                    //   <IconButton onClick={() => navigate("/notifications")}>
+                    //     <img src={Images.BellSimple} alt="notification" />
+                    //   </IconButton>
+                    // </Grid>
                   )}
                   {currentUrl?.includes("otp-verify") ? null : (
                     <>
@@ -333,13 +335,13 @@ function Header(props) {
                           <SettingsOutlined style={{ marginRight: 10 }} />
                           Account Settings
                         </MenuItem>
-                        <MenuItem
+                        {/* <MenuItem
                           className={classes.logoutTextStyle}
                           onClick={() => setMopen("currency")}
                         >
                           <AttachMoneyOutlined style={{ marginRight: 10 }} />
                           Currency
-                        </MenuItem>
+                        </MenuItem> */}
                         {/* <MenuItem
                           className={classes.logoutTextStyle}
                           onClick={() => setMopen("language")}

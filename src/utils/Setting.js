@@ -2,7 +2,7 @@ const baseUrl = process.env.REACT_APP_BASE_URL
 export const Setting = {
   baseUrl,
   api: baseUrl,
-  socketURL: "https://reno-home.azurewebsites.net", ///'https://reno-home.azurewebsites.net',
+  socketURL: baseUrl, ///'https://reno-home.azurewebsites.net',
   GOOLE_MAPS_KEY: "AIzaSyBO1ZlrBp68Oj02lrpoF4gJ7DbuzaFQLNA",
   FACEBOOK_APP_ID: "",
   GOOGLE_CLIENT_ID:

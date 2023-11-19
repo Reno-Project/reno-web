@@ -24,7 +24,7 @@ function AppleLoginButton(props) {
       authOptions={{
         clientId: "com.renocontractor.io",
         scope: "email name",
-        redirectURI: "https://reno-home-contractor.azurewebsites.net/",
+        redirectURI: process.env.REACT_APP_BASE_URL,
         state: "state",
         nonce: "nonce",
         usePopup: true,
