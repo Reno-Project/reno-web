@@ -144,13 +144,13 @@ const ManageProject = (props) => {
           <Grid item>
             <Typography className={classes.header}>Manage Projects</Typography>
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <Button style={{ backgroundColor: color.white, boxShadow: "none" }}>
               <KeyboardArrowLeftIcon />
               This Month
               <KeyboardArrowRightIcon />
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
         <Grid container className={classes.container}>
           <Grid
@@ -312,32 +312,31 @@ const ManageProject = (props) => {
           </Grid>
 
           <Grid
-            item
             container
-            mb={"20px"}
-            alignItems={"center"}
-            justifyContent={"space-between"}
-            wrap="nowrap"
-          >
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <Typography className={classes.ptitle}>
-                {tabVal === 0
-                  ? "Ongoing"
-                  : tabVal === 1
-                  ? "Proposal Submitted"
-                  : "Submitted request"}
-              </Typography>
-            </div>
-          </Grid>
-
-          <Grid
-            container
-            alignItems={"center"}
-            justifyContent={"space-between"}
+            // alignItems={"center"}
+            // justifyContent={"space-between"}
             wrap={sm ? "wrap" : "nowrap"}
             my={2}
             rowGap={2}
           >
+            <Grid
+              item
+              container
+              mb={"20px"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+              wrap="nowrap"
+            >
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography className={classes.ptitle}>
+                  {tabVal === 0
+                    ? "Ongoing"
+                    : tabVal === 1
+                    ? "Proposal Submitted"
+                    : "Submitted request"}
+                </Typography>
+              </div>
+            </Grid>
             <Grid item container rowGap={2}>
               <Grid item container style={{ width: "unset", margin: 0 }}>
                 <Grid item mr={2}>
@@ -381,7 +380,7 @@ const ManageProject = (props) => {
                   </Button>
                 </Grid>
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <Select
                   fullWidth
                   value={filter}
@@ -399,7 +398,7 @@ const ManageProject = (props) => {
                     Filters
                   </MenuItem>
                 </Select>
-              </Grid>
+              </Grid> */}
             </Grid>
             {tabVal === 0 ? (
               <Grid item justifySelf={"flex-end"}>
