@@ -28,6 +28,9 @@ import { useDispatch } from "react-redux";
 import useStyles from "./styles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { askForPermissionToReceiveNotifications } from "../../push-notification";
+import { CometChat } from "@cometchat/chat-sdk-javascript";
+import { CometChatConstants } from "../../constants";
+import { CometChatThemeContext } from "@cometchat/chat-uikit-react";
 
 const errorObj = {
   unameErr: false,
@@ -195,6 +198,40 @@ const Signup = (props) => {
     setErrObj(error);
     if (valid) {
       registerUser();
+    }
+  }
+  async function handleSubmit(e) {
+    e.preventDefault();
+    console.log("Form submitted");
+    let newUserUid = uid;
+    if (generateUid) {
+      newUserUid = `${name.replaceAll(" ", "")}_${Date.now()}`;
+    }
+    const newUser = new CometChat.User(newUserUid);
+    newUser.setName(name);
+    try {
+      setInterestingAsyncOpStarted(true);
+      const createdUser = await CometChat.createUser(
+        newUser,
+        process.env.REACT_APP_AUTHKEY
+      );
+      console.log("User created:", createdUser);
+      console.log(
+        `User having uid: ${createdUser.getUid()} created successfully.`
+      );
+      setLoggedInUser(createdUser);
+      // Don't think resetting states makes a difference since I am navigating to a different page
+      setName("");
+      setUid("");
+      setGenerateUid(false);
+      navigate("/home");
+    } catch (error) {
+      if (error instanceof CometChat.CometChatException && error.message) {
+        setErrorMessage(error.message);
+      }
+      console.log(error);
+    } finally {
+      setInterestingAsyncOpStarted(false);
     }
   }
 
