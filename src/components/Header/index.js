@@ -197,7 +197,7 @@ function Header(props) {
                   currentUrl?.includes("otp-verify") ||
                   userData?.contractor_data?.profile_completed ===
                     "pending" ? null : (
-                      <></>
+                    <></>
                     // <Grid item>
                     //   <IconButton onClick={() => navigate("/notifications")}>
                     //     <img src={Images.BellSimple} alt="notification" />
@@ -312,7 +312,7 @@ function Header(props) {
                               padding: "7px 10px",
                             }}
                           >
-                            Balance: AED 500.00
+                            Balance: AED {userData?.contractor_data?.balance}
                           </Typography>
                         </Grid>
                         <MenuItem
@@ -349,10 +349,13 @@ function Header(props) {
                           <TranslateOutlined style={{ marginRight: 10 }} />
                           Language
                         </MenuItem> */}
-                        <MenuItem className={classes.logoutTextStyle} onClick={()=>{
-                             handleClose();
-                             navigate("/billing");
-                        }}>
+                        <MenuItem
+                          className={classes.logoutTextStyle}
+                          onClick={() => {
+                            handleClose();
+                            navigate("/billing");
+                          }}
+                        >
                           <AccountBalanceWalletOutlined
                             style={{ marginRight: 10 }}
                           />

@@ -1,0 +1,10 @@
+.card_value {
+  color: var(--gray-800-header-text, #030f1c);
+
+  /* Titles/The quick brown fox jumps over the lazy dog */
+  font-family: Poppins-Regular !important;
+  font-size: 24px !important;
+  font-style: normal;
+  font-weight: 600 !important;
+  line-height: 32px !important; /* 133.333% */
+}
