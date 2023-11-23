@@ -33,6 +33,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import "./index.css";
 
 const Dashboard = (props) => {
   const classes = useStyles();
@@ -46,6 +47,7 @@ const Dashboard = (props) => {
   const [requestedLoader, setrequestedLoader] = useState(true);
   const [submittedLoader, setsubmittedLoader] = useState(true);
   const [visible, setVisible] = useState(false);
+  const [states, setStates] = useState(null);
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const md = useMediaQuery(theme.breakpoints.down("md"));
@@ -61,6 +63,7 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     handleUserData();
+    getStates();
     askForPermissionToReceiveNotifications();
     onMessageListener();
     requestedProposalApiCall("proposal", true);
@@ -133,6 +136,21 @@ const Dashboard = (props) => {
     }
   }
 
+  async function getStates() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.contractorStates}/${userData?.contractor_data?.id}`,
+        "get",
+        {}
+      );
+      console.log(">>>> cons ", response);
+      if (response?.success) {
+        setStates(response);
+      }
+    } catch (error) {
+      console.log("ERROR=====>>>>>", error);
+    }
+  }
   const settings = {
     dots: false,
     infinite: false,
@@ -181,20 +199,15 @@ const Dashboard = (props) => {
             <Typography className={classes.titleStyle}>Overview</Typography>
           </Grid>
           <Grid item container gap={2}>
-            <Grid
-              item
-              className={classes.card}
-              flexDirection={"column"}
-              lg={2.3}
-            >
-              <Typography
-                className={classes.cardTxt}
+            <Grid item className={classes.card} flexDirection={"column"} lg={3}>
+              <span
+                className={"card_value"}
                 style={{
                   textAlign: "center",
                 }}
               >
                 Hi {userData?.contractor_data?.company_name}
-              </Typography>
+              </span>
               <Typography className={classes.cardSubTxt}>
                 Submit proposals to <br /> your customers
               </Typography>
@@ -218,7 +231,6 @@ const Dashboard = (props) => {
               flexDirection={"column"}
               alignItems={"flex-start"}
               justifyContent={"center"}
-              lg={2}
             >
               <img
                 alt="Annual contracts value"
@@ -234,7 +246,7 @@ const Dashboard = (props) => {
               <Typography className={classes.annualC}>
                 Annual contracts value
               </Typography>
-              <Typography className={classes.cardTxt}>AED 20,000</Typography>
+              <span className={"card_value"}>AED {states?.annaul_value}</span>
             </Grid>
             <Grid
               item
@@ -242,7 +254,6 @@ const Dashboard = (props) => {
               flexDirection={"column"}
               alignItems={"flex-start"}
               justifyContent={"center"}
-              lg={2}
             >
               <img
                 alt="Annual contracts value"
@@ -258,7 +269,7 @@ const Dashboard = (props) => {
               <Typography className={classes.annualC}>
                 Active Contracts
               </Typography>
-              <Typography className={classes.cardTxt}>AED 12</Typography>
+              <span className={"card_value"}>{states?.active_contracts}</span>
             </Grid>
             <Grid
               item
@@ -266,7 +277,6 @@ const Dashboard = (props) => {
               flexDirection={"column"}
               alignItems={"flex-start"}
               justifyContent={"center"}
-              lg={2}
             >
               <img
                 alt="Annual contracts value"
@@ -282,7 +292,7 @@ const Dashboard = (props) => {
               <Typography className={classes.annualC}>
                 Profile Views today
               </Typography>
-              <Typography className={classes.cardTxt}>AED 4,384</Typography>
+              <span className={"card_value"}> {states?.total_views}</span>
             </Grid>
             <Grid
               item
@@ -290,7 +300,6 @@ const Dashboard = (props) => {
               flexDirection={"column"}
               alignItems={"flex-start"}
               justifyContent={"center"}
-              lg={2}
             >
               <div
                 style={{
@@ -305,7 +314,7 @@ const Dashboard = (props) => {
                 <Rating name="rating" value={4.5} max={1} readOnly />
               </div>
               <Typography className={classes.annualC}>455 Reviews</Typography>
-              <Typography className={classes.cardTxt}>4.5/5</Typography>
+              <span className={"card_value"}> {states?.average_rating}</span>
             </Grid>
           </Grid>
         </Grid>
@@ -327,7 +336,7 @@ const Dashboard = (props) => {
                 style={{
                   padding: "2px 10px",
                   margin: "0px 8px",
-                  backgroundColor: color.primary,
+                  backgroundColor: "#274BF1",
                   color: color.white,
                   fontWeight: "bold",
                   borderRadius: 22,
@@ -411,7 +420,7 @@ const Dashboard = (props) => {
                 style={{
                   padding: "2px 10px",
                   margin: "0px 8px",
-                  backgroundColor: "#E9B55C",
+                  backgroundColor: "#FFC561",
                   color: color.white,
                   fontWeight: "bold",
                   borderRadius: 22,

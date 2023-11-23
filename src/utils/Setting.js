@@ -1,4 +1,4 @@
-const baseUrl = process.env.REACT_APP_BASE_URL
+const baseUrl = process.env.REACT_APP_BASE_URL;
 export const Setting = {
   baseUrl,
   api: baseUrl,
@@ -60,6 +60,7 @@ export const Setting = {
     updateSingleBudget: "/api/project/single-proposal-budget-update",
     budgetDelete: "api/project/delete-budget-item",
     milestoneDelete: "api/project/milestone-proposal-delete",
+    contractorStates: "api/contractor/stats",
   },
 
   JS_Regex: {
