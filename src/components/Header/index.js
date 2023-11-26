@@ -300,6 +300,11 @@ function Header(props) {
                             border: "1px solid #ACD2FF",
                             borderRadius: "8px",
                             margin: "14px 16px",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            handleClose();
+                            navigate("/balance-breakdown");
                           }}
                         >
                           <Typography
