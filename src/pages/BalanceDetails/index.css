@@ -1,0 +1,43 @@
+.pageContainer {
+}
+.tableContainer {
+  border-radius: 12px;
+  background: var(--gray-100, #fefeff);
+  padding: 20px;
+  font-family: Poppins-Regular !important;
+  height: 400px;
+}
+.balance {
+  display: block;
+  font-family: Poppins-Regular !important;
+  font-weight: bold;
+  font-size: 30px !important;
+  line-height: 32px !important;
+  margin-right: 8px;
+  text-align: end;
+}
+.tableHeader {
+  font-family: Poppins-Regular !important;
+  font-weight: bold;
+  font-size: 28px !important;
+  line-height: 30px !important;
+  margin-left: 8px;
+}
+.detailsTitle {
+  font-family: Poppins-Regular !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  line-height: 32px !important;
+}
+.detailsHeaderValue {
+  font-family: Poppins-Regular !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 28px !important;
+}
+.values {
+  font-family: Poppins-Regular !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 24px !important;
+}

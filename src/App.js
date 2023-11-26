@@ -34,6 +34,7 @@ import ProjectDetail from "./pages/ProjectDetail";
 import ManageProject from "./pages/ManageProject";
 import ChatScreen from "./pages/ChatScreen";
 import Billing from "./pages/Billing";
+import BalanceDetails from "./pages/BalanceDetails";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
@@ -94,10 +95,7 @@ function App() {
                         path={"/notifications"}
                         element={<Notifications />}
                       />
-                      <Route
-                        path={"/billing"}
-                        element={<Billing />}
-                      />
+                      <Route path={"/billing"} element={<Billing />} />
                       <Route path={"/create-proposal"} element={<Summary />} />
                       <Route path={"/ongoing-project"} element={<OnGoing />} />
                       <Route
@@ -108,9 +106,10 @@ function App() {
                         path={"/manage-project"}
                         element={<ManageProject />}
                       />
-                        <Route
-                        path={"/chat"}
-                        element={<ChatScreen/>}
+                      <Route path={"/chat"} element={<ChatScreen />} />
+                      <Route
+                        path={"/balance-breakdown"}
+                        element={<BalanceDetails />}
                       />
                       <Route
                         path="*"
