@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
@@ -10,11 +10,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
+import Pagination from "@mui/material/Pagination";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import "./index.css";
-import { Chip } from "@mui/material";
+import { Chip, Paper } from "@mui/material";
 
 const data = [
   {
@@ -61,7 +61,7 @@ function Row(props) {
 
   return (
     <React.Fragment>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -156,39 +156,50 @@ Row.propTypes = {
 };
 
 export default function BalanceDetails() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const onPageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="pageContainer">
       <div className="balance">Total Balance = 2607</div>
       <div className="tableHeader">Balance Breakdown</div>
       <div className="tableContainer">
-        <TableContainer component={Paper}>
-          <Table
-            aria-label="collapsible customized table"
-            sx={{ maxHeight: 440 }}
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell className="detailsHeaderValue">
-                  {" "}
-                  Project ID
-                </TableCell>
-                <TableCell className="detailsHeaderValue">
-                  {" "}
-                  Project Name
-                </TableCell>
-                <TableCell className="detailsHeaderValue">
-                  Current Balance
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((row) => (
-                <Row key={row.id} row={row} />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Table
+          aria-label="collapsible customized table"
+          sx={{ maxHeight: 200 }}
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell className="detailsHeaderValue"> Project ID</TableCell>
+              <TableCell className="detailsHeaderValue">
+                {" "}
+                Project Name
+              </TableCell>
+              <TableCell className="detailsHeaderValue">
+                Current Balance
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((row) => (
+              <Row key={row.id} row={row} />
+            ))}
+          </TableBody>
+        </Table>
+        <div style={{ padding: "30px 0 10px 20px" }}>
+          <Pagination
+            count={Math.ceil(totalPages)}
+            page={currentPage}
+            size="large"
+            hidePrevButton
+            onChange={onPageChange}
+          />
+        </div>
       </div>
     </div>
   );

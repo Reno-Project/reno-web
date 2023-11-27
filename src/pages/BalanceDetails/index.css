@@ -1,18 +1,19 @@
 .pageContainer {
+  padding: 40px;
+  background-color: rgb(245, 246, 248);
 }
 .tableContainer {
   border-radius: 12px;
   background: var(--gray-100, #fefeff);
   padding: 20px;
   font-family: Poppins-Regular !important;
-  height: 400px;
 }
 .balance {
   display: block;
   font-family: Poppins-Regular !important;
   font-weight: bold;
-  font-size: 30px !important;
-  line-height: 32px !important;
+  font-size: 26px !important;
+  line-height: 26px !important;
   margin-right: 8px;
   text-align: end;
 }
@@ -21,7 +22,7 @@
   font-weight: bold;
   font-size: 28px !important;
   line-height: 30px !important;
-  margin-left: 8px;
+  margin: 20px;
 }
 .detailsTitle {
   font-family: Poppins-Regular !important;
@@ -40,4 +41,8 @@
   font-size: 12px !important;
   font-weight: 400 !important;
   line-height: 24px !important;
+}
+
+.MuiTableCell-root {
+  padding: 5px !important;
 }
