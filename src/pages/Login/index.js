@@ -28,6 +28,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { onMessageListener } from "../../push-notification";
+import { CometChatUIKit } from "@cometchat/chat-uikit-react";
 
 const errorObj = {
   emailErr: false,
@@ -135,6 +136,7 @@ const Login = (props) => {
       };
 
       if (response.success) {
+        CometChatUIKit.loginWithAuthToken(process.env.REACT_APP_AUTHKEY);
         dispatch(setToken(response?.token));
         if (response?.is_new_user) {
           navigate("/signup", { state: { socialData } });

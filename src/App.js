@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -35,6 +35,16 @@ import ManageProject from "./pages/ManageProject";
 import ChatScreen from "./pages/ChatScreen";
 import Billing from "./pages/Billing";
 import BalanceDetails from "./pages/BalanceDetails";
+import {
+  CometChatConversations,
+  CometChatGroups,
+  CometChatGroupsWithMessages,
+  CometChatTheme,
+  CometChatThemeContext,
+  CometChatUsers,
+  CometChatUsersWithMessages,
+} from "@cometchat/chat-uikit-react";
+import UserManagement from "./pages/UserManagement";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
@@ -50,6 +60,8 @@ function App() {
   initializeApp(firebaseConfig);
   const { userData } = useSelector((state) => state.auth);
   const [isLogin, setIsLogin] = useState(true);
+  const [theme, setTheme] = useState(new CometChatTheme({}));
+  let ccContextValue = useMemo(() => ({ theme }), [theme]);
 
   useEffect(() => {
     if (isObject(userData) && !isEmpty(userData)) {
@@ -63,102 +75,117 @@ function App() {
     <Detector
       render={({ online }) => {
         return (
-          <Router>
-            <div
-              style={{
-                display: "flex",
-                height: "100vh",
-                boxSizing: "border-box",
-                flexDirection: "column",
-              }}
-            >
-              <Header />
-              <div className="MT70">
-                <Routes>
-                  {isLogin ? (
-                    <>
-                      <Route path={"/otp-verify"} element={<OtpInput />} />
-                      <Route
-                        path={"/create-profile"}
-                        element={<CreateProfile />}
-                      />
-                      <Route path={"/dashboard"} element={<Dashboard />} />
-                      <Route
-                        path={"/contractor-profile"}
-                        element={<ContractorProfile />}
-                      />
-                      <Route
-                        path={"/account-setting"}
-                        element={<AccountSettings />}
-                      />
-                      <Route
-                        path={"/notifications"}
-                        element={<Notifications />}
-                      />
-                      <Route path={"/billing"} element={<Billing />} />
-                      <Route path={"/create-proposal"} element={<Summary />} />
-                      <Route path={"/ongoing-project"} element={<OnGoing />} />
-                      <Route
-                        path={"/request-proposal"}
-                        element={<RequestedProposal />}
-                      />
-                      <Route
-                        path={"/manage-project"}
-                        element={<ManageProject />}
-                      />
-                      <Route path={"/chat"} element={<ChatScreen />} />
-                      <Route
-                        path={"/balance-breakdown"}
-                        element={<BalanceDetails />}
-                      />
-                      <Route
-                        path="*"
-                        element={
-                          <Navigate
-                            to={
-                              userData?.contractor_data &&
-                              userData?.contractor_data?.profile_completed ===
-                                "pending"
-                                ? "/create-profile"
-                                : "/dashboard"
-                            }
-                          />
-                        }
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <Route
-                        exact
-                        path={"/how-it-works"}
-                        element={<HowItWorks />}
-                      />
-                      <Route path={"/login"} element={<Login />} />
-                      <Route path={"/signup"} element={<Signup />} />
-                      <Route
-                        path={"/reset-password"}
-                        element={<ResetPassword />}
-                      />
-                      <Route path={"/otp-verify"} element={<OtpInput />} />
-                      <Route path={"/phone-verify"} element={<PhoneVerify />} />
-                      <Route path="*" element={<Navigate to={"/login"} />} />
-                    </>
-                  )}
-                  <Route
-                    path={"/project/project-details/:id"}
-                    element={<ProjectDetail />}
-                  />
-                </Routes>
+          <CometChatThemeContext.Provider value={ccContextValue}>
+            <Router>
+              <div
+                style={{
+                  display: "flex",
+                  height: "100vh",
+                  boxSizing: "border-box",
+                  flexDirection: "column",
+                }}
+              >
+                <Header />
+                <div className="MT70">
+                  <Routes>
+                    {isLogin ? (
+                      <>
+                        <Route path={"/otp-verify"} element={<OtpInput />} />
+                        <Route
+                          path={"/create-profile"}
+                          element={<CreateProfile />}
+                        />
+                        <Route path={"/dashboard"} element={<Dashboard />} />
+                        <Route
+                          path={"/contractor-profile"}
+                          element={<ContractorProfile />}
+                        />
+                        <Route
+                          path={"/account-setting"}
+                          element={<AccountSettings />}
+                        />
+                        <Route
+                          path={"/notifications"}
+                          element={<Notifications />}
+                        />
+                        <Route path={"/billing"} element={<Billing />} />
+                        <Route
+                          path={"/create-proposal"}
+                          element={<Summary />}
+                        />
+                        <Route
+                          path={"/ongoing-project"}
+                          element={<OnGoing />}
+                        />
+                        <Route
+                          path={"/request-proposal"}
+                          element={<RequestedProposal />}
+                        />
+                        <Route
+                          path={"/manage-project"}
+                          element={<ManageProject />}
+                        />
+                        <Route path={"/chat"} element={<ChatScreen />} />
+                        <Route
+                          path={"/balance-breakdown"}
+                          element={<BalanceDetails />}
+                        />
+                        <Route
+                          path={"/user-management"}
+                          element={<UserManagement />}
+                        />
+                        <Route
+                          path="*"
+                          element={
+                            <Navigate
+                              to={
+                                userData?.contractor_data &&
+                                userData?.contractor_data?.profile_completed ===
+                                  "pending"
+                                  ? "/create-profile"
+                                  : "/dashboard"
+                              }
+                            />
+                          }
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Route
+                          exact
+                          path={"/how-it-works"}
+                          element={<HowItWorks />}
+                        />
+                        <Route path={"/login"} element={<Login />} />
+                        <Route path={"/signup"} element={<Signup />} />
+                        <Route
+                          path={"/reset-password"}
+                          element={<ResetPassword />}
+                        />
+                        <Route path={"/otp-verify"} element={<OtpInput />} />
+                        <Route
+                          path={"/phone-verify"}
+                          element={<PhoneVerify />}
+                        />
+                        <Route path="*" element={<Navigate to={"/login"} />} />
+                      </>
+                    )}
+                    <Route
+                      path={"/project/project-details/:id"}
+                      element={<ProjectDetail />}
+                    />
+                  </Routes>
+                </div>
+                <Footer />
+                <NotificationPopup />
               </div>
-              <Footer />
-              <NotificationPopup />
-            </div>
-            <ToastContainer
-              autoClose={3000}
-              pauseOnFocusLoss={false}
-              toastClassName="toastStyle"
-            />
-          </Router>
+              <ToastContainer
+                autoClose={3000}
+                pauseOnFocusLoss={false}
+                toastClassName="toastStyle"
+              />
+            </Router>
+          </CometChatThemeContext.Provider>
         );
       }}
     />

@@ -6,6 +6,11 @@
     "public/.well-known"
   ],
   "dependencies": {
+    "@cometchat/chat-sdk-javascript": "^4.0.2",
+    "@cometchat/chat-uikit-react": "^4.0.8",
+    "@cometchat/uikit-elements": "^4.0.7",
+    "@cometchat/uikit-resources": "^4.0.7",
+    "@cometchat/uikit-shared": "^4.0.7",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.11",
@@ -36,6 +41,7 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1",
+    "react-select": "^5.8.0",
     "react-slick": "^0.29.0",
     "react-toastify": "^9.1.2",
     "redux": "^4.2.1",
@@ -44,6 +50,7 @@
     "sails.io.js": "^1.2.1",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.6.1",
+    "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

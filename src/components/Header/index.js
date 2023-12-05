@@ -25,6 +25,7 @@ import {
   AttachMoneyOutlined,
   FmdGoodOutlined,
   LogoutOutlined,
+  Person,
   Person2Outlined,
   SettingsOutlined,
   TranslateOutlined,
@@ -183,7 +184,7 @@ function Header(props) {
                           <Grid item>
                             <IconButton
                               onClick={() => {
-                                // navigate("/chat");
+                                navigate("/chat");
                               }}
                             >
                               <img src={Images.chatico} alt="chat" />
@@ -339,6 +340,16 @@ function Header(props) {
                         >
                           <SettingsOutlined style={{ marginRight: 10 }} />
                           Account Settings
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            handleClose();
+                            navigate("/user-management");
+                          }}
+                          className={classes.logoutTextStyle}
+                        >
+                          <Person style={{ marginRight: 10 }} />
+                          User Management
                         </MenuItem>
                         {/* <MenuItem
                           className={classes.logoutTextStyle}

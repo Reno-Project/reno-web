@@ -33,6 +33,9 @@ import useStyles from "./styles";
 import ProfileSuccessModal from "../../components/ProfileSuccessModal";
 import ConfirmModel from "../../components/ConfirmModel";
 import Images from "../../config/images";
+import { CometChat } from "@cometchat/chat-sdk-javascript";
+import { v4 as uuid } from "uuid";
+import { CometChatUIKit } from "@cometchat/chat-uikit-react";
 
 const errorObj = {
   cnameErr: false,
@@ -88,7 +91,7 @@ const CreateProfile = (props) => {
   const classes = useStyles();
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const { setUserData, clearAllData } = authActions;
+  const { setUserData, clearAllData, setCometChatUserData } = authActions;
 
   const [activeStep, setActiveStep] = useState(0);
   const [expertiseList, setExpertiesList] = useState([]);
@@ -242,6 +245,28 @@ const CreateProfile = (props) => {
       });
     }
   };
+  const createUserInCometChat = (uname, logo) => {
+    const newUserUid = uuid();
+    const newUser = new CometChat.User(newUserUid);
+    newUser.setName(uname);
+    newUser.setStatus("online");
+    if (logo) {
+      const imgUrl = URL.createObjectURL(logo);
+      console.log(">>>> imgUrl ", imgUrl);
+      //   newUser.setAvatar(imgUrl);
+    }
+
+    CometChat.createUser(newUser, process.env.REACT_APP_AUTHKEY)
+      .then((res) => {
+        setCometChatUserData(res);
+        CometChatUIKit.login(newUserUid)?.then((loggedInUser) => {
+          console.log("Login successful, loggedInUser:", loggedInUser);
+        });
+      })
+      .catch((error) => {
+        console.log(">>> error ", error);
+      });
+  };
 
   // validation function for page 1
   function CheckValidattion() {
@@ -251,7 +276,7 @@ const CreateProfile = (props) => {
     let section = null;
     const urlRegex = /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/;
     const linkedinRegex =
-    /(https?)?:?(\/\/)?(([w]{3}||\w\w)\.)?linkedin.com(\w+:{0,1}\w*@)?(\S+)(:([0-9])+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+      /(https?)?:?(\/\/)?(([w]{3}||\w\w)\.)?linkedin.com(\w+:{0,1}\w*@)?(\S+)(:([0-9])+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     const facebookRegex =
       /^(?:http(?:s)?:\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\/[a-zA-Z0-9_\.]+$/;
     const instaRegex =
@@ -610,6 +635,7 @@ const CreateProfile = (props) => {
 
   // Step 1 Connect Api integration for api calls ---
   // Step 1 => Pass data in form-data
+
   async function addContractorDetailsApiCall() {
     const selectedOptions = [];
     state?.expertise?.map((e) => {
@@ -696,6 +722,10 @@ const CreateProfile = (props) => {
       );
 
       if (response.success) {
+        createUserInCometChat(
+          userData.username,
+          state?.businessLogo ? state?.businessLogo : ""
+        );
         continueStep(1);
         dispatch(setUserData(response?.data));
         toast.done(response.message);

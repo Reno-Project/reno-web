@@ -8,6 +8,30 @@ import reportWebVitals from "./reportWebVitals";
 import theme from "./config/theme";
 import App from "./App";
 import "./index.css";
+import { UIKitSettingsBuilder } from "@cometchat/uikit-shared";
+import { CometChatUIKit } from "@cometchat/chat-uikit-react";
+
+const COMETCHAT_CONSTANTS = {
+  APP_ID: process.env.REACT_APP_APP_ID,
+  REGION: process.env.REACT_APP_REGION,
+  AUTH_KEY: process.env.REACT_APP_AUTHKEY,
+};
+
+//create the builder
+const UIKitSettings = new UIKitSettingsBuilder()
+  .setAppId(COMETCHAT_CONSTANTS.APP_ID)
+  .setRegion(COMETCHAT_CONSTANTS.REGION)
+  .setAuthKey(COMETCHAT_CONSTANTS.AUTH_KEY)
+  .subscribePresenceForFriends()
+  .build();
+
+//Initialize CometChat UIKit
+CometChatUIKit.init(UIKitSettings)
+  .then(() => {
+    console.log("Initialization completed successfully");
+    // You can now call login function.
+  })
+  .catch(console.log);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

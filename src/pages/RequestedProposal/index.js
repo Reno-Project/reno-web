@@ -10,6 +10,12 @@ import {
   ImageList,
   ImageListItem,
   CircularProgress,
+  Chip,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
@@ -23,8 +29,24 @@ import ImageViewer from "../../components/ImageViewer";
 import { color } from "../../config/theme";
 import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
+import { Add } from "@mui/icons-material";
+import Select from "react-select";
 
 export default function RequestedProposal() {
+  let data = [
+    { value: "Mohamed Negm", label: "Mohamed Negm" },
+    { value: "Hagar", label: "Hagar" },
+    { value: "Yassin", label: "Yassin" },
+    { value: "Ali", label: "Ali" },
+  ];
+  const options = [
+    { value: "Mohamed Negm", label: "Mohamed Negm" },
+    { value: "Hagar", label: "Hagar" },
+    { value: "Yassin", label: "Yassin" },
+    { value: "Ali", label: "Ali" },
+    { value: "Ibrahim", label: "Ibrahim" },
+    { value: "Ahmed", label: "Ahmed" },
+  ];
   const location = useLocation();
   const [villa, setVilla] = useState(location?.state?.villa);
   const nData = villa?.submitted_by_reno
@@ -34,9 +56,10 @@ export default function RequestedProposal() {
   const fromManageProject = location?.state?.activeScreen === "/manage-project";
   const [isPressed, setIsPressed] = useState(false);
   const [pageLoad, setPageLoad] = useState(true);
-
+  const [assignedContractors, setAssignedContractors] = useState(data);
   const [url, setUrl] = useState("");
   const [imgurl, setImgUrl] = useState("");
+  const [openAssign, setOpenAssign] = useState(false);
   const classes = useStyles();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -61,6 +84,7 @@ export default function RequestedProposal() {
         isArray(response?.data) &&
         !isEmpty(response?.data)
       ) {
+        console.log(">>>> response?.data ", response?.data);
         setVilla(response?.data[0]);
       }
       setPageLoad(false);
@@ -69,7 +93,12 @@ export default function RequestedProposal() {
       setPageLoad(false);
     }
   }
-
+  const handleAddContractor = () => {
+    setOpenAssign(true);
+  };
+  const handleCloseAssign = () => {
+    setOpenAssign(false);
+  };
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
       <Grid
@@ -254,6 +283,37 @@ export default function RequestedProposal() {
                     <Typography className={classes.accRightText}>
                       {villa?.project_type}
                     </Typography>
+                  </Grid>
+                </Grid>
+                <Grid
+                  item
+                  container
+                  alignItems="center"
+                  justifyContent={"flex-end"}
+                >
+                  <Grid item lg={5} sm={12} md={6} xs={12} pt={2}>
+                    <Typography className={classes.titleStyle}>
+                      Assigned Contractors:
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    lg={7}
+                    sm={12}
+                    md={6}
+                    xs={12}
+                    pt={2}
+                    textAlign={md ? "start" : "end"}
+                  >
+                    {assignedContractors.map((con) => (
+                      <Chip label={con.label} key={con.value} />
+                    ))}
+                    <IconButton
+                      disabled={assignedContractors.length == 5}
+                      onClick={handleAddContractor}
+                    >
+                      <Add />
+                    </IconButton>
                   </Grid>
                 </Grid>
                 {isSubmitted && (
@@ -1748,6 +1808,25 @@ export default function RequestedProposal() {
           setIsPressed(false);
         }}
       />
+      <Dialog open={openAssign} onClose={handleCloseAssign}>
+        <DialogTitle>Assign Contractors</DialogTitle>
+        <DialogContent>
+          <Grid container width={450} height={200}>
+            <Grid item xs={12} md={12}>
+              <Select
+                options={options}
+                isMulti
+                defaultValue={assignedContractors}
+                closeMenuOnSelect={false}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAssign}>Cancel</Button>
+          <Button>Assign</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

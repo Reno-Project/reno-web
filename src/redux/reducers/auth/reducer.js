@@ -2,6 +2,7 @@ import types from "./actions";
 
 const initialState = {
   userData: {},
+  cometChatUserdata: {},
   token: "",
   accountTab: 0,
   proposalDetails: {},
@@ -17,6 +18,12 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         userData: action.userdata,
+      };
+
+    case types.SET_COMETCHAT_USER_DATA:
+      return {
+        ...state,
+        cometChatUserdata: action.cometChatUserdata,
       };
 
     case types.PROPOSAL_DETAILS:
