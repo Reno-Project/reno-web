@@ -29,7 +29,7 @@ import ImageViewer from "../../components/ImageViewer";
 import { color } from "../../config/theme";
 import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
-import { Add } from "@mui/icons-material";
+import { Add, RemoveRedEye } from "@mui/icons-material";
 import Select from "react-select";
 
 export default function RequestedProposal() {
@@ -306,13 +306,18 @@ export default function RequestedProposal() {
                     textAlign={md ? "start" : "end"}
                   >
                     {assignedContractors.map((con) => (
-                      <Chip label={con.label} key={con.value} />
+                      <Chip
+                        label={con.label}
+                        key={con.value}
+                        style={{ marginRight: 2 }}
+                      />
                     ))}
-                    <IconButton
-                      disabled={assignedContractors.length == 5}
-                      onClick={handleAddContractor}
-                    >
-                      <Add />
+                    <IconButton onClick={handleAddContractor}>
+                      {assignedContractors.length === 5 ? (
+                        <RemoveRedEye />
+                      ) : (
+                        <Add />
+                      )}
                     </IconButton>
                   </Grid>
                 </Grid>
@@ -1818,6 +1823,8 @@ export default function RequestedProposal() {
                 isMulti
                 defaultValue={assignedContractors}
                 closeMenuOnSelect={false}
+                onChange={(e) => setAssignedContractors(e)}
+                isOptionDisabled={() => assignedContractors.length == 5}
               />
             </Grid>
           </Grid>
