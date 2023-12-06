@@ -214,7 +214,6 @@ const ContractorProfile = (props) => {
     //   console.error("Error sharing content:", error);
     // }
   };
-
   return pageLoad ? (
     <div
       style={{
@@ -314,7 +313,8 @@ const ContractorProfile = (props) => {
                 className={classes.btnStyle}
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    `https://renohome.io/share_contractor/share=${userData?.id}`
+                    //`https://renohome.io/share_contractor/share=${userData?.id}`
+                    `${window.location.origin}/contractor-profile`
                   );
                   toast.success("Copied!", { toastId: 1 });
                 }}

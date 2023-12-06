@@ -60,24 +60,30 @@ const ManageProject = (props) => {
   const [onGoingLoader, setOnGoingLoader] = useState(true);
   const [proposalSubmitedLoader, setProposalSubmitedLoader] = useState(true);
   const [submitRequestLoader, setSubmitRequestLoader] = useState(true);
-  const [searchFilter, setSearchFilter] = useState("");
+  const [searchFilter, setSearchFilter] = useState(null);
 
   const [tabVal, setTabVal] = useState(0);
 
   useEffect(() => {
+    getTabList("ongoing");
     getTabList("proposal");
     getTabList("Requested");
-    getTabList("ongoing");
   }, []);
 
-  async function getTabList(type, bool) {
+  useEffect(() => {
+    getTabList();
+  }, [searchFilter, tabVal]);
+
+  async function getTabList(req) {
+    let type =
+      tabVal === 0 ? "ongoing" : tabVal === 1 ? "proposal" : "Requested";
     type === "ongoing" && setOnGoingLoader(true);
     type === "Requested" && setSubmitRequestLoader(true);
     type === "proposal" && setProposalSubmitedLoader(true);
     try {
       const response = await getApiData(
-        `${Setting.endpoints.listcontractorproject}?status=${type}&search=${
-          bool ? "" : searchFilter
+        `${Setting.endpoints.listcontractorproject}?status=${type}${
+          !searchFilter ? "" : "&search=" + searchFilter
         }`,
         "get",
         {}
@@ -110,7 +116,6 @@ const ManageProject = (props) => {
       type === "Requested" && setSubmitRequestLoader(false);
       type === "proposal" && setProposalSubmitedLoader(false);
     } catch (error) {
-      console.log("ERROR=====>>>>>", error);
       toast.error(error.toString());
       type === "ongoing" && setOnGoingLoader(false);
       type === "Requested" && setSubmitRequestLoader(false);
@@ -128,7 +133,9 @@ const ManageProject = (props) => {
     swipeToSlide: false,
     variableWidth: true,
   };
-  console.log(">>> proposalSubmitedCount ", proposalSubmitedCount);
+  const handleCallAPI = () => {
+    setSearchFilter(null);
+  };
   return (
     <>
       <Grid
@@ -164,14 +171,7 @@ const ManageProject = (props) => {
               allowScrollButtonsMobile
               value={tabVal}
               onChange={(v, b) => {
-                if (!isEmpty(searchFilter)) {
-                  setSearchFilter("");
-                  setTimeout(() => {
-                    tabVal === 0 && getTabList("ongoing", true);
-                    tabVal === 1 && getTabList("proposal", true);
-                    tabVal === 2 && getTabList("Requested", true);
-                  }, 500);
-                }
+                handleCallAPI();
                 setTabVal(b);
               }}
             >
@@ -179,21 +179,23 @@ const ManageProject = (props) => {
                 label={
                   <Typography style={{ display: "flex", alignItems: "center" }}>
                     Ongoing
-                    <span
-                      style={{
-                        padding: "2px 8px",
-                        margin: "0px 8px",
-                        backgroundColor: "#274BF1",
-                        color: color.white,
-                        fontWeight: "bold",
-                        borderRadius: 22,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {onGoingCount?.length || 0}
-                    </span>
+                    {onGoingCount.length > 0 && (
+                      <span
+                        style={{
+                          padding: "2px 8px",
+                          margin: "0px 8px",
+                          backgroundColor: "#274BF1",
+                          color: color.white,
+                          fontWeight: "bold",
+                          borderRadius: 22,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {onGoingCount.length}
+                      </span>
+                    )}
                   </Typography>
                 }
               />
@@ -224,21 +226,24 @@ const ManageProject = (props) => {
                 label={
                   <Typography style={{ display: "flex", alignItems: "center" }}>
                     Proposal Submitted
-                    <span
-                      style={{
-                        padding: "2px 8px",
-                        margin: "0px 8px",
-                        backgroundColor: "#E9B55C",
-                        color: color.white,
-                        fontWeight: "bold",
-                        borderRadius: 22,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {proposalSubmitedCount?.length || 0}
-                    </span>
+                    {proposalSubmitedCount.length > 0 && (
+                      <span
+                        style={{
+                          padding: "2px 8px",
+                          margin: "0px 8px",
+                          backgroundColor: "#E9B55C",
+                          color: color.white,
+                          fontWeight: "bold",
+                          borderRadius: 22,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {" "}
+                        {proposalSubmitedCount.length}
+                      </span>
+                    )}
                   </Typography>
                 }
               />
@@ -246,21 +251,23 @@ const ManageProject = (props) => {
                 label={
                   <Typography style={{ display: "flex", alignItems: "center" }}>
                     Submitted request
-                    <span
-                      style={{
-                        padding: "2px 8px",
-                        margin: "0px 8px",
-                        backgroundColor: "#6BBBD8",
-                        color: color.white,
-                        fontWeight: "bold",
-                        borderRadius: 22,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {submitRequestCount?.length || 0}
-                    </span>
+                    {submitRequestCount.length > 0 && (
+                      <span
+                        style={{
+                          padding: "2px 8px",
+                          margin: "0px 8px",
+                          backgroundColor: "#6BBBD8",
+                          color: color.white,
+                          fontWeight: "bold",
+                          borderRadius: 22,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {submitRequestCount.length}
+                      </span>
+                    )}
                   </Typography>
                 }
               />
@@ -356,29 +363,23 @@ const ManageProject = (props) => {
                     value={searchFilter}
                     onChange={(v) => {
                       if (isEmpty(v.target.value)) {
-                        tabVal === 0 && getTabList("ongoing", true);
-                        tabVal === 1 && getTabList("proposal", true);
-                        tabVal === 2 && getTabList("Requested", true);
+                        getTabList();
                       }
                       setSearchFilter(v?.target?.value);
                     }}
                   />
                 </Grid>
-                <Grid item mr={2}>
+                {/* <Grid item mr={2}>
                   <Button
                     variant="contained"
                     style={{ backgroundColor: color.secondary }}
                     onClick={() => {
-                      if (!isEmpty(searchFilter)) {
-                        tabVal === 0 && getTabList("ongoing", false);
-                        tabVal === 1 && getTabList("proposal", false);
-                        tabVal === 2 && getTabList("Requested", false);
-                      }
+                      getTabList();
                     }}
                   >
                     Search
                   </Button>
-                </Grid>
+                </Grid> */}
               </Grid>
               {/* <Grid item>
                 <Select
@@ -422,26 +423,25 @@ const ManageProject = (props) => {
             ) : null}
             {tabVal === 1 ? (
               <Grid item justifySelf={"flex-end"}>
-                {isArray(submitRequestCount) &&
-                  !isEmpty(submitRequestCount) && (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <IconButton
-                        style={{
-                          border: `1px solid #F2F3F4`,
-                          marginRight: 8,
-                        }}
-                        onClick={() => rSliderRef.current.slickPrev()}
-                      >
-                        <KeyboardArrowLeftIcon style={{ color: "#363853" }} />
-                      </IconButton>
-                      <IconButton
-                        style={{ border: `1px solid #F2F3F4` }}
-                        onClick={() => rSliderRef.current.slickNext()}
-                      >
-                        <KeyboardArrowRightIcon style={{ color: "#363853" }} />
-                      </IconButton>
-                    </div>
-                  )}
+                {isArray(submitRequestCount) && !isEmpty(submitRequestCount) && (
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <IconButton
+                      style={{
+                        border: `1px solid #F2F3F4`,
+                        marginRight: 8,
+                      }}
+                      onClick={() => rSliderRef.current.slickPrev()}
+                    >
+                      <KeyboardArrowLeftIcon style={{ color: "#363853" }} />
+                    </IconButton>
+                    <IconButton
+                      style={{ border: `1px solid #F2F3F4` }}
+                      onClick={() => rSliderRef.current.slickNext()}
+                    >
+                      <KeyboardArrowRightIcon style={{ color: "#363853" }} />
+                    </IconButton>
+                  </div>
+                )}
               </Grid>
             ) : null}
             {tabVal === 2 ? (

@@ -256,7 +256,7 @@ export default function UserManagement() {
     setOpenDelete(true);
   };
   function isValidUsername(username) {
-    return username.length >= 3 && username.length <= 20;
+    return username.length >= 3 && username.length <= 100;
   }
 
   function validation() {
@@ -272,7 +272,7 @@ export default function UserManagement() {
     } else if (!isValidUsername(uname)) {
       valid = false;
       error.unameErr = true;
-      error.unameMsg = "Username must be between 3 to 20 characters in long.";
+      error.unameMsg = "Username must be between 3 to 100 characters in long.";
     }
 
     // validate email
