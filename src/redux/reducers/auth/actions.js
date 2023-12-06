@@ -7,6 +7,13 @@ const actions = {
   SET_USER_UUID: "auth/SET_USER_UUID",
   SET_NOTI_DATA: "auth/SET_NOTI_DATA",
   SET_DISPLAY_NOTIFICATION_POP_UP: "auth/SET_DISPLAY_NOTIFICATION_POP_UP",
+  SET_COMETCHAT_USER_DATA: "SET_COMETCHAT_USER_DATA",
+
+  setCometChatUserData: (cometChatUserdata) => (dispatch) =>
+    dispatch({
+      type: actions.SET_COMETCHAT_USER_DATA,
+      cometChatUserdata,
+    }),
 
   setUserData: (userdata) => (dispatch) =>
     dispatch({

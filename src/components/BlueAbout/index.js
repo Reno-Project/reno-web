@@ -17,7 +17,7 @@ export default function BlueAbout() {
     "Selling on Reno",
     "Buying on Reno",
   ];
-  const contactus = ["+1 0234 573 875", "reno.renovation.mailus.com"];
+  const contactus = ["+971 56 976 7673", " help@renohome.io"];
 
   return (
     <div>
@@ -26,7 +26,7 @@ export default function BlueAbout() {
         className={classes.container}
         rowGap={6}
         margin={0}
-        width={"100%"}   
+        width={"100%"}
         maxWidth={"unset"}
         // mb={
         //   pathname === "/contractor-profile" || pathname === "/dashboard"
@@ -125,13 +125,22 @@ export default function BlueAbout() {
             </Typography>
           </Grid>
           <Grid item xs={12} rowGap={2}>
-            <IconButton sx={{ py: 1, pr: 1, pl: 0 }}>
+            <IconButton
+              sx={{ py: 1, pr: 1, pl: 0 }}
+              onClick={() =>
+                window.open(" https://www.facebook.com/renoapp?mibextid=LQQJ4d")
+              }
+            >
               <img src={Images.fb_white} alt="fb_logo" />
             </IconButton>
-            <IconButton sx={{ py: 1, px: 1 }}>
-              <img src={Images.twitter} alt="twitter_logo" />
-            </IconButton>
-            <IconButton sx={{ py: 1, px: 1 }}>
+            <IconButton
+              sx={{ py: 1, px: 1 }}
+              onClick={() =>
+                window.open(
+                  "https://instagram.com/renohomeapp?igshid=MTFtMGo5dm9xYTY2dw=="
+                )
+              }
+            >
               <img src={Images.insta_white} alt="insta_logo" />
             </IconButton>
           </Grid>

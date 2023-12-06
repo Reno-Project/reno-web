@@ -61,6 +61,7 @@ export const Setting = {
     budgetDelete: "api/project/delete-budget-item",
     milestoneDelete: "api/project/milestone-proposal-delete",
     contractorStates: "api/contractor/stats",
+    balanceBreakdown: "api/project/balance-details",
   },
 
   JS_Regex: {
