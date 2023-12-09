@@ -29,6 +29,12 @@
   font-weight: 400 !important;
   line-height: 24px !important;
 }
+.createHeader {
+  font-family: Poppins-Regular !important;
+  font-size: 22px !important;
+  line-height: 32px !important;
+  font-weight: bold;
+}
 
 .MuiTableCell-root {
   padding: 5px !important;

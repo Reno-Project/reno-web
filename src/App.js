@@ -85,97 +85,89 @@ function App() {
                   flexDirection: "column",
                 }}
               >
-                {/* <Header /> */}
-                <div className="MT70">
-                  <Routes>
-                    {isLogin ? (
-                      <>
-                        <Route path={"/otp-verify"} element={<OtpInput />} />
-                        <Route
-                          path={"/create-profile"}
-                          element={<CreateProfile />}
-                        />
-                        <Route path={"/dashboard"} element={<Dashboard />} />
-                        <Route
-                          path={"/contractor-profile"}
-                          element={<ContractorProfile />}
-                        />
-                        <Route
-                          path={"/account-setting"}
-                          element={<AccountSettings />}
-                        />
-                        <Route
-                          path={"/notifications"}
-                          element={<Notifications />}
-                        />
-                        <Route path={"/billing"} element={<Billing />} />
-                        <Route
-                          path={"/create-proposal"}
-                          element={<Summary />}
-                        />
-                        <Route
-                          path={"/ongoing-project"}
-                          element={<OnGoing />}
-                        />
-                        <Route
-                          path={"/request-proposal"}
-                          element={<RequestedProposal />}
-                        />
-                        <Route
-                          path={"/manage-project"}
-                          element={<ManageProject />}
-                        />
-                        <Route path={"/chat"} element={<ChatScreen />} />
-                        <Route
-                          path={"/balance-breakdown"}
-                          element={<BalanceDetails />}
-                        />
-                        <Route
-                          path={"/user-management"}
-                          element={<UserManagement />}
-                        />
-                        <Route
-                          path="*"
-                          element={
-                            <Navigate
-                              to={
-                                userData?.contractor_data &&
-                                userData?.contractor_data?.profile_completed ===
-                                  "pending"
-                                  ? "/create-profile"
-                                  : "/dashboard"
-                              }
-                            />
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
-                        {/* <Route
+                <Header />
+                {isLogin ? (
+                  <div className="MT70">
+                    <Routes>
+                      <Route
+                        path={"/project/project-details/:id"}
+                        element={<ProjectDetail />}
+                      />
+                      <Route path={"/otp-verify"} element={<OtpInput />} />
+                      <Route
+                        path={"/create-profile"}
+                        element={<CreateProfile />}
+                      />
+                      <Route path={"/dashboard"} element={<Dashboard />} />
+                      <Route
+                        path={"/contractor-profile"}
+                        element={<ContractorProfile />}
+                      />
+                      <Route
+                        path={"/account-setting"}
+                        element={<AccountSettings />}
+                      />
+                      <Route
+                        path={"/notifications"}
+                        element={<Notifications />}
+                      />
+                      <Route path={"/billing"} element={<Billing />} />
+                      <Route path={"/create-proposal"} element={<Summary />} />
+                      <Route path={"/ongoing-project"} element={<OnGoing />} />
+                      <Route
+                        path={"/request-proposal"}
+                        element={<RequestedProposal />}
+                      />
+                      <Route
+                        path={"/manage-project"}
+                        element={<ManageProject />}
+                      />
+                      <Route path={"/chat"} element={<ChatScreen />} />
+                      <Route
+                        path={"/balance-breakdown"}
+                        element={<BalanceDetails />}
+                      />
+                      <Route
+                        path={"/user-management"}
+                        element={<UserManagement />}
+                      />
+                      <Route
+                        path="*"
+                        element={
+                          <Navigate
+                            to={
+                              userData?.contractor_data &&
+                              userData?.contractor_data?.profile_completed ===
+                                "pending"
+                                ? "/create-profile"
+                                : "/dashboard"
+                            }
+                          />
+                        }
+                      />
+                    </Routes>
+                  </div>
+                ) : (
+                  <>
+                    {/* <Route
                           exact
                           path={"/how-it-works"}
                           element={<HowItWorks />}
                         /> */}
-                        <Route path={"/login"} element={<Login />} />
-                        <Route path={"/signup"} element={<Signup />} />
-                        <Route
-                          path={"/reset-password"}
-                          element={<ResetPassword />}
-                        />
-                        <Route path={"/otp-verify"} element={<OtpInput />} />
-                        <Route
-                          path={"/phone-verify"}
-                          element={<PhoneVerify />}
-                        />
-                        <Route path="*" element={<Navigate to={"/login"} />} />
-                      </>
-                    )}
-                    <Route
-                      path={"/project/project-details/:id"}
-                      element={<ProjectDetail />}
-                    />
-                  </Routes>
-                </div>
+                    <Routes>
+                      <Route path={"/login"} element={<Login />} />
+                      <Route path={"/signup"} element={<Signup />} />
+                      <Route
+                        path={"/reset-password"}
+                        element={<ResetPassword />}
+                      />
+                      <Route path={"/otp-verify"} element={<OtpInput />} />
+                      <Route path={"/phone-verify"} element={<PhoneVerify />} />
+                      <Route path="*" element={<Navigate to={"/login"} />} />
+                    </Routes>
+                  </>
+                )}
+
                 <Footer />
                 <NotificationPopup />
               </div>

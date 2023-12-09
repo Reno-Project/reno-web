@@ -247,6 +247,13 @@ export default function UserManagement() {
     setCurrentPage(page);
   };
   const handleClose = () => {
+    setState({
+      uname: "",
+      email: "",
+      pCode: "971",
+      countryCode: "AE",
+      phone: "",
+    });
     setOpen(false);
   };
   const handleCloseDelete = () => {
@@ -350,20 +357,20 @@ export default function UserManagement() {
       </div>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Create User</DialogTitle>
+        <DialogTitle className="createHeader">Create User</DialogTitle>
         <DialogContent>
           <Grid container>
             <Grid item xs={12}>
               <CInput
                 outline
-                label="User Name"
-                placeholder="Enter user name"
+                label="Full name"
+                placeholder="Enter full name"
                 value={state.uname}
                 onChange={(e) => {
                   setState({ ...state, uname: e.target.value });
                   setErrObj({ ...errObj, unameErr: false, unameMsg: "" });
                 }}
-                inputProps={{ maxLength: 20 }}
+                inputProps={{ maxLength: 100 }}
                 white={false}
                 error={errObj.unameErr}
                 helpertext={errObj.unameMsg}
@@ -372,7 +379,7 @@ export default function UserManagement() {
             <Grid item xs={12}>
               <CInput
                 outline
-                label="Email"
+                label="Email address"
                 placeholder="Enter email address"
                 value={state.email}
                 onChange={(e) => {
@@ -386,7 +393,7 @@ export default function UserManagement() {
             </Grid>
             <Grid item xs={12}>
               <InputLabel shrink htmlFor="bootstrap-input">
-                Phone
+                Phone number
               </InputLabel>
               <TextField
                 fullWidth
