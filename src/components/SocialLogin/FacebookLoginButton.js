@@ -28,7 +28,7 @@ function FacebookLoginButton(props) {
       render={(renderProps) => {
         return (
           <div
-            className={classes.socialContainerStyle}
+            className={classes.socialContainerStyle + " " + classes.facebook}
             onClick={() => renderProps.onClick()}
           >
             {loader ? (
@@ -41,7 +41,7 @@ function FacebookLoginButton(props) {
                   className={classes.socialImgStyle}
                 />
                 <Typography className={classes.socialTextStyle}>
-                  Facebook
+                  Continue with Facebook
                 </Typography>
               </>
             )}

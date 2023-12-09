@@ -85,7 +85,7 @@ function App() {
                   flexDirection: "column",
                 }}
               >
-                <Header />
+                {/* <Header /> */}
                 <div className="MT70">
                   <Routes>
                     {isLogin ? (
@@ -151,11 +151,11 @@ function App() {
                       </>
                     ) : (
                       <>
-                        <Route
+                        {/* <Route
                           exact
                           path={"/how-it-works"}
                           element={<HowItWorks />}
-                        />
+                        /> */}
                         <Route path={"/login"} element={<Login />} />
                         <Route path={"/signup"} element={<Signup />} />
                         <Route

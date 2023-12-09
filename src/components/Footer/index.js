@@ -35,15 +35,27 @@ function Footer(props) {
               display="flex"
               alignItems="center"
             >
-              <Grid item onDragStart={handleDragStart}>
+              {" "}
+              <Grid
+                item
+                onDragStart={handleDragStart}
+                className={classes.topLeft}
+              >
                 <img
-                  src={Images.flogo}
+                  src={
+                    pathname === "/signup"
+                      ? Images.logo_black
+                      : Images.logo_white
+                  }
                   alt="logoimage"
                   className={classes.imgStyle}
                 />
               </Grid>
               <Grid item>
-                <Typography className={classes.footerTextStyle}>
+                <Typography
+                  className={classes.footerTextStyle}
+                  sx={{ color: pathname === "/signup" ? "#000000" : "#FFFFFF" }}
+                >
                   Copyright ⓒ 2023. All Rights Reserved by Reno. Version 1.0
                 </Typography>
               </Grid>
@@ -57,6 +69,7 @@ function Footer(props) {
               display="flex"
               alignItems="center"
               justifyContent={"flex-end"}
+              className={classes.top}
             >
               <Grid item xs={4} sm={1} md={1} lg={1}>
                 <img

@@ -2,32 +2,38 @@ import { makeStyles } from "@mui/styles";
 import { color } from "../../config/theme";
 
 const useStyles = makeStyles((theme) => ({
-  container: {},
+  container: {
+    paddingLeft: 140,
+    marginTop: 129,
+  },
   menuTitleStyle: {
-    color: "#202939",
+    color: "#274BF1",
     fontSize: "14px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
+    cursor: "pointer",
   },
   welcomeTextStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "13px !important",
     color: "#646F86",
-    textAlign: "center",
+    // textAlign: "center",
   },
   loginHeaderText: {
-    fontFamily: "ElMessiri-Bold !important",
-    fontSize: "22px !important",
+    fontFamily: "Poppins-Regular !important",
+    fontSize: "24px !important",
+    fontWeight: "600 !important",
+    lineHeight: "32px !important",
     color: "#030F1C",
-    textAlign: "center",
     marginTop: "8px !important",
     marginBottom: "15px !important",
   },
   borderDivStyle: { height: 1, width: "32%", backgroundColor: "#F2F3F4" },
   continueTextStyle: {
-    margin: "0px 15px !important",
-    fontFamily: "Roobert-Regular !important",
+    // margin: "0px 15px !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "15px !important",
     color: "#787B8C",
+    textAlign: "center",
   },
   socialContainerStyle: {
     display: "flex",
@@ -39,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
   },
   socialTextStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     color: "#202939",
     fontSize: 15,
     marginLeft: "10px !important",
@@ -54,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
   },
   accountTextStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "14px !important",
     color: "#646F86",
   },
@@ -82,9 +88,15 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   countryCodeStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "14px !important",
     color: `${color.secondary} !important`,
+  },
+  label: {
+    fontFamily: "Poppins-Regular !important",
+    fontSize: "14px !important",
+    fontWeight: "400",
+    lineHeight: "20px",
   },
 }));
 
