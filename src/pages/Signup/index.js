@@ -8,6 +8,7 @@ import {
   Typography,
   CircularProgress,
   IconButton,
+  Box,
 } from "@mui/material";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { isEmpty } from "lodash";
@@ -28,6 +29,7 @@ import { useDispatch } from "react-redux";
 import useStyles from "./styles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { askForPermissionToReceiveNotifications } from "../../push-notification";
+import SignUpCover from "../../assets/images/SignUpCover.png";
 
 const errorObj = {
   unameErr: false,
@@ -276,216 +278,241 @@ const Signup = (props) => {
 
   return (
     <div>
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-        style={{ paddingTop: 40 }}
-      >
-        <Grid item xs={12}>
-          <Typography className={classes.welcomeTextStyle}>
-            Welcome to Reno
-          </Typography>
-          <Typography className={classes.loginHeaderText}>
-            Create an account
-          </Typography>
+      <Grid container>
+        <Grid item xs={6}>
+          <Box
+            component="img"
+            sx={{
+              height: "100%",
+              width: "100%",
+              // maxHeight: { xs: 233, md: 167 },
+              // maxWidth: { xs: 350, md: 250 },
+            }}
+            src={SignUpCover}
+          />
         </Grid>
-        <Grid item xs={10} sm={8} md={4} lg={3}>
-          <Grid container>
-            <Grid item xs={12}>
-              <CInput
-                outline
-                label="User Name"
-                placeholder="Enter user name"
-                value={state.uname}
-                onChange={(e) => {
-                  setState({ ...state, uname: e.target.value });
-                  setErrObj({ ...errObj, unameErr: false, unameMsg: "" });
-                }}
-                inputProps={{ maxLength: 20 }}
-                white={false}
-                error={errObj.unameErr}
-                helpertext={errObj.unameMsg}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <CInput
-                outline
-                label="Email"
-                placeholder="Enter email address"
-                value={state.email}
-                disabled={
-                  isSocial && emailRegex.test(locationState?.socialData?.email)
-                }
-                onChange={(e) => {
-                  setState({ ...state, email: e.target.value });
-                  setErrObj({ ...errObj, emailErr: false, emailMsg: "" });
-                }}
-                white={false}
-                error={errObj.emailErr}
-                helpertext={errObj.emailMsg}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <InputLabel shrink htmlFor="bootstrap-input">
-                Phone
-              </InputLabel>
-              <TextField
-                fullWidth
-                placeholder={
-                  state.pCode ? phonePlaceholder : "Enter phone number"
-                }
-                style={{ marginBottom: 20 }}
-                value={state.phone}
-                onChange={(e) => {
-                  setState({ ...state, phone: e.target.value });
-                  setErrObj({ ...errObj, phoneErr: false, phoneMsg: "" });
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment
-                      position="start"
-                      style={{ marginLeft: "-13px", marginRight: -5 }}
-                    >
-                      <PhoneInput
-                        country={"ae"}
-                        value={state.pCode}
-                        onChange={(code, country) => {
-                          const countryUpperCase =
-                            country?.countryCode.toUpperCase();
-                          setState({
-                            ...state,
-                            pCode: code,
-                            countryCode: countryUpperCase,
-                            phone: "",
-                          });
-                          const exampleNumber1 =
-                            phoneUtil.getExampleNumberForType(
-                              country?.countryCode,
-                              PhoneNumberType.MOBILE
+        <Grid
+          item
+          xs={6}
+          // alignItems="center"
+          // justifyContent="center"
+          className={classes.container}
+          flexDirection="column"
+          style={{ paddingTop: 129 }}
+        >
+          <Grid item xs={12}>
+            <Typography className={classes.welcomeTextStyle}>
+              Welcome to Reno
+            </Typography>
+            <Typography className={classes.loginHeaderText}>
+              Create an account
+            </Typography>
+          </Grid>
+          <Grid item xs={10} sm={8} md={4} lg={9}>
+            <Grid container>
+              <Grid item xs={12}>
+                <CInput
+                  outline
+                  label="User Name"
+                  placeholder="Enter user name"
+                  value={state.uname}
+                  onChange={(e) => {
+                    setState({ ...state, uname: e.target.value });
+                    setErrObj({ ...errObj, unameErr: false, unameMsg: "" });
+                  }}
+                  inputProps={{ maxLength: 20 }}
+                  white={false}
+                  error={errObj.unameErr}
+                  helpertext={errObj.unameMsg}
+                  className={classes.label}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CInput
+                  outline
+                  label="Email"
+                  placeholder="Enter email address"
+                  value={state.email}
+                  disabled={
+                    isSocial &&
+                    emailRegex.test(locationState?.socialData?.email)
+                  }
+                  onChange={(e) => {
+                    setState({ ...state, email: e.target.value });
+                    setErrObj({ ...errObj, emailErr: false, emailMsg: "" });
+                  }}
+                  white={false}
+                  error={errObj.emailErr}
+                  helpertext={errObj.emailMsg}
+                  className={classes.label}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <InputLabel shrink htmlFor="bootstrap-input">
+                  Phone
+                </InputLabel>
+                <TextField
+                  fullWidth
+                  placeholder={
+                    state.pCode ? phonePlaceholder : "Enter phone number"
+                  }
+                  style={{ marginBottom: 20 }}
+                  value={state.phone}
+                  onChange={(e) => {
+                    setState({ ...state, phone: e.target.value });
+                    setErrObj({ ...errObj, phoneErr: false, phoneMsg: "" });
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment
+                        position="start"
+                        style={{ marginLeft: "-13px", marginRight: -5 }}
+                      >
+                        <PhoneInput
+                          country={"ae"}
+                          value={state.pCode}
+                          onChange={(code, country) => {
+                            const countryUpperCase =
+                              country?.countryCode.toUpperCase();
+                            setState({
+                              ...state,
+                              pCode: code,
+                              countryCode: countryUpperCase,
+                              phone: "",
+                            });
+                            const exampleNumber1 =
+                              phoneUtil.getExampleNumberForType(
+                                country?.countryCode,
+                                PhoneNumberType.MOBILE
+                              );
+                            const formattedExampleNumber1 = phoneUtil.format(
+                              exampleNumber1,
+                              PhoneNumberFormat.NATIONAL
                             );
-                          const formattedExampleNumber1 = phoneUtil.format(
-                            exampleNumber1,
-                            PhoneNumberFormat.NATIONAL
-                          );
-                          setPhonePlaceholder(formattedExampleNumber1);
-                        }}
-                      />
-                      <Typography className={classes.countryCodeStyle}>
-                        +{state?.pCode}
-                      </Typography>
-                    </InputAdornment>
-                  ),
-                }}
-                className={classes.pickerInput}
-                error={errObj.phoneErr}
-                helperText={errObj.phoneMsg}
-              />
-            </Grid>
-            {locationState?.type === "google" ||
-            locationState?.type === "fb" ||
-            locationState?.type === "apple" ? null : (
-              <>
-                <Grid item xs={12}>
-                  <CInput
-                    outline
-                    label="Password"
-                    placeholder="Enter password"
-                    type={showPassword ? "text" : "password"}
-                    value={state.password}
-                    passValue={state?.password}
-                    passwordValidation
-                    inputProps={{ maxLength: 15 }}
-                    onChange={(e) => {
-                      setState({ ...state, password: e.target.value });
-                      setErrObj({
-                        ...errObj,
-                        passwordErr: false,
-                        passwordMsg: "",
-                      });
-                    }}
-                    onKeyPress={(ev) => {
-                      if (ev.key === "Enter") {
-                        ev.preventDefault();
-                        validation();
+                            setPhonePlaceholder(formattedExampleNumber1);
+                          }}
+                        />
+                        <Typography className={classes.countryCodeStyle}>
+                          +{state?.pCode}
+                        </Typography>
+                      </InputAdornment>
+                    ),
+                  }}
+                  className={classes.pickerInput + " " + classes.label}
+                  error={errObj.phoneErr}
+                  helperText={errObj.phoneMsg}
+                />
+              </Grid>
+              {locationState?.type === "google" ||
+              locationState?.type === "fb" ||
+              locationState?.type === "apple" ? null : (
+                <>
+                  <Grid item xs={12}>
+                    <CInput
+                      className={classes.label}
+                      outline
+                      label="Password"
+                      placeholder="Enter password"
+                      type={showPassword ? "text" : "password"}
+                      value={state.password}
+                      passValue={state?.password}
+                      passwordValidation
+                      inputProps={{ maxLength: 15 }}
+                      onChange={(e) => {
+                        setState({ ...state, password: e.target.value });
+                        setErrObj({
+                          ...errObj,
+                          passwordErr: false,
+                          passwordMsg: "",
+                        });
+                      }}
+                      onKeyPress={(ev) => {
+                        if (ev.key === "Enter") {
+                          ev.preventDefault();
+                          validation();
+                        }
+                      }}
+                      white={false}
+                      error={errObj.passwordErr}
+                      helpertext={errObj.passwordMsg}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {!showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
                       }
-                    }}
-                    white={false}
-                    error={errObj.passwordErr}
-                    helpertext={errObj.passwordMsg}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {!showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <CInput
-                    outline
-                    label="Confirm password"
-                    placeholder="Enter confirm password"
-                    required
-                    type={showCPassword ? "text" : "password"}
-                    value={state.confirmPassword}
-                    onChange={(e) => {
-                      setState({ ...state, confirmPassword: e.target.value });
-                      setErrObj({
-                        ...errObj,
-                        confirmPasswordErr: false,
-                        confirmPasswordMsg: "",
-                      });
-                    }}
-                    white={false}
-                    error={errObj.confirmPasswordErr}
-                    helpertext={errObj.confirmPasswordMsg}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={() => setShowCPassword(!showCPassword)}
-                        >
-                          {!showCPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                </Grid>
-              </>
-            )}
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                style={{ marginBottom: 20 }}
-                onClick={validation}
-                disabled={btnLoad}
-              >
-                {btnLoad ? (
-                  <CircularProgress style={{ color: "#fff" }} size={26} />
-                ) : (
-                  "Sign up now"
-                )}
-              </Button>
-            </Grid>
-            <Grid item xs={12} className={classes.needAccountContainer}>
-              <Typography className={classes.accountTextStyle}>
-                Already have an account?{" "}
-              </Typography>
-              <NavLink to="/login" className={classes.linkStyle}>
-                <Typography
-                  className={`${classes.menuTitleStyle} ${classes.mrL3}`}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <CInput
+                      className={classes.label}
+                      outline
+                      label="Confirm password"
+                      placeholder="Enter confirm password"
+                      required
+                      type={showCPassword ? "text" : "password"}
+                      value={state.confirmPassword}
+                      onChange={(e) => {
+                        setState({ ...state, confirmPassword: e.target.value });
+                        setErrObj({
+                          ...errObj,
+                          confirmPasswordErr: false,
+                          confirmPasswordMsg: "",
+                        });
+                      }}
+                      white={false}
+                      error={errObj.confirmPasswordErr}
+                      helpertext={errObj.confirmPasswordMsg}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => setShowCPassword(!showCPassword)}
+                          >
+                            {!showCPassword ? (
+                              <Visibility />
+                            ) : (
+                              <VisibilityOff />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  </Grid>
+                </>
+              )}
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  style={{ marginBottom: 20 }}
+                  onClick={validation}
+                  disabled={btnLoad}
                 >
-                  Log in
+                  {btnLoad ? (
+                    <CircularProgress style={{ color: "#fff" }} size={26} />
+                  ) : (
+                    "Sign up now"
+                  )}
+                </Button>
+              </Grid>
+              <Grid item xs={12} className={classes.needAccountContainer}>
+                <Typography className={classes.accountTextStyle}>
+                  Already have an account?{" "}
                 </Typography>
-              </NavLink>
+                <NavLink to="/login" className={classes.linkStyle}>
+                  <Typography
+                    className={`${classes.menuTitleStyle} ${classes.mrL3}`}
+                  >
+                    Log in
+                  </Typography>
+                </NavLink>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

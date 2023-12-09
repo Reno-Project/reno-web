@@ -19,9 +19,10 @@ const useStyles = makeStyles((theme) => ({
   },
   loginHeaderText: {
     fontFamily: "Poppins-Regular !important",
-    fontSize: "22px !important",
+    fontSize: "24px !important",
+    fontWeight: "600 !important",
+    lineHeight: "32px !important",
     color: "#030F1C",
-    // textAlign: "center",
     marginTop: "8px !important",
     marginBottom: "15px !important",
   },

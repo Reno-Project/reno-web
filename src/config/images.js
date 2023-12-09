@@ -35,6 +35,7 @@ const Images = {
   Linkedin1: "/assets/images/linkedin.png",
   Fb1: "/assets/images/facebook.png",
   logo_white: "/assets/images/logo_white.svg",
+  logo_black: "/assets/images/logo_black.svg",
   fb_white: "/assets/images/fb_white.svg",
   twitter: "/assets/images/twitter.svg",
   insta_white: "/assets/images/insta_white.svg",
