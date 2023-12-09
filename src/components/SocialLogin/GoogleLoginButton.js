@@ -38,7 +38,10 @@ function GoogleLoginButton(props) {
             alt="google"
             className={classes.socialImgStyle}
           />
-          <Typography className={classes.socialTextStyle}>Google</Typography>
+          <Typography className={classes.socialTextStyle}>
+            {" "}
+            Continue with Google
+          </Typography>
         </>
       )}
     </div>

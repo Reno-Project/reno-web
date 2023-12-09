@@ -36,7 +36,7 @@ function AppleLoginButton(props) {
       iconProp={{ style: { marginTop: "10px" } }} // default = undefined
       render={(props) => (
         <div
-          className={classes.socialContainerStyle}
+          className={classes.socialContainerStyle + " " + classes.apple}
           onClick={() => props.onClick()}
         >
           {loader ? (
@@ -48,7 +48,10 @@ function AppleLoginButton(props) {
                 alt="apple"
                 className={classes.socialImgStyle}
               />
-              <Typography className={classes.socialTextStyle}>Apple</Typography>
+              <Typography className={classes.socialTextStyle}>
+                {" "}
+                Continue with Apple
+              </Typography>
             </>
           )}
         </div>

@@ -1,10 +1,11 @@
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
+  top: { position: "fixed", top: "2%", left: "85%" },
   footerMainCon: {
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "transparent",
     bottom: 0,
     left: 0,
     right: 0,
@@ -13,16 +14,15 @@ const useStyles = makeStyles((theme) => ({
     height: "70px",
   },
   container: {
-    borderTop: "1px solid #F2F4F7",
     height: "100%",
     padding: "0 15px",
   },
   footerTextStyle: {
-    color: "#646F86",
+    color: "#FFFFFF",
     fontSize: "13px !important",
     letterSpacing: "0.5px !important",
     lineHeight: "25px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     marginLeft: "15px !important",
   },
   imgStyle: { height: "20px" },
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "13px !important",
     letterSpacing: "0.5px !important",
     lineHeight: "25px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     marginLeft: "5px !important",
   },
 }));

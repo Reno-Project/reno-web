@@ -29,6 +29,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { onMessageListener } from "../../push-notification";
 import { CometChatUIKit } from "@cometchat/chat-uikit-react";
+import loginCover from "../../assets/images/loginCover.png";
 
 const errorObj = {
   emailErr: false,
@@ -347,204 +348,230 @@ const Login = (props) => {
 
   return (
     <div>
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-        style={{ paddingTop: 40 }}
-      >
-        <Grid item xs={12}>
-          <Typography className={classes.welcomeTextStyle}>
-            Welcome to Reno
-          </Typography>
-          <Typography className={classes.loginHeaderText}>Log in</Typography>
+      <Grid container>
+        <Grid item xs={6}>
+          <Box
+            component="img"
+            sx={{
+              height: "100%",
+              width: "100%",
+              // maxHeight: { xs: 233, md: 167 },
+              // maxWidth: { xs: 350, md: 250 },
+            }}
+            src={loginCover}
+          />
         </Grid>
-        <Grid item xs={10} sm={8} md={4} lg={3}>
-          <Grid container>
-            <Grid item xs={12}>
-              <CInput
-                outline
-                label="Email"
-                placeholder="Enter email address"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setErrObj({ ...errObj, emailErr: false, emailMsg: "" });
-                }}
-                white={false}
-                error={errObj.emailErr}
-                helpertext={errObj.emailMsg}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <CInput
-                outline
-                label="Password"
-                placeholder="Enter password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setErrObj({ ...errObj, passwordErr: false, passwordMsg: "" });
-                }}
-                onKeyPress={(ev) => {
-                  if (ev.key === "Enter") {
-                    ev.preventDefault();
-                    validation();
-                  }
-                }}
-                white={false}
-                error={errObj.passwordErr}
-                helpertext={errObj.passwordMsg}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {!showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </Grid>
-            <Typography
-              onClick={() => {
-                setForgotEmail("");
-                setVisibleForgotModal(true);
-              }}
-              className={classes.menuTitleStyle}
-            >
-              Forget password?
+        <Grid
+          item
+          xs={6}
+          // alignItems="center"
+          // justifyContent="center"
+          className={classes.container}
+          flexDirection="column"
+          style={{ paddingTop: 129 }}
+        >
+          <Grid item xs={12}>
+            <Typography className={classes.welcomeTextStyle}>
+              Welcome to Reno
             </Typography>
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                style={{ marginTop: 20, marginBottom: 20 }}
-                onClick={validation}
-                disabled={btnLoad}
-              >
-                {btnLoad ? (
-                  <CircularProgress style={{ color: "#fff" }} size={26} />
-                ) : (
-                  "Log in"
-                )}
-              </Button>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              wrap="nowrap"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Grid xs={3}>
-                <div className={classes.borderDivStyle} />
-              </Grid>
-              <Grid item xs={5}>
-                <Typography className={classes.continueTextStyle}>
-                  Continue with
-                </Typography>
-              </Grid>
-              <Grid xs={3}>
-                <div className={classes.borderDivStyle} />
-              </Grid>
-            </Grid>
-            <Grid item xs={12} style={{ marginTop: 18 }}>
-              <GoogleOAuthProvider clientId={Setting.GOOGLE_CLIENT_ID}>
-                <GoogleLoginButton
-                  loader={socialBtnLoad === "google"}
-                  onGoogleDone={(val) => googleDataApiCall(val?.code)}
-                />
-              </GoogleOAuthProvider>
-              <FacebookLoginButton
-                loader={socialBtnLoad === "fb"}
-                onSuccess={(response) => socialLoginApiCall(response, "fb")}
-              />
-              <AppleLoginButton
-                loader={socialBtnLoad === "apple"}
-                onSuccess={(response) => socialLoginApiCall(response, "apple")}
-              />
-            </Grid>
-            <Grid item xs={12} className={classes.needAccountContainer}>
-              <Typography className={classes.accountTextStyle}>
-                Need an account?{" "}
-              </Typography>
-              <NavLink to="/signup" className={classes.linkStyle}>
-                <Typography
-                  className={`${classes.menuTitleStyle} ${classes.mrL3}`}
-                >
-                  Create an account
-                </Typography>
-              </NavLink>
-            </Grid>
-
-            <Modal
-              open={visibleForgotModal}
-              onClose={() =>
-                btnForgotLoad ? null : setVisibleForgotModal(false)
-              }
-              closeAfterTransition
-              disableAutoFocus
-              slotProps={{ backdrop: Backdrop }}
-              style={{ overflowY: "scroll" }}
-            >
-              <Fade in={visibleForgotModal}>
-                <Box sx={style}>
-                  {/* <div className={classes.splitViewStyle}> */}
-                  <Grid container justifyContent="center" alignItems="center">
-                    <Typography className={classes.forgotHeaderText}>
-                      Forget Password
-                    </Typography>
-                    <Grid item xs={12}>
-                      <CInput
-                        outline
-                        label="Email"
-                        placeholder="Enter email address"
-                        value={forgotEmail}
-                        onChange={(e) => {
-                          setForgotEmail(e.target.value);
-                          setErrObj({
-                            ...errObj,
-                            forgotEmailErr: false,
-                            forgotEmailMsg: "",
-                          });
-                        }}
-                        white={false}
-                        error={errObj.forgotEmailErr}
-                        helpertext={errObj.forgotEmailMsg}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        style={{ marginTop: 20, marginBottom: 20 }}
-                        onClick={forgotValidation}
-                        disabled={btnForgotLoad}
-                      >
-                        {btnForgotLoad ? (
-                          <CircularProgress
-                            style={{ color: "#fff" }}
-                            size={26}
-                          />
-                        ) : (
-                          "Submit"
-                        )}
-                      </Button>
-                    </Grid>
-                  </Grid>
-                  {/* </div> */}
-                </Box>
-              </Fade>
-            </Modal>
+            <Typography className={classes.loginHeaderText}>Log in</Typography>
           </Grid>
+          {/* form start */}
+          <Grid item xs={10} sm={8} md={4} lg={9}>
+            <Grid container>
+              <Grid item xs={12}>
+                <CInput
+                  outline
+                  label="Email"
+                  placeholder="Enter email address"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setErrObj({ ...errObj, emailErr: false, emailMsg: "" });
+                  }}
+                  white={false}
+                  error={errObj.emailErr}
+                  helpertext={errObj.emailMsg}
+                  className={classes.label}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CInput
+                  outline
+                  label="Password"
+                  placeholder="Enter password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  className={classes.label}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setErrObj({
+                      ...errObj,
+                      passwordErr: false,
+                      passwordMsg: "",
+                    });
+                  }}
+                  onKeyPress={(ev) => {
+                    if (ev.key === "Enter") {
+                      ev.preventDefault();
+                      validation();
+                    }
+                  }}
+                  white={false}
+                  error={errObj.passwordErr}
+                  helpertext={errObj.passwordMsg}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {!showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </Grid>
+              <Typography
+                onClick={() => {
+                  setForgotEmail("");
+                  setVisibleForgotModal(true);
+                }}
+                className={classes.menuTitleStyle}
+              >
+                Forget password?
+              </Typography>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  style={{ marginTop: 20, marginBottom: 20 }}
+                  onClick={validation}
+                  disabled={btnLoad}
+                >
+                  {btnLoad ? (
+                    <CircularProgress style={{ color: "#fff" }} size={26} />
+                  ) : (
+                    "Continue"
+                  )}
+                </Button>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                wrap="nowrap"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Grid xs={3}>
+                  <div className={classes.borderDivStyle} />
+                </Grid>
+                <Grid item xs={5}>
+                  <Typography className={classes.continueTextStyle}>
+                    Or
+                  </Typography>
+                </Grid>
+                <Grid xs={3}>
+                  <div className={classes.borderDivStyle} />
+                </Grid>
+              </Grid>
+              <Grid item xs={12} style={{ marginTop: 18 }}>
+                <GoogleOAuthProvider clientId={Setting.GOOGLE_CLIENT_ID}>
+                  <GoogleLoginButton
+                    loader={socialBtnLoad === "google"}
+                    onGoogleDone={(val) => googleDataApiCall(val?.code)}
+                  />
+                </GoogleOAuthProvider>
+                <FacebookLoginButton
+                  loader={socialBtnLoad === "fb"}
+                  onSuccess={(response) => socialLoginApiCall(response, "fb")}
+                />
+                <AppleLoginButton
+                  loader={socialBtnLoad === "apple"}
+                  onSuccess={(response) =>
+                    socialLoginApiCall(response, "apple")
+                  }
+                />
+              </Grid>
+              <Grid item xs={12} className={classes.needAccountContainer}>
+                <Typography className={classes.accountTextStyle}>
+                  Don’t have an account?
+                </Typography>
+                <NavLink to="/signup" className={classes.linkStyle}>
+                  <Typography
+                    className={`${classes.menuTitleStyle} ${classes.mrL3}`}
+                  >
+                    Sign Up
+                  </Typography>
+                </NavLink>
+              </Grid>
+
+              <Modal
+                open={visibleForgotModal}
+                onClose={() =>
+                  btnForgotLoad ? null : setVisibleForgotModal(false)
+                }
+                closeAfterTransition
+                disableAutoFocus
+                slotProps={{ backdrop: Backdrop }}
+                style={{ overflowY: "scroll" }}
+              >
+                <Fade in={visibleForgotModal}>
+                  <Box sx={style}>
+                    {/* <div className={classes.splitViewStyle}> */}
+                    <Grid container justifyContent="center" alignItems="center">
+                      <Typography className={classes.forgotHeaderText}>
+                        Forget Password
+                      </Typography>
+                      <Grid item xs={12}>
+                        <CInput
+                          outline
+                          label="Email"
+                          placeholder="Enter email address"
+                          value={forgotEmail}
+                          onChange={(e) => {
+                            setForgotEmail(e.target.value);
+                            setErrObj({
+                              ...errObj,
+                              forgotEmailErr: false,
+                              forgotEmailMsg: "",
+                            });
+                          }}
+                          white={false}
+                          error={errObj.forgotEmailErr}
+                          helpertext={errObj.forgotEmailMsg}
+                        />
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          fullWidth
+                          style={{ marginTop: 20, marginBottom: 20 }}
+                          onClick={forgotValidation}
+                          disabled={btnForgotLoad}
+                        >
+                          {btnForgotLoad ? (
+                            <CircularProgress
+                              style={{ color: "#fff" }}
+                              size={26}
+                            />
+                          ) : (
+                            "Submit"
+                          )}
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    {/* </div> */}
+                  </Box>
+                </Fade>
+              </Modal>
+            </Grid>
+          </Grid>
+          {/* form end */}
         </Grid>
       </Grid>
     </div>
