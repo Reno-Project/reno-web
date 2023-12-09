@@ -2,6 +2,11 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
   top: { position: "fixed", top: "2%", left: "85%" },
+  topLeft: {
+    position: "fixed",
+    top: "5%",
+    left: "5%",
+  },
   footerMainCon: {
     display: "flex",
     flexDirection: "column",

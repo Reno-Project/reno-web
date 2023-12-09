@@ -35,13 +35,18 @@ function Footer(props) {
               display="flex"
               alignItems="center"
             >
-              {/* <Grid item onDragStart={handleDragStart}>
+              {" "}
+              <Grid
+                item
+                onDragStart={handleDragStart}
+                className={classes.topLeft}
+              >
                 <img
-                  src={Images.flogo}
+                  src={Images.logo_white}
                   alt="logoimage"
                   className={classes.imgStyle}
                 />
-              </Grid> */}
+              </Grid>
               <Grid item>
                 <Typography className={classes.footerTextStyle}>
                   Copyright ⓒ 2023. All Rights Reserved by Reno. Version 1.0
