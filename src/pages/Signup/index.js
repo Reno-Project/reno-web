@@ -28,6 +28,7 @@ import { useDispatch } from "react-redux";
 import useStyles from "./styles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { askForPermissionToReceiveNotifications } from "../../push-notification";
+import TermsAndConditions from "../../components/TOSModal";
 
 const errorObj = {
   unameErr: false,
@@ -63,6 +64,7 @@ const Signup = (props) => {
     password: "",
     confirmPassword: "",
   });
+  const [visible, setVisible] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);
@@ -70,6 +72,9 @@ const Signup = (props) => {
   const [phonePlaceholder, setPhonePlaceholder] = useState("");
   const [locationData, setLocationData] = useState({});
 
+  const handleClose = () => {
+    setVisible(false);
+  };
   useEffect(() => {
     setState({
       ...state,
@@ -107,6 +112,7 @@ const Signup = (props) => {
 
   // this function checks validation of login field
   function validation() {
+    handleClose();
     const { uname, email, phone, password, countryCode, confirmPassword } =
       state;
     const error = { ...errObj };
@@ -465,8 +471,8 @@ const Signup = (props) => {
                 color="primary"
                 fullWidth
                 style={{ marginBottom: 20 }}
-                onClick={validation}
                 disabled={btnLoad}
+                onClick={() => setVisible(true)}
               >
                 {btnLoad ? (
                   <CircularProgress style={{ color: "#fff" }} size={26} />
@@ -490,6 +496,11 @@ const Signup = (props) => {
           </Grid>
         </Grid>
       </Grid>
+      <TermsAndConditions
+        validation={validation}
+        visible={visible}
+        handleClose={handleClose}
+      />
     </div>
   );
 };
