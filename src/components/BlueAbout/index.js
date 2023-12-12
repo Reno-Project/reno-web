@@ -10,7 +10,7 @@ export default function BlueAbout() {
   const location = useLocation();
   const { pathname } = location;
 
-  const quickLinks = ["Home", "Our Services", "About Us", "FAQs", "Sign Up"];
+  const quickLinks = []; //["Home", "Our Services", "About Us", "FAQs", "Sign Up"];
   const supportArr = [
     "Help & Support",
     "Trust & Safety",
@@ -48,7 +48,7 @@ export default function BlueAbout() {
         >
           {<img src={Images.logo_white} alt="logo" style={{ maxWidth: 225 }} />}
         </Grid>
-        <Grid
+        {/* <Grid
           item
           xs={12}
           sm={6}
@@ -75,7 +75,7 @@ export default function BlueAbout() {
               </div>
             );
           })}
-        </Grid>
+        </Grid> */}
         <Grid
           item
           xs={12}

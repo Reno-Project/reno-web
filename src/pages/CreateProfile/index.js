@@ -245,8 +245,7 @@ const CreateProfile = (props) => {
       });
     }
   };
-  const createUserInCometChat = (uname, logo) => {
-    const newUserUid = uuid();
+  const createUserInCometChat = (newUserUid, uname, logo) => {
     const newUser = new CometChat.User(newUserUid);
     newUser.setName(uname);
     newUser.setStatus("online");
@@ -258,7 +257,9 @@ const CreateProfile = (props) => {
 
     CometChat.createUser(newUser, process.env.REACT_APP_AUTHKEY)
       .then((res) => {
+        console.log(">>>>> res user", res);
         setCometChatUserData(res);
+
         CometChatUIKit.login(newUserUid)?.then((loggedInUser) => {
           console.log("Login successful, loggedInUser:", loggedInUser);
         });
@@ -714,6 +715,7 @@ const CreateProfile = (props) => {
       if (typeof state?.businessLogo !== "string") {
         data.business_logo = state?.businessLogo ? state?.businessLogo : "";
       }
+      data.cometChatUid = uuid();
       const response = await getAPIProgressData(
         Setting.endpoints.addContractorDetails,
         "POST",
@@ -723,6 +725,7 @@ const CreateProfile = (props) => {
 
       if (response.success) {
         createUserInCometChat(
+          data.uid,
           userData.username,
           state?.businessLogo ? state?.businessLogo : ""
         );

@@ -14,7 +14,7 @@ import {
 import { NavLink, useNavigate } from "react-router-dom";
 import { isEmpty } from "lodash";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import authActions from "../../redux/reducers/auth/actions";
 import { Setting } from "../../utils/Setting";
@@ -29,6 +29,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { onMessageListener } from "../../push-notification";
 import { CometChatUIKit } from "@cometchat/chat-uikit-react";
+
 import loginCover from "../../assets/images/loginCover.png";
 
 const errorObj = {
@@ -59,6 +60,7 @@ const Login = (props) => {
   const theme = useTheme();
   const [visibleForgotModal, setVisibleForgotModal] = useState(false);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const { cometChatUserdata } = useSelector((state) => state.auth);
   const style = {
     position: "absolute",
     top: "50%",
@@ -137,7 +139,28 @@ const Login = (props) => {
       };
 
       if (response.success) {
-        CometChatUIKit.loginWithAuthToken(process.env.REACT_APP_AUTHKEY);
+        // fetch(
+        //   `https://appid.api-us.cometchat.io/v3/users/${cometChatUserdata.uid}/auth_tokens`
+        // ).then((res) => {
+        //   CometChatUIKit.getLoggedinUser().then(
+        //     (user) => {
+        //       if (!user) {
+        //         CometChatUIKit.login(res.authToken).then(
+        //           (user) => {
+        //             console.log("Login Successful:", { user });
+        //           },
+        //           (error) => {
+        //             console.log("Login failed with exception:", { error });
+        //           }
+        //         );
+        //       }
+        //     },
+        //     (error) => {
+        //       console.log("Something went wrong", error);
+        //     }
+        //   );
+        // });
+
         dispatch(setToken(response?.token));
         if (response?.is_new_user) {
           navigate("/signup", { state: { socialData } });

@@ -33,6 +33,7 @@ import {
 import Cmodal from "../Cmodel";
 import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
+import { CometChatUIKit } from "@cometchat/chat-uikit-react";
 
 function Header(props) {
   const currentUrl = window.location.href;
@@ -72,6 +73,7 @@ function Header(props) {
       dispatch(clearAllData());
       handleClose();
       setVisible(false);
+      CometChatUIKit.logout();
       setTimeout(() => {
         type === "signup" ? navigate("/signup") : navigate("/login");
       }, 500);

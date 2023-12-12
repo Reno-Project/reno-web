@@ -16,6 +16,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Fab,
+  Modal,
+  Box,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
@@ -29,8 +32,9 @@ import ImageViewer from "../../components/ImageViewer";
 import { color } from "../../config/theme";
 import { getApiData } from "../../utils/APIHelper";
 import { Setting } from "../../utils/Setting";
-import { Add, RemoveRedEye } from "@mui/icons-material";
+import { Add, ChatBubbleOutline, RemoveRedEye } from "@mui/icons-material";
 import Select from "react-select";
+import ConversationsWithMessagesWrapper from "../../components/Chat/ConversationsWithMessagesWrapper";
 
 export default function RequestedProposal() {
   let data = [
@@ -47,6 +51,21 @@ export default function RequestedProposal() {
     { value: "Ibrahim", label: "Ibrahim" },
     { value: "Ahmed", label: "Ahmed" },
   ];
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    height: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    pt: 2,
+    px: 4,
+    pb: 3,
+  };
+
   const location = useLocation();
   const [villa, setVilla] = useState(location?.state?.villa);
   const nData = villa?.submitted_by_reno
@@ -60,6 +79,7 @@ export default function RequestedProposal() {
   const [url, setUrl] = useState("");
   const [imgurl, setImgUrl] = useState("");
   const [openAssign, setOpenAssign] = useState(false);
+  const [isChatStarted, setIsChatStarted] = useState(false);
   const classes = useStyles();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -1804,6 +1824,35 @@ export default function RequestedProposal() {
           )}
         </Grid>
       </Grid>
+      <Grid
+        style={{
+          position: "fixed",
+          bottom: 200,
+          left: "90%",
+          display: "flex",
+          justifyContent: "end",
+          padding: 5,
+        }}
+      >
+        <Fab
+          variant="extended"
+          color="primary"
+          onClick={() => setIsChatStarted(true)}
+        >
+          <ChatBubbleOutline sx={{ mr: 1 }} />
+          Chat
+        </Fab>
+      </Grid>
+      <Modal
+        open={isChatStarted}
+        onClose={() => setIsChatStarted(false)}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 400 }}>
+          <ConversationsWithMessagesWrapper isMobileView={true} />
+        </Box>
+      </Modal>
       <BlueAbout />
       <ImageViewer
         url={imgurl}
