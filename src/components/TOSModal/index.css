@@ -1,16 +1,19 @@
 .terms-content {
   height: 350px;
   overflow-y: scroll;
+  font-family: "Poppins-Regular";
 }
 .terms-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: "Poppins-Regular";
 }
 .submit-container {
   display: flex;
   justify-content: center;
   padding: 5px;
+  font-family: "Poppins-Regular";
 }
 
 .submit {
@@ -21,6 +24,7 @@
   color: #ffffff;
   width: 50%;
   cursor: pointer;
+  font-family: "Poppins-Regular";
 }
 
 .submit-disabled {
@@ -29,7 +33,9 @@
   border-radius: 5px;
   padding: 5px;
   width: 50%;
+  font-family: "Poppins-Regular";
 }
 .acceptance-bar {
-  padding: 5px;
+  padding: 10px;
+  font-family: "Poppins-Regular";
 }
