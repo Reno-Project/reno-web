@@ -75,7 +75,7 @@ export default function AccountSettings() {
         </Grid>
       </Grid>
 
-      <About />
+      {/* <About /> */}
       <PhoneVerificationModal
         visible={showModal}
         handleClose={() => setShowModal(false)}

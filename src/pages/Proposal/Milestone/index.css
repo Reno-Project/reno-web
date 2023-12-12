@@ -8,14 +8,14 @@
 }
 
 .label {
-  font-family: Poppins-Regular;
+  font-family: Poppins-Regular !important;
   font-style: normal;
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
 }
 .cur {
-  font-family: Poppins-Regular;
+  font-family: Poppins-Regular !important;
   font-style: normal;
   font-size: 24px;
   font-weight: 600;
@@ -23,7 +23,7 @@
 }
 .fieldTitle {
   color: var(--Text-color-1, #0d1522);
-  font-family: Poppins-Regular;
+  font-family: Poppins-Regular !important;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -33,7 +33,7 @@
   display: flex;
   align-items: center;
   color: var(--Primary-Brand-Color, #274bf1);
-  font-family: Poppins-Regular;
+  font-family: Poppins-Regular !important;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -43,7 +43,7 @@
 .secondaryTitle {
   color: var(--gray-800-header-text, #030f1c);
   /* Large/Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: */
-  font-family: Poppins-Regular;
+  font-family: Poppins-Regular !important;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -53,7 +53,7 @@
 .milestoneHeader {
   color: var(--gray-800-header-text, #030f1c);
   /* Titles/The quick brown fox jumps over the lazy dog */
-  font-family: Poppins-Regular;
+  font-family: Poppins-Regular !important;
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -63,7 +63,7 @@
 .endDate {
   color: var(--light-text-color-2, #8c92a4);
   /* Normal/Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: */
-  font-family: Poppins-Regular;
+  font-family: Poppins-Regular !important;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -71,7 +71,7 @@
 }
 .endDateValue {
   color: var(--light-text-color-1, #202939);
-  font-family: Poppins-Regular;
+  font-family: Poppins-Regular !important;
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -81,7 +81,7 @@
 .viewDetails {
   color: var(--Primary-Brand-Color, #274bf1);
   /* Large/Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: */
-  font-family: Poppins-Regular;
+  font-family: Poppins-Regular !important;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
