@@ -10,15 +10,19 @@ export default function BlueAbout() {
   const location = useLocation();
   const { pathname } = location;
 
-  const quickLinks = ["Home", "Our Services", "About Us", "FAQs", "Sign Up"];
+  const quickLinks = []; //["Home", "Our Services", "About Us", "FAQs", "Sign Up"];
   const supportArr = [
     "Help & Support",
     "Trust & Safety",
     "Selling on Reno",
     "Buying on Reno",
   ];
-  const contactus = ["+971 56 976 7673", " help@renohome.io"];
-
+  const contactus = [
+    "+971 56 976 7673",
+    "https://renohome.io/",
+    "help@renohome.io",
+  ];
+  const mailtoHref = "mailto:help@renohome.io.com?";
   return (
     <div>
       <Grid
@@ -48,7 +52,7 @@ export default function BlueAbout() {
         >
           {<img src={Images.logo_white} alt="logo" style={{ maxWidth: 225 }} />}
         </Grid>
-        <Grid
+        {/* <Grid
           item
           xs={12}
           sm={6}
@@ -75,7 +79,7 @@ export default function BlueAbout() {
               </div>
             );
           })}
-        </Grid>
+        </Grid> */}
         <Grid
           item
           xs={12}
@@ -97,7 +101,17 @@ export default function BlueAbout() {
             </Typography>
           </Grid>
           {contactus.map((item, index) => {
-            return (
+            return index == 1 ? (
+              <div key={`contactus_${index}`}>
+                <a href="https://renohome.io/" className={classes.text}>
+                  {item}
+                </a>
+              </div>
+            ) : index == 2 ? (
+              <a href={mailtoHref} className={classes.text}>
+                {item}
+              </a>
+            ) : (
               <div key={`contactus_${index}`}>
                 <ListItemText className={classes.text}>{item}</ListItemText>
               </div>

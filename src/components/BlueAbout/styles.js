@@ -4,7 +4,9 @@ import { color } from "../../config/theme";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    padding: "50px 0",
+    // position: "fixed",
+    // bottom: "0px",
+    padding: "20px 0",
     justifyContent: "space-evenly",
     backgroundColor: color.secondary,
   },
