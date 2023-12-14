@@ -462,7 +462,7 @@ const Login = (props) => {
                 }}
                 className={classes.menuTitleStyle}
               >
-                Forget password?
+                Forget password
               </Typography>
               <Grid item xs={12}>
                 <Button
@@ -493,7 +493,7 @@ const Login = (props) => {
                 </Grid>
                 <Grid item xs={5}>
                   <Typography className={classes.continueTextStyle}>
-                    Or
+                    OR
                   </Typography>
                 </Grid>
                 <Grid xs={3}>

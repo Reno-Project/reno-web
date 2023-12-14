@@ -18,13 +18,14 @@ const useStyles = makeStyles((theme) => ({
     // textAlign: "center",
   },
   loginHeaderText: {
-    fontFamily: "Poppins-Regular !important",
+    fontFamily: "Poppins-Bold !important",
     fontSize: "24px !important",
-    fontWeight: "600 !important",
+    // fontWeight: "600 !important",
+    fontWeight: "bold !important",
     lineHeight: "32px !important",
     color: "#030F1C",
     marginTop: "8px !important",
-    marginBottom: "15px !important",
+    marginBottom: "48px !important",
   },
   forgotHeaderText: {
     fontFamily: "Poppins-Regular !important",
@@ -74,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#646F86",
   },
   needAccountContainer: {
-    marginTop: 12,
+    marginTop: "24px !important",
     paddingBottom: "30%",
     display: "flex",
     alignItems: "center",

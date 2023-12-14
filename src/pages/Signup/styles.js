@@ -19,13 +19,14 @@ const useStyles = makeStyles((theme) => ({
     // textAlign: "center",
   },
   loginHeaderText: {
-    fontFamily: "Poppins-Regular !important",
+    fontFamily: "Poppins-Bold !important",
     fontSize: "24px !important",
-    fontWeight: "600 !important",
+    // fontWeight: "600 !important",
+    fontWeight: "bold !important",
     lineHeight: "32px !important",
     color: "#030F1C",
     marginTop: "8px !important",
-    marginBottom: "15px !important",
+    marginBottom: "38px !important",
   },
   borderDivStyle: { height: 1, width: "32%", backgroundColor: "#F2F3F4" },
   continueTextStyle: {

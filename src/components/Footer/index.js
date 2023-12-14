@@ -54,7 +54,7 @@ function Footer(props) {
               <Grid item>
                 <Typography
                   className={classes.footerTextStyle}
-                  sx={{ color: pathname === "/signup" ? "#000000" : "#FFFFFF" }}
+                  sx={{ color: pathname === "/signup" ? "#646F86" : "#FFFFFF" }}
                 >
                   Copyright ⓒ 2023. All Rights Reserved by Reno. Version 1.0
                 </Typography>
