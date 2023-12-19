@@ -1,14 +1,27 @@
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
-  welcomeTextStyle: {
-    fontFamily: "Roobert-Regular !important",
-    fontSize: "13px !important",
-    color: "#646F86",
+  headerContainer: {
+    display: "block",
+    paddingTop: "50px",
+    width: "100%",
+    height: "261px",
+    background:
+      "var(--Blue-Gradient, linear-gradient(192deg, #274BF1 0.26%, #0B1F7A 116.9%))",
     textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  welcomeTextStyle: {
+    color: "#FFFFFF",
+    fontFamily: "Poppins-Regular !important",
+    fontSize: "40px !important",
+    fontStyle: "normal !important",
+    fontWeight: "700 !important",
+    lineHeight: "48px !important",
   },
   loginHeaderText: {
-    fontFamily: "ElMessiri-Bold !important",
+    fontFamily: "Poppins-Bold !important",
     fontSize: "22px !important",
     color: "#030F1C",
     textAlign: "center",
@@ -16,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px !important",
   },
   formContainerStyle: {
+    position: "absolute",
+    top: "228px",
     width: "100%",
     backgroundColor: "#FFFFFF",
     borderRadius: 8,

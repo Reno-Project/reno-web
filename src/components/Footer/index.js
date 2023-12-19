@@ -16,6 +16,7 @@ function Footer(props) {
     pathname === "/create-proposal" ||
     pathname === "/manage-project" ||
     pathname === "/ongoing-project" ||
+    pathname === "/create-profile" ||
     pathname === "/request-proposal";
 
   const handleDragStart = (event) => {

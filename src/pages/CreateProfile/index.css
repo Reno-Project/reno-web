@@ -1,0 +1,25 @@
+.labelField {
+  color: #0d1522;
+  /* Normal/Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: */
+  font-family: "Poppins-Regular";
+  font-size: 14px;
+
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+.already {
+  font-family: Poppins-Regular !important;
+  font-size: 14px !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: 20px !important; /* 142.857% */
+  color: #222427;
+}
+
+.loginText {
+  color: #274bf1;
+  font-size: 14px !important;
+  font-family: Poppins-Regular !important;
+  cursor: pointer !important;
+}

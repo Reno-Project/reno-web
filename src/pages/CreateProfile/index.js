@@ -36,6 +36,7 @@ import Images from "../../config/images";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
 import { v4 as uuid } from "uuid";
 import { CometChatUIKit } from "@cometchat/chat-uikit-react";
+import "./index.css";
 
 const errorObj = {
   cnameErr: false,
@@ -97,7 +98,7 @@ const CreateProfile = (props) => {
   const [expertiseList, setExpertiesList] = useState([]);
   const [errObj, setErrObj] = useState(errorObj);
   const [state, setState] = useState({
-    businessLogo: "",
+    businessLogo: Images.upload,
     cname: "",
     description: "",
     email: "",
@@ -129,7 +130,7 @@ const CreateProfile = (props) => {
   const [userLocation, setUserLocation] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
   const [visible, setVisible] = useState(false);
-  const [bLogo, setBLogo] = useState(null);
+  const [bLogo, setBLogo] = useState();
   const [deleteImg, setDeleteImg] = useState({
     visible: false,
     id: null,
@@ -145,9 +146,9 @@ const CreateProfile = (props) => {
     if (!isEmpty(userData) && !isEmpty(userData?.contractor_data)) {
       const { profile_completed } = userData?.contractor_data;
 
-      if (profile_completed === "completed") {
-        navigate("/dashboard");
-      }
+      // if (profile_completed === "completed") {
+      //   navigate("/dashboard");
+      // }
     }
   }, [userData]);
 
@@ -167,6 +168,7 @@ const CreateProfile = (props) => {
   useEffect(() => {
     if (state?.businessLogo && _.isObject(state?.businessLogo)) {
       const imgUrl = URL.createObjectURL(state?.businessLogo);
+
       setBLogo(imgUrl);
     } else {
       setBLogo(state?.businessLogo || "");
@@ -724,11 +726,11 @@ const CreateProfile = (props) => {
       );
 
       if (response.success) {
-        createUserInCometChat(
-          data.uid,
-          userData.username,
-          state?.businessLogo ? state?.businessLogo : ""
-        );
+        // createUserInCometChat(
+        //   userData.cometChatUid,
+        //   userData.username,
+        //   state?.businessLogo ? state?.businessLogo : ""
+        // );
         continueStep(1);
         dispatch(setUserData(response?.data));
         toast.done(response.message);
@@ -1036,19 +1038,22 @@ const CreateProfile = (props) => {
         flexDirection="column"
         style={{ padding: "40px 0 120px" }}
       >
+        <Grid className={classes.headerContainer}>
+          <Typography className={classes.welcomeTextStyle}>
+            Welcome to Reno
+          </Typography>
+        </Grid>
+
         <Grid
           item
           xs={12}
-          sm={10}
-          md={8}
-          lg={6}
+          sm={7}
+          md={5}
+          lg={3}
           className={classes.formContainerStyle}
         >
           <Grid container justifyContent={"center"}>
             <Grid item xs={12}>
-              <Typography className={classes.welcomeTextStyle}>
-                Welcome to Reno
-              </Typography>
               <Typography className={classes.loginHeaderText}>
                 Create your Contractor Profile
               </Typography>
@@ -1125,7 +1130,7 @@ const CreateProfile = (props) => {
                       <Image style={{ color: "#FFF", fontSize: 30 }} />
                       <div className={classes.buttonAbsoluteDiv}>
                         <div className={classes.uploadIcon}>
-                          <CreateOutlined
+                          {/* <CreateOutlined
                             style={{
                               fontSize: "16px",
                               color: "#FFF",
@@ -1133,7 +1138,7 @@ const CreateProfile = (props) => {
                               top: 7,
                               left: 8,
                             }}
-                          />
+                          /> */}
                         </div>
                       </div>
                     </div>
@@ -1154,7 +1159,7 @@ const CreateProfile = (props) => {
                 />
               </div>
               <Typography
-                style={{ fontFamily: "Roobert-Regular", color: "#475569" }}
+                style={{ fontFamily: "Poppins-Regular", color: "#475569" }}
               >
                 {activeStep === 0 && "Upload business logo"}
               </Typography>
@@ -1163,7 +1168,8 @@ const CreateProfile = (props) => {
               <>
                 <Grid item xs={10} style={{ marginTop: 20 }} id="cname">
                   <CInput
-                    label="Company Name"
+                    // label="Company Name"
+                    label={<span className="labelField">Company Name</span>}
                     required
                     placeholder="Enter Company Name..."
                     value={state.cname}
@@ -1181,7 +1187,8 @@ const CreateProfile = (props) => {
                 <Grid item xs={10} id="description">
                   <CInput
                     multiline={true}
-                    label="Description"
+                    // label="Description"
+                    label={<span className="labelField">Description</span>}
                     // required
                     placeholder="Write Description"
                     value={state.description}
@@ -1202,7 +1209,8 @@ const CreateProfile = (props) => {
                 <Grid item container xs={10} justifyContent={"space-between"}>
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="web">
                     <CInput
-                      label="Website"
+                      // label="Website"
+                      label={<span className="labelField">Website</span>}
                       placeholder="Link Here..."
                       value={state.website}
                       onChange={(e) => {
@@ -1216,7 +1224,12 @@ const CreateProfile = (props) => {
 
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="year">
                     <Cselect
-                      label="Number of Years in Business"
+                      // label="Number of Years in Business"
+                      label={
+                        <span className="labelField">
+                          Number of Years in Business
+                        </span>
+                      }
                       required
                       placeholder="Select No. of Years"
                       value={state.businessYear}
@@ -1238,7 +1251,7 @@ const CreateProfile = (props) => {
                 <Grid item container xs={10} justifyContent="space-between">
                   {/* <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="phone">
                     <InputLabel shrink htmlFor="bootstrap-input">
-                      Phone
+                      <span className="labelField">Phone</span>
                     </InputLabel>
                     <TextField
                       fullWidth
@@ -1281,7 +1294,10 @@ const CreateProfile = (props) => {
                 <Grid item container xs={10} justifyContent="space-between">
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="employee">
                     <Cselect
-                      label="Number of Employees"
+                      // label="Number of Employees"
+                      label={
+                        <span className="labelField">Number of Employees</span>
+                      }
                       required
                       placeholder="Select No. of Employees"
                       value={state.employees}
@@ -1304,7 +1320,12 @@ const CreateProfile = (props) => {
                   </Grid>
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="contract">
                     <CInput
-                      label="Number of Contracts Annually"
+                      // label="Number of Contracts Annually"
+                      label={
+                        <span className="labelField">
+                          Number of Contracts Annually
+                        </span>
+                      }
                       required
                       placeholder="Enter No. of Contracts"
                       value={state.annualContract}
@@ -1331,7 +1352,8 @@ const CreateProfile = (props) => {
                 <Grid item xs={10} id="expertise">
                   <Cselect
                     multiple={true}
-                    label="Expertise Area"
+                    // label="Expertise Area"
+                    label={<span className="labelField">Expertise Area</span>}
                     required
                     placeholder={
                       isArray(state?.expertise) && state?.expertise.length > 0
@@ -1359,7 +1381,7 @@ const CreateProfile = (props) => {
                     shrink
                     htmlFor="bootstrap-input"
                   >
-                    Location
+                    <span className="labelField">Location</span>
                   </InputLabel>
                   <PlaceAutoComplete
                     placeholder="Enter Location Here..."
@@ -1381,7 +1403,7 @@ const CreateProfile = (props) => {
 
                 <Grid item xs={10} id="certi">
                   <InputLabel shrink htmlFor="bootstrap-input">
-                    ISO Certificate
+                    <span className="labelField">ISO Certificate</span>
                   </InputLabel>
                   {renderISOCertificate()}
                   {isArray(state.certificate) &&
@@ -1448,7 +1470,7 @@ const CreateProfile = (props) => {
                 </Grid>
                 <Grid item xs={10} id="license">
                   <InputLabel shrink htmlFor="bootstrap-input">
-                    Licenses
+                    <span className="labelField">Licenses</span>
                   </InputLabel>
                   {renderLicenses()}
                   {isArray(state.license) && state.license.length > 4 ? null : (
@@ -1516,7 +1538,7 @@ const CreateProfile = (props) => {
                 </Grid>
                 <Grid item xs={10} id="registartion">
                   <InputLabel shrink htmlFor="bootstrap-input">
-                    Company Registration
+                    <span className="labelField">Company Registration</span>
                   </InputLabel>
                   {renderRegistration()}
                   {isArray(state.registraion) &&
@@ -1586,7 +1608,7 @@ const CreateProfile = (props) => {
 
                 <Grid item xs={10} id="linkedIn">
                   <InputLabel shrink htmlFor="bootstrap-input">
-                    Team LinkedIn Profile
+                    <span className="labelField">Team LinkedIn Profile</span>
                   </InputLabel>
                   <TextField
                     fullWidth
@@ -1606,7 +1628,7 @@ const CreateProfile = (props) => {
                             }}
                           >
                             <img
-                              src={Images.Linkedin1}
+                              src={Images.Linkedin2}
                               alt="Linkedin"
                               style={{ borderRadius: 2 }}
                               // className={classes.imgStyleLanguage}
@@ -1631,7 +1653,7 @@ const CreateProfile = (props) => {
 
                 <Grid item xs={10} id="social">
                   <InputLabel shrink htmlFor="bootstrap-input">
-                    Social Media
+                    <span className="labelField"> Social Media</span>
                   </InputLabel>
                   <TextField
                     fullWidth
@@ -1650,7 +1672,7 @@ const CreateProfile = (props) => {
                             }}
                           >
                             <img
-                              src={Images.Fb1}
+                              src={Images.fb}
                               alt="facebook"
                               // className={classes.imgStyleLanguage}
                             />
@@ -1670,7 +1692,7 @@ const CreateProfile = (props) => {
 
                 <Grid item xs={10} id="instagram">
                   <InputLabel shrink htmlFor="bootstrap-input">
-                    Instagram
+                    <span className="labelField"> Instagram</span>
                   </InputLabel>
                   <TextField
                     fullWidth
@@ -1715,21 +1737,20 @@ const CreateProfile = (props) => {
                 </Grid>
 
                 <Grid item xs={10} justifyContent={"center"} container>
-                  <Typography style={{ textAlign: "center", color: "#646F86" }}>
+                  <Typography
+                    style={{ textAlign: "center", color: "#646F86" }}
+                    className="already"
+                  >
                     Already have an account,{" "}
                   </Typography>
-                  <Typography
+                  <span
                     onClick={() => {
                       dispatch(clearAllData());
                     }}
-                    style={{
-                      fontWeight: "bold",
-                      color: "#030F1C",
-                      cursor: "pointer",
-                    }}
+                    className="loginText"
                   >
-                    Login now?
-                  </Typography>
+                    Login
+                  </span>
                 </Grid>
 
                 {/* <Grid
@@ -1770,7 +1791,7 @@ const CreateProfile = (props) => {
                 <Grid container xs={10} style={{ marginTop: 20 }}>
                   <Grid item xs={12} style={{ position: "relative" }}>
                     <InputLabel htmlFor="bootstrap-input">
-                      Upload Photo
+                      <span className="labelField"> Upload Photo</span>
                     </InputLabel>
                     <div
                       style={{
@@ -1901,7 +1922,7 @@ const CreateProfile = (props) => {
                                   zIndex: 10,
                                   cursor: "pointer",
                                   fontSize: 28,
-                                  color: "#8C92A4",
+                                  color: "#FC5555",
                                 }}
                                 onClick={() => {
                                   item?.id && deletePortfolio(item?.id);
@@ -1916,30 +1937,31 @@ const CreateProfile = (props) => {
                       })}
                   </Grid>
                   <Grid
+                    flex
                     xs={12}
                     item
                     container
-                    gap={3}
+                    gap={1}
                     style={{
                       marginTop: 40,
                       justifyContent: "center",
                     }}
                   >
                     <Grid item>
-                      <Typography
+                      <Button
                         style={{
-                          width: "120px",
+                          width: "110px",
                           cursor: "pointer",
-                          marginTop: 5,
+                          backgroundColor: "#F5F6F8",
                         }}
                         onClick={() => previousStep()}
                       >
-                        Previous Step
-                      </Typography>
+                        Back
+                      </Button>
                     </Grid>
                     <Grid item>
                       <Button
-                        style={{ width: "342px" }}
+                        style={{ width: "300px" }}
                         variant="contained"
                         onClick={() => continueStep(2)}
                         disabled={buttonLoader == "step2"}
@@ -1961,7 +1983,10 @@ const CreateProfile = (props) => {
               <>
                 <Grid item xs={10} style={{ marginTop: 20 }} id="name">
                   <CInput
-                    label="Beneficiary Name"
+                    label={
+                      <span className="labelField">Beneficiary Name:</span>
+                    }
+                    // label="Beneficiary Name"
                     placeholder="Enter Beneficiary Name"
                     value={state.bname}
                     required
@@ -1976,7 +2001,8 @@ const CreateProfile = (props) => {
 
                 <Grid item xs={10} id="iban">
                   <CInput
-                    label="IBAN"
+                    label={<span className="labelField">IBAN:</span>}
+                    // label="IBAN"
                     placeholder="Enter IBAN"
                     required
                     value={state.iban}
@@ -1995,7 +2021,8 @@ const CreateProfile = (props) => {
 
                 <Grid item xs={10} id="bank">
                   <CInput
-                    label="Bank Name"
+                    label={<span className="labelField">Bank Name:</span>}
+                    // label="Bank Name"
                     placeholder="Enter Bank"
                     required
                     value={state.bank}
@@ -2031,7 +2058,8 @@ const CreateProfile = (props) => {
                 <Grid item container xs={10} justifyContent="space-between">
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="baccount">
                     <CInput
-                      label="Bank Account"
+                      label={<span className="labelField">Bank Account:</span>}
+                      // label="Bank Account"
                       inputProps={{ maxLength: 30 }}
                       placeholder="Enter Bank Account Number"
                       required
@@ -2046,7 +2074,8 @@ const CreateProfile = (props) => {
                   </Grid>
                   <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="swift">
                     <CInput
-                      label="SWIFT code"
+                      label={<span className="labelField">SWIFT code:</span>}
+                      //  label="SWIFT code"
                       placeholder="Enter SWIFT Code"
                       required
                       value={state.swift}
@@ -2062,8 +2091,9 @@ const CreateProfile = (props) => {
 
                 <Grid item xs={10} id="Address">
                   <CInput
+                    label={<span className="labelField">Address:</span>}
                     multiline
-                    label="Address"
+                    // label="Address"
                     placeholder="Enter Address"
                     required
                     value={state.address}
@@ -2091,16 +2121,16 @@ const CreateProfile = (props) => {
                   }}
                 >
                   <Grid item>
-                    <Typography
+                    <Button
                       style={{
                         width: "230px",
                         cursor: "pointer",
-                        marginTop: 5,
+                        // marginTop: 5,
                       }}
                       onClick={() => previousStep()}
                     >
-                      Previous Step
-                    </Typography>
+                      Back
+                    </Button>
                   </Grid>
                   <Grid item>
                     <Button

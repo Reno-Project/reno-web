@@ -5,6 +5,7 @@ import StepConnector, {
 } from "@mui/material/StepConnector";
 import styled from "@emotion/styled";
 import { KeyboardArrowDown, Done } from "@mui/icons-material";
+import "./index.css";
 
 function CStepper(props) {
   const { data, activeStep } = props;
@@ -68,7 +69,7 @@ function CStepper(props) {
       >
         {data.map((label) => {
           return (
-            <Step key={label}>
+            <Step key={label} l>
               <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
             </Step>
           );

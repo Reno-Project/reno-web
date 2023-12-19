@@ -196,7 +196,7 @@ const Login = (props) => {
           navigate("/create-profile");
         } else {
           dispatch(setUserData(response?.data));
-          navigate("/dashboard");
+          navigate("/create-profile");
         }
       } else {
         toast.error(response.message);
@@ -500,7 +500,7 @@ const Login = (props) => {
                   <div className={classes.borderDivStyle} />
                 </Grid>
               </Grid>
-              <Grid item xs={12} style={{ marginTop: 18 }}>
+              <Grid item xs={12} style={{ marginTop: 18, zIndex: 10001 }}>
                 <GoogleOAuthProvider clientId={Setting.GOOGLE_CLIENT_ID}>
                   <GoogleLoginButton
                     loader={socialBtnLoad === "google"}
