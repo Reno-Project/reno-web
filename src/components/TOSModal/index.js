@@ -4,7 +4,7 @@ import { useTheme } from "@emotion/react";
 import "./index.css";
 import { Close } from "@mui/icons-material";
 function TermsAndConditions(props) {
-  const { visible = false, handleClose = () => null, validation } = props;
+  const { visible = false, handleClose = () => null, acceptTerms } = props;
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
@@ -50,11 +50,7 @@ function TermsAndConditions(props) {
 
             <div className="terms-content" onScroll={handleScroll}>
               <>
-                <div title="header">
-                  <p style={{ lineHeight: "100%", marginBottom: "0.47in" }}>
-                    <br />
-                  </p>
-                </div>
+                <div title="header"></div>
                 <p style={{ marginLeft: "2in", marginBottom: "0.11in" }}>
                   <u>
                     <b>SERVICE AGREEMENT</b>
@@ -5958,7 +5954,7 @@ function TermsAndConditions(props) {
                 <button
                   disabled={!isScrolledToBottom}
                   className={isScrolledToBottom ? "submit" : "submit-disabled"}
-                  onClick={validation}
+                  onClick={acceptTerms}
                 >
                   Accept
                 </button>

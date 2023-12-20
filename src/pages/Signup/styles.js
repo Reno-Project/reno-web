@@ -99,6 +99,12 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "400",
     lineHeight: "20px",
   },
+  error: {
+    fontFamily: "Poppins-Regular !important",
+    fontSize: "14px !important",
+    fontWeight: "400",
+    color: "red",
+  },
 }));
 
 export default useStyles;

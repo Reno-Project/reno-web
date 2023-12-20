@@ -9,6 +9,8 @@ import {
   CircularProgress,
   IconButton,
   Box,
+  Checkbox,
+  FormHelperText,
 } from "@mui/material";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { isEmpty } from "lodash";
@@ -43,6 +45,8 @@ const errorObj = {
   phoneMsg: "",
   passwordMsg: "",
   confirmPasswordMsg: "",
+  termsAndConditionErr: false,
+  termsMessage: "",
 };
 
 const Signup = (props) => {
@@ -73,11 +77,16 @@ const Signup = (props) => {
   const [btnLoad, setBtnLoad] = useState(false);
   const [phonePlaceholder, setPhonePlaceholder] = useState("");
   const [locationData, setLocationData] = useState({});
-
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  console.log(">>>> isTermsAccepted ", isTermsAccepted);
   const handleClose = () => {
     setVisible(false);
   };
 
+  const acceptTerms = () => {
+    setIsTermsAccepted(true);
+    handleClose();
+  };
   useEffect(() => {
     setState({
       ...state,
@@ -120,7 +129,12 @@ const Signup = (props) => {
       state;
     const error = { ...errObj };
     let valid = true;
-
+    //validate terms and condition
+    if (!isTermsAccepted) {
+      valid = false;
+      error.termsAndConditionErr = true;
+      error.termsMessage = "please accept terms & condition";
+    }
     // validate name
     if (isEmpty(uname)) {
       valid = false;
@@ -492,14 +506,58 @@ const Signup = (props) => {
                   </Grid>
                 </>
               )}
+              <Grid
+                item
+                xs={12}
+                style={{
+                  marginBottom: 10,
+                  fontFamily: "Poppins-Regular !important",
+                }}
+              >
+                <Checkbox
+                  size="small"
+                  checked={isTermsAccepted}
+                  onChange={(e) => {
+                    setIsTermsAccepted(e.target.checked);
+                    setErrObj({
+                      ...errObj,
+                      termsAndConditionErr: false,
+                      termsMessage: "",
+                    });
+                  }}
+                  // color={errObj.termsAndConditionErr && "error"}
+                />
+                <span
+                  style={{
+                    fontFamily: "Poppins-Regular !important",
+                    color: "#646F86",
+                  }}
+                >
+                  Accept{" "}
+                  <u
+                    onClick={() => setVisible(true)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Terms & Condition
+                  </u>
+                </span>
+                {errObj.termsAndConditionErr && (
+                  <FormHelperText
+                    error
+                    style={{ marginBottom: 20, fontFamily: "Roobert-Regular" }}
+                  >
+                    {errObj.termsMessage}
+                  </FormHelperText>
+                )}
+              </Grid>
               <Grid item xs={12}>
                 <Button
                   variant="contained"
                   color="primary"
                   fullWidth
                   style={{ marginBottom: 20 }}
-                  // onClick={validation}
-                  onClick={() => setVisible(true)}
+                  onClick={validation}
+                  //     onClick={() => setVisible(true)}
                   disabled={btnLoad}
                 >
                   {btnLoad ? (
@@ -526,7 +584,7 @@ const Signup = (props) => {
         </Grid>
       </Grid>
       <TermsAndConditions
-        validation={validation}
+        acceptTerms={acceptTerms}
         visible={visible}
         handleClose={handleClose}
       />

@@ -3,8 +3,9 @@
   overflow-y: scroll;
   word-break: keep-all;
   font-family: "Poppins-Regular";
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none;
+  padding: 0px 10px;
+  /* -ms-overflow-style: none;
+  scrollbar-width: none; */
 }
 .terms-header {
   display: flex;
