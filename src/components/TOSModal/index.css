@@ -1,0 +1,58 @@
+.terms-content {
+  height: 350px;
+  overflow-y: scroll;
+  word-break: keep-all;
+  font-family: "Poppins-Regular";
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+}
+.terms-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Poppins-Regular";
+}
+.submit-container {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  font-family: "Poppins-Regular";
+}
+
+.submit {
+  background: #274bf1;
+  border: unset;
+  border-radius: 5px;
+  padding: 5px;
+  color: #ffffff;
+  width: 50%;
+  cursor: pointer;
+  font-family: "Poppins-Regular";
+}
+
+.submit-disabled {
+  background: rgb(245, 246, 248);
+  border: unset;
+  border-radius: 5px;
+  padding: 5px;
+  width: 50%;
+  font-family: "Poppins-Regular";
+}
+.acceptance-bar {
+  padding: 10px;
+  font-family: "Poppins-Regular";
+}
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
