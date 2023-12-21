@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => {
     },
     socialTextStyle: {
       fontFamily: "Poppins-Regular !important",
-      fontSize: `${sm ? "12px !important" : ": 15px !important"} `,
-      marginLeft: `${sm ? "5px !important" : ": 10px !important"} `,
+      fontSize: sm ? "12px" : "15px",
+      marginLeft: sm ? "5px !important" : ": 10px !important",
     },
     socialImgStyle: {
       height: 30,
