@@ -3,9 +3,13 @@ import { Grid, Typography } from "@mui/material";
 import Images from "../../config/images";
 import useStyles from "./styles";
 import { useLocation } from "react-router-dom";
+import { useTheme } from "@emotion/react";
+import { useMediaQuery } from "@mui/material";
 
 function Footer(props) {
   const classes = useStyles();
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
 
   const location = useLocation();
   const { pathname } = location;
@@ -44,7 +48,7 @@ function Footer(props) {
               >
                 <img
                   src={
-                    pathname === "/signup"
+                    pathname === "/signup" || (pathname === "/login" && sm)
                       ? Images.logo_black
                       : Images.logo_white
                   }

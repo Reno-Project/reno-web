@@ -36,7 +36,7 @@ function FacebookLoginButton(props) {
             ) : (
               <>
                 <img
-                  src={Images.fb}
+                  src={Images.Facebook}
                   alt="facebook"
                   className={classes.socialImgStyle}
                 />

@@ -33,6 +33,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { askForPermissionToReceiveNotifications } from "../../push-notification";
 import SignUpCover from "../../assets/images/SignUpCover.png";
 import TermsAndConditions from "../../components/TOSModal";
+import { useTheme } from "@emotion/react";
+import { useMediaQuery } from "@mui/material";
 
 const errorObj = {
   unameErr: false,
@@ -78,7 +80,8 @@ const Signup = (props) => {
   const [phonePlaceholder, setPhonePlaceholder] = useState("");
   const [locationData, setLocationData] = useState({});
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
-  console.log(">>>> isTermsAccepted ", isTermsAccepted);
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const handleClose = () => {
     setVisible(false);
   };
@@ -300,7 +303,7 @@ const Signup = (props) => {
   return (
     <div>
       <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs={0} md={6} sx={{ display: sm ? "none" : "block" }}>
           <Box
             component="img"
             sx={{
@@ -314,12 +317,17 @@ const Signup = (props) => {
         </Grid>
         <Grid
           item
-          xs={6}
+          xs={12}
+          md={6}
           // alignItems="center"
           // justifyContent="center"
           className={classes.container}
           flexDirection="column"
-          style={{ paddingTop: 129 }}
+          style={{
+            paddingTop: sm ? 100 : 129,
+            overflow: sm && "scroll",
+            height: sm && 500,
+          }}
         >
           <Grid item xs={12}>
             <Typography className={classes.welcomeTextStyle}>

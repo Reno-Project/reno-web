@@ -372,7 +372,7 @@ const Login = (props) => {
   return (
     <div>
       <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs={0} md={6} sx={{ display: sm ? "none" : "block" }}>
           <Box
             component="img"
             sx={{
@@ -386,12 +386,17 @@ const Login = (props) => {
         </Grid>
         <Grid
           item
-          xs={6}
+          xs={12}
+          md={6}
           // alignItems="center"
           // justifyContent="center"
           className={classes.container}
           flexDirection="column"
-          style={{ paddingTop: 129 }}
+          style={{
+            paddingTop: sm ? 100 : 129,
+            overflow: sm && "scroll",
+            height: sm && 500,
+          }}
         >
           <Grid item xs={12}>
             <Typography className={classes.welcomeTextStyle}>
