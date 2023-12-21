@@ -48,10 +48,10 @@ function AppleLoginButton(props) {
                 alt="apple"
                 className={classes.socialImgStyle}
               />
-              <Typography className={classes.socialTextStyle}>
+              <span className={classes.socialTextStyle}>
                 {" "}
                 Continue with Apple
-              </Typography>
+              </span>
             </>
           )}
         </div>

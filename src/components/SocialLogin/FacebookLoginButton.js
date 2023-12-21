@@ -40,9 +40,9 @@ function FacebookLoginButton(props) {
                   alt="facebook"
                   className={classes.socialImgStyle}
                 />
-                <Typography className={classes.socialTextStyle}>
+                <span className={classes.socialTextStyle}>
                   Continue with Facebook
-                </Typography>
+                </span>
               </>
             )}
           </div>
