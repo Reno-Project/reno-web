@@ -4,11 +4,14 @@ import { Typography, CircularProgress } from "@mui/material";
 import PropTypes from "prop-types";
 import Images from "../../config/images";
 import useStyles from "./styles";
+import { useTheme } from "@emotion/react";
+import { useMediaQuery } from "@mui/material";
 
 function GoogleLoginButton(props) {
   const { onGoogleDone, loader } = props;
   const classes = useStyles();
-
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const login = useGoogleLogin({
     flow: "auth-code",
     onSuccess: (tokenResponse) => {
@@ -37,8 +40,15 @@ function GoogleLoginButton(props) {
             src={Images.google}
             alt="google"
             className={classes.socialImgStyle}
+            style={{ marginRight: sm && 5 }}
           />
-          <span className={classes.socialTextStyle}> Continue with Google</span>
+          <span
+            className={classes.socialTextStyle}
+            style={{ fontSize: sm && 12 }}
+          >
+            {" "}
+            Continue with Google
+          </span>
         </>
       )}
     </div>
