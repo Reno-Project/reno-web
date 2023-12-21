@@ -133,7 +133,7 @@ const Signup = (props) => {
     if (!isTermsAccepted) {
       valid = false;
       error.termsAndConditionErr = true;
-      error.termsMessage = "please accept terms & condition";
+      error.termsMessage = "Please accept terms & conditions";
     }
     // validate name
     if (isEmpty(uname)) {
@@ -515,6 +515,7 @@ const Signup = (props) => {
                 }}
               >
                 <Checkbox
+                  sx={{ padding: "0px 5px 0px 0px !important" }}
                   size="small"
                   checked={isTermsAccepted}
                   onChange={(e) => {
@@ -538,7 +539,7 @@ const Signup = (props) => {
                     onClick={() => setVisible(true)}
                     style={{ cursor: "pointer" }}
                   >
-                    Terms & Condition
+                    Terms & Conditions
                   </u>
                 </span>
                 {errObj.termsAndConditionErr && (

@@ -1,4 +1,4 @@
-import { Box, Fade, Modal, useMediaQuery } from "@mui/material";
+import { Box, Fade, Grid, Modal, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
 import { useTheme } from "@emotion/react";
 import "./index.css";
@@ -11,11 +11,11 @@ function TermsAndConditions(props) {
 
   const style = {
     position: "absolute",
-    top: "50%",
+    top: sm ? "30%" : "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: sm ? 300 : 650,
-    height: sm ? 350 : 500,
+    height: 500,
     bgcolor: "background.paper",
     borderRadius: 1,
     boxShadow: 24,
@@ -47,11 +47,10 @@ function TermsAndConditions(props) {
                 onClick={() => handleClose()}
               />
             </div>
-
             <div className="terms-content" onScroll={handleScroll}>
               <>
                 <div title="header"></div>
-                <p style={{ marginLeft: "2in", marginBottom: "0.11in" }}>
+                <p className="serviceHeader">
                   <u>
                     <b>SERVICE AGREEMENT</b>
                   </u>
