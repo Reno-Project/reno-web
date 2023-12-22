@@ -22,7 +22,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
       "background-color",
       "box-shadow",
     ]),
-    fontFamily: "Roobert-Regular",
+    fontFamily: "Poppins-Regular",
     "&:focus": {
       // boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
       borderColor: theme.palette.primary.main,
@@ -76,7 +76,7 @@ function CInput(props) {
 
       <FormHelperText
         error={error}
-        style={{ marginBottom: 20, fontFamily: "Roobert-Regular" }}
+        style={{ marginBottom: 20, fontFamily: "Poppins-Regular" }}
       >
         {helpertext}
       </FormHelperText>

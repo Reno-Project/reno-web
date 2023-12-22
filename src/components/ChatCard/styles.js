@@ -90,26 +90,26 @@ const useStyles = makeStyles((theme) => ({
   titleText: {
     fontSize: "16px !important",
     lineHeight: "25px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontWeight: "500 !important",
   },
   requestDate: {
     fontSize: "14px !important",
     lineHeight: "20px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontWeight: "500 !important",
     color: "#646F86",
   },
   dateStyle: {
     fontSize: "14px !important",
     lineHeight: "24px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     color: "#202939",
     textAlign: "end",
     fontWeight: "bold",
   },
   acctext: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "14px !important",
     lineHeight: "20px !important",
     fontWeight: "400 !important",
@@ -134,25 +134,25 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "500 !important",
   },
   titleStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "16px !important",
     lineHeight: "20px !important",
     fontWeight: "400 !important",
   },
   titleStyleRight: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "16px !important",
     lineHeight: "24px !important",
     fontWeight: "500 !important",
   },
   MainTitle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "22px !important",
     lineHeight: "32px !important",
     fontWeight: "500 !important",
   },
   paraStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "14px !important",
     lineHeight: "20px !important",
     fontWeight: "400 !important",
@@ -167,9 +167,9 @@ const useStyles = makeStyles((theme) => ({
   iconTitleStyle: {
     fontFamily: "Roobert !important",
     fontSize: "12px !important",
-    lineHeight:'100%',
+    lineHeight: "100%",
     fontWeight: "500 !important",
-    color:'#475569 !important'
+    color: "#475569 !important",
   },
 }));
 

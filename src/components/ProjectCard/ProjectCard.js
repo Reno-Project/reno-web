@@ -81,15 +81,15 @@ const ProjectCard = (props) => {
           </Typography>
         </div>
         {/* <div className={classes.rowJustified}>
-          <Typography className={classes.row} fontFamily={"Roobert-Regular"}>
+          <Typography className={classes.row} fontFamily={"Poppins-Regular"}>
             <img src={Images.badroom} alt="badroom" />
             {villa?.form_json[0]?.bedrooms?.title || 0}
           </Typography>
-          <Typography className={classes.row} fontFamily={"Roobert-Regular"}>
+          <Typography className={classes.row} fontFamily={"Poppins-Regular"}>
             <img src={Images.bathroom} alt="bathroom" />{" "}
             {villa?.form_json[0]?.bathrooms?.title || 0}
           </Typography>
-          <Typography className={classes.row} fontFamily={"Roobert-Regular"}>
+          <Typography className={classes.row} fontFamily={"Poppins-Regular"}>
             <img src={Images.size} alt="size" />{" "}
             {villa?.form_json[0]?.size || 0} sqm
           </Typography>

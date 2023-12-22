@@ -553,7 +553,7 @@ const Signup = (props) => {
                 {errObj.termsAndConditionErr && (
                   <FormHelperText
                     error
-                    style={{ marginBottom: 20, fontFamily: "Roobert-Regular" }}
+                    style={{ marginBottom: 20, fontFamily: "Poppins-Regular" }}
                   >
                     {errObj.termsMessage}
                   </FormHelperText>

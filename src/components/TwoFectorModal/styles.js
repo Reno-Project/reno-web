@@ -2,11 +2,11 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
   welcomeTextStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     textAlign: "center",
   },
   loginHeaderText: {
-    fontFamily: "ElMessiri-Bold !important",
+    fontFamily: "Poppins-Bold !important",
     fontSize: "22px !important",
     color: "#030F1C",
     textAlign: "center",

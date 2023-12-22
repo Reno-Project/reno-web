@@ -358,7 +358,7 @@ export default function Summary(props) {
             <div style={{ margin: "auto 0" }}>
               <Typography
                 style={{
-                  fontFamily: "Roobert-Regular",
+                  fontFamily: "Poppins-Regular",
                   fontWeight: "500",
                   color: "#202939",
                   fontSize: 18,
@@ -686,7 +686,7 @@ export default function Summary(props) {
                             />
                             <FormHelperText
                               error={errObj.documentErr}
-                              style={{ fontFamily: "Roobert-Regular" }}
+                              style={{ fontFamily: "Poppins-Regular" }}
                             >
                               {errObj.documentMsg}
                             </FormHelperText>

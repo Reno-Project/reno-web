@@ -5,16 +5,16 @@ const useStyles = makeStyles((theme) => ({
   menuTitleStyle: {
     color: "#202939",
     fontSize: "14px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
   },
   welcomeTextStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "13px !important",
     color: "#646F86",
     textAlign: "center",
   },
   loginHeaderText: {
-    fontFamily: "ElMessiri-Bold !important",
+    fontFamily: "Poppins-Bold !important",
     fontSize: "22px !important",
     color: "#030F1C",
     textAlign: "center",
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   borderDivStyle: { height: 1, width: "32%", backgroundColor: "#F2F3F4" },
   continueTextStyle: {
     margin: "0px 15px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "15px !important",
     color: "#787B8C",
   },
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
   },
   socialTextStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     color: "#202939",
     fontSize: 15,
     marginLeft: "10px !important",
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
   },
   accountTextStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "14px !important",
     color: "#646F86",
   },

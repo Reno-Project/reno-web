@@ -13,7 +13,7 @@ export default function NoData(props) {
         alignItems: "center",
       }}
     >
-      <Typography variant="h4" fontFamily={"ElMessiri-Regular"} margin={"10px"}>
+      <Typography variant="h4" fontFamily={"Poppins-Regular"} margin={"10px"}>
         No data available
       </Typography>
     </div>

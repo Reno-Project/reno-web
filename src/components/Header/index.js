@@ -265,7 +265,7 @@ function Header(props) {
                               <Typography
                                 style={{
                                   color: "#030F1C",
-                                  fontFamily: "Roobert-Regular",
+                                  fontFamily: "Poppins-Regular",
                                   fontWeight: "500",
                                   fontSize: "14px",
                                   lineHeight: "20px",
@@ -276,7 +276,7 @@ function Header(props) {
                               <Typography
                                 style={{
                                   color: "#646F86",
-                                  fontFamily: "Roobert-Regular",
+                                  fontFamily: "Poppins-Regular",
                                   fontWeight: "400",
                                   fontSize: "12px",
                                   lineHeight: "16px",
@@ -308,7 +308,7 @@ function Header(props) {
                             <Typography
                               style={{
                                 color: "#0075FF",
-                                fontFamily: "Roobert-Regular",
+                                fontFamily: "Poppins-Regular",
                                 fontWeight: "500",
                                 fontSize: "14px",
                                 lineHeight: "20px",

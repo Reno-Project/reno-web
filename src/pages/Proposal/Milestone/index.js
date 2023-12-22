@@ -944,8 +944,10 @@ export default function Milestone(props) {
                             <ListItemText
                               primary="Description"
                               secondary={milestone.description}
-                              primaryTypographyProps={{className:"endDate"}}
-                              secondaryTypographyProps={{className:"endDateValue"}}
+                              primaryTypographyProps={{ className: "endDate" }}
+                              secondaryTypographyProps={{
+                                className: "endDateValue",
+                              }}
                             />
                           </ListItem>
                           <Divider />
@@ -959,14 +961,15 @@ export default function Milestone(props) {
                                     )
                                   : "-"
                               }
-                              primaryTypographyProps={{className:"endDate"}}
-                              secondaryTypographyProps={{className:"endDateValue"}}
+                              primaryTypographyProps={{ className: "endDate" }}
+                              secondaryTypographyProps={{
+                                className: "endDateValue",
+                              }}
                             />
                             <ListItemText
                               style={{ textAlign: "end" }}
                               className="endDate"
                               primary="End Date"
-                              
                               secondary={
                                 milestone.end_date
                                   ? moment(milestone.end_date).format(
@@ -974,8 +977,10 @@ export default function Milestone(props) {
                                     )
                                   : "-"
                               }
-                              primaryTypographyProps={{className:"endDate"}}
-                              secondaryTypographyProps={{className:"endDateValue"}}
+                              primaryTypographyProps={{ className: "endDate" }}
+                              secondaryTypographyProps={{
+                                className: "endDateValue",
+                              }}
                             />
                           </ListItem>
                         </List>
@@ -987,7 +992,7 @@ export default function Milestone(props) {
                                 <Grid container className={classes.card}>
                                   <Grid item container xs={12}>
                                     <Typography
-                                      fontFamily={"ElMEssiri-Regular"}
+                                      fontFamily={"Poppins-Regular"}
                                       fontWeight="bold"
                                       pl={1}
                                     >
@@ -1002,7 +1007,7 @@ export default function Milestone(props) {
                                   >
                                     <Table className={classes.customtable}>
                                       <Typography
-                                        fontFamily={"ElMEssiri-Regular"}
+                                        fontFamily={"Poppins-Regular"}
                                         fontSize={18}
                                       >
                                         Manpower
@@ -1013,7 +1018,7 @@ export default function Milestone(props) {
                                             style={{
                                               color: color.captionText,
                                               fontFamily:
-                                                "Roobert-Regular !important",
+                                                "Poppins-Regular !important",
                                             }}
                                             align="right"
                                           >
@@ -1024,7 +1029,7 @@ export default function Milestone(props) {
                                             style={{
                                               color: color.captionText,
                                               fontFamily:
-                                                "Roobert-Regular !important",
+                                                "Poppins-Regular !important",
                                             }}
                                             align="right"
                                           >
@@ -1034,7 +1039,7 @@ export default function Milestone(props) {
                                             style={{
                                               color: color.captionText,
                                               fontFamily:
-                                                "Roobert-Regular !important",
+                                                "Poppins-Regular !important",
                                             }}
                                             align="right"
                                           >
@@ -1044,21 +1049,21 @@ export default function Milestone(props) {
                                         <TableRow key={"Manpower"}>
                                           <TableCell align="right">
                                             <Typography
-                                              fontFamily={"ElMessiri-Regular"}
+                                              fontFamily={"Poppins-Regular"}
                                             >
                                               {item?.manpower_rate || "-"}
                                             </Typography>
                                           </TableCell>
                                           <TableCell align="right">
                                             <Typography
-                                              fontFamily={"ElMessiri-Regular"}
+                                              fontFamily={"Poppins-Regular"}
                                             >
                                               {item?.days || "-"}
                                             </Typography>
                                           </TableCell>
                                           <TableCell align="right">
                                             <Typography
-                                              fontFamily={"ElMessiri-Regular"}
+                                              fontFamily={"Poppins-Regular"}
                                             >
                                               AED{" "}
                                               {parseInt(
@@ -1079,7 +1084,7 @@ export default function Milestone(props) {
                                     </div>
                                     <Table className={classes.customtable}>
                                       <Typography
-                                        fontFamily={"ElMEssiri-Regular"}
+                                        fontFamily={"Poppins-Regular"}
                                         fontSize={18}
                                       >
                                         Material
@@ -1091,7 +1096,7 @@ export default function Milestone(props) {
                                             style={{
                                               color: color.captionText,
                                               fontFamily:
-                                                "Roobert-Regular !important",
+                                                "Poppins-Regular !important",
                                             }}
                                           >
                                             Material Type
@@ -1101,7 +1106,7 @@ export default function Milestone(props) {
                                             style={{
                                               color: color.captionText,
                                               fontFamily:
-                                                "Roobert-Regular !important",
+                                                "Poppins-Regular !important",
                                             }}
                                           >
                                             Material Unit
@@ -1110,7 +1115,7 @@ export default function Milestone(props) {
                                             style={{
                                               color: color.captionText,
                                               fontFamily:
-                                                "Roobert-Regular !important",
+                                                "Poppins-Regular !important",
                                             }}
                                             align="right"
                                           >
@@ -1120,7 +1125,7 @@ export default function Milestone(props) {
                                             style={{
                                               color: color.captionText,
                                               fontFamily:
-                                                "Roobert-Regular !important",
+                                                "Poppins-Regular !important",
                                             }}
                                             align="right"
                                           >
@@ -1130,7 +1135,7 @@ export default function Milestone(props) {
                                             style={{
                                               color: color.captionText,
                                               fontFamily:
-                                                "Roobert-Regular !important",
+                                                "Poppins-Regular !important",
                                             }}
                                             align="right"
                                           >
@@ -1140,7 +1145,7 @@ export default function Milestone(props) {
                                         <TableRow key={"Manpower"}>
                                           <TableCell align="right">
                                             <Typography
-                                              fontFamily={"ElMessiri-Regular"}
+                                              fontFamily={"Poppins-Regular"}
                                             >
                                               {item?.material_type || "-"}
                                             </Typography>
@@ -1148,7 +1153,7 @@ export default function Milestone(props) {
 
                                           <TableCell align="right">
                                             <Typography
-                                              fontFamily={"ElMessiri-Regular"}
+                                              fontFamily={"Poppins-Regular"}
                                             >
                                               {item?.material_unit || "-"}
                                             </Typography>
@@ -1156,7 +1161,7 @@ export default function Milestone(props) {
 
                                           <TableCell align="right">
                                             <Typography
-                                              fontFamily={"ElMessiri-Regular"}
+                                              fontFamily={"Poppins-Regular"}
                                             >
                                               AED{" "}
                                               {item?.material_unit_price || "0"}
@@ -1164,14 +1169,14 @@ export default function Milestone(props) {
                                           </TableCell>
                                           <TableCell align="right">
                                             <Typography
-                                              fontFamily={"ElMessiri-Regular"}
+                                              fontFamily={"Poppins-Regular"}
                                             >
                                               {item?.qty || "-"}
                                             </Typography>
                                           </TableCell>
                                           <TableCell align="right">
                                             <Typography
-                                              fontFamily={"ElMessiri-Regular"}
+                                              fontFamily={"Poppins-Regular"}
                                             >
                                               AED{" "}
                                               {parseInt(
@@ -1225,7 +1230,7 @@ export default function Milestone(props) {
             </Button>
           </Grid>
           <Grid item sm={5.9} xs={12} className="conBtn">
-            <Button variant="contained"  size="small" onClick={handleSubmit}>
+            <Button variant="contained" size="small" onClick={handleSubmit}>
               {buttonLoader ? (
                 <CircularProgress size={26} style={{ color: "#fff" }} />
               ) : (

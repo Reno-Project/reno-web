@@ -46,32 +46,32 @@ const useStyles = makeStyles((theme) => ({
   titleText: {
     fontSize: "16px !important",
     lineHeight: "25px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontWeight: "500 !important",
   },
   requestDate: {
     fontSize: "14px !important",
     lineHeight: "20px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontWeight: "500 !important",
     color: "#646F86",
   },
   dateStyle: {
     fontSize: "14px !important",
     lineHeight: "24px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     color: "#202939",
     textAlign: "end",
     fontWeight: "bold",
   },
   acctext: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "16px !important",
     lineHeight: "20px !important",
     fontWeight: "400 !important",
   },
   accRightText: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "14px !important",
     lineHeight: "24px !important",
     fontWeight: "500 !important",
@@ -81,31 +81,31 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   linkText: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "14px !important",
     lineHeight: "24px !important",
     fontWeight: "500 !important",
   },
   titleStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "16px !important",
     lineHeight: "20px !important",
     fontWeight: "400 !important",
   },
   titleStyleRight: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "16px !important",
     lineHeight: "24px !important",
     fontWeight: "500 !important",
   },
   MainTitle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "22px !important",
     lineHeight: "32px !important",
     fontWeight: "500 !important",
   },
   paraStyle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "14px !important",
     lineHeight: "20px !important",
     fontWeight: "400 !important",
@@ -133,17 +133,17 @@ const useStyles = makeStyles((theme) => ({
   },
   popupTitle: {
     fontWeight: "600",
-    fontFamily: "Elmessiri-Regular",
+    fontFamily: "Poppins-Regular",
     fontSize: "18px",
     letterSpacing: "0.6px",
   },
   imageButton: {
     cursor: "pointer",
     // padding: "0px 10px 0px 10px",
-    width:'100%'
+    width: "100%",
   },
   popupMessage: {
-    fontFamily: "Roobert-Regular",
+    fontFamily: "Poppins-Regular",
     fontSize: "13px",
     letterSpacing: "0.6px",
     color: "#696969",
@@ -171,7 +171,7 @@ const useStyles = makeStyles((theme) => ({
   },
   notiAppTitleText: {
     fontWeight: "normal",
-    fontFamily: "Roobert-Regular",
+    fontFamily: "Poppins-Regular",
     fontSize: "13px",
     marginTop: "-3px",
     marginLeft: "5px",
@@ -180,11 +180,11 @@ const useStyles = makeStyles((theme) => ({
   table: {
     "& td": {
       width: "33%",
-      fontFamily: "Roobert-Regular !important",
+      fontFamily: "Poppins-Regular !important",
     },
     "& .MuiTableCell-head": {
       fontWeight: "bold !important",
-      fontFamily: "Roobert-Regular !important",
+      fontFamily: "Poppins-Regular !important",
     },
   },
   dataMain: {

@@ -153,7 +153,7 @@ const PaymentHistory = (props) => {
               <Typography
                 variant="h5"
                 style={{
-                  fontFamily: "ElMessiri-SemiBold",
+                  fontFamily: "Poppins-SemiBold",
                 }}
               >
                 Initial Payment
@@ -162,7 +162,7 @@ const PaymentHistory = (props) => {
               <Typography
                 variant="h5"
                 style={{
-                  fontFamily: "ElMessiri-SemiBold",
+                  fontFamily: "Poppins-SemiBold",
                 }}
               >
                 AED {initialPayment?.customer_payment || ""}
@@ -188,7 +188,7 @@ const PaymentHistory = (props) => {
                 <Typography variant="caption" color={"#8C92A4"}>
                   Requested
                 </Typography>
-                <Typography fontFamily={"ElMessiri-SemiBold"}>
+                <Typography fontFamily={"Poppins-SemiBold"}>
                   {moment(initialPayment?.updatedAt).format("MMM DD, YYYY")}
                 </Typography>
               </Grid>
@@ -206,7 +206,7 @@ const PaymentHistory = (props) => {
                     ? "Under Review"
                     : "Paid"}
                 </Typography>
-                <Typography fontFamily={"ElMessiri-SemiBold"}>
+                <Typography fontFamily={"Poppins-SemiBold"}>
                   {moment(initialPayment?.updatedAt).format("MMM DD, YYYY")}
                 </Typography>
               </Grid>
@@ -435,7 +435,7 @@ const PaymentHistory = (props) => {
                 <Grid item container xs={12} md={9}>
                   <Grid item container xs={12}>
                     <Typography
-                      fontFamily={"ElMEssiri-Regular"}
+                      fontFamily={"Poppins-Regular"}
                       fontWeight="bold"
                       pl={1}
                     >
@@ -445,7 +445,7 @@ const PaymentHistory = (props) => {
                   <Grid item xs={12} md={9}>
                     <Typography
                       pl={1}
-                      fontFamily={"Roobert-Regular"}
+                      fontFamily={"Poppins-Regular"}
                       fontSize={14}
                       color={"#646F86"}
                     >
@@ -465,7 +465,7 @@ const PaymentHistory = (props) => {
                           <TableCell
                             align="right"
                             style={{
-                              fontFamily: "Roobert-Regular !important",
+                              fontFamily: "Poppins-Regular !important",
                             }}
                           >
                             Amount
@@ -473,14 +473,14 @@ const PaymentHistory = (props) => {
                           <TableCell
                             align="right"
                             style={{
-                              fontFamily: "Roobert-Regular !important",
+                              fontFamily: "Poppins-Regular !important",
                             }}
                           >
                             Status
                           </TableCell>
                           <TableCell
                             style={{
-                              fontFamily: "Roobert-Regular !important",
+                              fontFamily: "Poppins-Regular !important",
                             }}
                             align="right"
                           >
@@ -491,7 +491,7 @@ const PaymentHistory = (props) => {
                           <TableCell align="right">
                             <Typography
                               style={{ fontSize: 16, fontWeight: "600" }}
-                              fontFamily={"ElMEssiri-Regular"}
+                              fontFamily={"Poppins-Regular"}
                             >
                               AED {item?.total_item || "-"}
                             </Typography>
@@ -500,7 +500,7 @@ const PaymentHistory = (props) => {
                           <TableCell align="right">
                             <Typography
                               style={{ fontSize: 16, fontWeight: "600" }}
-                              fontFamily={"ElMEssiri-Regular"}
+                              fontFamily={"Poppins-Regular"}
                             >
                               {item?.status || "-"}
                             </Typography>
@@ -509,7 +509,7 @@ const PaymentHistory = (props) => {
                           <TableCell align="right">
                             <Typography
                               style={{ fontSize: 16, fontWeight: "600" }}
-                              fontFamily={"ElMEssiri-Regular"}
+                              fontFamily={"Poppins-Regular"}
                             >
                               {moment(item?.updatedAt).format("LL") || "-"}
                             </Typography>

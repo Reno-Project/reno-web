@@ -28,7 +28,7 @@ const Select = styled(Autocomplete)(({ theme }) => ({
       position: "relative",
       backgroundColor: "#FFF",
       fontSize: 14,
-      fontFamily: "Roobert-Regular",
+      fontFamily: "Poppins-Regular",
       padding: 0,
     },
     "& MuiAutocomplete-tag": {
@@ -71,10 +71,7 @@ export default function Cselect(props) {
         // getOptionLabel={(item) => item.label}
         // isOptionEqualToValue={(option, value) => option.id === value.id}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            placeholder={placeholder}
-          />
+          <TextField {...params} placeholder={placeholder} />
         )}
         value={val}
         onChange={(a, b, c, e) => {
@@ -107,7 +104,7 @@ export default function Cselect(props) {
       />
       <FormHelperText
         error={error}
-        style={{ marginBottom: 20, fontFamily: "Roobert-Regular" }}
+        style={{ marginBottom: 20, fontFamily: "Poppins-Regular" }}
       >
         {helpertext}
       </FormHelperText>

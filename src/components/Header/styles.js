@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   menuTitleStyle: {
     color: "#202939",
     fontSize: "15px !important",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     textAlign: "center",
   },
   linkStyle: {
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   logoutTextStyle: {
     cursor: "pointer",
     color: "#646F86",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontWeight: "400 !important",
     fontSize: "14px !important",
     lineHeight: "20px !important",

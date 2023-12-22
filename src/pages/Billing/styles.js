@@ -4,14 +4,14 @@ import { isMobile, isTablet } from "react-device-detect";
 const useStyles = makeStyles((theme) => ({
   title: {
     color: "#030F1C",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontWeight: "500 !important",
     fontSize: "22px !important",
     lineHeight: "32px !important",
   },
   subtitle: {
     color: "#030F1C",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontWeight: "400 !important",
     fontSize: "16px !important",
     lineHeight: "24px !important",

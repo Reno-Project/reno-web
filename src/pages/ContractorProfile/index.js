@@ -712,7 +712,7 @@ const ContractorProfile = (props) => {
                                 <span
                                   style={{
                                     fontSize: 13,
-                                    fontFamily: "Roobert-Regular !importanat",
+                                    fontFamily: "Poppins-Regular !importanat",
                                   }}
                                 >
                                   {reply?.content}

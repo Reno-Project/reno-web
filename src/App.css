@@ -43,38 +43,10 @@
 }
 
 @font-face {
-  font-family: "ElMessiri-Bold";
-  src: local("ElMessiri-Bold"),
-    url("./assets/fonts/ElMessiri-Bold.ttf") format("truetype");
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: "ElMessiri-Medium";
-  src: local("ElMessiri-Medium"),
-    url("./assets/fonts/ElMessiri-Medium.ttf") format("truetype");
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: "ElMessiri-Regular";
-  src: local("ElMessiri-Regular"),
-    url("./assets/fonts/ElMessiri-Regular.ttf") format("truetype");
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "ElMessiri-SemiBold";
-  src: local("ElMessiri-SemiBold"),
-    url("./assets/fonts/ElMessiri-SemiBold.ttf") format("truetype");
+  font-family: "Poppins-Medium";
+  src: local("Poppins-Medium"),
+    url("./assets/fonts/Poppins-Medium.ttf") format("truetype");
   font-weight: 600;
-}
-
-@font-face {
-  font-family: "Roobert-Regular";
-  src: local("Roobert-Regular"),
-    url("./assets/fonts/Roobert-Regular.ttf") format("truetype");
-  font-weight: 400;
 }
 
 @font-face {
@@ -88,5 +60,12 @@
   font-family: "Poppins-Bold";
   src: local("Poppins-Bold"),
     url("./assets/fonts/Poppins-Bold.ttf") format("truetype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Poppins-SemiBold";
+  src: local("Poppins-SemiBold"),
+    url("./assets/fonts/Poppins-SemiBold.ttf") format("truetype");
   font-weight: 600;
 }

@@ -237,7 +237,7 @@ export default function Budget(props) {
           <Typography
             variant="h5"
             style={{
-              fontFamily: "ElMessiri-SemiBold",
+              fontFamily: "Poppins-SemiBold",
             }}
           >
             Total Budget amount
@@ -245,7 +245,7 @@ export default function Budget(props) {
           <Typography
             variant="h5"
             style={{
-              fontFamily: "ElMessiri-SemiBold",
+              fontFamily: "Poppins-SemiBold",
             }}
           >
             AED{" "}
@@ -576,21 +576,20 @@ export default function Budget(props) {
               <Grid container className={classes.card}>
                 <Grid item container wrap={sm ? "wrap" : "nowrap"}>
                   <Grid item sx={12} justifyContent={"flex-start"}>
-                    {isArray(item?.buget_image) &&
-                      !isEmpty(item?.buget_image) && (
-                        <>
-                          <img
-                            style={{
-                              width: md ? 150 : 220,
-                              maxHeight: 170,
-                              objectFit: "contain",
-                              borderRadius: 4,
-                            }}
-                            src={item?.buget_image[0]?.image}
-                            alt="budget"
-                          />
-                        </>
-                      )}
+                    {isArray(item?.buget_image) && !isEmpty(item?.buget_image) && (
+                      <>
+                        <img
+                          style={{
+                            width: md ? 150 : 220,
+                            maxHeight: 170,
+                            objectFit: "contain",
+                            borderRadius: 4,
+                          }}
+                          src={item?.buget_image[0]?.image}
+                          alt="budget"
+                        />
+                      </>
+                    )}
                   </Grid>
                   <Grid
                     item
@@ -606,22 +605,22 @@ export default function Budget(props) {
                       alignItems={"flex-start"}
                       wrap="nowrap"
                     >
-                      <Typography variant="h5" fontFamily={"ElMessiri-Regular"}>
+                      <Typography variant="h5" fontFamily={"Poppins-Regular"}>
                         {item?.name || "-"}
                       </Typography>
                     </Grid>
                     <Grid item textAlign={sm ? "start" : "end"}>
-                      <Typography fontFamily={"ElMEssiri-Regular"}>
+                      <Typography fontFamily={"Poppins-Regular"}>
                         AED {amounts[index] || 0}
                       </Typography>
                       <Typography
-                        fontFamily={"ElMEssiri-Regular"}
+                        fontFamily={"Poppins-Regular"}
                         style={{
                           display: "flex",
                           alignItems: "baseline",
                         }}
                       >
-                        <Typography fontFamily={"Roobert-Regular"} mr={1}>
+                        <Typography fontFamily={"Poppins-Regular"} mr={1}>
                           Last updated:
                         </Typography>
                         {moment(item?.updatedAt).format("MMMM DD, YYYY")}
@@ -661,7 +660,7 @@ export default function Budget(props) {
                     }}
                   > */}
                   <Grid item padding={"10px 10px 0px 10px"}>
-                    <Typography fontFamily={"ElMEssiri-Regular"} fontSize={18}>
+                    <Typography fontFamily={"Poppins-Regular"} fontSize={18}>
                       Specifications
                     </Typography>
                     <Typography>{item?.specification || "-"}</Typography>
@@ -681,7 +680,7 @@ export default function Budget(props) {
                     >
                       <Table className={classes.customtable}>
                         <Typography
-                          fontFamily={"ElMEssiri-Regular"}
+                          fontFamily={"Poppins-Regular"}
                           fontSize={18}
                         >
                           Manpower
@@ -692,7 +691,7 @@ export default function Budget(props) {
                               align="right"
                               style={{
                                 color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
+                                fontFamily: "Poppins-Regular !important",
                               }}
                             >
                               Milestone
@@ -700,7 +699,7 @@ export default function Budget(props) {
                             <TableCell
                               style={{
                                 color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
+                                fontFamily: "Poppins-Regular !important",
                               }}
                               align="right"
                             >
@@ -710,7 +709,7 @@ export default function Budget(props) {
                             <TableCell
                               style={{
                                 color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
+                                fontFamily: "Poppins-Regular !important",
                               }}
                               align="right"
                             >
@@ -719,7 +718,7 @@ export default function Budget(props) {
                             <TableCell
                               style={{
                                 color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
+                                fontFamily: "Poppins-Regular !important",
                               }}
                               align="right"
                             >
@@ -728,7 +727,7 @@ export default function Budget(props) {
                             {/* <TableCell
                               style={{
                                 color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
+                                fontFamily: "Poppins-Regular !important",
                               }}
                               align="right"
                             >
@@ -737,7 +736,7 @@ export default function Budget(props) {
                             <TableCell
                               style={{
                                 color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
+                                fontFamily: "Poppins-Regular !important",
                               }}
                               align="right"
                             >
@@ -746,22 +745,22 @@ export default function Budget(props) {
                           </TableRow>
                           <TableRow key={"Manpower"}>
                             <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
+                              <Typography fontFamily={"Poppins-Regular"}>
                                 {milestoneValue?.milestone_name || "-"}
                               </Typography>
                             </TableCell>
                             <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
+                              <Typography fontFamily={"Poppins-Regular"}>
                                 {item?.manpower_rate || "-"}
                               </Typography>
                             </TableCell>
                             <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
+                              <Typography fontFamily={"Poppins-Regular"}>
                                 {item?.days || "-"}
                               </Typography>
                             </TableCell>
                             <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
+                              <Typography fontFamily={"Poppins-Regular"}>
                                 AED{" "}
                                 {parseInt(item.manpower_rate || 0) *
                                   parseInt(item.days || 0)}
@@ -769,12 +768,12 @@ export default function Budget(props) {
                             </TableCell>
 
                             {/* <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
+                              <Typography fontFamily={"Poppins-Regular"}>
                                 {item?.manpowerStatus || "-"}
                               </Typography>
                             </TableCell>
                             <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
+                              <Typography fontFamily={"Poppins-Regular"}>
                                 {item?.manpowerLastChange || "-"}
                               </Typography>
                             </TableCell> */}
@@ -788,7 +787,7 @@ export default function Budget(props) {
                       </div>
                       <Table className={classes.customtable}>
                         <Typography
-                          fontFamily={"ElMEssiri-Regular"}
+                          fontFamily={"Poppins-Regular"}
                           fontSize={18}
                         >
                           Material
@@ -799,7 +798,7 @@ export default function Budget(props) {
                               align="right"
                               style={{
                                 color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
+                                fontFamily: "Poppins-Regular !important",
                               }}
                             >
                               Material Type
@@ -808,7 +807,7 @@ export default function Budget(props) {
                               align="right"
                               style={{
                                 color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
+                                fontFamily: "Poppins-Regular !important",
                               }}
                             >
                               Material Unit
@@ -816,7 +815,7 @@ export default function Budget(props) {
                             <TableCell
                               style={{
                                 color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
+                                fontFamily: "Poppins-Regular !important",
                               }}
                               align="right"
                             >
@@ -825,7 +824,7 @@ export default function Budget(props) {
                             <TableCell
                               style={{
                                 color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
+                                fontFamily: "Poppins-Regular !important",
                               }}
                               align="right"
                             >
@@ -834,7 +833,7 @@ export default function Budget(props) {
                             <TableCell
                               style={{
                                 color: color.captionText,
-                                fontFamily: "Roobert-Regular !important",
+                                fontFamily: "Poppins-Regular !important",
                               }}
                               align="right"
                             >
@@ -843,29 +842,29 @@ export default function Budget(props) {
                           </TableRow>
                           <TableRow key={"Manpower"}>
                             <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
+                              <Typography fontFamily={"Poppins-Regular"}>
                                 {item?.material_type || "-"}
                               </Typography>
                             </TableCell>
 
                             <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
+                              <Typography fontFamily={"Poppins-Regular"}>
                                 {item?.material_unit || "-"}
                               </Typography>
                             </TableCell>
 
                             <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
+                              <Typography fontFamily={"Poppins-Regular"}>
                                 AED {item?.material_unit_price || "0"}
                               </Typography>
                             </TableCell>
                             <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
+                              <Typography fontFamily={"Poppins-Regular"}>
                                 {item?.qty || "-"}
                               </Typography>
                             </TableCell>
                             <TableCell align="right">
-                              <Typography fontFamily={"ElMessiri-Regular"}>
+                              <Typography fontFamily={"Poppins-Regular"}>
                                 AED{" "}
                                 {parseInt(item.material_unit_price || 0) *
                                   parseInt(item.qty || 0)}

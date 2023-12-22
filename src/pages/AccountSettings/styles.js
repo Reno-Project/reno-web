@@ -4,7 +4,7 @@ import { isMobile, isTablet } from "react-device-detect";
 const useStyles = makeStyles((theme) => ({
   header: {
     color: "#030F1C",
-    fontFamily: " ElMessiri-Semibold !important",
+    fontFamily: " Poppins-SemiBold !important",
     fontWeight: "600 !important",
     fontSize: "28px !important",
     lineHeight: "36px !important",

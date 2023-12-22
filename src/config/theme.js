@@ -55,7 +55,7 @@ theme = createTheme(theme, {
       styleOverrides: {
         root: {
           boxShadow: "0px 3px 6px #00000052",
-          fontFamily: "Roobert-Regular !important",
+          fontFamily: "Poppins-Regular !important",
           fontSize: "15px",
           textTransform: "inherit",
           borderRadius: "7px",
@@ -93,7 +93,7 @@ theme = createTheme(theme, {
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          fontFamily: "Roobert-Regular",
+          fontFamily: "Poppins-Regular",
           color: "#202939",
         },
       },
@@ -137,7 +137,7 @@ theme = createTheme(theme, {
           letterSpacing: "0.075em",
         },
         h5: {
-          fontFamily: "Roobert-Regular",
+          fontFamily: "Poppins-Regular",
         },
       },
     },
@@ -156,7 +156,7 @@ theme = createTheme(theme, {
           color: color.primary,
           position: "relative",
           backgroundColor: "#F5F6F8",
-          fontFamily: "Roobert-Regular",
+          fontFamily: "Poppins-Regular",
           padding: 0,
         },
         tag: {
@@ -193,7 +193,7 @@ theme = createTheme(theme, {
     MuiStepLabel: {
       styleOverrides: {
         label: {
-          fontFamily: "Roobert-Regular !important",
+          fontFamily: "Poppins-Regular !important",
           fontSize: "14px !important",
         },
         iconContainer: {
@@ -294,7 +294,7 @@ theme = createTheme(theme, {
       styleOverrides: {
         root: {
           textTransform: "capitalize",
-          fontFamily: "Roobert-Regular",
+          fontFamily: "Poppins-Regular",
           fontWeight: "500",
         },
       },

@@ -979,7 +979,7 @@ export default function Budget(props) {
               <div style={{ margin: "auto 0" }}>
                 <Typography
                   style={{
-                    fontFamily: "Roobert-Regular",
+                    fontFamily: "Poppins-Regular",
                     fontWeight: "500",
                     color: "#202939",
                     fontSize: 18,
@@ -1171,7 +1171,7 @@ export default function Budget(props) {
               />
               <FormHelperText
                 error={errObj.photoErr}
-                style={{ fontFamily: "Roobert-Regular" }}
+                style={{ fontFamily: "Poppins-Regular" }}
               >
                 {errObj.photoMsg}
               </FormHelperText>
@@ -1648,7 +1648,7 @@ export default function Budget(props) {
                         </Grid>
 
                         {/* <Grid item textAlign={sm ? "start" : "end"}>
-                          <Typography fontFamily={"ElMEssiri-Regular"}>
+                          <Typography fontFamily={"Poppins-Regular"}>
                             AED {amounts[index] || 0}
                           </Typography>
                         </Grid> */}

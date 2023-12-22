@@ -29,13 +29,13 @@ const useStyles = makeStyles((theme) => ({
   },
   notificationTitle: {
     fontWeight: "600",
-    fontFamily: "Roobert-Regular",
+    fontFamily: "Poppins-Regular",
     fontSize: "14px",
     letterSpacing: "0.6px",
     marginTop: 3,
   },
   notificationMessage: {
-    fontFamily: "Roobert-Regular",
+    fontFamily: "Poppins-Regular",
     fontSize: "13px",
     letterSpacing: "0.6px",
     color: "#696969",
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
   },
   notiAppTitleText: {
     fontWeight: "normal",
-    fontFamily: "Roobert-Regular",
+    fontFamily: "Poppins-Regular",
     fontSize: "13px",
     marginTop: "-3px",
     marginLeft: "5px",

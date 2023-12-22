@@ -3,14 +3,14 @@ import { makeStyles } from "@mui/styles";
 const useStyles = makeStyles((theme) => ({
   title: {
     color: "#030F1C",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontWeight: "500 !important",
     fontSize: "22px !important",
     lineHeight: "32px !important",
   },
   subtitle: {
     color: "#646F86",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontWeight: "400 !important",
     fontSize: "16px !important",
     lineHeight: "24px !important",
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
   TextStyle: {
     color: "#202939 ",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "18px !important",
     letterSpacing: "0.5px !important",
     lineHeight: "24px !important",
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   language: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     color: "#646F86",
     fontSize: "16px !important",
     fontWeight: "400 !important",
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
   imgStyle: { height: "16px" },
   signOut: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     color: "#646F86",
     fontSize: "14px !important",
     fontWeight: "400 !important",

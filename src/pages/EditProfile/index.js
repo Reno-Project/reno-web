@@ -1477,7 +1477,7 @@ export default function EditProfile() {
                   </div>
                   <Typography
                     style={{
-                      fontFamily: "Roobert-Regular",
+                      fontFamily: "Poppins-Regular",
                       color: "#475569",
                     }}
                   >
@@ -1804,7 +1804,7 @@ export default function EditProfile() {
                           <div style={{ margin: "auto 0" }}>
                             <Typography
                               style={{
-                                fontFamily: "Roobert-Regular",
+                                fontFamily: "Poppins-Regular",
                                 fontWeight: "500",
                                 color: "#202939",
                                 fontSize: 18,
@@ -1816,7 +1816,7 @@ export default function EditProfile() {
                             </Typography>
                             {/* <Typography
                               style={{
-                                fontFamily: "Roobert-Regular",
+                                fontFamily: "Poppins-Regular",
                                 color: "#787B8C",
                               }}
                             >

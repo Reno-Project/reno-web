@@ -23,7 +23,7 @@ const CustomAutocomplete = styled(Autocomplete)(({ theme }) => ({
       position: "relative",
       backgroundColor: "#FFF",
       fontSize: 14,
-      fontFamily: "Roobert-Regular",
+      fontFamily: "Poppins-Regular",
       padding: 0,
     },
     "& MuiAutocomplete-tag": {
@@ -79,7 +79,7 @@ const CAutocomplete = ({
       />
       <FormHelperText
         error={props?.error || false}
-        style={{ marginBottom: 20, fontFamily: "Roobert-Regular" }}
+        style={{ marginBottom: 20, fontFamily: "Poppins-Regular" }}
       >
         {props?.helpertext || ""}
       </FormHelperText>

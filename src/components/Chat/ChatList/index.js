@@ -347,7 +347,7 @@ function ChatList(props) {
                               style={{
                                 fontSize: "12px",
                                 lineHeight: "16px",
-                                fontFamily: "Roobert-Regular",
+                                fontFamily: "Poppins-Regular",
                                 fontWeight: "400",
                                 color: "#475569",
                               }}
@@ -366,7 +366,7 @@ function ChatList(props) {
                             style={{
                               fontSize: "12px",
                               lineHeight: "16px",
-                              fontFamily: "Roobert-Regular",
+                              fontFamily: "Poppins-Regular",
                               fontWeight: "400",
                               color: "#646F86",
                             }}

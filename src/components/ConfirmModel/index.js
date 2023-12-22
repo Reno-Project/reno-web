@@ -48,7 +48,7 @@ export default function ConfirmModel(props) {
             <Typography
               style={{
                 color: "#0D1522 ",
-                fontFamily: "ElMessiri-Regular",
+                fontFamily: "Poppins-Regular",
                 fontSize: "18px",
                 letterSpacing: "0.5px",
                 lineHeight: "24px",
@@ -84,7 +84,7 @@ export default function ConfirmModel(props) {
           marginTop={"10px"}
         >
           <Grid item xs={6}>
-            <div  className="cancel"  onClick={handleClose}>
+            <div className="cancel" onClick={handleClose}>
               Cancel
             </div>
           </Grid>

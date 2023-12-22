@@ -6,7 +6,7 @@ import Cselect from "../CSelect";
 import { useState } from "react";
 
 export default function Cmodal(props) {
-  const[selectedLanguage,setSelectedLanguage]=useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
 
   const {
     visible = false,
@@ -17,7 +17,7 @@ export default function Cmodal(props) {
 
   const handleSelectLanguage = (e) => {
     console.log(">>>>> e", e);
-    setSelectedLanguage(e)
+    setSelectedLanguage(e);
   };
 
   return (
@@ -57,7 +57,7 @@ export default function Cmodal(props) {
               <Typography
                 style={{
                   color: "#030F1C ",
-                  fontFamily: "ElMessiri-SemiBold",
+                  fontFamily: "Poppins-SemiBold",
                   fontSize: "28px",
                   lineHeight: "36px",
                   fontWeight: "600",
@@ -88,7 +88,7 @@ export default function Cmodal(props) {
                   <Typography
                     style={{
                       color: "#030F1C",
-                      fontFamily: "Roobert-Regular",
+                      fontFamily: "Poppins-Regular",
                       fontWeight: 500,
                       fontSize: "22px",
                       lineHeight: "32px",
@@ -99,7 +99,7 @@ export default function Cmodal(props) {
                   <Typography
                     style={{
                       color: "#646F86",
-                      fontFamily: "Roobert-Regular",
+                      fontFamily: "Poppins-Regular",
                       fontWeight: 400,
                       fontSize: "16px",
                       lineHeight: "24px",

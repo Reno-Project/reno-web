@@ -24,14 +24,14 @@ const useStyles = makeStyles((theme) => ({
   timeLineStyle: {
     fontSize: "19px",
     lineHeight: "16px",
-    fontFamily: "Roobert-Regular",
+    fontFamily: "Poppins-Regular",
     fontWeight: "400",
     color: "#475569",
   },
   msgTextStyle: {
     fontSize: "12px",
     lineHeight: "16px",
-    fontFamily: "Roobert-Regular",
+    fontFamily: "Poppins-Regular",
     fontWeight: "400",
     color: "#646F86",
   },

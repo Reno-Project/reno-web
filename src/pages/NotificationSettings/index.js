@@ -28,7 +28,7 @@ const IOSSwitch = styled((props) => (
     <Typography
       style={{
         color: "#202939",
-        fontFamily: "Roobert-Regular",
+        fontFamily: "Poppins-Regular",
         fontWeight: "500",
         fontSize: "16px",
         lineHeight: "24px",

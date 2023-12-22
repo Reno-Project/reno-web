@@ -70,7 +70,7 @@ export default function Notifications() {
           variant="h4"
           style={{
             lineHeight: 4,
-            fontFamily: "ElMessiri-semiBold",
+            fontFamily: "Poppins-SemiBold",
             fontSize: "28px",
           }}
         >
@@ -130,7 +130,7 @@ export default function Notifications() {
                             <Grid item xs={12}>
                               <Typography
                                 style={{
-                                  fontFamily: "Roobert-Regular",
+                                  fontFamily: "Poppins-Regular",
                                   fontSize: "16px",
                                   fontWeight: "bold",
                                 }}
@@ -139,7 +139,7 @@ export default function Notifications() {
                               </Typography>
                               <Typography
                                 style={{
-                                  fontFamily: "Roobert-Regular",
+                                  fontFamily: "Poppins-Regular",
                                   fontSize: "14px",
                                 }}
                               >
@@ -147,7 +147,7 @@ export default function Notifications() {
                               </Typography>
                               <Typography
                                 style={{
-                                  fontFamily: "Roobert-Regular",
+                                  fontFamily: "Poppins-Regular",
                                   color: "#274BF1",
                                 }}
                               >
@@ -198,7 +198,7 @@ export default function Notifications() {
                         <Grid item xs={12}>
                           <Typography
                             style={{
-                              fontFamily: "Roobert-Regular",
+                              fontFamily: "Poppins-Regular",
                               fontSize: "16px",
                               fontWeight: "bold",
                             }}
@@ -207,7 +207,7 @@ export default function Notifications() {
                           </Typography>
                           <Typography
                             style={{
-                              fontFamily: "Roobert-Regular",
+                              fontFamily: "Poppins-Regular",
                               fontSize: "14px",
                             }}
                           >
@@ -215,7 +215,7 @@ export default function Notifications() {
                           </Typography>
                           <Typography
                             style={{
-                              fontFamily: "Roobert-Regular",
+                              fontFamily: "Poppins-Regular",
                               color: "#274BF1",
                             }}
                           >

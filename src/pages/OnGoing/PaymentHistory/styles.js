@@ -49,25 +49,25 @@ const useStyles = makeStyles((theme) => ({
   },
   cardValueTexy: {
     color: "#030F1C",
-    fontFamily: " ElMessiri-Semibold !important",
+    fontFamily: " Poppins-SemiBold !important",
     fontWeight: "600 !important",
     fontSize: "28px !important",
     lineHeight: "36px !important", //styleName: Headline 4;
   },
   MainTitle: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "22px !important",
     lineHeight: "32px !important",
     fontWeight: "500 !important",
   },
   acctext: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "16px !important",
     lineHeight: "20px !important",
     fontWeight: "400 !important",
   },
   accRightText: {
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontSize: "18px !important",
     lineHeight: "24px !important",
     fontWeight: "500 !important",

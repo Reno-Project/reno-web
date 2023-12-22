@@ -23,7 +23,7 @@ export default function CreateProposal() {
             variant="h4"
             style={{
               lineHeight: 3,
-              fontFamily: "ElMessiri-SemiBold",
+              fontFamily: "Poppins-SemiBold",
             }}
           >
             Account Settings

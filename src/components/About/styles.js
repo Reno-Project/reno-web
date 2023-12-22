@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     color: "##202939",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontWeight: "500 !important",
     fontSize: "18px !important",
     lineHeight: "24px !important",
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#475569",
     paddingTop: isMobile ? 4 : "12px",
     cursor: "pointer",
-    fontFamily: "Roobert-Regular !important",
+    fontFamily: "Poppins-Regular !important",
     fontWeight: "400 !important",
     fontSize: "16px !important",
     lineHeight: "22px !important",

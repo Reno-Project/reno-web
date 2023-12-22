@@ -1760,7 +1760,7 @@ const CreateProfile = (props) => {
                 >
                   <Typography
                     style={{
-                      fontFamily: "Roobert-Regular",
+                      fontFamily: "Poppins-Regular",
                       textAlign: "center",
                     }}
                   >
@@ -1778,7 +1778,7 @@ const CreateProfile = (props) => {
                         textAlign: "center",
                         color: "#202939",
                         fontSize: "14px",
-                        fontFamily: "Roobert-Regular",
+                        fontFamily: "Poppins-Regular",
                       }}
                     >
                       Login Now
@@ -1888,7 +1888,7 @@ const CreateProfile = (props) => {
                             <div style={{ margin: "auto 0" }}>
                               <Typography
                                 style={{
-                                  fontFamily: "Roobert-Regular",
+                                  fontFamily: "Poppins-Regular",
                                   fontWeight: "500",
                                   color: "#202939",
                                   fontSize: 18,
@@ -1900,7 +1900,7 @@ const CreateProfile = (props) => {
                               </Typography>
                               {/* <Typography
                                 style={{
-                                  fontFamily: "Roobert-Regular",
+                                  fontFamily: "Poppins-Regular",
                                   color: "#787B8C",
                                 }}
                               >
