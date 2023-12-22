@@ -25,6 +25,9 @@ import {
   Box,
   Backdrop,
   Alert,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
@@ -47,6 +50,7 @@ import authActions from "../../../redux/reducers/auth/actions";
 import { getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import "./index.css";
+import { Close } from "@mui/icons-material";
 
 const errorObj = {
   nameErr: false,
@@ -72,6 +76,7 @@ export default function Milestone(props) {
     description: "",
     start_date: null,
     end_date: null,
+    amount: null,
   });
   const [milestones, setMilestones] = useState([]);
   const [budgets, setBudgets] = useState([]);
@@ -79,6 +84,7 @@ export default function Milestone(props) {
 
   const [buttonLoader, setButtonLoader] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);
+  const [isCreationOpen, setIsCreationOpen] = useState(false);
 
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
@@ -103,6 +109,10 @@ export default function Milestone(props) {
 
   const [visibleEditModal, setVisibleEditModal] = useState(false);
   const [btnUpdateLoader, setBtnUpdateLoader] = useState("");
+
+  const handleCloseCreation = () => {
+    setIsCreationOpen(false);
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -466,14 +476,15 @@ export default function Milestone(props) {
       error.endMsg = "Please enter valid date";
     }
 
-    // if (isEmpty(state.amount.toString())) {
-    //   valid = false;
-    //   error.amountErr = true;
-    //   error.amountMsg = "Please enter ammount";
-    // }
+    if (isEmpty(state.amount.toString())) {
+      valid = false;
+      error.amountErr = true;
+      error.amountMsg = "Please enter ammount";
+    }
 
     setErrObj(error);
     if (valid) {
+      handleCloseCreation();
       if (isUpdateModalVisible) {
         setVisibleEditModal(false);
       }
@@ -527,7 +538,14 @@ export default function Milestone(props) {
     if (isArray(milestones) && !isEmpty(milestones)) {
       // if (createProposal) {
       const extractedData = milestones?.map((item, ind) => {
-        const { milestone_name, description, start_date, end_date, id } = item;
+        const {
+          milestone_name,
+          description,
+          start_date,
+          end_date,
+          id,
+          amount,
+        } = item;
         // if (id) {
         //   return { id, milestone_name, description, start_date, end_date };
         // } else {
@@ -538,6 +556,7 @@ export default function Milestone(props) {
           description,
           start_date,
           end_date,
+          amount,
         };
         // }
       });
@@ -574,235 +593,271 @@ export default function Milestone(props) {
 
   function renderMilestoneCreateForm(mode) {
     return (
-      <>
-        <Grid item xs={12} id="name" mt={2}>
-          <CInput
-            label={<span className="fieldTitle">Milestone Name</span>}
-            placeholder="Enter Milestone Name..."
-            value={
-              mode === "modal" && visibleEditModal
-                ? state.milestone_name
-                : mode === "form" && visibleEditModal
-                ? ""
-                : state.milestone_name
-            }
-            onChange={(e) => {
-              setState({ ...state, milestone_name: e.target.value });
-              setErrObj({
-                ...errObj,
-                nameErr: false,
-                nameMsg: "",
-              });
-            }}
-            inputProps={{ maxLength: 50 }}
-            error={
-              mode === "modal" && visibleEditModal
-                ? errObj.nameErr
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.nameErr
-            }
-            helpertext={
-              mode === "modal" && visibleEditModal
-                ? errObj.nameMsg
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.nameMsg
-            }
-          />
-        </Grid>
-        <Grid item xs={12} id="desctiption">
-          <CInput
-            multiline={true}
-            rows={3}
-            label={<span className="fieldTitle">Description:</span>}
-            placeholder="Write description here..."
-            value={
-              mode === "modal" && visibleEditModal
-                ? state.description
-                : mode === "form" && visibleEditModal
-                ? ""
-                : state.description
-            }
-            onChange={(e) => {
-              setState({ ...state, description: e.target.value });
-              setErrObj({
-                ...errObj,
-                descriptionErr: false,
-                descriptionMsg: "",
-              });
-            }}
-            error={
-              mode === "modal" && visibleEditModal
-                ? errObj.descriptionErr
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.descriptionErr
-            }
-            helpertext={
-              mode === "modal" && visibleEditModal
-                ? errObj.descriptionMsg
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.descriptionMsg
-            }
-          />
-        </Grid>
-        <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
-          <Grid item xs={12} md={6} mb={2}>
-            <FormControl
-              variant="standard"
-              fullWidth
-              error={
-                mode === "modal" && visibleEditModal
-                  ? errObj.startErr
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.startErr
-              }
-              style={{ position: "relative" }}
-            >
-              <span className="fieldTitle" htmlFor="start-date">
-                Start Date:
-              </span>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  disablePast
+      <Modal open={isCreationOpen} onClose={handleCloseCreation}>
+        <Fade in={isCreationOpen}>
+          <Box sx={style}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div className="addMilestoneHeader">Create Milestone</div>
+              <Close
+                style={{ cursor: "pointer" }}
+                onClick={() => handleCloseCreation()}
+              />
+            </div>
+            <Grid container style={{ padding: "24px 24px 0px 24px" }}>
+              <Grid item xs={12} id="name" mt={2}>
+                <CInput
+                  label={<span className="fieldTitle">Milestone Name</span>}
+                  placeholder="Enter Milestone Name..."
                   value={
                     mode === "modal" && visibleEditModal
-                      ? new Date(state.start_date)
+                      ? state.milestone_name
                       : mode === "form" && visibleEditModal
-                      ? null
-                      : state.start_date
-                      ? new Date(state?.start_date)
-                      : null
-                  }
-                  onChange={(e, v) => {
-                    setState({
-                      ...state,
-                      start_date: moment(e).format("MMMM DD, yyyy"),
-                      end_date: null,
-                    });
-                    setErrObj({
-                      ...errObj,
-                      startErr: false,
-                      startMsg: "",
-                    });
-                  }}
-                  sx={{
-                    width: "100%",
-                    marginTop: "6px",
-                  }}
-                  format="MMMM dd, yyyy"
-                  slotProps={{
-                    textField: {
-                      helperText:
-                        mode === "modal" && visibleEditModal
-                          ? errObj.startMsg
-                          : mode === "form" && visibleEditModal
-                          ? ""
-                          : errObj.startMsg,
-                      error:
-                        mode === "modal" && visibleEditModal
-                          ? errObj.startErr
-                          : mode === "form" && visibleEditModal
-                          ? ""
-                          : errObj.startErr,
-                      id: "start-date",
-                    },
-                  }}
-                />
-              </LocalizationProvider>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} md={6} mb={2}>
-            <FormControl
-              variant="standard"
-              fullWidth
-              error={
-                mode === "modal" && visibleEditModal
-                  ? errObj.endErr
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.endErr
-              }
-              style={{ position: "relative" }}
-            >
-              <span className="fieldTitle" htmlFor="end-date">
-                End Date:
-              </span>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  minDate={new Date(state?.start_date)}
-                  value={
-                    mode === "modal" && visibleEditModal
-                      ? new Date(state.end_date)
-                      : mode === "form" && visibleEditModal
-                      ? null
-                      : state?.end_date
-                      ? new Date(state?.end_date)
-                      : null
+                      ? ""
+                      : state.milestone_name
                   }
                   onChange={(e) => {
-                    setState({
-                      ...state,
-                      end_date: moment(e).format("MMMM DD, yyyy"),
-                    });
+                    setState({ ...state, milestone_name: e.target.value });
                     setErrObj({
                       ...errObj,
-                      endErr: false,
-                      endMsg: "",
+                      nameErr: false,
+                      nameMsg: "",
                     });
                   }}
-                  sx={{
-                    width: "100%",
-                    marginTop: "6px",
-                  }}
-                  slotProps={{
-                    textField: {
-                      helperText:
-                        mode === "modal" && visibleEditModal
-                          ? errObj.endMsg
-                          : mode === "form" && visibleEditModal
-                          ? ""
-                          : errObj.endMsg,
-                      error:
-                        mode === "modal" && visibleEditModal
-                          ? errObj.endErr
-                          : mode === "form" && visibleEditModal
-                          ? ""
-                          : errObj.endErr,
-                      id: "end-date",
-                    },
-                  }}
-                  format="MMMM dd, yyyy"
+                  inputProps={{ maxLength: 50 }}
+                  error={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.nameErr
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.nameErr
+                  }
+                  helpertext={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.nameMsg
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.nameMsg
+                  }
                 />
-              </LocalizationProvider>
-            </FormControl>
-          </Grid>
-        </Grid>
-        {/* <Grid item xs={12} id="amount">
-          <CInput
-            type={"number"}
-            label="Milestone Amount:"
-            placeholder="Amount "
-            value={state.amount}
-            inputProps={{
-              onWheel: (event) => event.currentTarget.blur(),
-            }}
-            onChange={(e) => {
-              setState({ ...state, amount: e.target.value });
-              setErrObj({
-                ...errObj,
-                amountErr: false,
-                amountMsg: "",
-              });
-            }}
-            error={errObj.amountErr}
-            helpertext={errObj.amountMsg}
-          />
-        </Grid> */}
-      </>
+              </Grid>
+              <Grid item xs={12} id="desctiption">
+                <CInput
+                  multiline={true}
+                  rows={3}
+                  label={<span className="fieldTitle">Description:</span>}
+                  placeholder="Write description here..."
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? state.description
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : state.description
+                  }
+                  onChange={(e) => {
+                    setState({ ...state, description: e.target.value });
+                    setErrObj({
+                      ...errObj,
+                      descriptionErr: false,
+                      descriptionMsg: "",
+                    });
+                  }}
+                  error={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.descriptionErr
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.descriptionErr
+                  }
+                  helpertext={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.descriptionMsg
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.descriptionMsg
+                  }
+                />
+              </Grid>
+              <Grid item xs={12} id="amount">
+                <CInput
+                  type={"number"}
+                  label="Price:"
+                  placeholder="Enter Price "
+                  value={state.amount}
+                  inputProps={{
+                    onWheel: (event) => event.currentTarget.blur(),
+                  }}
+                  onChange={(e) => {
+                    setState({ ...state, amount: e.target.value });
+                    setErrObj({
+                      ...errObj,
+                      amountErr: false,
+                      amountMsg: "",
+                    });
+                  }}
+                  error={errObj.amountErr}
+                  helpertext={errObj.amountMsg}
+                />
+              </Grid>
+              <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
+                <Grid item xs={12} md={6} mb={2}>
+                  <FormControl
+                    variant="standard"
+                    fullWidth
+                    error={
+                      mode === "modal" && visibleEditModal
+                        ? errObj.startErr
+                        : mode === "form" && visibleEditModal
+                        ? ""
+                        : errObj.startErr
+                    }
+                    style={{ position: "relative" }}
+                  >
+                    <span className="fieldTitle" htmlFor="start-date">
+                      Start Date:
+                    </span>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        disablePast
+                        value={
+                          mode === "modal" && visibleEditModal
+                            ? new Date(state.start_date)
+                            : mode === "form" && visibleEditModal
+                            ? null
+                            : state.start_date
+                            ? new Date(state?.start_date)
+                            : null
+                        }
+                        onChange={(e, v) => {
+                          setState({
+                            ...state,
+                            start_date: moment(e).format("MMMM DD, yyyy"),
+                            end_date: null,
+                          });
+                          setErrObj({
+                            ...errObj,
+                            startErr: false,
+                            startMsg: "",
+                          });
+                        }}
+                        sx={{
+                          width: "100%",
+                          marginTop: "6px",
+                        }}
+                        format="MMMM dd, yyyy"
+                        slotProps={{
+                          textField: {
+                            helperText:
+                              mode === "modal" && visibleEditModal
+                                ? errObj.startMsg
+                                : mode === "form" && visibleEditModal
+                                ? ""
+                                : errObj.startMsg,
+                            error:
+                              mode === "modal" && visibleEditModal
+                                ? errObj.startErr
+                                : mode === "form" && visibleEditModal
+                                ? ""
+                                : errObj.startErr,
+                            id: "start-date",
+                          },
+                        }}
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={6} mb={2}>
+                  <FormControl
+                    variant="standard"
+                    fullWidth
+                    error={
+                      mode === "modal" && visibleEditModal
+                        ? errObj.endErr
+                        : mode === "form" && visibleEditModal
+                        ? ""
+                        : errObj.endErr
+                    }
+                    style={{ position: "relative" }}
+                  >
+                    <span className="fieldTitle" htmlFor="end-date">
+                      End Date:
+                    </span>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        minDate={new Date(state?.start_date)}
+                        value={
+                          mode === "modal" && visibleEditModal
+                            ? new Date(state.end_date)
+                            : mode === "form" && visibleEditModal
+                            ? null
+                            : state?.end_date
+                            ? new Date(state?.end_date)
+                            : null
+                        }
+                        onChange={(e) => {
+                          setState({
+                            ...state,
+                            end_date: moment(e).format("MMMM DD, yyyy"),
+                          });
+                          setErrObj({
+                            ...errObj,
+                            endErr: false,
+                            endMsg: "",
+                          });
+                        }}
+                        sx={{
+                          width: "100%",
+                          marginTop: "6px",
+                        }}
+                        slotProps={{
+                          textField: {
+                            helperText:
+                              mode === "modal" && visibleEditModal
+                                ? errObj.endMsg
+                                : mode === "form" && visibleEditModal
+                                ? ""
+                                : errObj.endMsg,
+                            error:
+                              mode === "modal" && visibleEditModal
+                                ? errObj.endErr
+                                : mode === "form" && visibleEditModal
+                                ? ""
+                                : errObj.endErr,
+                            id: "end-date",
+                          },
+                        }}
+                        format="MMMM dd, yyyy"
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid
+              item
+              container
+              justifyContent={"center"}
+              gap={sm ? 1 : 2}
+              wrap="nowrap"
+              marginTop={"10px"}
+            >
+              <Grid item xs={6}>
+                <div className="cancel" onClick={handleCloseCreation}>
+                  Cancel
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={() => validate(false)}
+                >
+                  Create Milestone
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </Fade>
+      </Modal>
     );
   }
 
@@ -825,18 +880,8 @@ export default function Milestone(props) {
             </span>
           </div>
         </Grid>
-        {renderMilestoneCreateForm("form")}
-        <Grid item container alignItems={"center"}>
-          <div
-            className="btnSubmit"
-            onClick={() => {
-              validate(false);
-            }}
-          >
-            <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
-            Add Milestone
-          </div>
-        </Grid>
+        {isCreationOpen && renderMilestoneCreateForm("form")}
+
         {milestoneLoader ? (
           <Grid
             item
@@ -856,347 +901,39 @@ export default function Milestone(props) {
                 <Divider style={{ marginTop: 28, marginBottom: 28 }} />
               </Grid> */}
 
-              <div className="secondaryTitle">Added Milestone</div>
+              <div className="secondaryTitle">Milestones</div>
 
               <Grid container>
                 {milestones.map((milestone, index) => {
                   return (
-                    <Card
-                      sx={{
-                        width: "100%",
-                        my: 2,
-                        p: 2,
-                        boxShadow: "none",
-                        border: `1px solid ${color.borderColor}`,
-                        borderRadius: "8px",
-                      }}
-                    >
-                      <Grid
-                        item
-                        container
-                        justifyContent={"space-between"}
-                        wrap="nowrap"
-                      >
-                        <span className="milestoneHeader">
-                          {milestone?.milestone_name}
-                        </span>
-                        <IconButton
-                          onClick={(e) => handleRowClick(e, milestone, index)}
-                        >
-                          <MoreVertIcon />
-                        </IconButton>
-                      </Grid>
-                      <Grid
-                        item
-                        container
-                        justifyContent={"space-between"}
-                        py={2}
-                      >
-                        <Grid item xl={6}>
-                          <div className="endDate">End date</div>
-                          <div className="endDateValue">
-                            {milestone.end_date
-                              ? moment(milestone.end_date).format(
-                                  "MMMM DD, YYYY"
-                                )
-                              : "-"}
-                          </div>
-                        </Grid>
-                        <Grid item xl={6}>
-                          <div className="endDate">Amount</div>
-                          <div className="endDateValue">
-                            {`AED ${amounts[index]}` || `AED 0`}
-                          </div>
-                        </Grid>
-                      </Grid>
-                      <div style={{ width: "100%", paddingBottom: 16 }}>
-                        <Divider />
-                      </div>
-                      <Grid item container xl={12}>
-                        <Typography
-                          style={{
-                            display: "flex",
-                            alignItems: "start",
-                            justifyContent: "start",
-                            width: "100%",
-                            cursor: "pointer",
-                          }}
-                          className="viewDetails"
-                          onClick={() => {
-                            handleChange(milestone, index);
-                          }}
-                        >
-                          View Details
-                          {milestone?.expanded ? (
-                            <ExpandLessIcon sx={{ ml: 1 }} />
-                          ) : (
-                            <ExpandMoreIcon sx={{ ml: 1 }} />
-                          )}
-                        </Typography>
-                      </Grid>
-                      <Collapse
-                        in={milestone?.expanded}
-                        timeout="auto"
-                        unmountOnExit
-                      >
-                        <List>
-                          <ListItem>
-                            <ListItemText
-                              primary="Description"
-                              secondary={milestone.description}
-                              primaryTypographyProps={{ className: "endDate" }}
-                              secondaryTypographyProps={{
-                                className: "endDateValue",
-                              }}
-                            />
-                          </ListItem>
-                          <Divider />
-                          <ListItem>
-                            <ListItemText
-                              primary="Start Date"
-                              secondary={
-                                milestone.start_date
-                                  ? moment(milestone.start_date).format(
-                                      "MMMM DD, YYYY"
-                                    )
-                                  : "-"
-                              }
-                              primaryTypographyProps={{ className: "endDate" }}
-                              secondaryTypographyProps={{
-                                className: "endDateValue",
-                              }}
-                            />
-                            <ListItemText
-                              style={{ textAlign: "end" }}
-                              className="endDate"
-                              primary="End Date"
-                              secondary={
-                                milestone.end_date
-                                  ? moment(milestone.end_date).format(
-                                      "MMMM DD, YYYY"
-                                    )
-                                  : "-"
-                              }
-                              primaryTypographyProps={{ className: "endDate" }}
-                              secondaryTypographyProps={{
-                                className: "endDateValue",
-                              }}
-                            />
-                          </ListItem>
-                        </List>
-                        {isArray(budgets) &&
-                          !isEmpty(budgets) &&
-                          budgets?.map((item, index) => {
-                            if (item?.milestone?.id === milestone?.id) {
-                              return (
-                                <Grid container className={classes.card}>
-                                  <Grid item container xs={12}>
-                                    <Typography
-                                      fontFamily={"Poppins-Regular"}
-                                      fontWeight="bold"
-                                      pl={1}
-                                    >
-                                      {item?.name}
-                                    </Typography>
-                                  </Grid>
-                                  <TableContainer
-                                    style={{
-                                      padding: 10,
-                                      boxSizing: "border-box",
-                                    }}
-                                  >
-                                    <Table className={classes.customtable}>
-                                      <Typography
-                                        fontFamily={"Poppins-Regular"}
-                                        fontSize={18}
-                                      >
-                                        Manpower
-                                      </Typography>
-                                      <TableBody>
-                                        <TableRow>
-                                          <TableCell
-                                            style={{
-                                              color: color.captionText,
-                                              fontFamily:
-                                                "Poppins-Regular !important",
-                                            }}
-                                            align="right"
-                                          >
-                                            Manpower rate
-                                          </TableCell>
-
-                                          <TableCell
-                                            style={{
-                                              color: color.captionText,
-                                              fontFamily:
-                                                "Poppins-Regular !important",
-                                            }}
-                                            align="right"
-                                          >
-                                            Days
-                                          </TableCell>
-                                          <TableCell
-                                            style={{
-                                              color: color.captionText,
-                                              fontFamily:
-                                                "Poppins-Regular !important",
-                                            }}
-                                            align="right"
-                                          >
-                                            Amount
-                                          </TableCell>
-                                        </TableRow>
-                                        <TableRow key={"Manpower"}>
-                                          <TableCell align="right">
-                                            <Typography
-                                              fontFamily={"Poppins-Regular"}
-                                            >
-                                              {item?.manpower_rate || "-"}
-                                            </Typography>
-                                          </TableCell>
-                                          <TableCell align="right">
-                                            <Typography
-                                              fontFamily={"Poppins-Regular"}
-                                            >
-                                              {item?.days || "-"}
-                                            </Typography>
-                                          </TableCell>
-                                          <TableCell align="right">
-                                            <Typography
-                                              fontFamily={"Poppins-Regular"}
-                                            >
-                                              AED{" "}
-                                              {parseInt(
-                                                item.manpower_rate || 0
-                                              ) * parseInt(item.days || 0)}
-                                            </Typography>
-                                          </TableCell>
-                                        </TableRow>
-                                      </TableBody>
-                                    </Table>
-                                    <div
-                                      style={{
-                                        width: "100%",
-                                        padding: "10px 0px 14px 0px",
-                                      }}
-                                    >
-                                      <Divider />
-                                    </div>
-                                    <Table className={classes.customtable}>
-                                      <Typography
-                                        fontFamily={"Poppins-Regular"}
-                                        fontSize={18}
-                                      >
-                                        Material
-                                      </Typography>
-                                      <TableBody>
-                                        <TableRow>
-                                          <TableCell
-                                            align="right"
-                                            style={{
-                                              color: color.captionText,
-                                              fontFamily:
-                                                "Poppins-Regular !important",
-                                            }}
-                                          >
-                                            Material Type
-                                          </TableCell>
-                                          <TableCell
-                                            align="right"
-                                            style={{
-                                              color: color.captionText,
-                                              fontFamily:
-                                                "Poppins-Regular !important",
-                                            }}
-                                          >
-                                            Material Unit
-                                          </TableCell>
-                                          <TableCell
-                                            style={{
-                                              color: color.captionText,
-                                              fontFamily:
-                                                "Poppins-Regular !important",
-                                            }}
-                                            align="right"
-                                          >
-                                            Unit Price
-                                          </TableCell>
-                                          <TableCell
-                                            style={{
-                                              color: color.captionText,
-                                              fontFamily:
-                                                "Poppins-Regular !important",
-                                            }}
-                                            align="right"
-                                          >
-                                            Quantity
-                                          </TableCell>
-                                          <TableCell
-                                            style={{
-                                              color: color.captionText,
-                                              fontFamily:
-                                                "Poppins-Regular !important",
-                                            }}
-                                            align="right"
-                                          >
-                                            Amount
-                                          </TableCell>
-                                        </TableRow>
-                                        <TableRow key={"Manpower"}>
-                                          <TableCell align="right">
-                                            <Typography
-                                              fontFamily={"Poppins-Regular"}
-                                            >
-                                              {item?.material_type || "-"}
-                                            </Typography>
-                                          </TableCell>
-
-                                          <TableCell align="right">
-                                            <Typography
-                                              fontFamily={"Poppins-Regular"}
-                                            >
-                                              {item?.material_unit || "-"}
-                                            </Typography>
-                                          </TableCell>
-
-                                          <TableCell align="right">
-                                            <Typography
-                                              fontFamily={"Poppins-Regular"}
-                                            >
-                                              AED{" "}
-                                              {item?.material_unit_price || "0"}
-                                            </Typography>
-                                          </TableCell>
-                                          <TableCell align="right">
-                                            <Typography
-                                              fontFamily={"Poppins-Regular"}
-                                            >
-                                              {item?.qty || "-"}
-                                            </Typography>
-                                          </TableCell>
-                                          <TableCell align="right">
-                                            <Typography
-                                              fontFamily={"Poppins-Regular"}
-                                            >
-                                              AED{" "}
-                                              {parseInt(
-                                                item.material_unit_price || 0
-                                              ) * parseInt(item.qty || 0)}
-                                            </Typography>
-                                          </TableCell>
-                                        </TableRow>
-                                      </TableBody>
-                                    </Table>
-                                  </TableContainer>
-                                </Grid>
-                              );
-                            }
-                          })}
-                      </Collapse>
-                    </Card>
+                    <SingleAccordion milestone={milestone} index={index} />
                   );
                 })}
               </Grid>
+              <Grid
+                item
+                container
+                alignItems={"center"}
+                style={{ marginTop: 18, marginBottom: 18 }}
+              >
+                <div
+                  className="btnSubmit"
+                  onClick={() => {
+                    setIsCreationOpen(true);
+                  }}
+                >
+                  <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
+                  Add Milestone
+                </div>
+              </Grid>
+              <div
+                style={{
+                  marginBottom: 24,
+                  height: 1,
+                  width: "100%",
+                  background: "#EEF0F3",
+                }}
+              />
             </>
           )
         )}
@@ -1372,3 +1109,148 @@ export default function Milestone(props) {
     </>
   );
 }
+const SingleAccordion = ({ milestone, index }) => {
+  const [expanded, setExpanded] = React.useState("panel_0");
+  const handleChangeExpanded = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
+  };
+  return (
+    <Grid item xs={12} style={{ marginTop: 5 }} key={index}>
+      <Accordion
+        key={milestone.id}
+        onChange={handleChangeExpanded(`panel_${milestone.id}`)}
+      >
+        <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
+          <Grid container>
+            <Grid item md={8} xs={8} style={{ display: "flex" }}>
+              {expanded ? (
+                <ExpandLessIcon style={{ marginRight: 2 }} />
+              ) : (
+                <ExpandMoreIcon style={{ marginRight: 2 }} />
+              )}
+
+              <div style={{ marginRight: 10 }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M5 22V14M5 14V4M5 14L7.47067 13.5059C9.1212 13.1758 10.8321 13.3328 12.3949 13.958C14.0885 14.6354 15.9524 14.7619 17.722 14.3195L17.9364 14.2659C18.5615 14.1096 19 13.548 19 12.9037V5.53669C19 4.75613 18.2665 4.18339 17.5092 4.3727C15.878 4.78051 14.1597 4.66389 12.5986 4.03943L12.3949 3.95797C10.8321 3.33284 9.1212 3.17576 7.47067 3.50587L5 4M5 4V2"
+                    stroke="#274BF1"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
+              <span style={{ fontFamily: "Poppins-Regular" }}>
+                {milestone.milestone_name}
+              </span>
+            </Grid>
+            <Grid item md={4} xs={4} style={{ display: "flex" }}>
+              <Grid
+                display={"flex"}
+                item
+                lg={7}
+                sm={12}
+                md={7}
+                xs={12}
+                direction={"column"}
+              >
+                <div component={"span"} className="accLabel">
+                  Due Date
+                </div>
+                <div component={"span"} className="accLabelValue">
+                  {milestone?.end_date}
+                </div>
+              </Grid>
+              <Grid
+                display={"flex"}
+                item
+                lg={5}
+                sm={12}
+                md={5}
+                xs={12}
+                direction={"column"}
+              >
+                <div component={"span"} className="accLabel">
+                  Amount
+                </div>
+                <div component={"span"} className="accLabelValue">
+                  {milestone?.amount}
+                </div>
+              </Grid>
+              <Grid item>
+                <MoreVertIcon />
+              </Grid>
+            </Grid>
+          </Grid>
+        </AccordionSummary>
+        <AccordionDetails style={{ padding: 24 }}>
+          <div className="disc">{milestone.description}</div>
+          <div
+            style={{
+              marginTop: 24,
+              marginBottom: 24,
+              height: 1,
+              width: "100%",
+              background: "#EEF0F3",
+            }}
+          />
+          <Grid item md={12} xs={12} style={{ display: "flex" }}>
+            <Grid
+              display={"flex"}
+              item
+              lg={3}
+              sm={12}
+              md={3}
+              xs={12}
+              direction={"column"}
+            >
+              <div component={"span"} className="accLabel">
+                start Date
+              </div>
+              <div component={"span"} className="accLabelValue">
+                {milestone?.start_date}
+              </div>
+            </Grid>
+            <Grid
+              display={"flex"}
+              item
+              lg={3}
+              sm={12}
+              md={3}
+              xs={12}
+              direction={"column"}
+            >
+              <div component={"span"} className="accLabel">
+                End Date
+              </div>
+              <div component={"span"} className="accLabelValue">
+                {milestone?.end_date}
+              </div>
+            </Grid>
+            <Grid
+              display={"flex"}
+              item
+              lg={6}
+              sm={12}
+              md={6}
+              xs={12}
+              direction={"column"}
+            >
+              <div component={"span"} className="accLabel">
+                Amount
+              </div>
+              <div component={"span"} className="accLabelValue">
+                {milestone?.amount}
+              </div>
+            </Grid>
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
+    </Grid>
+  );
+};

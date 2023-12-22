@@ -92,3 +92,36 @@
   display: flex;
   justify-content: end;
 }
+.addMilestoneHeader {
+  color: #030f1c;
+  font-family: Poppins-Bold !important;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 32px; /* 133.333% */
+}
+.accLabelValue {
+  color: #202939;
+  font-family: Poppins-Regular;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+.accLabel {
+  color: #878f9c;
+  font-family: Poppins-Regular;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+}
+
+.disc {
+  color: #646f86;
+  font-family: Poppins-Regular;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
