@@ -196,7 +196,7 @@ const Login = (props) => {
           navigate("/create-profile");
         } else {
           dispatch(setUserData(response?.data));
-          navigate("/create-profile");
+          navigate("/dashboard");
         }
       } else {
         toast.error(response.message);

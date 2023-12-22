@@ -27,7 +27,11 @@ import { toast } from "react-toastify";
 import { isMobile, isTablet } from "react-device-detect";
 import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
 import CAutocomplete from "../../../components/CAutocomplete";
+
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import moment from "moment";
+import { FormControl } from "@mui/material";
 import "./index.css";
 
 const errorObj = {
@@ -45,6 +49,10 @@ const errorObj = {
   emailMsg: "",
   documentErr: false,
   documentMsg: "",
+  startErr: false,
+  startMsg: "",
+  endErr: false,
+  endMsg: "",
 };
 
 export default function Summary(props) {
@@ -86,6 +94,8 @@ export default function Summary(props) {
   const [disableBudget, setDisableBudget] = useState(true);
   const [loader, setloader] = useState(false);
   const [expertiseList, setExpertiesList] = useState([]);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
     if (
@@ -119,6 +129,16 @@ export default function Summary(props) {
       error.scpMsg = "Please enter scope of project";
     }
 
+    if (isEmpty(startDate)) {
+      valid = false;
+      error.startErr = true;
+      error.startMsg = "Please enter start date";
+    }
+    if (isEmpty(endDate)) {
+      valid = false;
+      error.endErr = true;
+      error.endMsg = "Please enter end date";
+    }
     if (createProposal) {
       if (!projectType) {
         valid = false;
@@ -422,8 +442,8 @@ export default function Summary(props) {
             container
             xs={isMobile ? 11 : 10}
             sm={10}
-            md={4}
-            xl={3}
+            md={12}
+            xl={12}
             className={classes.MainContainer}
           >
             <ProposalCard villa={villa} />
@@ -433,7 +453,7 @@ export default function Summary(props) {
           item
           xs={createProposal ? 12 : isMobile ? 11 : 10}
           sm={10}
-          md={7.8}
+          md={createProposal ? 12 : 7.8}
           xl={8}
           className={classes.MainContainer}
         >
@@ -455,48 +475,56 @@ export default function Summary(props) {
               <>
                 {createProposal && (
                   <>
-                    <Grid item xs={12} style={{ paddingTop: 25 }}>
-                      <CAutocomplete
-                        label="Project Type"
-                        placeholder="Select project type"
-                        value={projectType}
-                        onChange={(e, newValue) => {
-                          setProjectType(newValue);
-                          setErrObj({
-                            ...errObj,
-                            typeErr: false,
-                            typeMsg: "",
-                          });
-                        }}
-                        options={expertiseList}
-                        getOptionLabel={(option) => option?.project_name}
-                        error={errObj.typeErr}
-                        helpertext={errObj.typeMsg}
-                      />
+                    <Grid
+                      container
+                      flex
+                      columnGap={1}
+                      wrap={md ? "wrap" : "nowrap"}
+                    >
+                      <Grid item xs={6} style={{ paddingTop: 25 }}>
+                        <CAutocomplete
+                          label="Type"
+                          placeholder="Select project type"
+                          value={projectType}
+                          onChange={(e, newValue) => {
+                            setProjectType(newValue);
+                            setErrObj({
+                              ...errObj,
+                              typeErr: false,
+                              typeMsg: "",
+                            });
+                          }}
+                          options={expertiseList}
+                          getOptionLabel={(option) => option?.project_name}
+                          error={errObj.typeErr}
+                          helpertext={errObj.typeMsg}
+                        />
+                      </Grid>
+                      <Grid item xs={6} style={{ paddingTop: 25 }}>
+                        <CInput
+                          label="Name"
+                          placeholder="Write here..."
+                          value={name}
+                          onChange={(e) => {
+                            setName(e.target.value);
+                            setErrObj({
+                              ...errObj,
+                              nameErr: false,
+                              nameMsg: "",
+                            });
+                          }}
+                          inputProps={{ maxLength: 50 }}
+                          error={errObj.nameErr}
+                          helpertext={errObj.nameMsg}
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                      <CInput
-                        label="Project Name"
-                        placeholder="Write here..."
-                        value={name}
-                        onChange={(e) => {
-                          setName(e.target.value);
-                          setErrObj({
-                            ...errObj,
-                            nameErr: false,
-                            nameMsg: "",
-                          });
-                        }}
-                        inputProps={{ maxLength: 50 }}
-                        error={errObj.nameErr}
-                        helpertext={errObj.nameMsg}
-                      />
-                    </Grid>
+
                     <Grid item xs={12}>
                       <CInput
                         multiline={true}
                         rows={3}
-                        label="Project Description"
+                        label="Description"
                         placeholder="Write here..."
                         value={description}
                         onChange={(e) => {
@@ -511,51 +539,54 @@ export default function Summary(props) {
                         helpertext={errObj.descriptionMsg}
                       />
                     </Grid>
-                    <Grid item xs={12}>
-                      <CInput
-                        label="Customer Name"
-                        placeholder="Write here..."
-                        value={customerName}
-                        onChange={(e) => {
-                          setCustomerName(e.target.value);
-                          setErrObj({
-                            ...errObj,
-                            cNameErr: false,
-                            cNameMsg: "",
-                          });
-                        }}
-                        inputProps={{ maxLength: 50 }}
-                        error={errObj.cNameErr}
-                        helpertext={errObj.cNameMsg}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <CInput
-                        label="Customer Email"
-                        placeholder="Enter email address"
-                        value={email}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          setErrObj({
-                            ...errObj,
-                            emailErr: false,
-                            emailMsg: "",
-                          });
-                        }}
-                        error={errObj.emailErr}
-                        helpertext={errObj.emailMsg}
-                      />
+                    <Grid
+                      container
+                      flex
+                      columnGap={1}
+                      wrap={md ? "wrap" : "nowrap"}
+                    >
+                      <Grid item xs={6}>
+                        <CInput
+                          label="Customer Name"
+                          placeholder="Write here..."
+                          value={customerName}
+                          onChange={(e) => {
+                            setCustomerName(e.target.value);
+                            setErrObj({
+                              ...errObj,
+                              cNameErr: false,
+                              cNameMsg: "",
+                            });
+                          }}
+                          inputProps={{ maxLength: 50 }}
+                          error={errObj.cNameErr}
+                          helpertext={errObj.cNameMsg}
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <CInput
+                          label="Customer Email"
+                          placeholder="Enter email address"
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            setErrObj({
+                              ...errObj,
+                              emailErr: false,
+                              emailMsg: "",
+                            });
+                          }}
+                          error={errObj.emailErr}
+                          helpertext={errObj.emailMsg}
+                        />
+                      </Grid>
                     </Grid>
                   </>
                 )}
-                <Grid
-                  item
-                  xs={12}
-                  style={{ paddingTop: createProposal ? 0 : 25 }}
-                >
+                <Grid item xs={12} style={{ paddingTop: 25 }}>
                   <CInput
                     multiline={true}
-                    rows={1}
+                    rows={4}
                     label="Scope of work"
                     placeholder="Write here..."
                     value={scope}
@@ -596,9 +627,9 @@ export default function Summary(props) {
                         </Grid>
                       ) : (
                         <>
-                          {/* <InputLabel shrink error={errObj.documentErr}>
-                            Project Files
-                          </InputLabel> */}
+                          <InputLabel shrink error={errObj.documentErr}>
+                            Upload supporting pictures or documentation
+                          </InputLabel>
                           <Grid
                             item
                             container
@@ -630,7 +661,17 @@ export default function Summary(props) {
                                 }}
                               />
                               <InputLabel>
-                                <b>Upload Document</b>
+                                <b>
+                                  <span
+                                    style={{
+                                      cursor: "pointer",
+                                      color: "#2563EB",
+                                    }}
+                                  >
+                                    Click to upload Images
+                                  </span>{" "}
+                                  or drag and drop{" "}
+                                </b>
                               </InputLabel>
                               <InputLabel style={{ fontSize: 12 }}>
                                 {"PNG, JPG, (max size 1200*800)"}
@@ -648,6 +689,7 @@ export default function Summary(props) {
                                 bottom: 0,
                                 opacity: 0,
                                 cursor: "pointer",
+                                width: "100%",
                               }}
                               onChange={(e) => {
                                 const chosenFiles = Array.prototype.slice.call(
@@ -708,6 +750,89 @@ export default function Summary(props) {
                   </>
                 )}
 
+                <Grid
+                  item
+                  container
+                  columnGap={1}
+                  wrap={md ? "wrap" : "nowrap"}
+                >
+                  <Grid item xs={12} md={6} mb={2}>
+                    <FormControl
+                      variant="standard"
+                      fullWidth
+                      error={errObj.startErr}
+                      style={{ position: "relative" }}
+                    >
+                      <InputLabel shrink htmlFor="start-date">
+                        Start Date:
+                      </InputLabel>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                          disablePast
+                          value={new Date(startDate)}
+                          onChange={(e, v) => {
+                            setStartDate(moment(e).format("MMMM DD, yyyy"));
+                            setErrObj({
+                              ...errObj,
+                              startErr: false,
+                              startMsg: "",
+                            });
+                          }}
+                          sx={{
+                            width: "100%",
+                            marginTop: "24px",
+                          }}
+                          format="MMMM dd, yyyy"
+                          slotProps={{
+                            textField: {
+                              helperText: errObj.startMsg,
+                              error: errObj.startErr,
+                              id: "start-date",
+                            },
+                          }}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={6} mb={2}>
+                    <FormControl
+                      variant="standard"
+                      fullWidth
+                      error={errObj.endErr}
+                      style={{ position: "relative" }}
+                    >
+                      <InputLabel shrink htmlFor="end-date">
+                        End Date:
+                      </InputLabel>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                          minDate={new Date(startDate)}
+                          value={new Date(endDate)}
+                          onChange={(e) => {
+                            setEndDate(moment(e).format("MMMM DD, yyyy"));
+                            setErrObj({
+                              ...errObj,
+                              endErr: false,
+                              endMsg: "",
+                            });
+                          }}
+                          sx={{
+                            width: "100%",
+                            marginTop: "24px",
+                          }}
+                          slotProps={{
+                            textField: {
+                              helperText: errObj.endMsg,
+                              error: errObj.endErr,
+                              id: "end-date",
+                            },
+                          }}
+                          format="MMMM dd, yyyy"
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Grid>
+                </Grid>
                 <Grid
                   item
                   container
