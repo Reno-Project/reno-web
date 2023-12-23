@@ -90,7 +90,7 @@
 .budgetName {
   color: var(--gray-800-header-text, #030f1c);
   /* Titles/The quick brown fox jumps over the lazy dog */
-  font-family: Poppins-Regular !important;
+  font-family: Poppins-Bold !important;
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -155,4 +155,23 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+}
+
+.addMilestoneHeader {
+  color: #030f1c;
+  font-family: Poppins-Bold !important;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 32px; /* 133.333% */
+}
+
+.disc {
+  margin-top: 12px;
+  color: #646f86;
+  font-family: Poppins-Regular;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
 }

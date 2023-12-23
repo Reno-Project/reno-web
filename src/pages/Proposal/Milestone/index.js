@@ -66,6 +66,7 @@ const errorObj = {
 };
 export default function Milestone(props) {
   const { handleClick = () => null, villa, createProposal } = props;
+  console.log(">>>> villa DD");
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
@@ -910,33 +911,33 @@ export default function Milestone(props) {
                   );
                 })}
               </Grid>
-              <Grid
-                item
-                container
-                alignItems={"center"}
-                style={{ marginTop: 18, marginBottom: 18 }}
-              >
-                <div
-                  className="btnSubmit"
-                  onClick={() => {
-                    setIsCreationOpen(true);
-                  }}
-                >
-                  <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
-                  Add Milestone
-                </div>
-              </Grid>
-              <div
-                style={{
-                  marginBottom: 24,
-                  height: 1,
-                  width: "100%",
-                  background: "#EEF0F3",
-                }}
-              />
             </>
           )
         )}
+        <Grid
+          item
+          container
+          alignItems={"center"}
+          style={{ marginTop: 18, marginBottom: 18 }}
+        >
+          <div
+            className="btnSubmit"
+            onClick={() => {
+              setIsCreationOpen(true);
+            }}
+          >
+            <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
+            Add Milestone
+          </div>
+        </Grid>
+        <div
+          style={{
+            marginBottom: 24,
+            height: 1,
+            width: "100%",
+            background: "#EEF0F3",
+          }}
+        />
         <Grid
           pt={2}
           item

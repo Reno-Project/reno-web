@@ -63,7 +63,7 @@ export default function Summary(props) {
 
   const createProposal = location?.state?.create_proposal || false;
   const villa = location?.state?.villa ? location?.state?.villa : {};
-  console.log("villa", villa?.status);
+  console.log("villa test", villa?.status);
   const fromManageProject = location?.state?.fromManageProject || false;
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
@@ -429,14 +429,12 @@ export default function Summary(props) {
       <div className="title">Submit Proposal</div>
       <Grid
         container
-        columnGap={1}
-        rowGap={1}
-        flexDirection="row-reverse"
+        // flexDirection="row-reverse"
         style={{ padding: isMobile && !isTablet ? "20px 0" : md ? 20 : 40 }}
-        justifyContent={!createProposal && !md ? "space-between" : "center"}
+        // justifyContent={!createProposal && !md ? "space-between" : "center"}
         boxSizing={"border-box"}
       >
-        {!createProposal && (
+        {/* {!createProposal && (
           <Grid
             item
             container
@@ -448,12 +446,12 @@ export default function Summary(props) {
           >
             <ProposalCard villa={villa} />
           </Grid>
-        )}
+        )} */}
         <Grid
           item
-          xs={createProposal ? 12 : isMobile ? 11 : 10}
-          sm={10}
-          md={createProposal ? 12 : 7.8}
+          xs={isMobile ? 11 : 10}
+          sm={9}
+          md={createProposal ? 12 : 7.5}
           xl={8}
           className={classes.MainContainer}
         >
@@ -891,6 +889,19 @@ export default function Summary(props) {
             ) : null}
           </Grid>
         </Grid>
+        {!createProposal && (
+          <Grid
+            item
+            container
+            xs={isMobile ? 10 : 5}
+            sm={3}
+            md={4.2}
+            xl={12}
+            className={classes.MainContainer}
+          >
+            <ProposalCard villa={villa} />
+          </Grid>
+        )}
       </Grid>
       <BlueAbout />
     </div>

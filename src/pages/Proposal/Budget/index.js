@@ -21,10 +21,17 @@ import {
   Fade,
   Box,
   Backdrop,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import useStyles from "./styles";
-import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
+import {
+  Close,
+  HighlightOffOutlined,
+  ImageOutlined,
+} from "@mui/icons-material";
 import { color } from "../../../config/theme";
 import CInput from "../../../components/CInput";
 import { useTheme } from "@emotion/react";
@@ -80,6 +87,7 @@ export default function Budget(props) {
   const { proposalDetails } = useSelector((state) => state.auth);
   const [deleteIND, setDeleteIND] = useState(null);
   const { setProposalDetails } = authActions;
+  const [isCreationOpen, setIsCreationOpen] = useState(false);
 
   const initialFormvalues = {
     name: "",
@@ -124,16 +132,22 @@ export default function Budget(props) {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: sm ? 300 : 600,
+    width: sm ? 300 : 500,
+    height: sm ? 300 : 500,
     bgcolor: "background.paper",
     borderRadius: 1,
     boxShadow: 24,
-    padding: "25px 25px 0px 25px",
+    p: 4,
+    overflow: "scroll",
   };
 
   const [amounts, setAmounts] = useState([]);
   const [visibleEditModal, setVisibleEditModal] = useState(false);
   const [btnUpdateLoader, setBtnUpdateLoader] = useState(false);
+
+  const handleCloseCreation = () => {
+    setIsCreationOpen(false);
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -449,6 +463,7 @@ export default function Budget(props) {
     setErrObj(error);
 
     if (valid) {
+      handleCloseCreation();
       if (isUpdateModalVisible) {
         setVisibleEditModal(false);
       }
@@ -1061,482 +1076,536 @@ export default function Budget(props) {
 
   function renderBudgetCreateForm(mode) {
     return (
-      <>
-        <Grid
-          item
-          xs={12}
-          style={{
-            position: "relative",
-          }}
-        >
-          {uploadLoader &&
-          ((mode === "form" && visibleEditModal === false) ||
-            (mode === "modal" && visibleEditModal)) ? (
+      <Modal open={isCreationOpen} onClose={handleCloseCreation}>
+        <Fade in={isCreationOpen}>
+          <Box sx={style}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div className="addMilestoneHeader">Add Budget Item</div>
+              <Close
+                style={{ cursor: "pointer" }}
+                onClick={() => handleCloseCreation()}
+              />
+            </div>
+            <div
+              style={{
+                marginTop: 24,
+
+                height: 1,
+                width: "100%",
+                background: "#EEF0F3",
+              }}
+            />
+
+            <Grid
+              item
+              style={{
+                marginTop: state?.photo_origin?.length > 0 && 40,
+                overflowY: "scroll",
+                maxHeight: 500,
+                width: "100%",
+              }}
+            >
+              {displayImagesView(mode)}
+            </Grid>
+            <Grid item xs={12} id="bName" mt={2}>
+              <CInput
+                label={<span className="fieldTitle">Budget Item Name</span>}
+                placeholder="Enter Budget Name..."
+                value={
+                  mode === "modal" && visibleEditModal
+                    ? state.name
+                    : mode === "form" && visibleEditModal
+                    ? ""
+                    : state.name
+                }
+                onChange={(e) => {
+                  setState({ ...state, name: e.target.value });
+                  setErrObj({
+                    ...errObj,
+                    bNameErr: false,
+                    bNameMsg: "",
+                  });
+                }}
+                inputProps={{ maxLength: 50 }}
+                error={
+                  mode === "modal" && visibleEditModal
+                    ? errObj.bNameErr
+                    : mode === "form" && visibleEditModal
+                    ? ""
+                    : errObj.bNameErr
+                }
+                helpertext={
+                  mode === "modal" && visibleEditModal
+                    ? errObj.bNameMsg
+                    : mode === "form" && visibleEditModal
+                    ? ""
+                    : errObj.bNameMsg
+                }
+              />
+            </Grid>
+
+            <Grid item xs={12} id="material_type">
+              <CInput
+                label={<span className="fieldTitle">Material type:</span>}
+                placeholder="marble, wood, etc..."
+                value={
+                  mode === "modal" && visibleEditModal
+                    ? state.material_type
+                    : mode === "form" && visibleEditModal
+                    ? ""
+                    : state.material_type
+                }
+                onChange={(e) => {
+                  setState({ ...state, material_type: e.target.value });
+                  clearErr();
+                }}
+                inputProps={{ maxLength: 50 }}
+                error={
+                  mode === "modal" && visibleEditModal
+                    ? errObj.materialTypeErr
+                    : mode === "form" && visibleEditModal
+                    ? ""
+                    : errObj.materialTypeErr
+                }
+                helpertext={
+                  mode === "modal" && visibleEditModal
+                    ? errObj.materialTypeMsg
+                    : mode === "form" && visibleEditModal
+                    ? ""
+                    : errObj.materialTypeMsg
+                }
+              />
+            </Grid>
+            <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
+              <Grid item xs={12} md={4} id="Unit">
+                <CAutocomplete
+                  label={<span className="fieldTitle">Material unit:</span>}
+                  placeholder="Enter material unit"
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? state.material_unit
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : state.material_unit
+                  }
+                  onChange={(e, newValue) => {
+                    setState({ ...state, material_unit: newValue });
+                    clearErr();
+                  }}
+                  options={[
+                    "tonns",
+                    "Kg",
+                    "g",
+                    "lbs",
+                    "liter",
+                    "ml",
+                    "sqm",
+                    "item",
+                  ]}
+                  getOptionLabel={(option) => option}
+                  error={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.unitErr
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.unitErr
+                  }
+                  helpertext={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.unitMsg
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.unitMsg
+                  }
+                />
+              </Grid>
+              <Grid item xs={12} md={4} id="price">
+                <CInput
+                  label={
+                    <span className="fieldTitle">Material unit price</span>
+                  }
+                  placeholder="Enter amount...."
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? state.material_unit_price
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : state.material_unit_price
+                  }
+                  type="number"
+                  onChange={(e) => {
+                    const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
+                      Number(e.target.value)
+                    );
+                    if (bool) {
+                      setState({
+                        ...state,
+                        material_unit_price: e.target.value,
+                      });
+                    }
+                    clearErr();
+                  }}
+                  error={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.materialUnitPriceErr
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.materialUnitPriceErr
+                  }
+                  helpertext={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.materialUnitPriceMsg
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.materialUnitPriceMsg
+                  }
+                />
+              </Grid>
+              <Grid item xs={12} md={4} id="qty">
+                <CInput
+                  label={<span className="fieldTitle">Quantity</span>}
+                  placeholder="N/A"
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? state.qty
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : state.qty
+                  }
+                  type="tel"
+                  onChange={(e) => {
+                    const bool = /^[0-9]+$/.test(Number(e.target.value));
+                    if (bool) {
+                      setState({ ...state, qty: e.target.value });
+                    }
+                    clearErr();
+                  }}
+                  inputProps={{
+                    pattern: "[0-9]*", // Allow only digits
+                    inputMode: "numeric", // Show numeric keyboard on mobile devices
+                  }}
+                  error={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.quantityErr
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.quantityErr
+                  }
+                  helpertext={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.quantityMsg
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.quantityMsg
+                  }
+                />
+              </Grid>
+            </Grid>
+
+            <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
+              <Grid item xs={12} md={4} id="rate">
+                <CInput
+                  label={<span className="fieldTitle">Manpower rate</span>}
+                  placeholder="Enter amount...."
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? state.manpower_rate
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : state.manpower_rate
+                  }
+                  type="number"
+                  onChange={(e) => {
+                    const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
+                      Number(e.target.value)
+                    );
+                    if (bool) {
+                      setState({ ...state, manpower_rate: e.target.value });
+                    }
+                    clearErr();
+                  }}
+                  error={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.manpowerRateErr
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.manpowerRateErr
+                  }
+                  helpertext={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.manpowerRateMsg
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.manpowerRateMsg
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={12} md={4} id="days">
+                <CInput
+                  label={<span className="fieldTitle">Days</span>}
+                  placeholder="N/A"
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? state.days
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : state.days
+                  }
+                  type="tel"
+                  onChange={(e) => {
+                    const bool = /^[0-9]+$/.test(Number(e.target.value));
+                    if (bool) {
+                      setState({ ...state, days: e.target.value });
+                    }
+                    clearErr();
+                  }}
+                  inputProps={{
+                    pattern: "[0-9]*", // Allow only digits
+                    inputMode: "numeric", // Show numeric keyboard on mobile devices
+                  }}
+                  error={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.daysErr
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.daysErr
+                  }
+                  helpertext={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.daysMsg
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.daysMsg
+                  }
+                />
+              </Grid>
+              <Grid item xs={12} md={4} id="manpowerMilestone">
+                <CAutocomplete
+                  label={<span className="fieldTitle">Milestone</span>}
+                  placeholder="N/A"
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? state?.milestone
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : state?.milestone
+                  }
+                  onChange={(e, newValue) => {
+                    setState({ ...state, milestone: newValue });
+                    setErrObj({
+                      ...errObj,
+                      manpowerMilestoneErr: false,
+                      manpowerMilestoneMsg: "",
+                    });
+                  }}
+                  options={milestones}
+                  getOptionLabel={(option) => option.milestone_name}
+                  error={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.manpowerMilestoneErr
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.manpowerMilestoneErr
+                  }
+                  helpertext={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.manpowerMilestoneMsg
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.manpowerMilestoneMsg
+                  }
+                />
+              </Grid>
+            </Grid>
+            <Grid item xs={12} id="description">
+              <CInput
+                multiline={true}
+                rows={2}
+                label={<span className="fieldTitle">Specifications:</span>}
+                placeholder="Write here..."
+                value={
+                  mode === "modal" && visibleEditModal
+                    ? state.specification
+                    : mode === "form" && visibleEditModal
+                    ? ""
+                    : state.specification
+                }
+                onChange={(e) => {
+                  setState({ ...state, specification: e.target.value });
+                  setErrObj({
+                    ...errObj,
+                    specificationsErr: false,
+                    specificationsMsg: "",
+                  });
+                }}
+                error={
+                  mode === "modal" && visibleEditModal
+                    ? errObj.specificationsErr
+                    : mode === "form" && visibleEditModal
+                    ? ""
+                    : errObj.specificationsErr
+                }
+                helpertext={
+                  mode === "modal" && visibleEditModal
+                    ? errObj.specificationsMsg
+                    : mode === "form" && visibleEditModal
+                    ? ""
+                    : errObj.specificationsMsg
+                }
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              style={{
+                position: "relative",
+              }}
+            >
+              {uploadLoader &&
+              ((mode === "form" && visibleEditModal === false) ||
+                (mode === "modal" && visibleEditModal)) ? (
+                <Grid
+                  item
+                  container
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  sx={12}
+                  minHeight={130}
+                >
+                  <CircularProgress style={{ color: "#274BF1" }} size={26} />
+                </Grid>
+              ) : (
+                <>
+                  <div
+                    style={{
+                      backgroundColor: "#F9F9FA",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                      height: 130,
+                      border: errObj.photoErr ? "1px solid red" : "none",
+                      borderRadius: 4,
+                    }}
+                  >
+                    <ImageOutlined
+                      style={{
+                        color: "grey",
+                        marginBottom: 20,
+                        fontSize: 30,
+                      }}
+                    />
+                    <InputLabel>
+                      <b>Upload Photo</b>
+                    </InputLabel>
+                    <InputLabel style={{ fontSize: 12 }}>
+                      {"PNG, JPG, (max size 1200*800)"}
+                    </InputLabel>
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/jpeg, image/png, image/jpg"
+                    multiple
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      opacity: 0,
+                      cursor: "pointer",
+                      width: "100%",
+                    }}
+                    onChange={(e) => {
+                      const chosenFiles = Array.prototype.slice.call(
+                        e.target.files
+                      );
+                      let showMsg = false;
+                      let limit = false;
+                      const newArr = [...state?.photo_origin];
+                      chosenFiles.map((item) => {
+                        const bool = checkImgSize(item);
+                        if (bool && newArr.length < 5) {
+                          newArr.push(item);
+                        } else if (newArr.length >= 4) {
+                          limit = true;
+                        } else {
+                          showMsg = true;
+                        }
+                      });
+                      if (limit) {
+                        toast.error("You can upload maximum 5 files");
+                      } else if (showMsg) {
+                        toast.error(
+                          "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                        );
+                      }
+                      // if (createProposal) {
+                      let shouldUpload =
+                        isArray(newArr) &&
+                        !isEmpty(newArr) &&
+                        newArr?.filter((elem) => typeof elem !== "string");
+                      if (shouldUpload) {
+                        UploadFileDirectly(shouldUpload);
+                      }
+                      // } else {
+                      //   let shouldUpload =
+                      //     isArray(newArr) &&
+                      //     !isEmpty(newArr) &&
+                      //     newArr?.filter((elem) => !elem?.image_id);
+                      //   if (shouldUpload) {
+                      //     UploadFile(shouldUpload);
+                      //   }
+                      // }
+                    }}
+                    ref={fileInputRef}
+                  />
+                  <FormHelperText
+                    error={errObj.photoErr}
+                    style={{ fontFamily: "Poppins-Regular" }}
+                  >
+                    {errObj.photoMsg}
+                  </FormHelperText>
+                </>
+              )}
+            </Grid>
+            <div
+              style={{
+                marginTop: 24,
+                marginBottom: 24,
+                height: 1,
+                width: "100%",
+                background: "#EEF0F3",
+              }}
+            />
             <Grid
               item
               container
               justifyContent={"center"}
-              alignItems={"center"}
-              sx={12}
-              minHeight={220}
+              gap={sm ? 1 : 2}
+              wrap="nowrap"
+              marginTop={"10px"}
             >
-              <CircularProgress style={{ color: "#274BF1" }} size={26} />
+              <Grid item xs={6}>
+                <div className="cancel" onClick={handleCloseCreation}>
+                  Cancel
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={() => validate(false)}
+                >
+                  Create Budget Item
+                </Button>
+              </Grid>
             </Grid>
-          ) : (
-            <>
-              <div
-                style={{
-                  backgroundColor: "#F9F9FA",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100%",
-                  height: 170,
-                  border: errObj.photoErr ? "1px solid red" : "none",
-                  borderRadius: 4,
-                }}
-              >
-                <ImageOutlined
-                  style={{
-                    color: "grey",
-                    marginBottom: 20,
-                    fontSize: 30,
-                  }}
-                />
-                <InputLabel>
-                  <b>Upload Photo</b>
-                </InputLabel>
-                <InputLabel style={{ fontSize: 12 }}>
-                  {"PNG, JPG, (max size 1200*800)"}
-                </InputLabel>
-              </div>
-              <input
-                type="file"
-                accept="image/jpeg, image/png, image/jpg"
-                multiple
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  opacity: 0,
-                  cursor: "pointer",
-                  width: "100%",
-                }}
-                onChange={(e) => {
-                  const chosenFiles = Array.prototype.slice.call(
-                    e.target.files
-                  );
-                  let showMsg = false;
-                  let limit = false;
-                  const newArr = [...state?.photo_origin];
-                  chosenFiles.map((item) => {
-                    const bool = checkImgSize(item);
-                    if (bool && newArr.length < 5) {
-                      newArr.push(item);
-                    } else if (newArr.length >= 4) {
-                      limit = true;
-                    } else {
-                      showMsg = true;
-                    }
-                  });
-                  if (limit) {
-                    toast.error("You can upload maximum 5 files");
-                  } else if (showMsg) {
-                    toast.error(
-                      "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
-                    );
-                  }
-                  // if (createProposal) {
-                  let shouldUpload =
-                    isArray(newArr) &&
-                    !isEmpty(newArr) &&
-                    newArr?.filter((elem) => typeof elem !== "string");
-                  if (shouldUpload) {
-                    UploadFileDirectly(shouldUpload);
-                  }
-                  // } else {
-                  //   let shouldUpload =
-                  //     isArray(newArr) &&
-                  //     !isEmpty(newArr) &&
-                  //     newArr?.filter((elem) => !elem?.image_id);
-                  //   if (shouldUpload) {
-                  //     UploadFile(shouldUpload);
-                  //   }
-                  // }
-                }}
-                ref={fileInputRef}
-              />
-              <FormHelperText
-                error={errObj.photoErr}
-                style={{ fontFamily: "Poppins-Regular" }}
-              >
-                {errObj.photoMsg}
-              </FormHelperText>
-            </>
-          )}
-        </Grid>
-
-        <Grid
-          item
-          style={{
-            marginTop: state?.photo_origin?.length > 0 && 40,
-            overflowY: "scroll",
-            maxHeight: 500,
-            width: "100%",
-          }}
-        >
-          {displayImagesView(mode)}
-        </Grid>
-        <Grid item xs={12} id="bName" mt={2}>
-          <CInput
-            label={<span className="fieldTitle">Budget Name</span>}
-            placeholder="Enter Budget Name..."
-            value={
-              mode === "modal" && visibleEditModal
-                ? state.name
-                : mode === "form" && visibleEditModal
-                ? ""
-                : state.name
-            }
-            onChange={(e) => {
-              setState({ ...state, name: e.target.value });
-              setErrObj({
-                ...errObj,
-                bNameErr: false,
-                bNameMsg: "",
-              });
-            }}
-            inputProps={{ maxLength: 50 }}
-            error={
-              mode === "modal" && visibleEditModal
-                ? errObj.bNameErr
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.bNameErr
-            }
-            helpertext={
-              mode === "modal" && visibleEditModal
-                ? errObj.bNameMsg
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.bNameMsg
-            }
-          />
-        </Grid>
-
-        <Grid item xs={12} id="material_type">
-          <CInput
-            label={<span className="fieldTitle">Material type:</span>}
-            placeholder="marble, wood, etc..."
-            value={
-              mode === "modal" && visibleEditModal
-                ? state.material_type
-                : mode === "form" && visibleEditModal
-                ? ""
-                : state.material_type
-            }
-            onChange={(e) => {
-              setState({ ...state, material_type: e.target.value });
-              clearErr();
-            }}
-            inputProps={{ maxLength: 50 }}
-            error={
-              mode === "modal" && visibleEditModal
-                ? errObj.materialTypeErr
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.materialTypeErr
-            }
-            helpertext={
-              mode === "modal" && visibleEditModal
-                ? errObj.materialTypeMsg
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.materialTypeMsg
-            }
-          />
-        </Grid>
-        <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
-          <Grid item xs={12} md={4} id="Unit">
-            <CAutocomplete
-              label={<span className="fieldTitle">Material unit:</span>}
-              placeholder="Enter material unit"
-              value={
-                mode === "modal" && visibleEditModal
-                  ? state.material_unit
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : state.material_unit
-              }
-              onChange={(e, newValue) => {
-                setState({ ...state, material_unit: newValue });
-                clearErr();
-              }}
-              options={[
-                "tonns",
-                "Kg",
-                "g",
-                "lbs",
-                "liter",
-                "ml",
-                "sqm",
-                "item",
-              ]}
-              getOptionLabel={(option) => option}
-              error={
-                mode === "modal" && visibleEditModal
-                  ? errObj.unitErr
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.unitErr
-              }
-              helpertext={
-                mode === "modal" && visibleEditModal
-                  ? errObj.unitMsg
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.unitMsg
-              }
-            />
-          </Grid>
-          <Grid item xs={12} md={4} id="price">
-            <CInput
-              label={<span className="fieldTitle">Material unit price</span>}
-              placeholder="Enter amount here...."
-              value={
-                mode === "modal" && visibleEditModal
-                  ? state.material_unit_price
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : state.material_unit_price
-              }
-              type="number"
-              onChange={(e) => {
-                const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
-                  Number(e.target.value)
-                );
-                if (bool) {
-                  setState({
-                    ...state,
-                    material_unit_price: e.target.value,
-                  });
-                }
-                clearErr();
-              }}
-              error={
-                mode === "modal" && visibleEditModal
-                  ? errObj.materialUnitPriceErr
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.materialUnitPriceErr
-              }
-              helpertext={
-                mode === "modal" && visibleEditModal
-                  ? errObj.materialUnitPriceMsg
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.materialUnitPriceMsg
-              }
-            />
-          </Grid>
-          <Grid item xs={12} md={4} id="qty">
-            <CInput
-              label={<span className="fieldTitle">Quantity</span>}
-              placeholder="Enter quantity here...."
-              value={
-                mode === "modal" && visibleEditModal
-                  ? state.qty
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : state.qty
-              }
-              type="tel"
-              onChange={(e) => {
-                const bool = /^[0-9]+$/.test(Number(e.target.value));
-                if (bool) {
-                  setState({ ...state, qty: e.target.value });
-                }
-                clearErr();
-              }}
-              inputProps={{
-                pattern: "[0-9]*", // Allow only digits
-                inputMode: "numeric", // Show numeric keyboard on mobile devices
-              }}
-              error={
-                mode === "modal" && visibleEditModal
-                  ? errObj.quantityErr
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.quantityErr
-              }
-              helpertext={
-                mode === "modal" && visibleEditModal
-                  ? errObj.quantityMsg
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.quantityMsg
-              }
-            />
-          </Grid>
-        </Grid>
-
-        <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
-          <Grid item xs={12} md={4} id="rate">
-            <CInput
-              label={<span className="fieldTitle">Manpower rate</span>}
-              placeholder="Enter amount here...."
-              value={
-                mode === "modal" && visibleEditModal
-                  ? state.manpower_rate
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : state.manpower_rate
-              }
-              type="number"
-              onChange={(e) => {
-                const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
-                  Number(e.target.value)
-                );
-                if (bool) {
-                  setState({ ...state, manpower_rate: e.target.value });
-                }
-                clearErr();
-              }}
-              error={
-                mode === "modal" && visibleEditModal
-                  ? errObj.manpowerRateErr
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.manpowerRateErr
-              }
-              helpertext={
-                mode === "modal" && visibleEditModal
-                  ? errObj.manpowerRateMsg
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.manpowerRateMsg
-              }
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4} id="days">
-            <CInput
-              label={<span className="fieldTitle">Days</span>}
-              placeholder="Enter Days"
-              value={
-                mode === "modal" && visibleEditModal
-                  ? state.days
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : state.days
-              }
-              type="tel"
-              onChange={(e) => {
-                const bool = /^[0-9]+$/.test(Number(e.target.value));
-                if (bool) {
-                  setState({ ...state, days: e.target.value });
-                }
-                clearErr();
-              }}
-              inputProps={{
-                pattern: "[0-9]*", // Allow only digits
-                inputMode: "numeric", // Show numeric keyboard on mobile devices
-              }}
-              error={
-                mode === "modal" && visibleEditModal
-                  ? errObj.daysErr
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.daysErr
-              }
-              helpertext={
-                mode === "modal" && visibleEditModal
-                  ? errObj.daysMsg
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.daysMsg
-              }
-            />
-          </Grid>
-          <Grid item xs={12} md={4} id="manpowerMilestone">
-            <CAutocomplete
-              label={<span className="fieldTitle">Milestone</span>}
-              placeholder="Select milestone"
-              value={
-                mode === "modal" && visibleEditModal
-                  ? state?.milestone
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : state?.milestone
-              }
-              onChange={(e, newValue) => {
-                setState({ ...state, milestone: newValue });
-                setErrObj({
-                  ...errObj,
-                  manpowerMilestoneErr: false,
-                  manpowerMilestoneMsg: "",
-                });
-              }}
-              options={milestones}
-              getOptionLabel={(option) => option.milestone_name}
-              error={
-                mode === "modal" && visibleEditModal
-                  ? errObj.manpowerMilestoneErr
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.manpowerMilestoneErr
-              }
-              helpertext={
-                mode === "modal" && visibleEditModal
-                  ? errObj.manpowerMilestoneMsg
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.manpowerMilestoneMsg
-              }
-            />
-          </Grid>
-        </Grid>
-        <Grid item xs={12} id="description">
-          <CInput
-            multiline={true}
-            rows={2}
-            label={<span className="fieldTitle">Specifications:</span>}
-            placeholder="Write here..."
-            value={
-              mode === "modal" && visibleEditModal
-                ? state.specification
-                : mode === "form" && visibleEditModal
-                ? ""
-                : state.specification
-            }
-            onChange={(e) => {
-              setState({ ...state, specification: e.target.value });
-              setErrObj({
-                ...errObj,
-                specificationsErr: false,
-                specificationsMsg: "",
-              });
-            }}
-            error={
-              mode === "modal" && visibleEditModal
-                ? errObj.specificationsErr
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.specificationsErr
-            }
-            helpertext={
-              mode === "modal" && visibleEditModal
-                ? errObj.specificationsMsg
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.specificationsMsg
-            }
-          />
-        </Grid>
-      </>
+          </Box>
+        </Fade>
+      </Modal>
     );
   }
 
@@ -1563,11 +1632,17 @@ export default function Budget(props) {
 
         {renderBudgetCreateForm("form")}
 
-        <Grid item container alignItems={"center"} mb={2}>
+        <Grid
+          item
+          container
+          alignItems={"center"}
+          style={{ marginTop: 18, marginBottom: 18 }}
+        >
           <div
             className="btnSubmit"
             onClick={() => {
-              validate(false);
+              // validate(false);
+              setIsCreationOpen(true);
             }}
           >
             <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
@@ -1589,7 +1664,7 @@ export default function Budget(props) {
           isArray(budgetDetails) &&
           !isEmpty(budgetDetails) && (
             <>
-              <div className="secondaryTitle">Added Budget Items</div>
+              <div className="secondaryTitle">Budget Items</div>
 
               {budgetDetails?.map((item, index) => {
                 const milestoneValue = item?.milestone_id
@@ -1599,241 +1674,242 @@ export default function Budget(props) {
                   : item?.milestone;
 
                 return (
-                  <Grid container className={classes.customCard}>
-                    <Grid item container wrap={sm ? "wrap" : "nowrap"}>
-                      <Grid item sx={12} justifyContent={"flex-start"}>
-                        {isArray(item?.photo_origin) &&
-                          !isEmpty(item?.photo_origin) && (
-                            <>
-                              <img
-                                style={{
-                                  width: md ? 150 : 220,
-                                  maxHeight: 170,
-                                  objectFit: "contain",
-                                  borderRadius: 4,
-                                }}
-                                src={item?.photo_origin[0]}
-                                alt="budget"
-                              />
-                            </>
-                          )}
-                      </Grid>
-                      <Grid
-                        item
-                        container
-                        sx={12}
-                        p={sm ? "10px" : 2}
-                        justifyContent={sm ? "flex-start" : "flex-end"}
-                      >
-                        <Grid
-                          item
-                          container
-                          flexDirection={"column"}
-                          wrap="nowrap"
-                        >
-                          <div className="detailsHeader">
-                            <span className="budgetName">
-                              {item?.name || "-"}
-                            </span>
-                            <IconButton
-                              onClick={(e) => handleRowClick(e, item, index)}
-                            >
-                              <MoreVertIcon fontSize="20px" color="red" />
-                            </IconButton>
-                          </div>
+                  <SingleAccordion budget={item} index={index} />
+                  // <Grid container className={classes.customCard}>
+                  //   <Grid item container wrap={sm ? "wrap" : "nowrap"}>
+                  //     <Grid item sx={12} justifyContent={"flex-start"}>
+                  //       {isArray(item?.photo_origin) &&
+                  //         !isEmpty(item?.photo_origin) && (
+                  //           <>
+                  //             <img
+                  //               style={{
+                  //                 width: md ? 150 : 220,
+                  //                 maxHeight: 170,
+                  //                 objectFit: "contain",
+                  //                 borderRadius: 4,
+                  //               }}
+                  //               src={item?.photo_origin[0]}
+                  //               alt="budget"
+                  //             />
+                  //           </>
+                  //         )}
+                  //     </Grid>
+                  //     <Grid
+                  //       item
+                  //       container
+                  //       sx={12}
+                  //       p={sm ? "10px" : 2}
+                  //       justifyContent={sm ? "flex-start" : "flex-end"}
+                  //     >
+                  //       <Grid
+                  //         item
+                  //         container
+                  //         flexDirection={"column"}
+                  //         wrap="nowrap"
+                  //       >
+                  //         <div className="detailsHeader">
+                  //           <span className="budgetName">
+                  //             {item?.name || "-"}
+                  //           </span>
+                  //           <IconButton
+                  //             onClick={(e) => handleRowClick(e, item, index)}
+                  //           >
+                  //             <MoreVertIcon fontSize="20px" color="red" />
+                  //           </IconButton>
+                  //         </div>
 
-                          <div className="spec">
-                            {item?.specification || "-"}
-                          </div>
-                        </Grid>
+                  //         <div className="spec">
+                  //           {item?.specification || "-"}
+                  //         </div>
+                  //       </Grid>
 
-                        {/* <Grid item textAlign={sm ? "start" : "end"}>
-                          <Typography fontFamily={"Poppins-Regular"}>
-                            AED {amounts[index] || 0}
-                          </Typography>
-                        </Grid> */}
-                        <div className="detailsContent">
-                          <dic md={3} className="firstItem">
-                            <div className="detailLabel"> Amount</div>
-                            <div className="detailValue">
-                              {" "}
-                              AED {amounts[index] || 0}
-                            </div>
-                          </dic>
-                          <div md={4} className="secondItem">
-                            <div className="detailLabel"> Status</div>
-                            <div className="detailValue"> Completed</div>
-                          </div>
-                          <div md={3} className="lastItem">
-                            <div className="detailLabel"> Payment Date</div>
-                            <div className="detailValue"> March 01, 2023</div>
-                          </div>
-                        </div>
-                      </Grid>
-                    </Grid>
-                    <Grid item container justifyContent={"flex-start"}>
-                      <ListItemButton
-                        style={{
-                          color: color.primary,
-                          padding: sm && "10px 0px",
-                        }}
-                        onClick={() => {
-                          handleChange(item, index);
-                        }}
-                      >
-                        {item?.expanded ? "Collapse" : "View Subitems"}
-                        {item?.expanded ? (
-                          <ExpandLessIcon sx={{ ml: 1 }} />
-                        ) : (
-                          <ExpandMoreIcon sx={{ ml: 1 }} />
-                        )}
-                      </ListItemButton>
-                    </Grid>
-                    <Collapse
-                      in={item?.expanded}
-                      timeout="auto"
-                      unmountOnExit
-                      style={{ width: "100%" }}
-                    >
-                      {/* <CardContent
-                    style={{
-                      position: "relative",
-                      boxSizing: "border-box",
-                      width: "100%",
-                    }}
-                  > */}
-                      <Grid item padding={"10px 10px 0px 10px"}>
-                        <div className="budgetName">Specifications</div>
-                        <div className="detailValue">
-                          {item?.specification || "-"}
-                        </div>
-                        <div
-                          style={{
-                            width: "100%",
-                            paddingTop: 14,
-                            paddingBottom: 4,
-                          }}
-                        >
-                          <Divider />
-                        </div>
-                      </Grid>
-                      <div className="responsive-table">
-                        <TableContainer
-                          style={{ padding: 10, boxSizing: "border-box" }}
-                        >
-                          <Table className={classes.customtable}>
-                            <Typography className="budgetName">
-                              Manpower
-                            </Typography>
-                            <TableBody>
-                              <TableRow>
-                                <TableCell align="right">
-                                  <div className="endDate">Milestone</div>
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div className="endDate"> Manpower rate</div>
-                                </TableCell>
+                  //       {/* <Grid item textAlign={sm ? "start" : "end"}>
+                  //         <Typography fontFamily={"Poppins-Regular"}>
+                  //           AED {amounts[index] || 0}
+                  //         </Typography>
+                  //       </Grid> */}
+                  //       <div className="detailsContent">
+                  //         <dic md={3} className="firstItem">
+                  //           <div className="detailLabel"> Amount</div>
+                  //           <div className="detailValue">
+                  //             {" "}
+                  //             AED {amounts[index] || 0}
+                  //           </div>
+                  //         </dic>
+                  //         <div md={4} className="secondItem">
+                  //           <div className="detailLabel"> Status</div>
+                  //           <div className="detailValue"> Completed</div>
+                  //         </div>
+                  //         <div md={3} className="lastItem">
+                  //           <div className="detailLabel"> Payment Date</div>
+                  //           <div className="detailValue"> March 01, 2023</div>
+                  //         </div>
+                  //       </div>
+                  //     </Grid>
+                  //   </Grid>
+                  //   <Grid item container justifyContent={"flex-start"}>
+                  //     <ListItemButton
+                  //       style={{
+                  //         color: color.primary,
+                  //         padding: sm && "10px 0px",
+                  //       }}
+                  //       onClick={() => {
+                  //         handleChange(item, index);
+                  //       }}
+                  //     >
+                  //       {item?.expanded ? "Collapse" : "View Subitems"}
+                  //       {item?.expanded ? (
+                  //         <ExpandLessIcon sx={{ ml: 1 }} />
+                  //       ) : (
+                  //         <ExpandMoreIcon sx={{ ml: 1 }} />
+                  //       )}
+                  //     </ListItemButton>
+                  //   </Grid>
+                  //   <Collapse
+                  //     in={item?.expanded}
+                  //     timeout="auto"
+                  //     unmountOnExit
+                  //     style={{ width: "100%" }}
+                  //   >
+                  //     {/* <CardContent
+                  //   style={{
+                  //     position: "relative",
+                  //     boxSizing: "border-box",
+                  //     width: "100%",
+                  //   }}
+                  // > */}
+                  //     <Grid item padding={"10px 10px 0px 10px"}>
+                  //       <div className="budgetName">Specifications</div>
+                  //       <div className="detailValue">
+                  //         {item?.specification || "-"}
+                  //       </div>
+                  //       <div
+                  //         style={{
+                  //           width: "100%",
+                  //           paddingTop: 14,
+                  //           paddingBottom: 4,
+                  //         }}
+                  //       >
+                  //         <Divider />
+                  //       </div>
+                  //     </Grid>
+                  //     <div className="responsive-table">
+                  //       <TableContainer
+                  //         style={{ padding: 10, boxSizing: "border-box" }}
+                  //       >
+                  //         <Table className={classes.customtable}>
+                  //           <Typography className="budgetName">
+                  //             Manpower
+                  //           </Typography>
+                  //           <TableBody>
+                  //             <TableRow>
+                  //               <TableCell align="right">
+                  //                 <div className="endDate">Milestone</div>
+                  //               </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDate"> Manpower rate</div>
+                  //               </TableCell>
 
-                                <TableCell align="right">
-                                  <div className="endDate"> Days</div>
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div className="endDate"> Amount</div>
-                                </TableCell>
-                              </TableRow>
-                              <TableRow key={"Manpower"}>
-                                <TableCell align="right">
-                                  <div className="endDateValue">
-                                    {milestoneValue?.milestone_name || "-"}
-                                  </div>
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div className="endDateValue">
-                                    {item?.manpower_rate || "-"}
-                                  </div>
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div className="endDateValue">
-                                    {item?.days || "-"}
-                                  </div>
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div className="endDateValue">
-                                    AED{" "}
-                                    {parseInt(item.manpower_rate || 0) *
-                                      parseInt(item.days || 0)}
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                          <div
-                            style={{
-                              width: "100%",
-                              padding: "10px 0px 14px 0px",
-                            }}
-                          >
-                            <Divider />
-                          </div>
-                          <Table className={classes.customtable}>
-                            <Typography className="budgetName">
-                              Material
-                            </Typography>
-                            <TableBody>
-                              <TableRow>
-                                <TableCell align="right">
-                                  <div className="endDate"> Material Type</div>
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div className="endDate"> Material Unit</div>
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div className="endDate"> Unit Price</div>
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div className="endDate"> Quantity</div>
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div className="endDate"> Amount</div>
-                                </TableCell>
-                              </TableRow>
-                              <TableRow key={"Manpower"}>
-                                <TableCell align="right">
-                                  <div className="endDateValue">
-                                    {item?.material_type || "-"}
-                                  </div>
-                                </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDate"> Days</div>
+                  //               </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDate"> Amount</div>
+                  //               </TableCell>
+                  //             </TableRow>
+                  //             <TableRow key={"Manpower"}>
+                  //               <TableCell align="right">
+                  //                 <div className="endDateValue">
+                  //                   {milestoneValue?.milestone_name || "-"}
+                  //                 </div>
+                  //               </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDateValue">
+                  //                   {item?.manpower_rate || "-"}
+                  //                 </div>
+                  //               </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDateValue">
+                  //                   {item?.days || "-"}
+                  //                 </div>
+                  //               </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDateValue">
+                  //                   AED{" "}
+                  //                   {parseInt(item.manpower_rate || 0) *
+                  //                     parseInt(item.days || 0)}
+                  //                 </div>
+                  //               </TableCell>
+                  //             </TableRow>
+                  //           </TableBody>
+                  //         </Table>
+                  //         <div
+                  //           style={{
+                  //             width: "100%",
+                  //             padding: "10px 0px 14px 0px",
+                  //           }}
+                  //         >
+                  //           <Divider />
+                  //         </div>
+                  //         <Table className={classes.customtable}>
+                  //           <Typography className="budgetName">
+                  //             Material
+                  //           </Typography>
+                  //           <TableBody>
+                  //             <TableRow>
+                  //               <TableCell align="right">
+                  //                 <div className="endDate"> Material Type</div>
+                  //               </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDate"> Material Unit</div>
+                  //               </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDate"> Unit Price</div>
+                  //               </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDate"> Quantity</div>
+                  //               </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDate"> Amount</div>
+                  //               </TableCell>
+                  //             </TableRow>
+                  //             <TableRow key={"Manpower"}>
+                  //               <TableCell align="right">
+                  //                 <div className="endDateValue">
+                  //                   {item?.material_type || "-"}
+                  //                 </div>
+                  //               </TableCell>
 
-                                <TableCell align="right">
-                                  <div className="endDateValue">
-                                    {item?.material_unit || "-"}
-                                  </div>
-                                </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDateValue">
+                  //                   {item?.material_unit || "-"}
+                  //                 </div>
+                  //               </TableCell>
 
-                                <TableCell align="right">
-                                  <div className="endDateValue">
-                                    AED {item?.material_unit_price || "0"}
-                                  </div>
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div className="endDateValue">
-                                    {item?.qty || "-"}
-                                  </div>
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div className="endDateValue">
-                                    AED{" "}
-                                    {parseInt(item.material_unit_price || 0) *
-                                      parseInt(item.qty || 0)}
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </div>
-                    </Collapse>
-                  </Grid>
+                  //               <TableCell align="right">
+                  //                 <div className="endDateValue">
+                  //                   AED {item?.material_unit_price || "0"}
+                  //                 </div>
+                  //               </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDateValue">
+                  //                   {item?.qty || "-"}
+                  //                 </div>
+                  //               </TableCell>
+                  //               <TableCell align="right">
+                  //                 <div className="endDateValue">
+                  //                   AED{" "}
+                  //                   {parseInt(item.material_unit_price || 0) *
+                  //                     parseInt(item.qty || 0)}
+                  //                 </div>
+                  //               </TableCell>
+                  //             </TableRow>
+                  //           </TableBody>
+                  //         </Table>
+                  //       </TableContainer>
+                  //     </div>
+                  //   </Collapse>
+                  // </Grid>
                 );
               })}
             </>
@@ -2089,3 +2165,150 @@ export default function Budget(props) {
     </>
   );
 }
+
+const SingleAccordion = ({ budget, index }) => {
+  const [expanded, setExpanded] = React.useState("panel_0");
+  const handleChangeExpanded = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
+  };
+  console.log(">>>> budget ", budget);
+  return (
+    <Grid item xs={12} style={{ marginTop: 5 }} key={index}>
+      <Accordion
+        key={budget.name}
+        onChange={handleChangeExpanded(`panel_${budget.name}`)}
+      >
+        <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
+          <Grid container>
+            <Grid item md={12} xs={12} style={{ display: "flex" }}>
+              <Grid item md={1} xs={1}>
+                {expanded ? (
+                  <ExpandLessIcon style={{ marginRight: 2 }} />
+                ) : (
+                  <ExpandMoreIcon style={{ marginRight: 2 }} />
+                )}
+              </Grid>
+              <Grid item md={3} xs={3}>
+                <div style={{ marginRight: 10 }}>
+                  <img
+                    src={budget.photo_origin[0]}
+                    loading="lazy"
+                    width={128}
+                    height={128}
+                  />
+                </div>
+              </Grid>
+              <Grid item md={8} xs={8} direction={"column"} display={"flex"}>
+                <Grid>
+                  <span className="budgetName">{budget.name}</span>
+                </Grid>
+                <Grid>
+                  <span className="disc">{budget.specification}</span>
+                </Grid>
+                <Grid display={"flex"} style={{ marginTop: 20 }}>
+                  <Grid
+                    display={"flex"}
+                    item
+                    lg={7}
+                    sm={12}
+                    md={7}
+                    xs={12}
+                    direction={"column"}
+                  >
+                    <div component={"span"} className="accLabel">
+                      Payment Date
+                    </div>
+                    <div component={"span"} className="accLabelValue">
+                      {budget?.milestone.end_date}
+                    </div>
+                  </Grid>
+                  <Grid
+                    display={"flex"}
+                    item
+                    lg={5}
+                    sm={12}
+                    md={5}
+                    xs={12}
+                    direction={"column"}
+                  >
+                    <div component={"span"} className="accLabel">
+                      Amount
+                    </div>
+                    <div component={"span"} className="accLabelValue">
+                      {budget?.milestone.amount}
+                    </div>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <MoreVertIcon />
+              </Grid>
+            </Grid>
+          </Grid>
+        </AccordionSummary>
+        <AccordionDetails style={{ padding: 24 }}>
+          <div className="disc">{budget.description}</div>
+          <div
+            style={{
+              marginTop: 24,
+              marginBottom: 24,
+              height: 1,
+              width: "100%",
+              background: "#EEF0F3",
+            }}
+          />
+          <Grid item md={12} xs={12} style={{ display: "flex" }}>
+            <Grid
+              display={"flex"}
+              item
+              lg={3}
+              sm={12}
+              md={3}
+              xs={12}
+              direction={"column"}
+            >
+              <div component={"span"} className="accLabel">
+                start Date
+              </div>
+              <div component={"span"} className="accLabelValue">
+                {budget?.milestone.start_date}
+              </div>
+            </Grid>
+            <Grid
+              display={"flex"}
+              item
+              lg={3}
+              sm={12}
+              md={3}
+              xs={12}
+              direction={"column"}
+            >
+              <div component={"span"} className="accLabel">
+                End Date
+              </div>
+              <div component={"span"} className="accLabelValue">
+                {budget?.milestone.end_date}
+              </div>
+            </Grid>
+            <Grid
+              display={"flex"}
+              item
+              lg={6}
+              sm={12}
+              md={6}
+              xs={12}
+              direction={"column"}
+            >
+              <div component={"span"} className="accLabel">
+                Amount
+              </div>
+              <div component={"span"} className="accLabelValue">
+                {budget?.milestone.amount}
+              </div>
+            </Grid>
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
+    </Grid>
+  );
+};

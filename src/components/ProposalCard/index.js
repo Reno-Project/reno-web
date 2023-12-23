@@ -269,6 +269,12 @@ export default function ProposalCard(props) {
             </AccordionDetails>
           </Accordion>
         </>
+      ) : tabValueforcard === 1 ? (
+        <>
+          <Grid item style={{ marginTop: 10 }}>
+            <Typography className={classes.titleText}>Comming Soon</Typography>
+          </Grid>
+        </>
       ) : null}
       <ImageViewer
         url={imgurl}
@@ -278,11 +284,11 @@ export default function ProposalCard(props) {
           setIsPressed(false);
         }}
       />
-      {tabValueforcard === 1 ? (
+      {/* {tabValueforcard === 1 ? (
         <>
           <Grid item xs={12}></Grid>
         </>
-      ) : null}
+      ) : null} */}
     </Grid>
   );
 }
