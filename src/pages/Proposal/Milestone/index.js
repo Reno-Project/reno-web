@@ -77,7 +77,7 @@ export default function Milestone(props) {
     description: "",
     start_date: null,
     end_date: null,
-    amount: null,
+    // amount: null,
   });
   const [milestones, setMilestones] = useState([]);
   const [budgets, setBudgets] = useState([]);
@@ -477,11 +477,11 @@ export default function Milestone(props) {
       error.endMsg = "Please enter valid date";
     }
 
-    if (isEmpty(state.amount.toString())) {
-      valid = false;
-      error.amountErr = true;
-      error.amountMsg = "Please enter ammount";
-    }
+    // if (isEmpty(state.amount.toString())) {
+    //   valid = false;
+    //   error.amountErr = true;
+    //   error.amountMsg = "Please enter ammount";
+    // }
 
     setErrObj(error);
     if (valid) {
@@ -545,7 +545,7 @@ export default function Milestone(props) {
           start_date,
           end_date,
           id,
-          amount,
+          // amount,
         } = item;
         // if (id) {
         //   return { id, milestone_name, description, start_date, end_date };
@@ -557,7 +557,7 @@ export default function Milestone(props) {
           description,
           start_date,
           end_date,
-          amount,
+          // amount,
         };
         // }
       });
@@ -678,7 +678,7 @@ export default function Milestone(props) {
                   }
                 />
               </Grid>
-              <Grid item xs={12} id="amount">
+              {/* <Grid item xs={12} id="amount">
                 <CInput
                   type={"number"}
                   label="Price:"
@@ -698,7 +698,7 @@ export default function Milestone(props) {
                   error={errObj.amountErr}
                   helpertext={errObj.amountMsg}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
                 <Grid item xs={12} md={6} mb={2}>
                   <FormControl
