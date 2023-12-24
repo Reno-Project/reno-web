@@ -808,11 +808,13 @@ export default function Budget(props) {
   }
 
   async function UploadFileDirectly(img) {
+    console.log(">>>> state", state);
     const nArr1 = state.photo_origin ? [...state.photo_origin] : [];
     for (let i = 0; i < img.length; i++) {
       const base64Data = await convertToBase64(img[i]);
       nArr1.push(base64Data);
     }
+    console.log(">>> nArr1 ", nArr1);
     setState({ ...state, photo_origin: nArr1 });
 
     setErrObj({
@@ -957,6 +959,7 @@ export default function Budget(props) {
   }
 
   function displayImagesView(mode) {
+    console.log(">>>> state in display ", state);
     if (isArray(state.photo_origin) && state?.photo_origin?.length > 0) {
       if (mode === "form" && visibleEditModal) {
         return null;
@@ -976,7 +979,7 @@ export default function Budget(props) {
                 display: "flex",
                 border: "1px solid #F2F3F4",
                 borderRadius: 6,
-                marginBottom: 10,
+                marginBottom: 5,
                 padding: 3,
               }}
             >
@@ -1096,17 +1099,6 @@ export default function Budget(props) {
               }}
             />
 
-            <Grid
-              item
-              style={{
-                marginTop: state?.photo_origin?.length > 0 && 40,
-                overflowY: "scroll",
-                maxHeight: 500,
-                width: "100%",
-              }}
-            >
-              {displayImagesView(mode)}
-            </Grid>
             <Grid item xs={12} id="bName" mt={2}>
               <CInput
                 label={<span className="fieldTitle">Budget Item Name</span>}
@@ -1570,6 +1562,17 @@ export default function Budget(props) {
                   </FormHelperText>
                 </>
               )}
+              <Grid
+                item
+                style={{
+                  marginTop: state?.photo_origin?.length > 0 && 40,
+                  overflowY: "scroll",
+                  maxHeight: 500,
+                  width: "100%",
+                }}
+              >
+                {displayImagesView()}
+              </Grid>
             </Grid>
             <div
               style={{
