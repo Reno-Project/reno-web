@@ -959,7 +959,6 @@ export default function Budget(props) {
   }
 
   function displayImagesView(mode) {
-    console.log(">>>> state in display ", state);
     if (isArray(state.photo_origin) && state?.photo_origin?.length > 0) {
       if (mode === "form" && visibleEditModal) {
         return null;

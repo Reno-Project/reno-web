@@ -66,7 +66,6 @@ const errorObj = {
 };
 export default function Milestone(props) {
   const { handleClick = () => null, villa, createProposal } = props;
-  console.log(">>>> villa DD");
   const classes = useStyles();
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
@@ -77,7 +76,7 @@ export default function Milestone(props) {
     description: "",
     start_date: null,
     end_date: null,
-    // amount: null,
+    amount: null,
   });
   const [milestones, setMilestones] = useState([]);
   const [budgets, setBudgets] = useState([]);
@@ -907,7 +906,11 @@ export default function Milestone(props) {
               <Grid container>
                 {milestones.map((milestone, index) => {
                   return (
-                    <SingleAccordion milestone={milestone} index={index} />
+                    <SingleAccordion
+                      milestone={milestone}
+                      index={index}
+                      amounts={amounts}
+                    />
                   );
                 })}
               </Grid>
@@ -1110,7 +1113,7 @@ export default function Milestone(props) {
     </>
   );
 }
-const SingleAccordion = ({ milestone, index }) => {
+const SingleAccordion = ({ milestone, index, amounts }) => {
   const [expanded, setExpanded] = React.useState("panel_0");
   const handleChangeExpanded = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -1167,22 +1170,34 @@ const SingleAccordion = ({ milestone, index }) => {
                   {milestone?.end_date}
                 </div>
               </Grid>
-              <Grid
-                display={"flex"}
-                item
-                lg={5}
-                sm={12}
-                md={5}
-                xs={12}
-                direction={"column"}
-              >
-                <div component={"span"} className="accLabel">
-                  Amount
-                </div>
-                <div component={"span"} className="accLabelValue">
-                  {milestone?.amount}
-                </div>
-              </Grid>
+              {amounts?.reduce((acc, curr) => acc + curr, 0) > 0 ? (
+                <Grid
+                  display={"flex"}
+                  item
+                  lg={5}
+                  sm={12}
+                  md={5}
+                  xs={12}
+                  direction={"column"}
+                >
+                  <div component={"span"} className="accLabel">
+                    Amount
+                  </div>
+                  <div component={"span"} className="accLabelValue">
+                    AED {amounts.reduce((acc, curr) => acc + curr, 0)}
+                  </div>
+                </Grid>
+              ) : (
+                <Grid
+                  display={"flex"}
+                  item
+                  lg={5}
+                  sm={12}
+                  md={5}
+                  xs={12}
+                  direction={"column"}
+                ></Grid>
+              )}
               <Grid item>
                 <MoreVertIcon />
               </Grid>
