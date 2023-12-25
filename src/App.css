@@ -50,6 +50,13 @@
 }
 
 @font-face {
+  font-family: "Roobert-Regular";
+  src: local("Roobert-Regular"),
+    url("./assets/fonts/Roobert-Regular.ttf") format("truetype");
+  font-weight: 600;
+}
+
+@font-face {
   font-family: "Poppins-Regular";
   src: local("Poppins-Regular"),
     url("./assets/fonts/Poppins-Regular.ttf") format("truetype");

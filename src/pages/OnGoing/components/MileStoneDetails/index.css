@@ -1,0 +1,19 @@
+.status {
+  display: flex;
+  padding: 4px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border-radius: 4px;
+  background: #5cc385;
+  color: var(--Dark-Text-Color-1, #fff);
+  text-align: center;
+  font-feature-settings: "clig" off, "liga" off;
+  font-family: Roobert-Regular;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px; /* 160% */
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}

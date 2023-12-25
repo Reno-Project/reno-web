@@ -50,7 +50,11 @@ import CInput from "../../../components/CInput";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useNavigate } from "react-router-dom";
-import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
+import {
+  ArrowDownwardRounded,
+  HighlightOffOutlined,
+  ImageOutlined,
+} from "@mui/icons-material";
 import { useRef } from "react";
 import CAutocomplete from "../../../components/CAutocomplete";
 
@@ -1692,7 +1696,7 @@ export default function Milestone(props) {
   return (
     <>
       <Grid container>
-        <Grid item container className={classes.contentContainer} mt={2}>
+        {/* <Grid item container className={classes.contentContainer} mt={2}>
           <Grid item lg={12} sm={12} md={12} xs={12} pb={2}>
             <Typography className={classes.MainTitle}>Budget</Typography>
           </Grid>
@@ -1910,8 +1914,8 @@ export default function Milestone(props) {
           >
             <Divider />
           </div>
-        </Grid>
-        <Grid item container className={classes.contentContainer}>
+        </Grid> */}
+        {/* <Grid item container className={classes.contentContainer}>
           <Grid item lg={12} sm={12} md={12} xs={12} pb={2}>
             <Typography className={classes.MainTitle}>Milestones</Typography>
           </Grid>
@@ -1996,11 +2000,64 @@ export default function Milestone(props) {
               </Grid>
             )
           )}
-        </Grid>
+        </Grid> */}
         {/* {renderMilestoneCreateForm("form")} */}
-        <Grid item container py={2}>
-          <Typography className={classes.MainTitle}>Items:</Typography>
+
+        <Grid
+          style={{ marginTop: 28, marginBottom: 28 }}
+          container
+          display={"flex"}
+          justifyContent={"space-between"}
+        >
+          <Grid item>
+            <Typography className={classes.MainTitle}>Milestones</Typography>
+          </Grid>
+
+          <Grid item>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.9997 9.17C16.8123 8.98375 16.5589 8.87921 16.2947 8.87921C16.0305 8.87921 15.7771 8.98375 15.5897 9.17L11.9997 12.71L8.4597 9.17C8.27234 8.98375 8.01889 8.87921 7.7547 8.87921C7.49052 8.87921 7.23707 8.98375 7.0497 9.17C6.95598 9.26297 6.88158 9.37357 6.83081 9.49543C6.78004 9.61729 6.75391 9.74799 6.75391 9.88C6.75391 10.012 6.78004 10.1427 6.83081 10.2646C6.88158 10.3864 6.95598 10.497 7.0497 10.59L11.2897 14.83C11.3827 14.9237 11.4933 14.9981 11.6151 15.0489C11.737 15.0997 11.8677 15.1258 11.9997 15.1258C12.1317 15.1258 12.2624 15.0997 12.3843 15.0489C12.5061 14.9981 12.6167 14.9237 12.7097 14.83L16.9997 10.59C17.0934 10.497 17.1678 10.3864 17.2186 10.2646C17.2694 10.1427 17.2955 10.012 17.2955 9.88C17.2955 9.74799 17.2694 9.61729 17.2186 9.49543C17.1678 9.37357 17.0934 9.26297 16.9997 9.17Z"
+                fill="black"
+              />
+            </svg>
+          </Grid>
         </Grid>
+
+        <Grid container display={"flex"} justifyContent={"space-between"}>
+          <Grid item xl={6}>
+            <Typography
+              style={{ fontSize: 14 }}
+              variant="caption"
+              color={"#8C92A4"}
+            >
+              End date
+            </Typography>
+            <Typography style={{ fontSize: 18 }} fontFamily={"Poppins-Regular"}>
+              March 12, 2023
+            </Typography>
+          </Grid>
+          <Grid item xl={6}>
+            <Typography
+              style={{ fontSize: 14 }}
+              variant="caption"
+              color={"#8C92A4"}
+            >
+              Amount
+            </Typography>
+            <Typography style={{ fontSize: 18 }} fontFamily={"Poppins-Regular"}>
+              $1,500
+            </Typography>
+          </Grid>
+        </Grid>
+        {/* <Grid item container py={2}>
+          <Typography className={classes.MainTitle}>Items:</Typography>
+        </Grid> */}
         <Grid
           item
           container
@@ -2165,7 +2222,16 @@ export default function Milestone(props) {
                       wrap="nowrap"
                     >
                       <div>
-                        <Typography variant="h6" fontFamily={"Poppins-Regular"}>
+                        <Typography
+                          variant="h6"
+                          style={{
+                            fontSize: "18px",
+                            fontWeight: 500,
+                            lineHeight: "24px",
+                            color: "#030F1C",
+                          }}
+                          fontFamily={"Poppins-Regular"}
+                        >
                           {milestone?.milestone_name}
                         </Typography>
                       </div>
@@ -2214,35 +2280,36 @@ export default function Milestone(props) {
                       justifyContent={"space-between"}
                       py={2}
                     >
-                      <Grid item xl={4}>
-                        <Typography variant="caption" color={"#8C92A4"}>
+                      <Grid item xl={6}>
+                        <Typography
+                          style={{ fontSize: 14 }}
+                          variant="caption"
+                          color={"#8C92A4"}
+                        >
                           End date
                         </Typography>
-                        <Typography fontFamily={"Poppins-SemiBold"}>
+                        <Typography
+                          style={{ fontSize: 18 }}
+                          fontFamily={"Poppins-Regular"}
+                        >
                           {milestone.end_date
                             ? moment(milestone.end_date).format("MMMM DD, YYYY")
                             : "-"}
                         </Typography>
                       </Grid>
-                      <Grid item xl={4}>
-                        <Typography variant="caption" color={"#8C92A4"}>
-                          Status
-                        </Typography>
-                        <Typography fontFamily={"Poppins-SemiBold"}>
-                          {/* {milestone?.payment_status === "approve-request"
-                            ? "Payment under review"
-                            : milestone?.payment_status === "pending" ||
-                              milestone?.payment_status === ""
-                            ? "Pending"
-                            : "Requested"} */}
-                          Pending
-                        </Typography>
-                      </Grid>
-                      <Grid item xl={4}>
-                        <Typography variant="caption" color={"#8C92A4"}>
+
+                      <Grid item xl={6}>
+                        <Typography
+                          style={{ fontSize: 14 }}
+                          variant="caption"
+                          color={"#8C92A4"}
+                        >
                           Amount
                         </Typography>
-                        <Typography fontFamily={"Poppins-SemiBold"}>
+                        <Typography
+                          style={{ fontSize: 18 }}
+                          fontFamily={"Poppins-Regular"}
+                        >
                           {`AED ${milestone?.amount}` || `AED 0`}
                         </Typography>
                       </Grid>
@@ -2255,10 +2322,13 @@ export default function Milestone(props) {
                         style={{
                           color: color.primary,
                           display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
+                          alignItems: "start",
+                          justifyContent: "start",
                           width: "100%",
                           cursor: "pointer",
+                          fontSize: "16px",
+                          lineHeight: "24px",
+                          fontFamily: "Poppins-Regular",
                         }}
                         onClick={() => {
                           handleChange(milestone, index, "pending");

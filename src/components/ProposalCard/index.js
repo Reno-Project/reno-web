@@ -272,7 +272,7 @@ export default function ProposalCard(props) {
       ) : tabValueforcard === 1 ? (
         <>
           <Grid item style={{ marginTop: 10 }}>
-            <Typography className={classes.titleText}>Comming Soon</Typography>
+            <Typography className={classes.titleText}>Coming Soon</Typography>
           </Grid>
         </>
       ) : null}
