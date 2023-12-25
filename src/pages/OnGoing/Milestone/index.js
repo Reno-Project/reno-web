@@ -392,8 +392,15 @@ export default function Milestone(props) {
   function renderMilestoneCreateForm(mode) {
     return (
       <>
-        <Grid item xs={12} id="name" mt={2}>
+        <Grid
+          item
+          xs={12}
+          id="name"
+          mt={2}
+          style={{ fontFamily: "Poppins-Regular" }}
+        >
           <CInput
+            style={{ fontFamily: "Poppins-Regular" }}
             label="Milestone Name"
             placeholder="Enter Milestone Name..."
             value={
@@ -428,8 +435,14 @@ export default function Milestone(props) {
             }
           />
         </Grid>
-        <Grid item xs={12} id="desctiption">
+        <Grid
+          item
+          xs={12}
+          id="desctiption"
+          style={{ fontFamily: "Poppins-Regular" }}
+        >
           <CInput
+            style={{ fontFamily: "Poppins-Regular" }}
             multiline={true}
             rows={3}
             label="Description:"
@@ -465,7 +478,13 @@ export default function Milestone(props) {
             }
           />
         </Grid>
-        <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
+        <Grid
+          item
+          container
+          columnGap={1}
+          wrap={md ? "wrap" : "nowrap"}
+          style={{ fontFamily: "Poppins-Regular" }}
+        >
           <Grid item xs={12} md={6} mb={2}>
             <FormControl
               variant="standard"
@@ -4005,6 +4024,7 @@ export default function Milestone(props) {
       >
         {tabValue === 0 && (
           <MenuItem
+            style={{ fontFamily: "Poppins-Regular" }}
             disabled={
               selectedMilestone?.data?.payment_status === "pending" ||
               selectedMilestone?.data?.payment_status === ""
@@ -4027,9 +4047,15 @@ export default function Milestone(props) {
           </MenuItem>
         )}
         {tabValue !== 0 && (
-          <MenuItem onClick={handePayment}>Submit Milestone</MenuItem>
+          <MenuItem
+            style={{ fontFamily: "Poppins-Regular" }}
+            onClick={handePayment}
+          >
+            Submit Milestone
+          </MenuItem>
         )}
         <MenuItem
+          style={{ fontFamily: "Poppins-Regular" }}
           disabled={
             selectedMilestone?.data?.payment_status === "completed"
               ? true
@@ -4040,6 +4066,7 @@ export default function Milestone(props) {
           Edit
         </MenuItem>
         <MenuItem
+          style={{ fontFamily: "Poppins-Regular" }}
           disabled={
             selectedMilestone?.data?.payment_status === "completed"
               ? true
@@ -4134,7 +4161,10 @@ export default function Milestone(props) {
         <Fade in={visibleEditModal}>
           <Box sx={style}>
             <Grid container justifyContent="center" alignItems="center">
-              <Typography className={classes.forgotHeaderText}>
+              <Typography
+                fontFamily="Poppins-Regular"
+                className={classes.forgotHeaderText}
+              >
                 Update Milestone Details
               </Typography>
               <Grid item xs={12}>

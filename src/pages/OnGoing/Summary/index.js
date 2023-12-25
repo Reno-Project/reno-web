@@ -2416,7 +2416,27 @@ export default function Summary(props) {
                   villa={projectDetails}
                 />
               ) : null}
-              {tabValue === 2 ? <PaymentHistoryList villa={villa} /> : null}
+              {tabValue === 3 ? (
+                <Grid item style={{ marginTop: 10 }}>
+                  <Typography className={classes.titleText}>
+                    Coming Soon
+                  </Typography>
+                </Grid>
+              ) : null}
+              {tabValue === 4 ? (
+                <Grid item style={{ marginTop: 10 }}>
+                  <Typography className={classes.titleText}>
+                    Coming Soon
+                  </Typography>
+                </Grid>
+              ) : null}
+              {tabValue === 5 ? (
+                <Grid item style={{ marginTop: 10 }}>
+                  <Typography className={classes.titleText}>
+                    Coming Soon
+                  </Typography>
+                </Grid>
+              ) : null}
             </Grid>
           </Grid>
         </Grid>
