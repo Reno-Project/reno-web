@@ -51,6 +51,7 @@ import { getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import "./index.css";
 import { Close } from "@mui/icons-material";
+import Images from "../../../config/images";
 
 const errorObj = {
   nameErr: false,
@@ -743,6 +744,9 @@ export default function Milestone(props) {
                           width: "100%",
                           marginTop: "6px",
                         }}
+                        components={{
+                          OpenPickerIcon:()=><img src={Images.calendarIcon} alt="calender-icon"></img>
+                        }}
                         format="MMMM dd, yyyy"
                         slotProps={{
                           textField: {
@@ -807,6 +811,9 @@ export default function Milestone(props) {
                         sx={{
                           width: "100%",
                           marginTop: "6px",
+                        }}
+                        components={{
+                          OpenPickerIcon:()=><img src={Images.calendarIcon} alt="calender-icon"></img>
                         }}
                         slotProps={{
                           textField: {

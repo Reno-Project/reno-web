@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     position: "fixed",
     height: "70px",
+    padding:"0px 40px",
     alignItems: "center",
     backgroundColor: color.white,
     boxShadow: "0px 2px 5px #D9DFEB",

@@ -18,6 +18,13 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid #F2F4F7",
     height: "max-content",
   },
+  title:{
+   padding:"40px 40px 0px 40px",
+   fontFamily:"Poppins-SemiBold ",
+   fontSize:"24px",
+   textAlign:"start",
+   lineHeight:"32px",
+  },
   imageStyle: {
     height: "80px",
     width: "80px",
