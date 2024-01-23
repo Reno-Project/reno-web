@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Grid,
@@ -8,27 +8,31 @@ import {
   Typography,
   CircularProgress,
   IconButton,
-} from "@mui/material";
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import { isEmpty } from "lodash";
-import PhoneInput from "react-phone-input-2";
+  Stack,
+  Checkbox,
+  FormControlLabel,
+  Link,
+} from '@mui/material';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { isEmpty } from 'lodash';
+import PhoneInput from 'react-phone-input-2';
 import {
   PhoneNumberFormat,
   PhoneNumberType,
   PhoneNumberUtil,
-} from "google-libphonenumber";
-import "react-phone-input-2/lib/style.css";
-import { isMobile } from "react-device-detect";
-import CInput from "../../components/CInput";
-import { getApiData } from "../../utils/APIHelper";
-import authActions from "../../redux/reducers/auth/actions";
-import { Setting } from "../../utils/Setting";
-import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import useStyles from "./styles";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { askForPermissionToReceiveNotifications } from "../../push-notification";
-import TermsAndConditions from "../../components/TOSModal";
+} from 'google-libphonenumber';
+import 'react-phone-input-2/lib/style.css';
+import { isMobile } from 'react-device-detect';
+import CInput from '../../components/CInput';
+import { getApiData } from '../../utils/APIHelper';
+import authActions from '../../redux/reducers/auth/actions';
+import { Setting } from '../../utils/Setting';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import useStyles from './styles';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { askForPermissionToReceiveNotifications } from '../../push-notification';
+import TermsAndConditionsDialog from '../Signup/TermsAndConditionsDialog';
 
 const errorObj = {
   unameErr: false,
@@ -36,11 +40,11 @@ const errorObj = {
   phoneErr: false,
   passwordErr: false,
   confirmPasswordErr: false,
-  unameMsg: "",
-  emailMsg: "",
-  phoneMsg: "",
-  passwordMsg: "",
-  confirmPasswordMsg: "",
+  unameMsg: '',
+  emailMsg: '',
+  phoneMsg: '',
+  passwordMsg: '',
+  confirmPasswordMsg: '',
 };
 
 const Signup = (props) => {
@@ -56,21 +60,41 @@ const Signup = (props) => {
   const emailRegex =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const [state, setState] = useState({
-    uname: "",
-    email: "",
-    pCode: "971",
-    countryCode: "AE",
-    phone: "",
-    password: "",
-    confirmPassword: "",
+    uname: '',
+    email: '',
+    pCode: '971',
+    countryCode: 'AE',
+    phone: '',
+    password: '',
+    confirmPassword: '',
   });
   const [visible, setVisible] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
   const [errObj, setErrObj] = useState(errorObj);
   const [btnLoad, setBtnLoad] = useState(false);
-  const [phonePlaceholder, setPhonePlaceholder] = useState("");
+  const [phonePlaceholder, setPhonePlaceholder] = useState('');
   const [locationData, setLocationData] = useState({});
+  const [areTermsAccepted, setAreTermsAccepted] = useState(false);
+
+  const handleChangeTermsAcceptance = (e, checked) => {
+    setAreTermsAccepted(checked);
+  };
+
+  const handleAcceptTerms = () => {
+    setAreTermsAccepted(true);
+  };
+
+  const [isTermsAndConditionsDialogOpen, setIsTermsAndConditionsDialogOpen] =
+    useState(false);
+
+  const handleCloseTermsAndConditionsDialog = () => {
+    setIsTermsAndConditionsDialogOpen(false);
+  };
+
+  const handleClickTermsAndConditionsLink = () => {
+    setIsTermsAndConditionsDialogOpen(true);
+  };
 
   const handleClose = () => {
     setVisible(false);
@@ -79,15 +103,15 @@ const Signup = (props) => {
     setState({
       ...state,
       email:
-        locationState?.socialData?.email || locationState?.data?.email || "",
-      uname: locationState?.data?.username ? locationState?.data?.username : "",
+        locationState?.socialData?.email || locationState?.data?.email || '',
+      uname: locationState?.data?.username ? locationState?.data?.username : '',
     });
     askForPermissionToReceiveNotifications();
   }, []);
 
   useEffect(() => {
     const exampleNumber1 = phoneUtil.getExampleNumberForType(
-      "ae",
+      'ae',
       PhoneNumberType.MOBILE
     );
     const formattedExampleNumber1 = phoneUtil.format(
@@ -99,7 +123,7 @@ const Signup = (props) => {
 
   // this function for to get location detail
   useEffect(() => {
-    fetch("https://ipapi.co/json/")
+    fetch('https://ipapi.co/json/')
       .then((response) => response.json())
       .then((data) => setLocationData(data))
       .catch((error) => console.error(error));
@@ -122,64 +146,64 @@ const Signup = (props) => {
     if (isEmpty(uname)) {
       valid = false;
       error.unameErr = true;
-      error.unameMsg = "Please enter user name";
+      error.unameMsg = 'Please enter user name';
     } else if (!isValidUsername(uname)) {
       valid = false;
       error.unameErr = true;
-      error.unameMsg = "Username must be between 3 to 20 characters in long.";
+      error.unameMsg = 'Username must be between 3 to 20 characters in long.';
     }
 
     // validate email
     if (isEmpty(email)) {
       valid = false;
       error.emailErr = true;
-      error.emailMsg = "Please enter email";
+      error.emailMsg = 'Please enter email';
     } else if (!emailRegex.test(email)) {
       valid = false;
       error.emailErr = true;
-      error.emailMsg = "Please enter valid email";
+      error.emailMsg = 'Please enter valid email';
     }
 
     if (
-      locationState?.type === "google" ||
-      locationState?.type === "fb" ||
-      locationState?.type === "apple"
+      locationState?.type === 'google' ||
+      locationState?.type === 'fb' ||
+      locationState?.type === 'apple'
     ) {
     } else {
       // validate password
       if (isEmpty(password)) {
         valid = false;
         error.passwordErr = true;
-        error.passwordMsg = "Please enter password";
+        error.passwordMsg = 'Please enter password';
       } else if (password.length < 8) {
         valid = false;
         error.passwordErr = true;
-        error.passwordMsg = "Password length must be of 8-15";
+        error.passwordMsg = 'Password length must be of 8-15';
       } else if (!passwordRegex.test(password)) {
         valid = false;
         error.passwordErr = true;
         error.passwordMsg =
-          "Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol";
+          'Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol';
       }
 
       // validate confirm password
       if (isEmpty(confirmPassword)) {
         valid = false;
         error.confirmPasswordErr = true;
-        error.confirmPasswordMsg = "Please enter confirm password";
+        error.confirmPasswordMsg = 'Please enter confirm password';
       } else if (!passwordRegex.test(confirmPassword)) {
         valid = false;
         error.confirmPasswordErr = true;
         error.confirmPasswordMsg =
-          "Confirm Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol";
+          'Confirm Password must include more than 8 characters, at least one number, one letter, one capital letter and one symbol';
       } else if (confirmPassword.length < 8) {
         valid = false;
         error.confirmPasswordErr = true;
-        error.confirmPasswordMsg = "Confirm password length must be of 8-15";
+        error.confirmPasswordMsg = 'Confirm password length must be of 8-15';
       } else if (confirmPassword !== password) {
         valid = false;
         error.confirmPasswordErr = true;
-        error.confirmPasswordMsg = "Password and confirm password must be same";
+        error.confirmPasswordMsg = 'Password and confirm password must be same';
       }
     }
 
@@ -187,7 +211,7 @@ const Signup = (props) => {
     if (isEmpty(phone)) {
       valid = false;
       error.phoneErr = true;
-      error.phoneMsg = "Please enter phone number";
+      error.phoneMsg = 'Please enter phone number';
     } else if (!isEmpty(phone) && !isEmpty(countryCode)) {
       const phoneNumber1 = phoneUtil.parse(phone, countryCode);
       const isValid = phoneUtil.isValidNumber(phoneNumber1);
@@ -208,27 +232,27 @@ const Signup = (props) => {
   async function registerUser() {
     setBtnLoad(true);
     const { uname, email, phone, password, pCode } = state;
-    const address = `${locationData?.city ? locationData?.city + "," : ""} ${
-      locationData?.region ? locationData?.region + "," : ""
-    } ${locationData?.country_name || ""}`;
+    const address = `${locationData?.city ? locationData?.city + ',' : ''} ${
+      locationData?.region ? locationData?.region + ',' : ''
+    } ${locationData?.country_name || ''}`;
 
     const userAgent = window.navigator.userAgent;
-    const isSafari = userAgent.includes("Safari");
+    const isSafari = userAgent.includes('Safari');
 
     let data = {
       username: uname,
       email,
-      phone_code: pCode ? pCode : "",
+      phone_code: pCode ? pCode : '',
       phone_no: phone,
       password,
-      role: "contractor",
-      device_type: "web",
-      device_name: locationData?.ip || "",
+      role: 'contractor',
+      device_type: 'web',
+      device_name: locationData?.ip || '',
       login_address: address,
       notification:
         isSafari && isMobile
           ? 0
-          : Notification?.permission === "granted"
+          : Notification?.permission === 'granted'
           ? 1
           : 0,
     };
@@ -244,41 +268,41 @@ const Signup = (props) => {
     }
 
     try {
-      const response = await getApiData(Setting.endpoints.signup, "POST", data);
-      console.log("response =register user====>>> ", response);
+      const response = await getApiData(Setting.endpoints.signup, 'POST', data);
+      console.log('response =register user====>>> ', response);
 
       if (response.success) {
-        toast.success(response?.message || "");
+        toast.success(response?.message || '');
         if (
           response?.is_email_verified === false ||
           response?.data?.is_email_verified === false
         ) {
-          navigate("/otp-verify", { state: { data, type: "email" } });
+          navigate('/otp-verify', { state: { data, type: 'email' } });
         } else if (
           response?.is_phone_verified === false ||
           response?.data?.is_phone_verified === false
         ) {
-          navigate("/phone-verify", { state: { data, type: "phone" } });
+          navigate('/phone-verify', { state: { data, type: 'phone' } });
         } else {
           dispatch(setToken(response?.token));
           dispatch(setUserData(response?.data));
-          navigate("/create-profile");
+          navigate('/create-profile');
         }
       } else {
         toast.error(response.message);
       }
       setBtnLoad(false);
     } catch (error) {
-      console.log("🚀 ~ file: index.js:63 ~ registeruser ~ error:", error);
+      console.log('🚀 ~ file: index.js:63 ~ registeruser ~ error:', error);
       setBtnLoad(false);
       toast.error(error.toString());
     }
   }
 
   const isSocial =
-    locationState?.type === "google" ||
-    locationState?.type === "fb" ||
-    locationState?.type === "apple";
+    locationState?.type === 'google' ||
+    locationState?.type === 'fb' ||
+    locationState?.type === 'apple';
 
   return (
     <div>
@@ -307,7 +331,7 @@ const Signup = (props) => {
                 value={state.uname}
                 onChange={(e) => {
                   setState({ ...state, uname: e.target.value });
-                  setErrObj({ ...errObj, unameErr: false, unameMsg: "" });
+                  setErrObj({ ...errObj, unameErr: false, unameMsg: '' });
                 }}
                 inputProps={{ maxLength: 20 }}
                 white={false}
@@ -326,7 +350,7 @@ const Signup = (props) => {
                 }
                 onChange={(e) => {
                   setState({ ...state, email: e.target.value });
-                  setErrObj({ ...errObj, emailErr: false, emailMsg: "" });
+                  setErrObj({ ...errObj, emailErr: false, emailMsg: '' });
                 }}
                 white={false}
                 error={errObj.emailErr}
@@ -340,22 +364,22 @@ const Signup = (props) => {
               <TextField
                 fullWidth
                 placeholder={
-                  state.pCode ? phonePlaceholder : "Enter phone number"
+                  state.pCode ? phonePlaceholder : 'Enter phone number'
                 }
                 style={{ marginBottom: 20 }}
                 value={state.phone}
                 onChange={(e) => {
                   setState({ ...state, phone: e.target.value });
-                  setErrObj({ ...errObj, phoneErr: false, phoneMsg: "" });
+                  setErrObj({ ...errObj, phoneErr: false, phoneMsg: '' });
                 }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment
                       position="start"
-                      style={{ marginLeft: "-13px", marginRight: -5 }}
+                      style={{ marginLeft: '-13px', marginRight: -5 }}
                     >
                       <PhoneInput
-                        country={"ae"}
+                        country={'ae'}
                         value={state.pCode}
                         onChange={(code, country) => {
                           const countryUpperCase =
@@ -364,7 +388,7 @@ const Signup = (props) => {
                             ...state,
                             pCode: code,
                             countryCode: countryUpperCase,
-                            phone: "",
+                            phone: '',
                           });
                           const exampleNumber1 =
                             phoneUtil.getExampleNumberForType(
@@ -389,16 +413,16 @@ const Signup = (props) => {
                 helperText={errObj.phoneMsg}
               />
             </Grid>
-            {locationState?.type === "google" ||
-            locationState?.type === "fb" ||
-            locationState?.type === "apple" ? null : (
+            {locationState?.type === 'google' ||
+            locationState?.type === 'fb' ||
+            locationState?.type === 'apple' ? null : (
               <>
                 <Grid item xs={12}>
                   <CInput
                     outline
                     label="Password"
                     placeholder="Enter password"
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     value={state.password}
                     passValue={state?.password}
                     passwordValidation
@@ -408,11 +432,11 @@ const Signup = (props) => {
                       setErrObj({
                         ...errObj,
                         passwordErr: false,
-                        passwordMsg: "",
+                        passwordMsg: '',
                       });
                     }}
                     onKeyPress={(ev) => {
-                      if (ev.key === "Enter") {
+                      if (ev.key === 'Enter') {
                         ev.preventDefault();
                         validation();
                       }
@@ -438,14 +462,14 @@ const Signup = (props) => {
                     label="Confirm password"
                     placeholder="Enter confirm password"
                     required
-                    type={showCPassword ? "text" : "password"}
+                    type={showCPassword ? 'text' : 'password'}
                     value={state.confirmPassword}
                     onChange={(e) => {
                       setState({ ...state, confirmPassword: e.target.value });
                       setErrObj({
                         ...errObj,
                         confirmPasswordErr: false,
-                        confirmPasswordMsg: "",
+                        confirmPasswordMsg: '',
                       });
                     }}
                     white={false}
@@ -465,25 +489,48 @@ const Signup = (props) => {
                 </Grid>
               </>
             )}
+            <Grid item xs={12} sx={{ marginBottom: 2 }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    value={areTermsAccepted}
+                    checked={areTermsAccepted}
+                    onChange={handleChangeTermsAcceptance}
+                  />
+                }
+                label={
+                  <Stack direction="row" alignItems="baseline">
+                    Accept
+                    <Link
+                      className={classes.termsAndConditions}
+                      component={Button}
+                      onClick={handleClickTermsAndConditionsLink}
+                    >
+                      Terms and Conditions
+                    </Link>
+                  </Stack>
+                }
+              />
+            </Grid>
             <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
                 fullWidth
                 style={{ marginBottom: 20 }}
-                disabled={btnLoad}
-                onClick={() => setVisible(true)}
+                disabled={!areTermsAccepted || btnLoad}
+                onClick={validation}
               >
                 {btnLoad ? (
-                  <CircularProgress style={{ color: "#fff" }} size={26} />
+                  <CircularProgress style={{ color: '#fff' }} size={26} />
                 ) : (
-                  "Sign up now"
+                  'Sign up now'
                 )}
               </Button>
             </Grid>
             <Grid item xs={12} className={classes.needAccountContainer}>
               <Typography className={classes.accountTextStyle}>
-                Already have an account?{" "}
+                Already have an account?{' '}
               </Typography>
               <NavLink to="/login" className={classes.linkStyle}>
                 <Typography
@@ -496,10 +543,11 @@ const Signup = (props) => {
           </Grid>
         </Grid>
       </Grid>
-      <TermsAndConditions
-        validation={validation}
-        visible={visible}
-        handleClose={handleClose}
+      <TermsAndConditionsDialog
+        open={isTermsAndConditionsDialogOpen}
+        onClose={handleCloseTermsAndConditionsDialog}
+        areTermsAccepted={areTermsAccepted}
+        onAcceptTerms={handleAcceptTerms}
       />
     </div>
   );
