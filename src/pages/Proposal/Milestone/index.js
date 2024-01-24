@@ -952,7 +952,7 @@ export default function Milestone(props) {
           </div>
         </Grid>
 
-        <Divider />
+        <Divider width="100%" />
 
         <Grid
           item
