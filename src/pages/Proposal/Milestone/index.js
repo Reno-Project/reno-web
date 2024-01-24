@@ -39,7 +39,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import moment from "moment";
@@ -51,7 +50,8 @@ import authActions from "../../../redux/reducers/auth/actions";
 import { getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import "./index.css";
-import { ChevronLeft, ChevronRight, Close } from "@mui/icons-material";
+import { ChevronRight, Close } from "@mui/icons-material";
+import Images from "../../../config/images";
 
 const errorObj = {
   nameErr: false,
@@ -747,6 +747,9 @@ export default function Milestone(props) {
                           width: "100%",
                           marginTop: "6px",
                         }}
+                        components={{
+                          OpenPickerIcon:()=><img src={Images.calendarIcon} alt="calender-icon"></img>
+                        }}
                         format="MMMM dd, yyyy"
                         slotProps={{
                           textField: {
@@ -811,6 +814,9 @@ export default function Milestone(props) {
                         sx={{
                           width: "100%",
                           marginTop: "6px",
+                        }}
+                        components={{
+                          OpenPickerIcon:()=><img src={Images.calendarIcon} alt="calender-icon"></img>
                         }}
                         slotProps={{
                           textField: {

@@ -89,7 +89,7 @@ function Header(props) {
     <>
       {currentUrl?.includes("signup") ||
       currentUrl?.includes("login") ? null : (
-        <div className={classes.headerMainCon} style={{ padding: "0 15px" }}>
+        <div className={classes.headerMainCon}>
           <Grid container>
             <Grid
               item

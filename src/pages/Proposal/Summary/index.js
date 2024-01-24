@@ -27,12 +27,11 @@ import { toast } from "react-toastify";
 import { isMobile, isTablet } from "react-device-detect";
 import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
 import CAutocomplete from "../../../components/CAutocomplete";
-
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import moment from "moment";
 import { FormControl } from "@mui/material";
-import "./index.css";
+import Images from "../../../config/images";
 
 const errorObj = {
   scpErr: false,
@@ -426,7 +425,7 @@ export default function Summary(props) {
   }
   return (
     <div style={{ backgroundColor: "#F9F9FA" }}>
-      <div className="title">Submit Proposal</div>
+      <div className={classes.title}>Submit Proposal</div>
       <Grid
         container
         // flexDirection="row-reverse"
@@ -638,26 +637,20 @@ export default function Summary(props) {
                           >
                             <div
                               style={{
-                                backgroundColor: "#F9F9FA",
                                 display: "flex",
                                 flexDirection: "column",
                                 justifyContent: "center",
                                 alignItems: "center",
                                 width: "100%",
                                 height: 170,
-                                border: errObj.documentErr
-                                  ? "1px solid red"
-                                  : "none",
+                                border:"1px dashed #9CA3AF",
                                 borderRadius: 4,
+                                gap:1,
                               }}
                             >
-                              <ImageOutlined
-                                style={{
-                                  color: "grey",
-                                  marginBottom: 20,
-                                  fontSize: 30,
-                                }}
-                              />
+                              <div style={{width:"24px", height:"24px"}}>
+                               <img src={Images.upload_icon}  alt="upload-icon"></img>
+                              </div>
                               <InputLabel>
                                 <b>
                                   <span
@@ -671,7 +664,7 @@ export default function Summary(props) {
                                   or drag and drop{" "}
                                 </b>
                               </InputLabel>
-                              <InputLabel style={{ fontSize: 12 }}>
+                              <InputLabel style={{ fontSize: 12,color:"#6B7280" }}>
                                 {"PNG, JPG, (max size 1200*800)"}
                               </InputLabel>
                             </div>
@@ -766,7 +759,7 @@ export default function Summary(props) {
                       </InputLabel>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
-                          disablePast
+                          disablePast              
                           value={new Date(startDate)}
                           onChange={(e, v) => {
                             setStartDate(moment(e).format("MMMM DD, yyyy"));
@@ -781,6 +774,9 @@ export default function Summary(props) {
                             marginTop: "24px",
                           }}
                           format="MMMM dd, yyyy"
+                          components={{
+                            OpenPickerIcon:()=><img src={Images.calendarIcon} alt="calender-icon"></img>
+                          }}
                           slotProps={{
                             textField: {
                               helperText: errObj.startMsg,
@@ -818,6 +814,10 @@ export default function Summary(props) {
                             width: "100%",
                             marginTop: "24px",
                           }}
+                          components={{
+                            OpenPickerIcon:()=><img src={Images.calendarIcon} alt="calender-icon"></img>
+                          }}
+                          
                           slotProps={{
                             textField: {
                               helperText: errObj.endMsg,

@@ -529,6 +529,9 @@ export default function Milestone(props) {
                     width: "100%",
                     marginTop: "24px",
                   }}
+                  components={{
+                    OpenPickerIcon:()=><img src={Images.calendarIcon} alt="calender-icon"></img>
+                  }}
                   format="MMMM dd, yyyy"
                   slotProps={{
                     textField: {
@@ -593,6 +596,9 @@ export default function Milestone(props) {
                   sx={{
                     width: "100%",
                     marginTop: "24px",
+                  }}
+                  components={{
+                    OpenPickerIcon:()=><img src={Images.calendarIcon} alt="calender-icon"></img>
                   }}
                   slotProps={{
                     textField: {
