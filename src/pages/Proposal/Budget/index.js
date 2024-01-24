@@ -1935,7 +1935,6 @@ export default function Budget(props) {
         <Divider width="100%" />
 
         <Grid
-          pt={2}
           item
           container
           columnGap={1}
