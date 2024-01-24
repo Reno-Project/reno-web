@@ -112,6 +112,7 @@ export default function serialize(nodes) {
         richtext += `<h6${attrs}>${serialize(node.children)}</h6>`;
         break;
       default:
+        richtext += serialize(node.children);
         // eslint-disable-next-line no-console
         console.error(`Unhandled slate node found: ${node.type}`);
         break;

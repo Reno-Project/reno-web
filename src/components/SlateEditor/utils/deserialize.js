@@ -34,8 +34,13 @@ function insertNode(node, format, type, nodes) {
   nodes.push(n);
 }
 
-function traverseNodes(root, { format = {} }) {
+function traverseNodes(root, { format = {} } = {}) {
   const nodes = [];
+
+  if (!root.childNodes || root.childNodes.length === 0) {
+    nodes.push({ text: '' });
+    return nodes;
+  }
 
   // eslint-disable-next-line no-restricted-syntax
   for (const node of Array.from(root.childNodes)) {
@@ -91,7 +96,7 @@ function traverseNodes(root, { format = {} }) {
         nodes.push(
           ...traverseNodes(node, {
             format: { ...format, bold: true },
-          }),
+          })
         );
         break;
       case 'EM':
@@ -99,27 +104,28 @@ function traverseNodes(root, { format = {} }) {
         nodes.push(
           ...traverseNodes(node, {
             format: { ...format, italic: true },
-          }),
+          })
         );
         break;
       case 'U':
         nodes.push(
           ...traverseNodes(node, {
             format: { ...format, underline: true },
-          }),
+          })
         );
         break;
       case 'MARK':
         nodes.push(
           ...traverseNodes(node, {
             format: { ...format, mark: true },
-          }),
+          })
         );
         break;
       case 'A':
         nodes.push(parseLink(node, traverseNodes(node, { format })));
         break;
       default:
+        nodes.push(...traverseNodes(node, { format }));
         break;
     }
   }
@@ -128,13 +134,12 @@ function traverseNodes(root, { format = {} }) {
 }
 
 export default function deserialize(richtext) {
+  if (!richtext) richtext = '<p></p>';
+
   const wrapper = document.createElement('div');
   wrapper.innerHTML = richtext;
 
-  const nodes = traverseNodes(wrapper, {
-    nodes: [],
-    format: {},
-  });
+  const nodes = traverseNodes(wrapper);
 
   if (!nodes.length) {
     nodes.push({
