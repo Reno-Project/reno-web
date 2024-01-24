@@ -25,6 +25,8 @@ const Images = {
   building: "/assets/images/building.png",
   profile: "/assets/images/profile.png",
   upload: "/assets/images/upload.svg",
+  upload_icon : "/assets/images/uploadicon.svg",
+  calendarIcon: "/assets/images/calendarIcon.svg",
   Facebook: "/assets/images/Facebook.svg",
   Instagram: "/assets/images/Instagram.svg",
   Yt: "/assets/images/Yt.svg",
