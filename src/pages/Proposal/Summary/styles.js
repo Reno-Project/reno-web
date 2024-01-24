@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 8,
     boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.04)",
     border: "1px solid #F2F4F7",
-    padding: "20px 20px 20px 20px",
+    padding: "24px",
     height: "max-content",
   },
   sideContainer: {

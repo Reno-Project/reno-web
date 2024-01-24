@@ -92,6 +92,7 @@
   display: flex;
   justify-content: end;
 }
+
 .addMilestoneHeader {
   color: #030f1c;
   font-family: Poppins-Bold !important;
@@ -107,6 +108,7 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px;
+  white-space: nowrap;
 }
 .accLabel {
   color: #878f9c;
