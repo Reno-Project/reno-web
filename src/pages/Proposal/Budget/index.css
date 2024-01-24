@@ -3,19 +3,23 @@
   justify-content: space-between;
   width: 100%;
   padding: 16px;
-  background: #f2f4f7;
+  background: #f3f4f9;
   color: #000000;
 }
 
 .label {
-  font-family: Poppins-Regular !important;
+  font-family: Poppins-Medium !important;
   font-style: normal;
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
 }
+.accLabelValue {
+  font-family: Poppins-Medium !important;
+  font-size: 16px;
+}
 .cur {
-  font-family: Poppins-Regular !important;
+  font-family: Poppins-SemiBold !important;
   font-style: normal;
   font-size: 24px;
   font-weight: 600;
@@ -43,12 +47,11 @@
 .secondaryTitle {
   color: var(--gray-800-header-text, #030f1c);
   /* Large/Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: */
-  font-family: Poppins-Regular !important;
+  font-family: Poppins-Medium !important;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
-  margin-top: 5px;
 }
 .milestoneHeader {
   color: var(--gray-800-header-text, #030f1c);
@@ -90,7 +93,7 @@
 .budgetName {
   color: var(--gray-800-header-text, #030f1c);
   /* Titles/The quick brown fox jumps over the lazy dog */
-  font-family: Poppins-Bold !important;
+  font-family: Poppins-Medium !important;
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -167,7 +170,6 @@
 }
 
 .disc {
-  margin-top: 12px;
   color: #646f86;
   font-family: Poppins-Regular;
   font-size: 14px;

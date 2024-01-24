@@ -3999,6 +3999,7 @@ export default function Milestone(props) {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             mt: 1.5,
+            ml: 16,
             "& .MuiAvatar-root": {
               width: 32,
               height: 32,
@@ -4010,7 +4011,7 @@ export default function Milestone(props) {
               display: "block",
               position: "absolute",
               top: 0,
-              right: 14,
+              left: 14,
               width: 10,
               height: 10,
               bgcolor: "background.paper",

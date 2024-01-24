@@ -28,6 +28,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import useStyles from "./styles";
 import {
+  ChevronRight,
   Close,
   HighlightOffOutlined,
   ImageOutlined,
@@ -51,6 +52,7 @@ import CAutocomplete from "../../../components/CAutocomplete";
 import ProfileSuccessModal from "../../../components/ProfileSuccessModal";
 import moment from "moment";
 import "./index.css";
+import { Stack } from "@mui/system";
 
 const errorObj = {
   bNameErr: false,
@@ -147,6 +149,7 @@ export default function Budget(props) {
 
   const handleCloseCreation = () => {
     setIsCreationOpen(false);
+    setVisibleEditModal(false);
   };
 
   useEffect(() => {
@@ -520,6 +523,7 @@ export default function Budget(props) {
     );
   }
   const handleRowClick = (event, budget, index) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setSelectedBudget({
       data: budget,
@@ -533,6 +537,7 @@ export default function Budget(props) {
   };
 
   const handleEdit = (data, index) => {
+    console.log(data, "edit");
     setVisibleEditModal(true);
     setErrObj(errorObj);
 
@@ -1613,10 +1618,10 @@ export default function Budget(props) {
 
   return (
     <>
-      <Grid container>
+      <Grid container gap="20px" style={{ paddingTop: "25px" }}>
         <div className={"alert"}>
           {" "}
-          <span className="label"> Total Budget amount</span>
+          <span className="label"> Total Budget amount </span>
           <span className="cur">
             AED{" "}
             {(isArray(budgetDetails) &&
@@ -1634,23 +1639,6 @@ export default function Budget(props) {
 
         {renderBudgetCreateForm("form")}
 
-        <Grid
-          item
-          container
-          alignItems={"center"}
-          style={{ marginTop: 18, marginBottom: 18 }}
-        >
-          <div
-            className="btnSubmit"
-            onClick={() => {
-              // validate(false);
-              setIsCreationOpen(true);
-            }}
-          >
-            <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
-            Add Budget
-          </div>
-        </Grid>
         {budgetLoader ? (
           <Grid
             item
@@ -1676,7 +1664,11 @@ export default function Budget(props) {
                   : item?.milestone;
 
                 return (
-                  <SingleAccordion budget={item} index={index} />
+                  <SingleAccordion
+                    budget={item}
+                    index={index}
+                    handleRowClick={handleRowClick}
+                  />
                   // <Grid container className={classes.customCard}>
                   //   <Grid item container wrap={sm ? "wrap" : "nowrap"}>
                   //     <Grid item sx={12} justifyContent={"flex-start"}>
@@ -1918,18 +1910,36 @@ export default function Budget(props) {
           )
         )}
         <Grid
+          item
+          container
+          alignItems={"center"}
+          style={{ marginTop: 18, marginBottom: 18 }}
+        >
+          <div
+            className="btnSubmit"
+            onClick={() => {
+              // validate(false);
+              setIsCreationOpen(true);
+            }}
+          >
+            <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
+            Add Budget Item
+          </div>
+        </Grid>
+        <Grid
           pt={2}
           item
           container
           columnGap={1}
           rowGap={1}
+          display="flex"
           justifyContent={"space-between"}
         >
           <Grid item sm={5.9} xs={12}>
             <Button
               variant="outlined"
               size="small"
-              sx={{ boxShadow: "none" }}
+              sx={{ boxShadow: "none", padding: "12px 24px" }}
               onClick={() => {
                 updateRedux();
                 handleClick("back");
@@ -1938,14 +1948,36 @@ export default function Budget(props) {
               Previous Step
             </Button>
           </Grid>
-          <Grid item sm={5.9} xs={12} className="conBtn">
-            <Button variant="contained" size="small" onClick={handleSubmit}>
-              {submitLoader ? (
-                <CircularProgress style={{ color: "#fff" }} size={26} />
-              ) : (
-                "Submit"
-              )}
-            </Button>
+          <Grid display="flex" gap="12px">
+            <Grid item sm={5.9} xs={12}>
+              <Button
+                variant="outlined"
+                size="small"
+                className="conBtn"
+                sx={{ boxShadow: "none", padding: "12px 24px" }}
+                onClick={() => {
+                  updateRedux();
+                  handleClick("back");
+                }}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item sm={5.9} xs={12}>
+              <Button
+                variant="contained"
+                size="small"
+                className="conBtn"
+                onClick={handleSubmit}
+                sx={{ padding: "12px 24px" }}
+              >
+                {submitLoader ? (
+                  <CircularProgress style={{ color: "#fff" }} size={26} />
+                ) : (
+                  "Continue"
+                )}
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
@@ -2044,24 +2076,12 @@ export default function Budget(props) {
           sx: {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
+            ml: 18,
             "& .MuiAvatar-root": {
               width: 32,
               height: 32,
               ml: -0.5,
               mr: 1,
-            },
-            "&:before": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: "background.paper",
-              transform: "translateY(-50%) rotate(45deg)",
-              zIndex: 0,
             },
           },
         }}
@@ -2074,8 +2094,30 @@ export default function Budget(props) {
           vertical: "bottom",
         }}
       >
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
         <MenuItem
+          style={{
+            fontFamily: "Poppins-Medium",
+            padding: "12px 36px 12px 12px",
+          }}
+        >
+          Request Payment
+        </MenuItem>
+        <Divider style={{ margin: 0 }} />
+        <MenuItem
+          style={{
+            fontFamily: "Poppins-Medium",
+            padding: "12px 36px 12px 12px",
+          }}
+          onClick={handleEdit}
+        >
+          Edit
+        </MenuItem>
+        <Divider style={{ margin: 0 }} />
+        <MenuItem
+          style={{
+            fontFamily: "Poppins-Medium",
+            padding: "12px 36px 12px 12px",
+          }}
           onClick={() => {
             setVisible(true);
           }}
@@ -2111,56 +2153,415 @@ export default function Budget(props) {
           style={{ overflowY: "scroll" }}
         >
           <Fade in={visibleEditModal}>
-            <Box sx={style}>
-              <Grid
-                container
-                style={{ height: 600, overflow: "auto" }}
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Typography className={classes.forgotHeaderText}>
-                  Update Budget Details
-                </Typography>
-                <Grid item xs={12}>
-                  {renderBudgetCreateForm("modal")}
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                container
-                columnGap={1}
-                justifyContent={"space-between"}
-                alignItems="end"
-              >
-                <Grid item xs={5.7}>
-                  <Button
-                    color="primary"
-                    fullWidth
-                    style={{ marginTop: 20, marginBottom: 20 }}
-                    onClick={() => {
-                      setVisibleEditModal(false);
-                      clearData();
+            <Grid
+              container
+              style={{ height: 600, overflow: "auto" }}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item xs={12}>
+                {/* {renderBudgetCreateForm("modal")} */}
+                <Box sx={style}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
                     }}
                   >
-                    Close
-                  </Button>
-                </Grid>
+                    <div className="addMilestoneHeader">Update Budget Item</div>
+                    <Close
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleCloseCreation()}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      marginTop: 24,
 
-                <Grid item xs={5.7}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    style={{ marginTop: 20, marginBottom: 20 }}
-                    onClick={() => {
-                      validate(true);
+                      height: 1,
+                      width: "100%",
+                      background: "#EEF0F3",
+                    }}
+                  />
+
+                  <Grid item xs={12} id="bName" mt={2}>
+                    <CInput
+                      label={
+                        <span className="fieldTitle">Budget Item Name</span>
+                      }
+                      placeholder="Enter Budget Name..."
+                      value={state.name}
+                      onChange={(e) => {
+                        setState({ ...state, name: e.target.value });
+                        setErrObj({
+                          ...errObj,
+                          bNameErr: false,
+                          bNameMsg: "",
+                        });
+                      }}
+                      inputProps={{ maxLength: 50 }}
+                      error={errObj.bNameErr}
+                      helpertext={errObj.bNameMsg}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} id="material_type">
+                    <CInput
+                      label={<span className="fieldTitle">Material type:</span>}
+                      placeholder="marble, wood, etc..."
+                      value={state.material_type}
+                      onChange={(e) => {
+                        setState({ ...state, material_type: e.target.value });
+                        clearErr();
+                      }}
+                      inputProps={{ maxLength: 50 }}
+                      error={errObj.materialTypeErr}
+                      helpertext={errObj.materialTypeMsg}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    container
+                    columnGap={1}
+                    wrap={md ? "wrap" : "nowrap"}
+                  >
+                    <Grid item xs={12} md={4} id="Unit">
+                      <CAutocomplete
+                        label={
+                          <span className="fieldTitle">Material unit:</span>
+                        }
+                        placeholder="Enter material unit"
+                        value={state.material_unit}
+                        onChange={(e, newValue) => {
+                          setState({ ...state, material_unit: newValue });
+                          clearErr();
+                        }}
+                        options={[
+                          "tonns",
+                          "Kg",
+                          "g",
+                          "lbs",
+                          "liter",
+                          "ml",
+                          "sqm",
+                          "item",
+                        ]}
+                        getOptionLabel={(option) => option}
+                        error={errObj.unitErr}
+                        helpertext={errObj.unitMsg}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={4} id="price">
+                      <CInput
+                        label={
+                          <span className="fieldTitle">
+                            Material unit price
+                          </span>
+                        }
+                        placeholder="Enter amount...."
+                        value={state.material_unit_price}
+                        type="number"
+                        onChange={(e) => {
+                          const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
+                            Number(e.target.value)
+                          );
+                          if (bool) {
+                            setState({
+                              ...state,
+                              material_unit_price: e.target.value,
+                            });
+                          }
+                          clearErr();
+                        }}
+                        error={errObj.materialUnitPriceErr}
+                        helpertext={errObj.materialUnitPriceMsg}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={4} id="qty">
+                      <CInput
+                        label={<span className="fieldTitle">Quantity</span>}
+                        placeholder="N/A"
+                        value={state.qty}
+                        type="tel"
+                        onChange={(e) => {
+                          const bool = /^[0-9]+$/.test(Number(e.target.value));
+                          if (bool) {
+                            setState({ ...state, qty: e.target.value });
+                          }
+                          clearErr();
+                        }}
+                        inputProps={{
+                          pattern: "[0-9]*", // Allow only digits
+                          inputMode: "numeric", // Show numeric keyboard on mobile devices
+                        }}
+                        error={errObj.quantityErr}
+                        helpertext={errObj.quantityMsg}
+                      />
+                    </Grid>
+                  </Grid>
+
+                  <Grid
+                    item
+                    container
+                    columnGap={1}
+                    wrap={md ? "wrap" : "nowrap"}
+                  >
+                    <Grid item xs={12} md={4} id="rate">
+                      <CInput
+                        label={
+                          <span className="fieldTitle">Manpower rate</span>
+                        }
+                        placeholder="Enter amount...."
+                        value={state.manpower_rate}
+                        type="number"
+                        onChange={(e) => {
+                          const bool = /^[0-9]+(?:\.[0-9]+)?$/.test(
+                            Number(e.target.value)
+                          );
+                          if (bool) {
+                            setState({
+                              ...state,
+                              manpower_rate: e.target.value,
+                            });
+                          }
+                          clearErr();
+                        }}
+                        error={errObj.manpowerRateErr}
+                        helpertext={errObj.manpowerRateMsg}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={4} id="days">
+                      <CInput
+                        label={<span className="fieldTitle">Days</span>}
+                        placeholder="N/A"
+                        value={state.days}
+                        type="tel"
+                        onChange={(e) => {
+                          const bool = /^[0-9]+$/.test(Number(e.target.value));
+                          if (bool) {
+                            setState({ ...state, days: e.target.value });
+                          }
+                          clearErr();
+                        }}
+                        inputProps={{
+                          pattern: "[0-9]*", // Allow only digits
+                          inputMode: "numeric", // Show numeric keyboard on mobile devices
+                        }}
+                        error={errObj.daysErr}
+                        helpertext={errObj.daysMsg}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={4} id="manpowerMilestone">
+                      <CAutocomplete
+                        label={<span className="fieldTitle">Milestone</span>}
+                        placeholder="N/A"
+                        value={state?.milestone}
+                        onChange={(e, newValue) => {
+                          setState({ ...state, milestone: newValue });
+                          setErrObj({
+                            ...errObj,
+                            manpowerMilestoneErr: false,
+                            manpowerMilestoneMsg: "",
+                          });
+                        }}
+                        options={milestones}
+                        getOptionLabel={(option) => option.milestone_name}
+                        error={errObj.manpowerMilestoneErr}
+                        helpertext={errObj.manpowerMilestoneMsg}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12} id="description">
+                    <CInput
+                      multiline={true}
+                      rows={2}
+                      label={
+                        <span className="fieldTitle">Specifications:</span>
+                      }
+                      placeholder="Write here..."
+                      value={state.specification}
+                      onChange={(e) => {
+                        setState({ ...state, specification: e.target.value });
+                        setErrObj({
+                          ...errObj,
+                          specificationsErr: false,
+                          specificationsMsg: "",
+                        });
+                      }}
+                      error={errObj.specificationsErr}
+                      helpertext={errObj.specificationsMsg}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    style={{
+                      position: "relative",
                     }}
                   >
-                    Update
-                  </Button>
-                </Grid>
+                    {uploadLoader &&
+                    (visibleEditModal === false || visibleEditModal) ? (
+                      <Grid
+                        item
+                        container
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        sx={12}
+                        minHeight={130}
+                      >
+                        <CircularProgress
+                          style={{ color: "#274BF1" }}
+                          size={26}
+                        />
+                      </Grid>
+                    ) : (
+                      <>
+                        <div
+                          style={{
+                            backgroundColor: "#F9F9FA",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "100%",
+                            height: 130,
+                            border: errObj.photoErr ? "1px solid red" : "none",
+                            borderRadius: 4,
+                          }}
+                        >
+                          <ImageOutlined
+                            style={{
+                              color: "grey",
+                              marginBottom: 20,
+                              fontSize: 30,
+                            }}
+                          />
+                          <InputLabel>
+                            <b>Upload Photo</b>
+                          </InputLabel>
+                          <InputLabel style={{ fontSize: 12 }}>
+                            {"PNG, JPG, (max size 1200*800)"}
+                          </InputLabel>
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/jpeg, image/png, image/jpg"
+                          multiple
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            opacity: 0,
+                            cursor: "pointer",
+                            width: "100%",
+                          }}
+                          onChange={(e) => {
+                            const chosenFiles = Array.prototype.slice.call(
+                              e.target.files
+                            );
+                            let showMsg = false;
+                            let limit = false;
+                            const newArr = [...state?.photo_origin];
+                            chosenFiles.map((item) => {
+                              const bool = checkImgSize(item);
+                              if (bool && newArr.length < 5) {
+                                newArr.push(item);
+                              } else if (newArr.length >= 4) {
+                                limit = true;
+                              } else {
+                                showMsg = true;
+                              }
+                            });
+                            if (limit) {
+                              toast.error("You can upload maximum 5 files");
+                            } else if (showMsg) {
+                              toast.error(
+                                "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                              );
+                            }
+                            // if (createProposal) {
+                            let shouldUpload =
+                              isArray(newArr) &&
+                              !isEmpty(newArr) &&
+                              newArr?.filter(
+                                (elem) => typeof elem !== "string"
+                              );
+                            if (shouldUpload) {
+                              UploadFileDirectly(shouldUpload);
+                            }
+                            // } else {
+                            //   let shouldUpload =
+                            //     isArray(newArr) &&
+                            //     !isEmpty(newArr) &&
+                            //     newArr?.filter((elem) => !elem?.image_id);
+                            //   if (shouldUpload) {
+                            //     UploadFile(shouldUpload);
+                            //   }
+                            // }
+                          }}
+                          ref={fileInputRef}
+                        />
+                        <FormHelperText
+                          error={errObj.photoErr}
+                          style={{ fontFamily: "Poppins-Regular" }}
+                        >
+                          {errObj.photoMsg}
+                        </FormHelperText>
+                      </>
+                    )}
+                    <Grid
+                      item
+                      style={{
+                        marginTop: state?.photo_origin?.length > 0 && 40,
+                        overflowY: "scroll",
+                        maxHeight: 500,
+                        width: "100%",
+                      }}
+                    >
+                      {displayImagesView()}
+                    </Grid>
+                    <Grid
+                      item
+                      container
+                      columnGap={1}
+                      justifyContent={"space-between"}
+                      alignItems="end"
+                    >
+                      <Grid item xs={5.7}>
+                        <Button
+                          color="primary"
+                          fullWidth
+                          style={{ marginTop: 20, marginBottom: 20 }}
+                          onClick={() => {
+                            setVisibleEditModal(false);
+                            clearData();
+                          }}
+                        >
+                          Close
+                        </Button>
+                      </Grid>
+
+                      <Grid item xs={5.7}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          fullWidth
+                          style={{ marginTop: 20, marginBottom: 20 }}
+                          onClick={() => {
+                            validate(true);
+                          }}
+                        >
+                          Update
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Box>
               </Grid>
-            </Box>
+            </Grid>
           </Fade>
         </Modal>
       ) : null}
@@ -2168,12 +2569,11 @@ export default function Budget(props) {
   );
 }
 
-const SingleAccordion = ({ budget, index }) => {
-  const [expanded, setExpanded] = React.useState("panel_0");
+const SingleAccordion = ({ budget, index, handleRowClick }) => {
+  const [expanded, setExpanded] = React.useState(false);
   const handleChangeExpanded = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
-  console.log(">>>> budget ", budget);
   return (
     <Grid item xs={12} style={{ marginTop: 5 }} key={index}>
       <Accordion
@@ -2182,68 +2582,99 @@ const SingleAccordion = ({ budget, index }) => {
       >
         <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
           <Grid container>
-            <Grid item md={12} xs={12} style={{ display: "flex" }}>
-              <Grid item md={1} xs={1}>
-                {expanded ? (
-                  <ExpandLessIcon style={{ marginRight: 2 }} />
-                ) : (
-                  <ExpandMoreIcon style={{ marginRight: 2 }} />
-                )}
-              </Grid>
-              <Grid item md={3} xs={3}>
-                <div style={{ marginRight: 10 }}>
-                  <img
-                    src={budget.photo_origin[0]}
-                    loading="lazy"
-                    width={128}
-                    height={128}
-                  />
-                </div>
-              </Grid>
-              <Grid item md={8} xs={8} direction={"column"} display={"flex"}>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Grid
+                item
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "16px",
+                }}
+              >
+                <Grid>{expanded ? <ExpandMoreIcon /> : <ChevronRight />}</Grid>
                 <Grid>
-                  <span className="budgetName">{budget.name}</span>
+                  <div style={{ width: "128px", height: "128px" }}>
+                    {budget.photo_origin[0] ? (
+                      <img
+                        src={budget.photo_origin[0]}
+                        loading="lazy"
+                        width="100%"
+                        height="100%"
+                        alt="budget-item"
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          border: "1px solid black",
+                          width: "128px",
+                          height: "128px",
+                        }}
+                      ></div>
+                    )}
+                  </div>
                 </Grid>
-                <Grid>
-                  <span className="disc">{budget.specification}</span>
-                </Grid>
-                <Grid display={"flex"} style={{ marginTop: 20 }}>
-                  <Grid
-                    display={"flex"}
-                    item
-                    lg={7}
-                    sm={12}
-                    md={7}
-                    xs={12}
-                    direction={"column"}
-                  >
-                    <div component={"span"} className="accLabel">
-                      Payment Date
-                    </div>
-                    <div component={"span"} className="accLabelValue">
-                      {budget?.milestone.end_date}
-                    </div>
-                  </Grid>
-                  <Grid
-                    display={"flex"}
-                    item
-                    lg={5}
-                    sm={12}
-                    md={5}
-                    xs={12}
-                    direction={"column"}
-                  >
-                    <div component={"span"} className="accLabel">
-                      Amount
-                    </div>
-                    <div component={"span"} className="accLabelValue">
-                      {budget?.milestone.amount}
-                    </div>
+                <Grid
+                  item
+                  md={8}
+                  xs={8}
+                  direction={"column"}
+                  display={"flex"}
+                  style={{ placeSelf: "baseline", gap: "20px" }}
+                >
+                  <Stack gap="12px">
+                    <Stack>
+                      <span className="budgetName">{budget.name}</span>
+                    </Stack>
+                    <Stack>
+                      <span className="disc">{budget.specification}</span>
+                    </Stack>
+                  </Stack>
+                  <Grid display={"flex"} gap="40px">
+                    <Grid
+                      display={"flex"}
+                      item
+                      lg={7}
+                      sm={12}
+                      md={7}
+                      xs={12}
+                      direction={"column"}
+                      style={{ whiteSpace: "nowrap" }}
+                    >
+                      <div component={"span"} className="accLabel">
+                        Payment Date
+                      </div>
+                      <div component={"span"} className="accLabelValue">
+                        {budget?.milestone.end_date}
+                      </div>
+                    </Grid>
+                    <Grid
+                      display={"flex"}
+                      item
+                      lg={5}
+                      sm={12}
+                      md={5}
+                      xs={12}
+                      direction={"column"}
+                    >
+                      <div component={"span"} className="accLabel">
+                        Amount
+                      </div>
+                      <div component={"span"} className="accLabelValue">
+                        {budget?.milestone.amount || "NA"}
+                      </div>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item>
-                <MoreVertIcon />
+                <IconButton onClick={(e) => handleRowClick(e, budget, index)}>
+                  <MoreVertIcon />
+                </IconButton>
               </Grid>
             </Grid>
           </Grid>
@@ -2305,7 +2736,7 @@ const SingleAccordion = ({ budget, index }) => {
                 Amount
               </div>
               <div component={"span"} className="accLabelValue">
-                {budget?.milestone.amount}
+                {budget?.milestone.amount || "NA"}
               </div>
             </Grid>
           </Grid>

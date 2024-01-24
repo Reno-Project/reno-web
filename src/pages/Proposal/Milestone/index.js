@@ -28,6 +28,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Stack,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
@@ -38,7 +39,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import moment from "moment";
@@ -50,7 +50,7 @@ import authActions from "../../../redux/reducers/auth/actions";
 import { getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import "./index.css";
-import { Close } from "@mui/icons-material";
+import { ChevronRight, Close } from "@mui/icons-material";
 import Images from "../../../config/images";
 
 const errorObj = {
@@ -65,6 +65,7 @@ const errorObj = {
   amountErr: false,
   amountMsg: "",
 };
+
 export default function Milestone(props) {
   const { handleClick = () => null, villa, createProposal } = props;
   const classes = useStyles();
@@ -113,6 +114,7 @@ export default function Milestone(props) {
 
   const handleCloseCreation = () => {
     setIsCreationOpen(false);
+    setVisibleEditModal(false);
   };
 
   useEffect(() => {
@@ -302,6 +304,7 @@ export default function Milestone(props) {
   }
 
   const handleRowClick = (event, budget, index) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setSelectedBudget({
       data: budget,
@@ -870,124 +873,127 @@ export default function Milestone(props) {
 
   return (
     <>
-      <Grid container>
-        <Grid
-          item
-          container
-          xs={12}
-          pb={2}
-          pt={"25px"}
-          justifyContent={"space-between"}
-        >
-          <div className={"alert"}>
-            {" "}
-            <span className="label">Total Milestones Created</span>
-            <span className="cur">
-              AED {amounts.reduce((acc, curr) => acc + curr, 0)}
-            </span>
-          </div>
-        </Grid>
-        {isCreationOpen && renderMilestoneCreateForm("form")}
+      <Grid container sx={{ paddingTop: "28px" }}>
+        <Stack gap="28px" width="100%">
+          <Grid item container xs={12} justifyContent={"space-between"}>
+            <div className={"alert"}>
+              {" "}
+              <span className="label">Total Milestones Created</span>
+              <span className="cur">
+                AED {amounts.reduce((acc, curr) => acc + curr, 0)}
+              </span>
+            </div>
+          </Grid>
 
-        {milestoneLoader ? (
+          <Divider width="100%" sx={{ marginTop: "" }} />
+
+          {isCreationOpen && renderMilestoneCreateForm("form")}
+
+          {milestoneLoader ? (
+            <Grid
+              item
+              container
+              justifyContent={"center"}
+              alignItems={"center"}
+              sx={12}
+              minHeight={220}
+            >
+              <CircularProgress style={{ color: "#274BF1" }} size={26} />
+            </Grid>
+          ) : (
+            isArray(milestones) &&
+            !isEmpty(milestones) && (
+              <>
+                {/* <Grid>
+                  <Divider style={{ marginTop: 28, marginBottom: 28 }} />
+                </Grid> */}
+
+                <Grid container gap="16px">
+                  <div className="secondaryTitle">Milestones</div>
+                  <Divider width="100%" />
+                  <Grid container>
+                    <Stack divider={<Divider />} width="100%">
+                      {milestones.map((milestone, index) => {
+                        return (
+                          <SingleAccordion
+                            milestone={milestone}
+                            index={index}
+                            amounts={amounts}
+                            handleRowClick={handleRowClick}
+                          />
+                        );
+                      })}
+                    </Stack>
+                    <Divider width="100%" />
+                  </Grid>
+                </Grid>
+              </>
+            )
+          )}
+
+          <Grid item container alignItems={"center"}>
+            <div
+              className="btnSubmit"
+              onClick={() => {
+                setIsCreationOpen(true);
+              }}
+            >
+              <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
+              Add Milestone
+            </div>
+          </Grid>
+
+          <Divider />
+
           <Grid
             item
             container
-            justifyContent={"center"}
-            alignItems={"center"}
-            sx={12}
-            minHeight={220}
+            columnGap={1}
+            rowGap={1}
+            justifyContent={"space-between"}
           >
-            <CircularProgress style={{ color: "#274BF1" }} size={26} />
-          </Grid>
-        ) : (
-          isArray(milestones) &&
-          !isEmpty(milestones) && (
-            <>
-              {/* <Grid>
-                <Divider style={{ marginTop: 28, marginBottom: 28 }} />
-              </Grid> */}
-
-              <div className="secondaryTitle">Milestones</div>
-
-              <Grid container>
-                {milestones.map((milestone, index) => {
-                  return (
-                    <SingleAccordion
-                      milestone={milestone}
-                      index={index}
-                      amounts={amounts}
-                    />
+            <Grid item sm={5.9} xs={12}>
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{ boxShadow: "none", padding: "12px 24px" }}
+                onClick={() => {
+                  const milestone_details = {
+                    formvalues: state,
+                    milestone: milestones,
+                    previous: true,
+                  };
+                  dispatch(
+                    setProposalDetails({
+                      ...proposalDetails,
+                      milestone_details,
+                    })
                   );
-                })}
-              </Grid>
-            </>
-          )
-        )}
-        <Grid
-          item
-          container
-          alignItems={"center"}
-          style={{ marginTop: 18, marginBottom: 18 }}
-        >
-          <div
-            className="btnSubmit"
-            onClick={() => {
-              setIsCreationOpen(true);
-            }}
-          >
-            <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
-            Add Milestone
-          </div>
-        </Grid>
-        <div
-          style={{
-            marginBottom: 24,
-            height: 1,
-            width: "100%",
-            background: "#EEF0F3",
-          }}
-        />
-        <Grid
-          pt={2}
-          item
-          container
-          columnGap={1}
-          rowGap={1}
-          justifyContent={"space-between"}
-        >
-          <Grid item sm={5.9} xs={12}>
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{ boxShadow: "none" }}
-              onClick={() => {
-                const milestone_details = {
-                  formvalues: state,
-                  milestone: milestones,
-                  previous: true,
-                };
-                dispatch(
-                  setProposalDetails({ ...proposalDetails, milestone_details })
-                );
 
-                handleClick("back");
-              }}
-            >
-              Previous Step
-            </Button>
+                  handleClick("back");
+                }}
+              >
+                Previous Step
+              </Button>
+            </Grid>
+            <Grid item sm={5.9} xs={12} className="conBtn">
+              <Button
+                variant="contained"
+                size="small"
+                onClick={handleSubmit}
+                style={{ padding: "12px 24px" }}
+              >
+                {buttonLoader ? (
+                  <CircularProgress size={26} style={{ color: "#fff" }} />
+                ) : (
+                  "Continue"
+                )}
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item sm={5.9} xs={12} className="conBtn">
-            <Button variant="contained" size="small" onClick={handleSubmit}>
-              {buttonLoader ? (
-                <CircularProgress size={26} style={{ color: "#fff" }} />
-              ) : (
-                "Continue"
-              )}
-            </Button>
-          </Grid>
-        </Grid>
+        </Stack>
       </Grid>
+
       <ConfirmModel
         visible={visible}
         handleClose={() => setVisible(false)}
@@ -1006,24 +1012,12 @@ export default function Milestone(props) {
           sx: {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
+            ml: 18,
             "& .MuiAvatar-root": {
               width: 32,
               height: 32,
               ml: -0.5,
               mr: 1,
-            },
-            "&:before": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: "background.paper",
-              transform: "translateY(-50%) rotate(45deg)",
-              zIndex: 0,
             },
           },
         }}
@@ -1036,8 +1030,30 @@ export default function Milestone(props) {
           vertical: "bottom",
         }}
       >
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
         <MenuItem
+          style={{
+            fontFamily: "Poppins-Regular",
+            padding: "12px 36px 12px 12px",
+          }}
+        >
+          Request Payment
+        </MenuItem>
+        <Divider style={{ margin: 0 }} />
+        <MenuItem
+          style={{
+            fontFamily: "Poppins-Regular",
+            padding: "12px 36px 12px 12px",
+          }}
+          onClick={handleEdit}
+        >
+          Edit
+        </MenuItem>
+        <Divider style={{ margin: 0 }} />
+        <MenuItem
+          style={{
+            fontFamily: "Poppins-Regular",
+            padding: "12px 36px 12px 12px",
+          }}
           onClick={() => {
             setVisible(true);
           }}
@@ -1065,53 +1081,228 @@ export default function Milestone(props) {
         <Fade in={visibleEditModal}>
           <Box sx={style}>
             <Grid container justifyContent="center" alignItems="center">
-              <Typography className={classes.forgotHeaderText}>
-                Update Milestone Details
-              </Typography>
               <Grid item xs={12}>
-                {renderMilestoneCreateForm("modal")}
-              </Grid>
-
-              <Grid
-                item
-                container
-                columnGap={1}
-                justifyContent={"space-between"}
-              >
-                <Grid item xs={5.7}>
-                  <Button
-                    color="primary"
-                    fullWidth
-                    style={{ marginTop: 20, marginBottom: 20 }}
-                    onClick={() => {
-                      setVisibleEditModal(false);
-                      clearData();
-                      setSelectedBudget(null);
-                    }}
-                    disabled={btnUpdateLoader === "update"}
+                {/* {renderMilestoneCreateForm("modal")} */}
+                <Box sx={style}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    Close
-                  </Button>
-                </Grid>
-
-                <Grid item xs={5.7}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    style={{ marginTop: 20, marginBottom: 20 }}
-                    onClick={() => {
-                      validate(true);
-                    }}
-                    disabled={btnUpdateLoader === "update"}
+                    <div className="addMilestoneHeader">Create Milestone</div>
+                    <Close
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleCloseCreation()}
+                    />
+                  </div>
+                  <Grid container style={{ padding: "24px 24px 0px 24px" }}>
+                    <Grid item xs={12} id="name" mt={2}>
+                      <CInput
+                        label={
+                          <span className="fieldTitle">
+                            Update Milestone Details
+                          </span>
+                        }
+                        placeholder="Enter Milestone Name..."
+                        value={state.milestone_name}
+                        onChange={(e) => {
+                          setState({
+                            ...state,
+                            milestone_name: e.target.value,
+                          });
+                          setErrObj({
+                            ...errObj,
+                            nameErr: false,
+                            nameMsg: "",
+                          });
+                        }}
+                        inputProps={{ maxLength: 50 }}
+                        error={errObj.nameErr}
+                        helpertext={errObj.nameMsg}
+                      />
+                    </Grid>
+                    <Grid item xs={12} id="desctiption">
+                      <CInput
+                        multiline={true}
+                        rows={3}
+                        label={<span className="fieldTitle">Description:</span>}
+                        placeholder="Write description here..."
+                        value={state.description}
+                        onChange={(e) => {
+                          setState({ ...state, description: e.target.value });
+                          setErrObj({
+                            ...errObj,
+                            descriptionErr: false,
+                            descriptionMsg: "",
+                          });
+                        }}
+                        error={errObj.descriptionErr}
+                        helpertext={errObj.descriptionMsg}
+                      />
+                    </Grid>
+                    {/* <Grid item xs={12} id="amount">
+                <CInput
+                  type={"number"}
+                  label="Price:"
+                  placeholder="Enter Price "
+                  value={state.amount}
+                  inputProps={{
+                    onWheel: (event) => event.currentTarget.blur(),
+                  }}
+                  onChange={(e) => {
+                    setState({ ...state, amount: e.target.value });
+                    setErrObj({
+                      ...errObj,
+                      amountErr: false,
+                      amountMsg: "",
+                    });
+                  }}
+                  error={errObj.amountErr}
+                  helpertext={errObj.amountMsg}
+                />
+              </Grid> */}
+                    <Grid
+                      item
+                      container
+                      columnGap={1}
+                      wrap={md ? "wrap" : "nowrap"}
+                    >
+                      <Grid item xs={12} md={6} mb={2}>
+                        <FormControl
+                          variant="standard"
+                          fullWidth
+                          error={errObj.startErr}
+                          style={{ position: "relative" }}
+                        >
+                          <span className="fieldTitle" htmlFor="start-date">
+                            Start Date:
+                          </span>
+                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                              disablePast
+                              value={
+                                state.start_date
+                                  ? new Date(state?.start_date)
+                                  : null
+                              }
+                              onChange={(e, v) => {
+                                setState({
+                                  ...state,
+                                  start_date: moment(e).format("MMMM DD, yyyy"),
+                                  end_date: null,
+                                });
+                                setErrObj({
+                                  ...errObj,
+                                  startErr: false,
+                                  startMsg: "",
+                                });
+                              }}
+                              sx={{
+                                width: "100%",
+                                marginTop: "6px",
+                              }}
+                              format="MMMM dd, yyyy"
+                              slotProps={{
+                                textField: {
+                                  helperText: errObj.startMsg,
+                                  error: errObj.startErr,
+                                  id: "start-date",
+                                },
+                              }}
+                            />
+                          </LocalizationProvider>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} md={6} mb={2}>
+                        <FormControl
+                          variant="standard"
+                          fullWidth
+                          error={errObj.endErr}
+                          style={{ position: "relative" }}
+                        >
+                          <span className="fieldTitle" htmlFor="end-date">
+                            End Date:
+                          </span>
+                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                              minDate={new Date(state?.start_date)}
+                              value={
+                                state?.end_date
+                                  ? new Date(state?.end_date)
+                                  : null
+                              }
+                              onChange={(e) => {
+                                setState({
+                                  ...state,
+                                  end_date: moment(e).format("MMMM DD, yyyy"),
+                                });
+                                setErrObj({
+                                  ...errObj,
+                                  endErr: false,
+                                  endMsg: "",
+                                });
+                              }}
+                              sx={{
+                                width: "100%",
+                                marginTop: "6px",
+                              }}
+                              slotProps={{
+                                textField: {
+                                  helperText: errObj.endMsg,
+                                  error: errObj.endErr,
+                                  id: "end-date",
+                                },
+                              }}
+                              format="MMMM dd, yyyy"
+                            />
+                          </LocalizationProvider>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    item
+                    container
+                    columnGap={1}
+                    justifyContent={"space-between"}
                   >
-                    {btnUpdateLoader === "update" ? (
-                      <CircularProgress style={{ color: "#fff" }} size={26} />
-                    ) : (
-                      "Update"
-                    )}
-                  </Button>
-                </Grid>
+                    <Grid item xs={5.7}>
+                      <Button
+                        color="primary"
+                        fullWidth
+                        style={{ marginTop: 20, marginBottom: 20 }}
+                        onClick={() => {
+                          setVisibleEditModal(false);
+                          clearData();
+                          setSelectedBudget(null);
+                        }}
+                        disabled={btnUpdateLoader === "update"}
+                      >
+                        Close
+                      </Button>
+                    </Grid>
+
+                    <Grid item xs={5.7}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        style={{ marginTop: 20, marginBottom: 20 }}
+                        onClick={() => {
+                          validate(true);
+                        }}
+                        disabled={btnUpdateLoader === "update"}
+                      >
+                        {btnUpdateLoader === "update" ? (
+                          <CircularProgress
+                            style={{ color: "#fff" }}
+                            size={26}
+                          />
+                        ) : (
+                          "Update"
+                        )}
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
               </Grid>
             </Grid>
           </Box>
@@ -1120,8 +1311,8 @@ export default function Milestone(props) {
     </>
   );
 }
-const SingleAccordion = ({ milestone, index, amounts }) => {
-  const [expanded, setExpanded] = React.useState("panel_0");
+const SingleAccordion = ({ milestone, index, amounts, handleRowClick }) => {
+  const [expanded, setExpanded] = React.useState(false);
   const handleChangeExpanded = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
@@ -1130,15 +1321,12 @@ const SingleAccordion = ({ milestone, index, amounts }) => {
       <Accordion
         key={milestone.id}
         onChange={handleChangeExpanded(`panel_${milestone.id}`)}
+        style={{ boxShadow: "none", borderRadius: "none" }}
       >
         <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
           <Grid container>
-            <Grid item md={8} xs={8} style={{ display: "flex" }}>
-              {expanded ? (
-                <ExpandLessIcon style={{ marginRight: 2 }} />
-              ) : (
-                <ExpandMoreIcon style={{ marginRight: 2 }} />
-              )}
+            <Grid item md={8} xs={8} style={{ display: "flex", gap: "2px" }}>
+              {expanded ? <ExpandLessIcon /> : <ChevronRight />}
 
               <div style={{ marginRight: 10 }}>
                 <svg
@@ -1206,7 +1394,11 @@ const SingleAccordion = ({ milestone, index, amounts }) => {
                 ></Grid>
               )}
               <Grid item>
-                <MoreVertIcon />
+                <IconButton
+                  onClick={(e) => handleRowClick(e, milestone, index)}
+                >
+                  <MoreVertIcon />
+                </IconButton>
               </Grid>
             </Grid>
           </Grid>
@@ -1268,7 +1460,7 @@ const SingleAccordion = ({ milestone, index, amounts }) => {
                 Amount
               </div>
               <div component={"span"} className="accLabelValue">
-                {milestone?.amount}
+                {milestone?.amount || "NA"}
               </div>
             </Grid>
           </Grid>
