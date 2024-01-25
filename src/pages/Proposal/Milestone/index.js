@@ -520,6 +520,7 @@ export default function Milestone(props) {
             ? [...milestones, { ...state, id: milestones?.length + 1 || 1 }]
             : [{ ...state, id: milestones?.length + 1 || 1 }],
         };
+
         setTimeout(() => {
           dispatch(
             setProposalDetails({

@@ -59,5 +59,11 @@ const useStyles = makeStyles((theme) => ({
       height: 140,
     },
   },
+  newMilestone:{
+    fontFamily: "Poppins-Medium  !important",
+    fontSize: "16px !important",
+    lineHeight: "24px !important",
+    color:"#274BF1",
+  }
 }));
 export default useStyles;

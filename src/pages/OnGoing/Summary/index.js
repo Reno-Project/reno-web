@@ -86,12 +86,13 @@ export default function Summary(props) {
       setPageLoad(false);
     }
   }
+  console.log(projectDetails, "project details");
 
   return (
     <>
       <div style={{ padding: md ? 20 : 40, backgroundColor: "#F9F9FA" }}>
         <Grid item container>
-          <Typography className={classes.header}>Ongoing Projects</Typography>
+          <Typography className={classes.header}>Ongoing Project</Typography>
         </Grid>
         <Grid
           container
@@ -136,7 +137,7 @@ export default function Summary(props) {
                   }}
                 >
                   <Tab label="Summary" />
-                  <Tab label="Milestone" disabled={disableMilestone} />
+                  <Tab label="Milestones" disabled={disableMilestone} />
                   <Tab label="Budget" />
                   <Tab label="Change log" />
                   <Tab label="Payment History" disabled={disableMilestone} />
@@ -349,7 +350,7 @@ export default function Summary(props) {
                             wrap="nowrap"
                           >
                             <Typography className={classes.linkText}>
-                              {projectDetails?.location}
+                              Google Map{projectDetails?.location}
                             </Typography>
 
                             <img
@@ -422,10 +423,7 @@ export default function Summary(props) {
                             textAlign={sm ? "start" : "end"}
                           >
                             <Typography className={classes.accRightText}>
-                              {moment(
-                                projectDetails?.start_date,
-                                "DD/MM/YYYY"
-                              ).format("MMM DD, YYYY")}
+                              {projectDetails?.start_date || "NA"}
                             </Typography>
                           </Grid>
                         </Grid>
@@ -454,10 +452,7 @@ export default function Summary(props) {
                             textAlign={sm ? "start" : "end"}
                           >
                             <Typography className={classes.accRightText}>
-                              {moment(
-                                projectDetails?.end_date,
-                                "DD/MM/YYYY"
-                              ).format("MMM DD, YYYY")}
+                              {projectDetails?.end_date || "NA"}
                             </Typography>
                           </Grid>
                         </Grid>

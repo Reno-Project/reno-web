@@ -1475,7 +1475,6 @@ export default function Budget(props) {
                 <>
                   <div
                     style={{
-                      backgroundColor: "#F9F9FA",
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "center",
@@ -2433,7 +2432,6 @@ export default function Budget(props) {
                       <>
                         <div
                           style={{
-                            backgroundColor: "#F9F9FA",
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",

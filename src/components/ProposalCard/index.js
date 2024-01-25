@@ -1,4 +1,11 @@
-import { Grid, Tab, Tabs, Typography, useMediaQuery } from "@mui/material";
+import {
+  Divider,
+  Grid,
+  Tab,
+  Tabs,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import React, { useState } from "react";
 import useStyles from "./styles";
 import Images from "../../config/images";
@@ -17,7 +24,6 @@ const errorObj = {
 
 export default function ProposalCard(props) {
   const { villa, from } = props;
-
   const classes = useStyles();
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
@@ -69,7 +75,7 @@ export default function ProposalCard(props) {
                 color: "#FFFFFF",
               }}
             >
-              {villa?.status === "ongoing" ? "ONGOING" : "REQUEST"}
+              {villa?.status === "ongoing" ? "Ongoing" : "REQUEST"}
             </span>
           </Grid>
         </Grid>
@@ -83,7 +89,7 @@ export default function ProposalCard(props) {
             }}
             variant="fullWidth"
           >
-            <Tab label="Proposal summary" />
+            <Tab label="Summary" />
             <Tab label="Chat" />
           </Tabs>
         </Grid>
@@ -91,12 +97,12 @@ export default function ProposalCard(props) {
       {tabValueforcard === 0 ? (
         <>
           <Accordion
-            style={{ marginTop: 10 }}
+            style={{ marginTop: 10, boxShadow: "none" }}
             expanded={expandProjectInfo}
             onChange={() => setExpandProjectInfo(!expandProjectInfo)}
           >
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
+              expandIcon={<ExpandMoreIcon style={{ color: "#98A2B3" }} />}
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
@@ -104,6 +110,7 @@ export default function ProposalCard(props) {
                 Project Information
               </Typography>
             </AccordionSummary>
+            <Divider style={{ margin: "0 16px" }} />
             <AccordionDetails>
               <Grid
                 item
@@ -130,6 +137,14 @@ export default function ProposalCard(props) {
                 <Grid item lg={8} sm={8} md={8} xs={8} textAlign={"end"}>
                   <Typography className={classes.accRightText}>
                     {villa?.project_type}
+                  </Typography>
+                </Grid>
+                <Grid item lg={4} sm={4} md={4} xs={4}>
+                  <Typography className={classes.acctext}>Space:</Typography>
+                </Grid>
+                <Grid item lg={8} sm={8} md={8} xs={8} textAlign={"end"}>
+                  <Typography className={classes.accRightText}>
+                    {villa?.space || "NA"}
                   </Typography>
                 </Grid>
                 {/* {isArray(villa?.form_json) &&
@@ -202,27 +217,28 @@ export default function ProposalCard(props) {
                   textAlign={"end"}
                   justifyContent={"flex-end"}
                   wrap="nowrap"
+                  gap="4px"
                 >
                   <Typography className={classes.linkText}>
-                    {villa?.location}
+                    Google Map
                   </Typography>
 
                   <img
                     alt="logo"
                     src={Images.Location}
-                    // style={{ width: '12%' }}
+                    style={{ color: "#274BF1 !important" }}
                   />
                 </Grid>
               </Grid>
             </AccordionDetails>
           </Accordion>
           <Accordion
-            style={{ marginTop: 10, width: "100%" }}
+            style={{ marginTop: 10, width: "100%", boxShadow: "none" }}
             expanded={expandAttachments}
             onChange={() => setExpandAttachments(!expandAttachments)}
           >
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
+              expandIcon={<ExpandMoreIcon style={{ color: "#98A2B3" }} />}
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
@@ -230,6 +246,7 @@ export default function ProposalCard(props) {
                 Attachments
               </Typography>
             </AccordionSummary>
+            <Divider style={{ margin: "0 16px" }} />
             <AccordionDetails>
               <Grid item container alignContent={"center"}>
                 <Grid item lg={12}>

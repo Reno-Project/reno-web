@@ -663,7 +663,9 @@ export default function Budget(props) {
                     <Typography fontFamily={"Poppins-Regular"} fontSize={18}>
                       Specifications
                     </Typography>
-                    <Typography>{item?.specification || "-"}</Typography>
+                    <Typography fontFamily={"Poppins-Regular"}>
+                      {item?.specification || "-"}
+                    </Typography>
                     <div
                       style={{
                         width: "100%",
