@@ -913,7 +913,22 @@ export default function Milestone(props) {
                   let showMsg = false;
                   let limit = false;
                   const newArr = [...stateBudget?.buget_image];
-                  chosenFiles.map((item) => {
+                  const rejected = chosenFiles.every(
+                    (item) =>
+                      item.type === "image/png" ||
+                      item.type === "image/jpg" ||
+                      item.type === "image/jpeg"
+                  );
+                  if (!rejected) {
+                    toast.error("You can only add jpeg,jpg or png");
+                  }
+                  const filteredFiles = chosenFiles.filter(
+                    (item) =>
+                      item.type === "image/png" ||
+                      item.type === "image/jpg" ||
+                      item.type === "image/jpeg"
+                  );
+                  filteredFiles.map((item) => {
                     const bool = checkImgSize(item);
                     if (bool && newArr.length < 5) {
                       newArr.push(item);

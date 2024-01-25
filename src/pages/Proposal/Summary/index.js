@@ -8,50 +8,50 @@ import {
   CircularProgress,
   InputLabel,
   FormHelperText,
-} from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import useStyles from './styles';
-import { useLocation, useNavigate } from 'react-router-dom';
-import BlueAbout from '../../../components/BlueAbout';
-import theme from '../../../config/theme';
-import Milestone from '../Milestone';
-import Budget from '../Budget';
-import CInput from '../../../components/CInput';
-import _, { isArray, isEmpty } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
-import authActions from '../../../redux/reducers/auth/actions';
-import ProposalCard from '../../../components/ProposalCard';
-import { getAPIProgressData, getApiData } from '../../../utils/APIHelper';
-import { Setting } from '../../../utils/Setting';
-import { toast } from 'react-toastify';
-import { isMobile, isTablet } from 'react-device-detect';
-import { HighlightOffOutlined, ImageOutlined } from '@mui/icons-material';
-import CAutocomplete from '../../../components/CAutocomplete';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import moment from 'moment';
-import { FormControl } from '@mui/material';
-import Images from '../../../config/images';
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import useStyles from "./styles";
+import { useLocation, useNavigate } from "react-router-dom";
+import BlueAbout from "../../../components/BlueAbout";
+import theme from "../../../config/theme";
+import Milestone from "../Milestone";
+import Budget from "../Budget";
+import CInput from "../../../components/CInput";
+import _, { isArray, isEmpty } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import authActions from "../../../redux/reducers/auth/actions";
+import ProposalCard from "../../../components/ProposalCard";
+import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
+import { Setting } from "../../../utils/Setting";
+import { toast } from "react-toastify";
+import { isMobile, isTablet } from "react-device-detect";
+import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
+import CAutocomplete from "../../../components/CAutocomplete";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import moment from "moment";
+import { FormControl } from "@mui/material";
+import Images from "../../../config/images";
 
 const errorObj = {
   scpErr: false,
-  scpMsg: '',
+  scpMsg: "",
   typeErr: false,
-  typeMsg: '',
+  typeMsg: "",
   nameErr: false,
-  nameMsg: '',
+  nameMsg: "",
   cNameErr: false,
-  cNameMsg: '',
+  cNameMsg: "",
   descriptionErr: false,
-  descriptionMsg: '',
+  descriptionMsg: "",
   emailErr: false,
-  emailMsg: '',
+  emailMsg: "",
   documentErr: false,
-  documentMsg: '',
+  documentMsg: "",
   startErr: false,
-  startMsg: '',
+  startMsg: "",
   endErr: false,
-  endMsg: '',
+  endMsg: "",
 };
 
 export default function Summary(props) {
@@ -62,7 +62,6 @@ export default function Summary(props) {
 
   const createProposal = location?.state?.create_proposal || false;
   const villa = location?.state?.villa ? location?.state?.villa : {};
-  console.log('villa test', villa?.status);
   const fromManageProject = location?.state?.fromManageProject || false;
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
@@ -73,17 +72,17 @@ export default function Summary(props) {
   const emailRegex =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-  const sm = useMediaQuery(theme.breakpoints.down('sm'));
-  const md = useMediaQuery(theme.breakpoints.down('md'));
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const md = useMediaQuery(theme.breakpoints.down("md"));
 
   const [tabValue, setTabValue] = useState(0);
   const [errObj, setErrObj] = useState(errorObj);
-  const [scope, setScope] = useState('');
+  const [scope, setScope] = useState("");
   const [projectType, setProjectType] = useState(null);
-  const [name, setName] = useState('');
-  const [customerName, setCustomerName] = useState('');
-  const [description, setDescription] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
   const [document, setDocument] = useState([]);
   const [originalDoc, setOriginalDoc] = useState([]);
   const [uploadLoader, setUploadLoader] = useState(false);
@@ -93,8 +92,8 @@ export default function Summary(props) {
   const [disableBudget, setDisableBudget] = useState(true);
   const [loader, setloader] = useState(false);
   const [expertiseList, setExpertiesList] = useState([]);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
     if (
@@ -105,11 +104,11 @@ export default function Summary(props) {
       setProjectType(villa?.project_type);
     } else if (_?.isObject(proposalDetails) && !isEmpty(proposalDetails)) {
       setScope(proposalDetails?.scope_of_work);
-      setProjectType(proposalDetails?.project_type || '');
-      setName(proposalDetails?.name || '');
-      setDescription(proposalDetails?.description || '');
-      setCustomerName(proposalDetails?.customer_name || '');
-      setEmail(proposalDetails?.email || '');
+      setProjectType(proposalDetails?.project_type || "");
+      setName(proposalDetails?.name || "");
+      setDescription(proposalDetails?.description || "");
+      setCustomerName(proposalDetails?.customer_name || "");
+      setEmail(proposalDetails?.email || "");
       setOriginalDoc(proposalDetails?.project || []);
       // setOriginalDoc(proposalDetails?.project_origin);
       getprojectList();
@@ -125,50 +124,50 @@ export default function Summary(props) {
     if (isEmpty(scope)) {
       valid = false;
       error.scpErr = true;
-      error.scpMsg = 'Please enter scope of project';
+      error.scpMsg = "Please enter scope of project";
     }
 
     if (isEmpty(startDate)) {
       valid = false;
       error.startErr = true;
-      error.startMsg = 'Please enter start date';
+      error.startMsg = "Please enter start date";
     }
     if (isEmpty(endDate)) {
       valid = false;
       error.endErr = true;
-      error.endMsg = 'Please enter end date';
+      error.endMsg = "Please enter end date";
     }
     if (createProposal) {
       if (!projectType) {
         valid = false;
         error.typeErr = true;
-        error.typeMsg = 'Please select project type';
+        error.typeMsg = "Please select project type";
       }
       if (isEmpty(name?.trim())) {
         valid = false;
         error.nameErr = true;
-        error.nameMsg = 'Please enter project name';
+        error.nameMsg = "Please enter project name";
       }
 
       if (isEmpty(description?.trim())) {
         valid = false;
         error.descriptionErr = true;
-        error.descriptionMsg = 'Please enter project description';
+        error.descriptionMsg = "Please enter project description";
       }
       if (isEmpty(customerName?.trim())) {
         valid = false;
         error.cNameErr = true;
-        error.cNameMsg = 'Please enter customer name';
+        error.cNameMsg = "Please enter customer name";
       }
 
       if (isEmpty(email)) {
         valid = false;
         error.emailErr = true;
-        error.emailMsg = 'Please enter email';
+        error.emailMsg = "Please enter email";
       } else if (!emailRegex.test(email)) {
         valid = false;
         error.emailErr = true;
-        error.emailMsg = 'Please enter valid email';
+        error.emailMsg = "Please enter valid email";
       }
 
       // if (!isArray(document) || isEmpty(document)) {
@@ -207,7 +206,7 @@ export default function Summary(props) {
       setDisableMilestone(false);
       setTabValue(1);
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
 
@@ -237,7 +236,7 @@ export default function Summary(props) {
     const endpoint = Setting.endpoints.createproposal;
 
     try {
-      const response = await getAPIProgressData(endpoint, 'POST', data, true);
+      const response = await getAPIProgressData(endpoint, "POST", data, true);
       if (response?.success) {
         const scope_of_work = scope;
 
@@ -258,8 +257,8 @@ export default function Summary(props) {
       }
       setloader(false);
     } catch (error) {
-      console.log('ERROR=====>>>>>', error);
-      toast.error(error.toString() || 'Something went wrong try again later');
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error.toString() || "Something went wrong try again later");
       setloader(false);
     }
   }
@@ -275,7 +274,7 @@ export default function Summary(props) {
     setErrObj({
       ...errObj,
       photoErr: false,
-      photoMsg: '',
+      photoMsg: "",
     });
   }
 
@@ -283,7 +282,7 @@ export default function Summary(props) {
     try {
       const response = await getApiData(
         `${Setting.endpoints.projectlist}`,
-        'GET',
+        "GET",
         {}
       );
       if (response.success) {
@@ -294,7 +293,7 @@ export default function Summary(props) {
         }
       }
     } catch (error) {
-      console.log('🚀 ~ file: index.js:63 ~ by id api ~ error:', error);
+      console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
     }
   }
 
@@ -313,7 +312,7 @@ export default function Summary(props) {
     try {
       const response = await getApiData(
         `${Setting.endpoints.deleteTemplate}/${id}`,
-        'GET',
+        "GET",
         {}
       );
       if (response?.success) {
@@ -337,18 +336,18 @@ export default function Summary(props) {
     } catch (error) {
       setDeleteIND(null);
 
-      console.log('ERROR=====>>>>>', error);
-      toast.error(error.toString() || 'Somthing went wromg try again later');
+      console.log("ERROR=====>>>>>", error);
+      toast.error(error.toString() || "Somthing went wromg try again later");
     }
   }
 
   function displayImagesView() {
     if (isArray(originalDoc) && originalDoc?.length > 0) {
       return originalDoc?.map((item, index) => {
-        let imgUrl = '';
+        let imgUrl = "";
         if (item.image) {
           imgUrl = item.image;
-        } else if (typeof item === 'object' && item instanceof Blob) {
+        } else if (typeof item === "object" && item instanceof Blob) {
           imgUrl = URL.createObjectURL(item);
         } else {
           imgUrl = item;
@@ -356,8 +355,8 @@ export default function Summary(props) {
         return (
           <div
             style={{
-              display: 'flex',
-              border: '1px solid #F2F3F4',
+              display: "flex",
+              border: "1px solid #F2F3F4",
               borderRadius: 6,
               marginBottom: 10,
               padding: 3,
@@ -369,40 +368,40 @@ export default function Summary(props) {
                 height: 70,
                 borderRadius: 6,
                 marginRight: 20,
-                objectFit: 'cover',
+                objectFit: "cover",
               }}
               src={imgUrl}
               alt="Budget Photos"
             />
-            <div style={{ margin: 'auto 0' }}>
+            <div style={{ margin: "auto 0" }}>
               <Typography
                 style={{
-                  fontFamily: 'Poppins-Regular',
-                  fontWeight: '500',
-                  color: '#202939',
+                  fontFamily: "Poppins-Regular",
+                  fontWeight: "500",
+                  color: "#202939",
                   fontSize: 18,
                 }}
               >
-                {item?.name || `Budget Image ${index + 1}` || ''}
+                {item?.name || `Budget Image ${index + 1}` || ""}
               </Typography>
             </div>
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginLeft: 'auto',
+                display: "flex",
+                alignItems: "center",
+                marginLeft: "auto",
                 marginRight: 10,
               }}
             >
               {deleteIND === index ? (
-                <CircularProgress style={{ color: '#274BF1' }} size={26} />
+                <CircularProgress style={{ color: "#274BF1" }} size={26} />
               ) : (
                 <HighlightOffOutlined
                   style={{
                     zIndex: 10,
-                    cursor: 'pointer',
+                    cursor: "pointer",
                     fontSize: 28,
-                    color: '#8C92A4',
+                    color: "#8C92A4",
                   }}
                   onClick={() => {
                     const nArr = [...originalDoc];
@@ -424,14 +423,14 @@ export default function Summary(props) {
     }
   }
   return (
-    <div style={{ backgroundColor: '#F9F9FA' }}>
+    <div style={{ backgroundColor: "#F9F9FA" }}>
       <div className={classes.title}>Submit Proposal</div>
       <Grid
         container
         // flexDirection="row-reverse"
-        style={{ padding: isMobile && !isTablet ? '20px 0' : md ? 20 : 40 }}
+        style={{ padding: isMobile && !isTablet ? "20px 0" : md ? 20 : 40 }}
         // justifyContent={!createProposal && !md ? "space-between" : "center"}
-        boxSizing={'border-box'}
+        boxSizing={"border-box"}
       >
         {/* {!createProposal && (
           <Grid
@@ -461,7 +460,7 @@ export default function Summary(props) {
             id="scope"
             gap="28px"
           >
-            <Grid item xs={12} style={{ borderBottom: '1px solid #F2F3F4' }}>
+            <Grid item xs={12} style={{ borderBottom: "1px solid #F2F3F4" }}>
               <Tabs
                 value={tabValue}
                 variant="scrollable"
@@ -482,7 +481,7 @@ export default function Summary(props) {
                       container
                       flex
                       columnGap={1}
-                      wrap={md ? 'wrap' : 'nowrap'}
+                      wrap={md ? "wrap" : "nowrap"}
                     >
                       <Grid item xs={6} style={{ paddingTop: 25 }}>
                         <CAutocomplete
@@ -494,7 +493,7 @@ export default function Summary(props) {
                             setErrObj({
                               ...errObj,
                               typeErr: false,
-                              typeMsg: '',
+                              typeMsg: "",
                             });
                           }}
                           options={expertiseList}
@@ -513,7 +512,7 @@ export default function Summary(props) {
                             setErrObj({
                               ...errObj,
                               nameErr: false,
-                              nameMsg: '',
+                              nameMsg: "",
                             });
                           }}
                           inputProps={{ maxLength: 50 }}
@@ -535,7 +534,7 @@ export default function Summary(props) {
                           setErrObj({
                             ...errObj,
                             descriptionErr: false,
-                            descriptionMsg: '',
+                            descriptionMsg: "",
                           });
                         }}
                         error={errObj.descriptionErr}
@@ -546,7 +545,7 @@ export default function Summary(props) {
                       container
                       flex
                       columnGap={1}
-                      wrap={md ? 'wrap' : 'nowrap'}
+                      wrap={md ? "wrap" : "nowrap"}
                     >
                       <Grid item xs={6}>
                         <CInput
@@ -558,7 +557,7 @@ export default function Summary(props) {
                             setErrObj({
                               ...errObj,
                               cNameErr: false,
-                              cNameMsg: '',
+                              cNameMsg: "",
                             });
                           }}
                           inputProps={{ maxLength: 50 }}
@@ -576,7 +575,7 @@ export default function Summary(props) {
                             setErrObj({
                               ...errObj,
                               emailErr: false,
-                              emailMsg: '',
+                              emailMsg: "",
                             });
                           }}
                           error={errObj.emailErr}
@@ -598,7 +597,7 @@ export default function Summary(props) {
                       setErrObj({
                         ...errObj,
                         scpErr: false,
-                        scpMsg: '',
+                        scpMsg: "",
                       });
                     }}
                     error={errObj.scpErr}
@@ -618,13 +617,13 @@ export default function Summary(props) {
                         <Grid
                           item
                           container
-                          justifyContent={'center'}
-                          alignItems={'center'}
+                          justifyContent={"center"}
+                          alignItems={"center"}
                           sx={12}
                           minHeight={220}
                         >
                           <CircularProgress
-                            style={{ color: '#274BF1' }}
+                            style={{ color: "#274BF1" }}
                             size={26}
                           />
                         </Grid>
@@ -638,23 +637,23 @@ export default function Summary(props) {
                             container
                             xs={12}
                             style={{
-                              position: 'relative',
+                              position: "relative",
                             }}
                           >
                             <div
                               style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                width: '100%',
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "100%",
                                 height: 170,
-                                border: '1px dashed #9CA3AF',
+                                border: "1px dashed #9CA3AF",
                                 borderRadius: 4,
                                 gap: 1,
                               }}
                             >
-                              <div style={{ width: '24px', height: '24px' }}>
+                              <div style={{ width: "24px", height: "24px" }}>
                                 <img
                                   src={Images.upload_icon}
                                   alt="upload-icon"
@@ -664,19 +663,19 @@ export default function Summary(props) {
                                 <b>
                                   <span
                                     style={{
-                                      cursor: 'pointer',
-                                      color: '#2563EB',
+                                      cursor: "pointer",
+                                      color: "#2563EB",
                                     }}
                                   >
                                     Click to upload Images
-                                  </span>{' '}
-                                  or drag and drop{' '}
+                                  </span>{" "}
+                                  or drag and drop{" "}
                                 </b>
                               </InputLabel>
                               <InputLabel
-                                style={{ fontSize: 12, color: '#6B7280' }}
+                                style={{ fontSize: 12, color: "#6B7280" }}
                               >
-                                {'PNG, JPG, (max size 1200*800)'}
+                                {"PNG, JPG, (max size 1200*800)"}
                               </InputLabel>
                             </div>
                             <input
@@ -684,23 +683,41 @@ export default function Summary(props) {
                               accept="image/jpeg, image/png, image/jpg"
                               multiple
                               style={{
-                                position: 'absolute',
+                                position: "absolute",
                                 top: 0,
                                 left: 0,
                                 right: 0,
                                 bottom: 0,
                                 opacity: 0,
-                                cursor: 'pointer',
-                                width: '100%',
+                                cursor: "pointer",
+                                width: "100%",
                               }}
                               onChange={(e) => {
                                 const chosenFiles = Array.prototype.slice.call(
                                   e.target.files
                                 );
+                                const rejected = chosenFiles.every(
+                                  (item) =>
+                                    item.type === "image/png" ||
+                                    item.type === "image/jpg" ||
+                                    item.type === "image/jpeg"
+                                );
+                                if (!rejected) {
+                                  toast.error(
+                                    "You can only add jpeg,jpg or png"
+                                  );
+                                }
+                                const filteredFiles = chosenFiles.filter(
+                                  (item) =>
+                                    item.type === "image/png" ||
+                                    item.type === "image/jpg" ||
+                                    item.type === "image/jpeg"
+                                );
+
                                 let showMsg = false;
                                 let limit = false;
                                 const newArr = [...originalDoc];
-                                chosenFiles.map((item) => {
+                                filteredFiles.map((item) => {
                                   const bool = checkImgSize(item);
                                   if (bool && newArr.length < 5) {
                                     newArr.push(item);
@@ -711,17 +728,17 @@ export default function Summary(props) {
                                   }
                                 });
                                 if (limit) {
-                                  toast.error('You can upload maximum 5 files');
+                                  toast.error("You can upload maximum 5 files");
                                 } else if (showMsg) {
                                   toast.error(
-                                    'Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again.'
+                                    "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
                                   );
                                 }
                                 let shouldUpload =
                                   isArray(newArr) &&
                                   !isEmpty(newArr) &&
                                   newArr?.filter(
-                                    (elem) => typeof elem !== 'string'
+                                    (elem) => typeof elem !== "string"
                                   );
                                 if (shouldUpload) {
                                   UploadFile(shouldUpload);
@@ -730,7 +747,7 @@ export default function Summary(props) {
                             />
                             <FormHelperText
                               error={errObj.documentErr}
-                              style={{ fontFamily: 'Poppins-Regular' }}
+                              style={{ fontFamily: "Poppins-Regular" }}
                             >
                               {errObj.documentMsg}
                             </FormHelperText>
@@ -738,10 +755,10 @@ export default function Summary(props) {
                           <Grid
                             item
                             style={{
-                              marginTop: document?.length > 0 && 40,
-                              overflowY: 'scroll',
-                              maxHeight: 500,
-                              width: '100%',
+                              marginTop: "20px",
+                              overflowY: "auto",
+                              maxHeight: "170px",
+                              width: "100%",
                             }}
                           >
                             {displayImagesView()}
@@ -756,14 +773,14 @@ export default function Summary(props) {
                   item
                   container
                   columnGap={1}
-                  wrap={md ? 'wrap' : 'nowrap'}
+                  wrap={md ? "wrap" : "nowrap"}
                 >
                   <Grid item xs={12} md={6} mb={2}>
                     <FormControl
                       variant="standard"
                       fullWidth
                       error={errObj.startErr}
-                      style={{ position: 'relative' }}
+                      style={{ position: "relative" }}
                     >
                       <InputLabel shrink htmlFor="start-date">
                         Start Date:
@@ -773,16 +790,16 @@ export default function Summary(props) {
                           disablePast
                           value={new Date(startDate)}
                           onChange={(e, v) => {
-                            setStartDate(moment(e).format('MMMM DD, yyyy'));
+                            setStartDate(moment(e).format("MMMM DD, yyyy"));
                             setErrObj({
                               ...errObj,
                               startErr: false,
-                              startMsg: '',
+                              startMsg: "",
                             });
                           }}
                           sx={{
-                            width: '100%',
-                            marginTop: '24px',
+                            width: "100%",
+                            marginTop: "24px",
                           }}
                           format="MMMM dd, yyyy"
                           components={{
@@ -797,7 +814,7 @@ export default function Summary(props) {
                             textField: {
                               helperText: errObj.startMsg,
                               error: errObj.startErr,
-                              id: 'start-date',
+                              id: "start-date",
                             },
                           }}
                         />
@@ -809,7 +826,7 @@ export default function Summary(props) {
                       variant="standard"
                       fullWidth
                       error={errObj.endErr}
-                      style={{ position: 'relative' }}
+                      style={{ position: "relative" }}
                     >
                       <InputLabel shrink htmlFor="end-date">
                         End Date:
@@ -819,16 +836,16 @@ export default function Summary(props) {
                           minDate={new Date(startDate)}
                           value={new Date(endDate)}
                           onChange={(e) => {
-                            setEndDate(moment(e).format('MMMM DD, yyyy'));
+                            setEndDate(moment(e).format("MMMM DD, yyyy"));
                             setErrObj({
                               ...errObj,
                               endErr: false,
-                              endMsg: '',
+                              endMsg: "",
                             });
                           }}
                           sx={{
-                            width: '100%',
-                            marginTop: '24px',
+                            width: "100%",
+                            marginTop: "24px",
                           }}
                           components={{
                             OpenPickerIcon: () => (
@@ -842,7 +859,7 @@ export default function Summary(props) {
                             textField: {
                               helperText: errObj.endMsg,
                               error: errObj.endErr,
-                              id: 'end-date',
+                              id: "end-date",
                             },
                           }}
                           format="MMMM dd, yyyy"
@@ -856,12 +873,12 @@ export default function Summary(props) {
                   container
                   columnGap={1}
                   rowGap={1}
-                  justifyContent={'end'}
+                  justifyContent={"end"}
                 >
                   <Button
                     variant="outlined"
                     size="small"
-                    sx={{ boxShadow: 'none' }}
+                    sx={{ boxShadow: "none" }}
                     onClick={() => {
                       navigate(-1);
                       dispatch(setProposalDetails({}));
@@ -872,9 +889,9 @@ export default function Summary(props) {
 
                   <Button variant="contained" onClick={validation} size="small">
                     {loader ? (
-                      <CircularProgress style={{ color: '#fff' }} size={26} />
+                      <CircularProgress style={{ color: "#fff" }} size={26} />
                     ) : (
-                      'Continue'
+                      "Continue"
                     )}
                   </Button>
                 </Grid>
@@ -883,10 +900,10 @@ export default function Summary(props) {
             {tabValue === 1 ? (
               <Milestone
                 handleClick={(type, data) => {
-                  if (type === 'back') {
+                  if (type === "back") {
                     setTabValue(0);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  } else if (type === 'next') {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  } else if (type === "next") {
                     setDisableBudget(false);
                     setTabValue(2);
                   }
@@ -898,7 +915,7 @@ export default function Summary(props) {
             {tabValue === 2 ? (
               <Budget
                 handleClick={(type, data) => {
-                  if (type === 'back') {
+                  if (type === "back") {
                     setTabValue(1);
                   }
                 }}
