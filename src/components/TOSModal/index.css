@@ -1,0 +1,41 @@
+.terms-content {
+  height: 350px;
+  overflow-y: scroll;
+  font-family: "Poppins-Regular";
+}
+.terms-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Poppins-Regular";
+}
+.submit-container {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  font-family: "Poppins-Regular";
+}
+
+.submit {
+  background: #274bf1;
+  border: unset;
+  border-radius: 5px;
+  padding: 5px;
+  color: #ffffff;
+  width: 50%;
+  cursor: pointer;
+  font-family: "Poppins-Regular";
+}
+
+.submit-disabled {
+  background: rgb(245, 246, 248);
+  border: unset;
+  border-radius: 5px;
+  padding: 5px;
+  width: 50%;
+  font-family: "Poppins-Regular";
+}
+.acceptance-bar {
+  padding: 10px;
+  font-family: "Poppins-Regular";
+}
