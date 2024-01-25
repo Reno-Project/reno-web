@@ -24,7 +24,6 @@ const errorObj = {
 
 export default function ProposalCard(props) {
   const { villa, from } = props;
-  console.log(villa, ">>>>villa");
   const classes = useStyles();
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
