@@ -24,57 +24,57 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-} from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
-import useStyles from './styles';
+} from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import useStyles from "./styles";
 import {
   ChevronRight,
   Close,
   HighlightOffOutlined,
   ImageOutlined,
-} from '@mui/icons-material';
-import { color } from '../../../config/theme';
-import CInput from '../../../components/CInput';
-import { useTheme } from '@emotion/react';
-import Images from '../../../config/images';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import _, { create, isArray, isEmpty, isNull, isObject } from 'lodash';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import { Setting } from '../../../utils/Setting';
-import { toast } from 'react-toastify';
-import { getAPIProgressData, getApiData } from '../../../utils/APIHelper';
-import { useDispatch, useSelector } from 'react-redux';
-import authActions from '../../../redux/reducers/auth/actions';
-import ConfirmModel from '../../../components/ConfirmModel';
-import CAutocomplete from '../../../components/CAutocomplete';
-import ProfileSuccessModal from '../../../components/ProfileSuccessModal';
-import moment from 'moment';
-import './index.css';
-import { Stack } from '@mui/system';
+} from "@mui/icons-material";
+import { color } from "../../../config/theme";
+import CInput from "../../../components/CInput";
+import { useTheme } from "@emotion/react";
+import Images from "../../../config/images";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import _, { create, isArray, isEmpty, isNull, isObject } from "lodash";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import { Setting } from "../../../utils/Setting";
+import { toast } from "react-toastify";
+import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
+import { useDispatch, useSelector } from "react-redux";
+import authActions from "../../../redux/reducers/auth/actions";
+import ConfirmModel from "../../../components/ConfirmModel";
+import CAutocomplete from "../../../components/CAutocomplete";
+import ProfileSuccessModal from "../../../components/ProfileSuccessModal";
+import moment from "moment";
+import "./index.css";
+import { Stack } from "@mui/system";
 
 const errorObj = {
   bNameErr: false,
-  bNameMsg: '',
+  bNameMsg: "",
   materialTypeErr: false,
-  materialTypeMsg: '',
+  materialTypeMsg: "",
   materialUnitPriceErr: false,
-  materialUnitPriceMsg: '',
+  materialUnitPriceMsg: "",
   quantityErr: false,
-  quantityMsg: '',
+  quantityMsg: "",
   unitErr: false,
-  unitMsg: '',
+  unitMsg: "",
   daysErr: false,
-  daysMsg: '',
+  daysMsg: "",
   manpowerRateErr: false,
-  manpowerRateMsg: '',
+  manpowerRateMsg: "",
   manpowerMilestoneErr: false,
-  manpowerMilestoneMsg: '',
+  manpowerMilestoneMsg: "",
   specificationsErr: false,
-  specificationsMsg: '',
+  specificationsMsg: "",
   photoErr: false,
-  photoMsg: '',
+  photoMsg: "",
 };
 
 export default function Budget(props) {
@@ -92,18 +92,18 @@ export default function Budget(props) {
   const [isCreationOpen, setIsCreationOpen] = useState(false);
 
   const initialFormvalues = {
-    name: '',
+    name: "",
     photo_url: [],
     photo_origin: [],
-    material_type: '',
-    material_unit: '',
-    material_unit_price: '',
-    qty: '',
-    manpower_rate: '',
-    days: '',
+    material_type: "",
+    material_unit: "",
+    material_unit_price: "",
+    qty: "",
+    manpower_rate: "",
+    days: "",
     milestone: null,
-    specification: '',
-    updatedAt: moment().format('MMMM DD, YYYY'),
+    specification: "",
+    updatedAt: moment().format("MMMM DD, YYYY"),
   };
   const [state, setState] = useState(initialFormvalues);
   const [budgetDetails, setBudgetDetails] = useState([]);
@@ -127,20 +127,20 @@ export default function Budget(props) {
 
   const fileInputRef = useRef();
   const theme = useTheme();
-  const md = useMediaQuery(theme.breakpoints.down('md'));
-  const sm = useMediaQuery(theme.breakpoints.down('sm'));
+  const md = useMediaQuery(theme.breakpoints.down("md"));
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     width: sm ? 300 : 500,
     height: sm ? 300 : 500,
-    bgcolor: 'background.paper',
+    bgcolor: "background.paper",
     borderRadius: 1,
     boxShadow: 24,
     p: 4,
-    overflow: 'scroll',
+    overflow: "scroll",
   };
 
   const [amounts, setAmounts] = useState([]);
@@ -153,7 +153,7 @@ export default function Budget(props) {
   };
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     // if (createProposal) {
     setMilestones(proposalDetails?.milestone_details?.milestone);
     // } else {
@@ -219,7 +219,7 @@ export default function Budget(props) {
     try {
       const response = await getApiData(
         `${Setting.endpoints.budgetList}/${villa?.proposal_id}`,
-        'GET',
+        "GET",
         {}
       );
       if (response.success) {
@@ -257,7 +257,7 @@ export default function Budget(props) {
       setBudgetLoader(false);
     } catch (error) {
       setBudgetLoader(false);
-      console.log('err===>', error);
+      console.log("err===>", error);
     }
   }
 
@@ -280,18 +280,18 @@ export default function Budget(props) {
     if (isEmpty(state.name?.trim())) {
       valid = false;
       error.bNameErr = true;
-      error.bNameMsg = 'Please enter the name';
+      error.bNameMsg = "Please enter the name";
     } else if (state?.name?.length > 50) {
       valid = false;
       error.bNameErr = true;
-      error.bNameMsg = 'Please enter the name less then 50 characters';
+      error.bNameMsg = "Please enter the name less then 50 characters";
     }
 
     const positiveIntRegex = /^[1-9]\d*$/;
     const regex = /^\d+(\.\d+)?$/;
     const startDate = moment(state?.milestone?.start_date);
     const endDate = moment(state?.milestone?.end_date);
-    const totalDays = endDate.diff(startDate, 'days');
+    const totalDays = endDate.diff(startDate, "days");
 
     if (
       isEmpty(state?.material_type?.trim()) &&
@@ -304,67 +304,67 @@ export default function Budget(props) {
       if (isEmpty(state.material_type?.trim())) {
         valid = false;
         error.materialTypeErr = true;
-        error.materialTypeMsg = 'Please enter the material type';
+        error.materialTypeMsg = "Please enter the material type";
       }
 
       if (isEmpty(state.material_unit_price?.toString())) {
         valid = false;
         error.materialUnitPriceErr = true;
-        error.materialUnitPriceMsg = 'Please enter the material unit price';
+        error.materialUnitPriceMsg = "Please enter the material unit price";
       } else if (
         !regex.test(state.material_unit_price) ||
         parseInt(state.material_unit_price) <= 0
       ) {
         valid = false;
         error.materialUnitPriceErr = true;
-        error.materialUnitPriceMsg = 'Please enter valid material unit price';
+        error.materialUnitPriceMsg = "Please enter valid material unit price";
       }
       if (isEmpty(state?.qty?.toString())) {
         valid = false;
         error.quantityErr = true;
-        error.quantityMsg = 'Please enter the material qty';
+        error.quantityMsg = "Please enter the material qty";
       } else if (!positiveIntRegex.test(state?.qty)) {
         valid = false;
         error.quantityErr = true;
-        error.quantityMsg = 'Please enter valid material qty';
+        error.quantityMsg = "Please enter valid material qty";
       } else if (state?.qty >= 100000) {
         valid = false;
         error.quantityErr = true;
-        error.quantityMsg = 'Please enter Quantity less then 100000';
+        error.quantityMsg = "Please enter Quantity less then 100000";
       }
 
       if (isEmpty(state.material_unit) || isNull(state?.material_unit)) {
         valid = false;
         error.unitErr = true;
-        error.unitMsg = 'Please enter material unit';
+        error.unitMsg = "Please enter material unit";
       }
 
       if (isEmpty(state?.manpower_rate?.toString())) {
         valid = false;
         error.manpowerRateErr = true;
-        error.manpowerRateMsg = 'Please enter the manpower rate';
+        error.manpowerRateMsg = "Please enter the manpower rate";
       } else if (!regex.test(state?.manpower_rate)) {
         valid = false;
         error.manpowerRateErr = true;
-        error.manpowerRateMsg = 'Please enter valid manpower rate';
+        error.manpowerRateMsg = "Please enter valid manpower rate";
       } else if (state?.manpower_rate >= 100000) {
         valid = false;
         error.manpowerRateErr = true;
-        error.manpowerRateMsg = 'Please enter valid manpower rate under 10000 ';
+        error.manpowerRateMsg = "Please enter valid manpower rate under 10000 ";
       }
 
       if (isEmpty(state?.days?.toString())) {
         valid = false;
         error.daysErr = true;
-        error.daysMsg = 'Please enter the days';
+        error.daysMsg = "Please enter the days";
       } else if (!positiveIntRegex.test(state?.days)) {
         valid = false;
         error.daysErr = true;
-        error.daysErr = 'Please enter valid days';
+        error.daysErr = "Please enter valid days";
       } else if (state?.days >= 365) {
         valid = false;
         error.daysErr = true;
-        error.daysMsg = 'Please enter days under 365';
+        error.daysMsg = "Please enter days under 365";
       }
     } else {
       if (
@@ -376,39 +376,39 @@ export default function Budget(props) {
         if (isEmpty(state.material_type?.trim())) {
           valid = false;
           error.materialTypeErr = true;
-          error.materialTypeMsg = 'Please enter the material type';
+          error.materialTypeMsg = "Please enter the material type";
         }
 
         if (!state.material_unit_price) {
           valid = false;
           error.materialUnitPriceErr = true;
-          error.materialUnitPriceMsg = 'Please enter the material unit price';
+          error.materialUnitPriceMsg = "Please enter the material unit price";
         } else if (
           !regex.test(state.material_unit_price) ||
           parseInt(state.material_unit_price) <= 0
         ) {
           valid = false;
           error.materialUnitPriceErr = true;
-          error.materialUnitPriceMsg = 'Please enter valid material unit price';
+          error.materialUnitPriceMsg = "Please enter valid material unit price";
         }
         if (isEmpty(state?.qty?.toString())) {
           valid = false;
           error.quantityErr = true;
-          error.quantityMsg = 'Please enter the material qty';
+          error.quantityMsg = "Please enter the material qty";
         } else if (!positiveIntRegex.test(state?.qty)) {
           valid = false;
           error.quantityErr = true;
-          error.quantityMsg = 'Please enter valid material qty';
+          error.quantityMsg = "Please enter valid material qty";
         } else if (state?.qty >= 100000) {
           valid = false;
           error.quantityErr = true;
-          error.quantityMsg = 'Please enter Quantity less then 100000';
+          error.quantityMsg = "Please enter Quantity less then 100000";
         }
 
         if (isEmpty(state.material_unit)) {
           valid = false;
           error.unitErr = true;
-          error.unitMsg = 'Please enter material unit';
+          error.unitMsg = "Please enter material unit";
         }
       }
       if (
@@ -418,26 +418,26 @@ export default function Budget(props) {
         if (isEmpty(state?.manpower_rate?.toString())) {
           valid = false;
           error.manpowerRateErr = true;
-          error.manpowerRateMsg = 'Please enter the manpower rate';
+          error.manpowerRateMsg = "Please enter the manpower rate";
         } else if (!regex.test(state.manpower_rate)) {
           valid = false;
           error.manpowerRateErr = true;
-          error.manpowerRateMsg = 'Please enter valid manpower rate';
+          error.manpowerRateMsg = "Please enter valid manpower rate";
         } else if (state?.manpower_rate >= 100000) {
           valid = false;
           error.manpowerRateErr = true;
           error.manpowerRateMsg =
-            'Please enter valid manpower rate under 10000 ';
+            "Please enter valid manpower rate under 10000 ";
         }
 
         if (isEmpty(state?.days?.toString()) || state?.days <= 0) {
           valid = false;
           error.daysErr = true;
-          error.daysMsg = 'Please enter the days';
+          error.daysMsg = "Please enter the days";
         } else if (!positiveIntRegex.test(state?.days)) {
           valid = false;
           error.daysErr = true;
-          error.daysMsg = 'Please enter valid days';
+          error.daysMsg = "Please enter valid days";
         }
         //  else if (state?.days > totalDays) {
         //   valid = false;
@@ -451,17 +451,17 @@ export default function Budget(props) {
     if (
       isEmpty(state?.milestone?.id?.toString()) ||
       state?.milestone === undefined ||
-      state?.milestone === ''
+      state?.milestone === ""
     ) {
       valid = false;
       error.manpowerMilestoneErr = true;
-      error.manpowerMilestoneMsg = 'Please select the milestone';
+      error.manpowerMilestoneMsg = "Please select the milestone";
     }
 
     if (isEmpty(state?.specification)) {
       valid = false;
       error.specificationsErr = true;
-      error.specificationsMsg = 'Please enter the specification';
+      error.specificationsMsg = "Please enter the specification";
     }
     setErrObj(error);
 
@@ -505,7 +505,7 @@ export default function Budget(props) {
       }
       clearData();
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -537,7 +537,7 @@ export default function Budget(props) {
   };
 
   const handleEdit = (data, index) => {
-    console.log(data, 'edit');
+    console.log(data, "edit");
     setVisibleEditModal(true);
     setErrObj(errorObj);
 
@@ -558,7 +558,7 @@ export default function Budget(props) {
     const nextState = {
       ...selectedData,
       milestone: milestoneObj,
-      updatedAt: moment().format('MMMM DD, YYYY'),
+      updatedAt: moment().format("MMMM DD, YYYY"),
       photo_origin: selectedData?.photo_url?.image
         ? [selectedData.photo_url]
         : selectedData?.photo_origin,
@@ -594,7 +594,7 @@ export default function Budget(props) {
     try {
       const response = await getApiData(
         `${Setting.endpoints.deleteBudget}/${selectedBudget?.data?.id}`,
-        'GET'
+        "GET"
       );
       if (response.success) {
         toast.success(response.message);
@@ -618,7 +618,7 @@ export default function Budget(props) {
       }
       setVisibleLoader(false);
     } catch (error) {
-      console.log('error===>>>>', error);
+      console.log("error===>>>>", error);
       toast.error(error.toString());
     }
     setVisibleLoader(false);
@@ -628,14 +628,14 @@ export default function Budget(props) {
     try {
       const response = await getApiData(
         `${Setting.endpoints.milestoneProposalList}/${villa?.proposal_id}`,
-        'GET',
+        "GET",
         {}
       );
       if (response.success) {
         setMilestones(response?.data);
       }
     } catch (error) {
-      console.log('err===>', error);
+      console.log("err===>", error);
     }
   }
 
@@ -682,11 +682,11 @@ export default function Budget(props) {
                     name: item?.name,
                     budget_id: i + 1,
                     material_type: item?.material_type,
-                    material_unit: item?.material_unit || '',
-                    material_unit_price: item?.material_unit_price || '0',
-                    qty: item?.qty || '0',
-                    manpower_rate: item?.manpower_rate || '0',
-                    days: item?.days || '0',
+                    material_unit: item?.material_unit || "",
+                    material_unit_price: item?.material_unit_price || "0",
+                    qty: item?.qty || "0",
+                    manpower_rate: item?.manpower_rate || "0",
+                    days: item?.days || "0",
                     specification: item?.specification,
                   };
                   i++;
@@ -722,11 +722,11 @@ export default function Budget(props) {
     //   proposal_id: villa?.proposal_id,
     //   budget_item: extractedData,
     // };
-    console.log('transformedData====>>>>>', transformedData);
+    console.log("transformedData====>>>>>", transformedData);
     try {
       const response = await getAPIProgressData(
         Setting.endpoints.createproposal,
-        'POST',
+        "POST",
         transformedData,
         true
       );
@@ -740,12 +740,12 @@ export default function Budget(props) {
       } else {
         toast.error(response.message);
       }
-      setButtonLoader('');
+      setButtonLoader("");
       setAlreadySubmittedPopLoader(false);
     } catch (error) {
-      console.log('🚀 ~ file: index.js:330 ~ addPortfolio ~ error:', error);
+      console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
       toast.error(error.toString());
-      setButtonLoader('');
+      setButtonLoader("");
       setAlreadySubmittedPopLoader(false);
     }
   }
@@ -755,7 +755,7 @@ export default function Budget(props) {
     try {
       const response = await getApiData(
         `${Setting.endpoints.alreadySentProposal}/${villa?.proposal_id}`,
-        'GET',
+        "GET",
         {}
       );
       if (response.success) {
@@ -766,7 +766,7 @@ export default function Budget(props) {
       setsubmitLoader(false);
     } catch (error) {
       setsubmitLoader(false);
-      console.log('err===>', error);
+      console.log("err===>", error);
     }
   }
 
@@ -775,7 +775,7 @@ export default function Budget(props) {
     try {
       const response = await getAPIProgressData(
         Setting.endpoints.directproposal,
-        'POST',
+        "POST",
         data,
         true
       );
@@ -787,11 +787,11 @@ export default function Budget(props) {
       } else {
         toast.error(response.message);
       }
-      setButtonLoader('');
+      setButtonLoader("");
     } catch (error) {
-      console.log('🚀 ~ file: index.js:330 ~ addPortfolio ~ error:', error);
+      console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
       toast.error(error.toString());
-      setButtonLoader('');
+      setButtonLoader("");
     }
   }
 
@@ -803,7 +803,7 @@ export default function Budget(props) {
         checkSubmitted();
       }
     } else {
-      toast.warning('Please add at least one budget');
+      toast.warning("Please add at least one budget");
     }
   };
 
@@ -813,19 +813,19 @@ export default function Budget(props) {
   }
 
   async function UploadFileDirectly(img) {
-    console.log('>>>> state', state);
+    console.log(">>>> state", state);
     const nArr1 = state.photo_origin ? [...state.photo_origin] : [];
     for (let i = 0; i < img.length; i++) {
       const base64Data = await convertToBase64(img[i]);
       nArr1.push(base64Data);
     }
-    console.log('>>> nArr1 ', nArr1);
+    console.log(">>> nArr1 ", nArr1);
     setState({ ...state, photo_origin: nArr1 });
 
     setErrObj({
       ...errObj,
       photoErr: false,
-      photoMsg: '',
+      photoMsg: "",
     });
   }
 
@@ -910,7 +910,7 @@ export default function Budget(props) {
   };
 
   const convertBase64ToImageFile = (base64String, filename) => {
-    const arr = base64String.split(',');
+    const arr = base64String.split(",");
     const mimeType = arr[0].match(/:(.*?);/)[1];
     const bstr = atob(arr[1]);
     let n = bstr.length;
@@ -965,14 +965,14 @@ export default function Budget(props) {
 
   function displayImagesView(mode) {
     if (isArray(state.photo_origin) && state?.photo_origin?.length > 0) {
-      if (mode === 'form' && visibleEditModal) {
+      if (mode === "form" && visibleEditModal) {
         return null;
       } else {
         return state?.photo_origin?.map((item, index) => {
-          let imgUrl = '';
+          let imgUrl = "";
           if (item.image) {
             imgUrl = item.image;
-          } else if (typeof item === 'object' && item instanceof Blob) {
+          } else if (typeof item === "object" && item instanceof Blob) {
             imgUrl = URL.createObjectURL(item);
           } else {
             imgUrl = item;
@@ -980,8 +980,8 @@ export default function Budget(props) {
           return (
             <div
               style={{
-                display: 'flex',
-                border: '1px solid #F2F3F4',
+                display: "flex",
+                border: "1px solid #F2F3F4",
                 borderRadius: 6,
                 marginBottom: 5,
                 padding: 3,
@@ -993,40 +993,40 @@ export default function Budget(props) {
                   height: 70,
                   borderRadius: 6,
                   marginRight: 20,
-                  objectFit: 'cover',
+                  objectFit: "cover",
                 }}
                 src={imgUrl}
                 alt="Budget Photos"
               />
-              <div style={{ margin: 'auto 0' }}>
+              <div style={{ margin: "auto 0" }}>
                 <Typography
                   style={{
-                    fontFamily: 'Poppins-Regular',
-                    fontWeight: '500',
-                    color: '#202939',
+                    fontFamily: "Poppins-Regular",
+                    fontWeight: "500",
+                    color: "#202939",
                     fontSize: 18,
                   }}
                 >
-                  {item?.name || `Budget Image ${index + 1}` || ''}
+                  {item?.name || `Budget Image ${index + 1}` || ""}
                 </Typography>
               </div>
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginLeft: 'auto',
+                  display: "flex",
+                  alignItems: "center",
+                  marginLeft: "auto",
                   marginRight: 10,
                 }}
               >
                 {deleteIND === index ? (
-                  <CircularProgress style={{ color: '#274BF1' }} size={26} />
+                  <CircularProgress style={{ color: "#274BF1" }} size={26} />
                 ) : (
                   <HighlightOffOutlined
                     style={{
                       zIndex: 10,
-                      cursor: 'pointer',
+                      cursor: "pointer",
                       fontSize: 28,
-                      color: '#8C92A4',
+                      color: "#8C92A4",
                     }}
                     onClick={() => {
                       // if (createProposal) {
@@ -1067,17 +1067,17 @@ export default function Budget(props) {
     setErrObj({
       ...errObj,
       materialTypeErr: false,
-      materialTypeMsg: '',
+      materialTypeMsg: "",
       materialUnitPriceErr: false,
-      materialUnitPriceMsg: '',
+      materialUnitPriceMsg: "",
       quantityErr: false,
-      quantityMsg: '',
+      quantityMsg: "",
       unitErr: false,
-      unitMsg: '',
+      unitMsg: "",
       daysErr: false,
-      daysMsg: '',
+      daysMsg: "",
       manpowerRateErr: false,
-      manpowerRateMsg: '',
+      manpowerRateMsg: "",
     });
   }
 
@@ -1086,10 +1086,10 @@ export default function Budget(props) {
       <Modal open={isCreationOpen} onClose={handleCloseCreation}>
         <Fade in={isCreationOpen}>
           <Box sx={style}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div className="addMilestoneHeader">Add Budget Item</div>
               <Close
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
                 onClick={() => handleCloseCreation()}
               />
             </div>
@@ -1098,8 +1098,8 @@ export default function Budget(props) {
                 marginTop: 24,
 
                 height: 1,
-                width: '100%',
-                background: '#EEF0F3',
+                width: "100%",
+                background: "#EEF0F3",
               }}
             />
 
@@ -1108,10 +1108,10 @@ export default function Budget(props) {
                 label={<span className="fieldTitle">Budget Item Name</span>}
                 placeholder="Enter Budget Name..."
                 value={
-                  mode === 'modal' && visibleEditModal
+                  mode === "modal" && visibleEditModal
                     ? state.name
-                    : mode === 'form' && visibleEditModal
-                    ? ''
+                    : mode === "form" && visibleEditModal
+                    ? ""
                     : state.name
                 }
                 onChange={(e) => {
@@ -1119,22 +1119,22 @@ export default function Budget(props) {
                   setErrObj({
                     ...errObj,
                     bNameErr: false,
-                    bNameMsg: '',
+                    bNameMsg: "",
                   });
                 }}
                 inputProps={{ maxLength: 50 }}
                 error={
-                  mode === 'modal' && visibleEditModal
+                  mode === "modal" && visibleEditModal
                     ? errObj.bNameErr
-                    : mode === 'form' && visibleEditModal
-                    ? ''
+                    : mode === "form" && visibleEditModal
+                    ? ""
                     : errObj.bNameErr
                 }
                 helpertext={
-                  mode === 'modal' && visibleEditModal
+                  mode === "modal" && visibleEditModal
                     ? errObj.bNameMsg
-                    : mode === 'form' && visibleEditModal
-                    ? ''
+                    : mode === "form" && visibleEditModal
+                    ? ""
                     : errObj.bNameMsg
                 }
               />
@@ -1145,10 +1145,10 @@ export default function Budget(props) {
                 label={<span className="fieldTitle">Material type:</span>}
                 placeholder="marble, wood, etc..."
                 value={
-                  mode === 'modal' && visibleEditModal
+                  mode === "modal" && visibleEditModal
                     ? state.material_type
-                    : mode === 'form' && visibleEditModal
-                    ? ''
+                    : mode === "form" && visibleEditModal
+                    ? ""
                     : state.material_type
                 }
                 onChange={(e) => {
@@ -1157,31 +1157,31 @@ export default function Budget(props) {
                 }}
                 inputProps={{ maxLength: 50 }}
                 error={
-                  mode === 'modal' && visibleEditModal
+                  mode === "modal" && visibleEditModal
                     ? errObj.materialTypeErr
-                    : mode === 'form' && visibleEditModal
-                    ? ''
+                    : mode === "form" && visibleEditModal
+                    ? ""
                     : errObj.materialTypeErr
                 }
                 helpertext={
-                  mode === 'modal' && visibleEditModal
+                  mode === "modal" && visibleEditModal
                     ? errObj.materialTypeMsg
-                    : mode === 'form' && visibleEditModal
-                    ? ''
+                    : mode === "form" && visibleEditModal
+                    ? ""
                     : errObj.materialTypeMsg
                 }
               />
             </Grid>
-            <Grid item container columnGap={1} wrap={md ? 'wrap' : 'nowrap'}>
+            <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
               <Grid item xs={12} md={4} id="Unit">
                 <CAutocomplete
                   label={<span className="fieldTitle">Material unit:</span>}
                   placeholder="Enter material unit"
                   value={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? state.material_unit
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : state.material_unit
                   }
                   onChange={(e, newValue) => {
@@ -1189,28 +1189,28 @@ export default function Budget(props) {
                     clearErr();
                   }}
                   options={[
-                    'tonns',
-                    'Kg',
-                    'g',
-                    'lbs',
-                    'liter',
-                    'ml',
-                    'sqm',
-                    'item',
+                    "tonns",
+                    "Kg",
+                    "g",
+                    "lbs",
+                    "liter",
+                    "ml",
+                    "sqm",
+                    "item",
                   ]}
                   getOptionLabel={(option) => option}
                   error={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.unitErr
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.unitErr
                   }
                   helpertext={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.unitMsg
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.unitMsg
                   }
                 />
@@ -1222,10 +1222,10 @@ export default function Budget(props) {
                   }
                   placeholder="Enter amount...."
                   value={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? state.material_unit_price
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : state.material_unit_price
                   }
                   type="number"
@@ -1242,17 +1242,17 @@ export default function Budget(props) {
                     clearErr();
                   }}
                   error={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.materialUnitPriceErr
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.materialUnitPriceErr
                   }
                   helpertext={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.materialUnitPriceMsg
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.materialUnitPriceMsg
                   }
                 />
@@ -1262,10 +1262,10 @@ export default function Budget(props) {
                   label={<span className="fieldTitle">Quantity</span>}
                   placeholder="N/A"
                   value={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? state.qty
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : state.qty
                   }
                   type="tel"
@@ -1277,37 +1277,37 @@ export default function Budget(props) {
                     clearErr();
                   }}
                   inputProps={{
-                    pattern: '[0-9]*', // Allow only digits
-                    inputMode: 'numeric', // Show numeric keyboard on mobile devices
+                    pattern: "[0-9]*", // Allow only digits
+                    inputMode: "numeric", // Show numeric keyboard on mobile devices
                   }}
                   error={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.quantityErr
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.quantityErr
                   }
                   helpertext={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.quantityMsg
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.quantityMsg
                   }
                 />
               </Grid>
             </Grid>
 
-            <Grid item container columnGap={1} wrap={md ? 'wrap' : 'nowrap'}>
+            <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
               <Grid item xs={12} md={4} id="rate">
                 <CInput
                   label={<span className="fieldTitle">Manpower rate</span>}
                   placeholder="Enter amount...."
                   value={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? state.manpower_rate
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : state.manpower_rate
                   }
                   type="number"
@@ -1321,17 +1321,17 @@ export default function Budget(props) {
                     clearErr();
                   }}
                   error={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.manpowerRateErr
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.manpowerRateErr
                   }
                   helpertext={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.manpowerRateMsg
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.manpowerRateMsg
                   }
                 />
@@ -1342,10 +1342,10 @@ export default function Budget(props) {
                   label={<span className="fieldTitle">Days</span>}
                   placeholder="N/A"
                   value={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? state.days
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : state.days
                   }
                   type="tel"
@@ -1357,21 +1357,21 @@ export default function Budget(props) {
                     clearErr();
                   }}
                   inputProps={{
-                    pattern: '[0-9]*', // Allow only digits
-                    inputMode: 'numeric', // Show numeric keyboard on mobile devices
+                    pattern: "[0-9]*", // Allow only digits
+                    inputMode: "numeric", // Show numeric keyboard on mobile devices
                   }}
                   error={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.daysErr
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.daysErr
                   }
                   helpertext={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.daysMsg
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.daysMsg
                   }
                 />
@@ -1381,10 +1381,10 @@ export default function Budget(props) {
                   label={<span className="fieldTitle">Milestone</span>}
                   placeholder="N/A"
                   value={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? state?.milestone
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : state?.milestone
                   }
                   onChange={(e, newValue) => {
@@ -1392,23 +1392,23 @@ export default function Budget(props) {
                     setErrObj({
                       ...errObj,
                       manpowerMilestoneErr: false,
-                      manpowerMilestoneMsg: '',
+                      manpowerMilestoneMsg: "",
                     });
                   }}
                   options={milestones}
                   getOptionLabel={(option) => option.milestone_name}
                   error={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.manpowerMilestoneErr
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.manpowerMilestoneErr
                   }
                   helpertext={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.manpowerMilestoneMsg
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.manpowerMilestoneMsg
                   }
                 />
@@ -1421,10 +1421,10 @@ export default function Budget(props) {
                 label={<span className="fieldTitle">Specifications:</span>}
                 placeholder="Write here..."
                 value={
-                  mode === 'modal' && visibleEditModal
+                  mode === "modal" && visibleEditModal
                     ? state.specification
-                    : mode === 'form' && visibleEditModal
-                    ? ''
+                    : mode === "form" && visibleEditModal
+                    ? ""
                     : state.specification
                 }
                 onChange={(e) => {
@@ -1432,21 +1432,21 @@ export default function Budget(props) {
                   setErrObj({
                     ...errObj,
                     specificationsErr: false,
-                    specificationsMsg: '',
+                    specificationsMsg: "",
                   });
                 }}
                 error={
-                  mode === 'modal' && visibleEditModal
+                  mode === "modal" && visibleEditModal
                     ? errObj.specificationsErr
-                    : mode === 'form' && visibleEditModal
-                    ? ''
+                    : mode === "form" && visibleEditModal
+                    ? ""
                     : errObj.specificationsErr
                 }
                 helpertext={
-                  mode === 'modal' && visibleEditModal
+                  mode === "modal" && visibleEditModal
                     ? errObj.specificationsMsg
-                    : mode === 'form' && visibleEditModal
-                    ? ''
+                    : mode === "form" && visibleEditModal
+                    ? ""
                     : errObj.specificationsMsg
                 }
               />
@@ -1455,49 +1455,56 @@ export default function Budget(props) {
               item
               xs={12}
               style={{
-                position: 'relative',
+                position: "relative",
               }}
             >
               {uploadLoader &&
-              ((mode === 'form' && visibleEditModal === false) ||
-                (mode === 'modal' && visibleEditModal)) ? (
+              ((mode === "form" && visibleEditModal === false) ||
+                (mode === "modal" && visibleEditModal)) ? (
                 <Grid
                   item
                   container
-                  justifyContent={'center'}
-                  alignItems={'center'}
+                  justifyContent={"center"}
+                  alignItems={"center"}
                   sx={12}
                   minHeight={130}
                 >
-                  <CircularProgress style={{ color: '#274BF1' }} size={26} />
+                  <CircularProgress style={{ color: "#274BF1" }} size={26} />
                 </Grid>
               ) : (
                 <>
                   <div
                     style={{
-                      backgroundColor: '#F9F9FA',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '100%',
+                      backgroundColor: "#F9F9FA",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
                       height: 130,
-                      border: errObj.photoErr ? '1px solid red' : 'none',
+                      border: "1px dashed #9CA3AF",
                       borderRadius: 4,
                     }}
                   >
-                    <ImageOutlined
-                      style={{
-                        color: 'grey',
-                        marginBottom: 20,
-                        fontSize: 30,
-                      }}
-                    />
+                    <div style={{ width: "24px", height: "24px" }}>
+                      <img src={Images.upload_icon} alt="upload-icon"></img>
+                    </div>
+
                     <InputLabel>
-                      <b>Upload Photo</b>
+                      <b>
+                        <span
+                          style={{
+                            cursor: "pointer",
+                            color: "#2563EB",
+                          }}
+                        >
+                          Click to upload Images
+                        </span>{" "}
+                        or drag and drop{" "}
+                      </b>
                     </InputLabel>
-                    <InputLabel style={{ fontSize: 12 }}>
-                      {'PNG, JPG, (max size 1200*800)'}
+                    <InputLabel style={{ fontSize: 12, color: "#6B7280" }}>
+                      {"PNG, JPG, (max size 1200*800)"}
                     </InputLabel>
                   </div>
                   <input
@@ -1505,14 +1512,14 @@ export default function Budget(props) {
                     accept="image/jpeg, image/png, image/jpg"
                     multiple
                     style={{
-                      position: 'absolute',
+                      position: "absolute",
                       top: 0,
                       left: 0,
                       right: 0,
                       bottom: 0,
                       opacity: 0,
-                      cursor: 'pointer',
-                      width: '100%',
+                      cursor: "pointer",
+                      width: "100%",
                     }}
                     onChange={(e) => {
                       const chosenFiles = Array.prototype.slice.call(
@@ -1532,17 +1539,17 @@ export default function Budget(props) {
                         }
                       });
                       if (limit) {
-                        toast.error('You can upload maximum 5 files');
+                        toast.error("You can upload maximum 5 files");
                       } else if (showMsg) {
                         toast.error(
-                          'Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again.'
+                          "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
                         );
                       }
                       // if (createProposal) {
                       let shouldUpload =
                         isArray(newArr) &&
                         !isEmpty(newArr) &&
-                        newArr?.filter((elem) => typeof elem !== 'string');
+                        newArr?.filter((elem) => typeof elem !== "string");
                       if (shouldUpload) {
                         UploadFileDirectly(shouldUpload);
                       }
@@ -1560,7 +1567,7 @@ export default function Budget(props) {
                   />
                   <FormHelperText
                     error={errObj.photoErr}
-                    style={{ fontFamily: 'Poppins-Regular' }}
+                    style={{ fontFamily: "Poppins-Regular" }}
                   >
                     {errObj.photoMsg}
                   </FormHelperText>
@@ -1570,9 +1577,9 @@ export default function Budget(props) {
                 item
                 style={{
                   marginTop: state?.photo_origin?.length > 0 && 40,
-                  overflowY: 'scroll',
+                  overflowY: "scroll",
                   maxHeight: 500,
-                  width: '100%',
+                  width: "100%",
                 }}
               >
                 {displayImagesView()}
@@ -1583,17 +1590,17 @@ export default function Budget(props) {
                 marginTop: 24,
                 marginBottom: 24,
                 height: 1,
-                width: '100%',
-                background: '#EEF0F3',
+                width: "100%",
+                background: "#EEF0F3",
               }}
             />
             <Grid
               item
               container
-              justifyContent={'center'}
+              justifyContent={"center"}
               gap={sm ? 1 : 2}
               wrap="nowrap"
-              marginTop={'10px'}
+              marginTop={"10px"}
             >
               <Grid item xs={6}>
                 <div className="cancel" onClick={handleCloseCreation}>
@@ -1619,11 +1626,11 @@ export default function Budget(props) {
   return (
     <>
       <Grid container gap="28px">
-        <div className={'alert'}>
-          {' '}
+        <div className={"alert"}>
+          {" "}
           <span className="label"> Total Budget amount </span>
           <span className="cur">
-            AED{' '}
+            AED{" "}
             {(isArray(budgetDetails) &&
               !isEmpty(budgetDetails) &&
               budgetDetails?.reduce((acc, bud) => {
@@ -1637,7 +1644,7 @@ export default function Budget(props) {
           </span>
         </div>
 
-        {renderBudgetCreateForm('form')}
+        {renderBudgetCreateForm("form")}
 
         <Divider width="100%" />
 
@@ -1645,12 +1652,12 @@ export default function Budget(props) {
           <Grid
             item
             container
-            justifyContent={'center'}
-            alignItems={'center'}
+            justifyContent={"center"}
+            alignItems={"center"}
             sx={12}
             minHeight={220}
           >
-            <CircularProgress style={{ color: '#274BF1' }} size={26} />
+            <CircularProgress style={{ color: "#274BF1" }} size={26} />
           </Grid>
         ) : (
           isArray(budgetDetails) &&
@@ -1917,9 +1924,9 @@ export default function Budget(props) {
           )
         )}
 
-        <Divider width="100%" />
+        {budgetDetails.length > 0 && <Divider width="100%" />}
 
-        <Grid item container alignItems={'center'}>
+        <Grid item container alignItems={"center"}>
           <div
             className="btnSubmit"
             onClick={() => {
@@ -1940,16 +1947,16 @@ export default function Budget(props) {
           columnGap={1}
           rowGap={1}
           display="flex"
-          justifyContent={'space-between'}
+          justifyContent={"space-between"}
         >
           <Grid item sm={5.9} xs={12}>
             <Button
               variant="outlined"
               size="small"
-              sx={{ boxShadow: 'none', padding: '12px 24px' }}
+              sx={{ boxShadow: "none", padding: "12px 24px" }}
               onClick={() => {
                 updateRedux();
-                handleClick('back');
+                handleClick("back");
               }}
             >
               Previous Step
@@ -1961,10 +1968,10 @@ export default function Budget(props) {
                 variant="outlined"
                 size="small"
                 className="conBtn"
-                sx={{ boxShadow: 'none', padding: '12px 24px' }}
+                sx={{ boxShadow: "none", padding: "12px 24px" }}
                 onClick={() => {
                   updateRedux();
-                  handleClick('back');
+                  handleClick("back");
                 }}
               >
                 Cancel
@@ -1976,12 +1983,12 @@ export default function Budget(props) {
                 size="small"
                 className="conBtn"
                 onClick={handleSubmit}
-                sx={{ padding: '12px 24px' }}
+                sx={{ padding: "12px 24px" }}
               >
                 {submitLoader ? (
-                  <CircularProgress style={{ color: '#fff' }} size={26} />
+                  <CircularProgress style={{ color: "#fff" }} size={26} />
                 ) : (
-                  'Continue'
+                  "Continue"
                 )}
               </Button>
             </Grid>
@@ -2000,7 +2007,7 @@ export default function Budget(props) {
       <ConfirmModel
         visible={visibleFinal}
         loader={buttonLoader}
-        title={'Submit'}
+        title={"Submit"}
         handleClose={() => setVisibleFinal(false)}
         confirmation={() => {
           if (createProposal) {
@@ -2033,12 +2040,12 @@ export default function Budget(props) {
                               name: item?.name,
                               budget_id: i + 1,
                               material_type: item?.material_type,
-                              material_unit: item?.material_unit || '',
+                              material_unit: item?.material_unit || "",
                               material_unit_price:
-                                item?.material_unit_price || '0',
-                              qty: item?.qty || '0',
-                              manpower_rate: item?.manpower_rate || '0',
-                              days: item?.days || '0',
+                                item?.material_unit_price || "0",
+                              qty: item?.qty || "0",
+                              manpower_rate: item?.manpower_rate || "0",
+                              days: item?.days || "0",
                               specification: item?.specification,
                             };
                             i++;
@@ -2081,10 +2088,10 @@ export default function Budget(props) {
         PaperProps={{
           elevation: 0,
           sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             ml: 18,
-            '& .MuiAvatar-root': {
+            "& .MuiAvatar-root": {
               width: 32,
               height: 32,
               ml: -0.5,
@@ -2093,18 +2100,18 @@ export default function Budget(props) {
           },
         }}
         transformOrigin={{
-          horizontal: 'right',
-          vertical: 'top',
+          horizontal: "right",
+          vertical: "top",
         }}
         anchorOrigin={{
-          horizontal: 'right',
-          vertical: 'bottom',
+          horizontal: "right",
+          vertical: "bottom",
         }}
       >
         <MenuItem
           style={{
-            fontFamily: 'Poppins-Medium',
-            padding: '12px 36px 12px 12px',
+            fontFamily: "Poppins-Medium",
+            padding: "12px 36px 12px 12px",
           }}
         >
           Request Payment
@@ -2112,8 +2119,8 @@ export default function Budget(props) {
         <Divider style={{ margin: 0 }} />
         <MenuItem
           style={{
-            fontFamily: 'Poppins-Medium',
-            padding: '12px 36px 12px 12px',
+            fontFamily: "Poppins-Medium",
+            padding: "12px 36px 12px 12px",
           }}
           onClick={handleEdit}
         >
@@ -2122,8 +2129,8 @@ export default function Budget(props) {
         <Divider style={{ margin: 0 }} />
         <MenuItem
           style={{
-            fontFamily: 'Poppins-Medium',
-            padding: '12px 36px 12px 12px',
+            fontFamily: "Poppins-Medium",
+            padding: "12px 36px 12px 12px",
           }}
           onClick={() => {
             setVisible(true);
@@ -2138,7 +2145,7 @@ export default function Budget(props) {
           msg="Proposal successfully submitted!"
           btnTitle="Continue"
           visible={proposalModal}
-          navigatePath={fromManageProject ? '/manage-project' : ''}
+          navigatePath={fromManageProject ? "/manage-project" : ""}
         />
       )}
 
@@ -2147,7 +2154,7 @@ export default function Budget(props) {
         <Modal
           open={visibleEditModal}
           onClose={() => {
-            if (btnUpdateLoader === 'update') {
+            if (btnUpdateLoader === "update") {
               return null;
             } else {
               setVisibleEditModal(false);
@@ -2157,12 +2164,12 @@ export default function Budget(props) {
           closeAfterTransition
           disableAutoFocus
           slotProps={{ backdrop: Backdrop }}
-          style={{ overflowY: 'scroll' }}
+          style={{ overflowY: "scroll" }}
         >
           <Fade in={visibleEditModal}>
             <Grid
               container
-              style={{ height: 600, overflow: 'auto' }}
+              style={{ height: 600, overflow: "auto" }}
               justifyContent="center"
               alignItems="center"
             >
@@ -2171,13 +2178,13 @@ export default function Budget(props) {
                 <Box sx={style}>
                   <div
                     style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
+                      display: "flex",
+                      justifyContent: "space-between",
                     }}
                   >
                     <div className="addMilestoneHeader">Update Budget Item</div>
                     <Close
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                       onClick={() => handleCloseCreation()}
                     />
                   </div>
@@ -2186,8 +2193,8 @@ export default function Budget(props) {
                       marginTop: 24,
 
                       height: 1,
-                      width: '100%',
-                      background: '#EEF0F3',
+                      width: "100%",
+                      background: "#EEF0F3",
                     }}
                   />
 
@@ -2203,7 +2210,7 @@ export default function Budget(props) {
                         setErrObj({
                           ...errObj,
                           bNameErr: false,
-                          bNameMsg: '',
+                          bNameMsg: "",
                         });
                       }}
                       inputProps={{ maxLength: 50 }}
@@ -2230,7 +2237,7 @@ export default function Budget(props) {
                     item
                     container
                     columnGap={1}
-                    wrap={md ? 'wrap' : 'nowrap'}
+                    wrap={md ? "wrap" : "nowrap"}
                   >
                     <Grid item xs={12} md={4} id="Unit">
                       <CAutocomplete
@@ -2244,14 +2251,14 @@ export default function Budget(props) {
                           clearErr();
                         }}
                         options={[
-                          'tonns',
-                          'Kg',
-                          'g',
-                          'lbs',
-                          'liter',
-                          'ml',
-                          'sqm',
-                          'item',
+                          "tonns",
+                          "Kg",
+                          "g",
+                          "lbs",
+                          "liter",
+                          "ml",
+                          "sqm",
+                          "item",
                         ]}
                         getOptionLabel={(option) => option}
                         error={errObj.unitErr}
@@ -2298,8 +2305,8 @@ export default function Budget(props) {
                           clearErr();
                         }}
                         inputProps={{
-                          pattern: '[0-9]*', // Allow only digits
-                          inputMode: 'numeric', // Show numeric keyboard on mobile devices
+                          pattern: "[0-9]*", // Allow only digits
+                          inputMode: "numeric", // Show numeric keyboard on mobile devices
                         }}
                         error={errObj.quantityErr}
                         helpertext={errObj.quantityMsg}
@@ -2311,7 +2318,7 @@ export default function Budget(props) {
                     item
                     container
                     columnGap={1}
-                    wrap={md ? 'wrap' : 'nowrap'}
+                    wrap={md ? "wrap" : "nowrap"}
                   >
                     <Grid item xs={12} md={4} id="rate">
                       <CInput
@@ -2352,8 +2359,8 @@ export default function Budget(props) {
                           clearErr();
                         }}
                         inputProps={{
-                          pattern: '[0-9]*', // Allow only digits
-                          inputMode: 'numeric', // Show numeric keyboard on mobile devices
+                          pattern: "[0-9]*", // Allow only digits
+                          inputMode: "numeric", // Show numeric keyboard on mobile devices
                         }}
                         error={errObj.daysErr}
                         helpertext={errObj.daysMsg}
@@ -2369,7 +2376,7 @@ export default function Budget(props) {
                           setErrObj({
                             ...errObj,
                             manpowerMilestoneErr: false,
-                            manpowerMilestoneMsg: '',
+                            manpowerMilestoneMsg: "",
                           });
                         }}
                         options={milestones}
@@ -2393,7 +2400,7 @@ export default function Budget(props) {
                         setErrObj({
                           ...errObj,
                           specificationsErr: false,
-                          specificationsMsg: '',
+                          specificationsMsg: "",
                         });
                       }}
                       error={errObj.specificationsErr}
@@ -2404,7 +2411,7 @@ export default function Budget(props) {
                     item
                     xs={12}
                     style={{
-                      position: 'relative',
+                      position: "relative",
                     }}
                   >
                     {uploadLoader &&
@@ -2412,13 +2419,13 @@ export default function Budget(props) {
                       <Grid
                         item
                         container
-                        justifyContent={'center'}
-                        alignItems={'center'}
+                        justifyContent={"center"}
+                        alignItems={"center"}
                         sx={12}
                         minHeight={130}
                       >
                         <CircularProgress
-                          style={{ color: '#274BF1' }}
+                          style={{ color: "#274BF1" }}
                           size={26}
                         />
                       </Grid>
@@ -2426,29 +2433,40 @@ export default function Budget(props) {
                       <>
                         <div
                           style={{
-                            backgroundColor: '#F9F9FA',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '100%',
+                            backgroundColor: "#F9F9FA",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "100%",
                             height: 130,
-                            border: errObj.photoErr ? '1px solid red' : 'none',
+                            border: "1px dashed #9CA3AF",
                             borderRadius: 4,
                           }}
                         >
-                          <ImageOutlined
-                            style={{
-                              color: 'grey',
-                              marginBottom: 20,
-                              fontSize: 30,
-                            }}
-                          />
+                          <div style={{ width: "24px", height: "24px" }}>
+                            <img
+                              src={Images.upload_icon}
+                              alt="upload-icon"
+                            ></img>
+                          </div>
                           <InputLabel>
-                            <b>Upload Photo</b>
+                            <b>
+                              <span
+                                style={{
+                                  cursor: "pointer",
+                                  color: "#2563EB",
+                                }}
+                              >
+                                Click to upload Images
+                              </span>{" "}
+                              or drag and drop{" "}
+                            </b>
                           </InputLabel>
-                          <InputLabel style={{ fontSize: 12 }}>
-                            {'PNG, JPG, (max size 1200*800)'}
+                          <InputLabel
+                            style={{ fontSize: 12, color: "#6B7280" }}
+                          >
+                            {"PNG, JPG, (max size 1200*800)"}
                           </InputLabel>
                         </div>
                         <input
@@ -2456,14 +2474,14 @@ export default function Budget(props) {
                           accept="image/jpeg, image/png, image/jpg"
                           multiple
                           style={{
-                            position: 'absolute',
+                            position: "absolute",
                             top: 0,
                             left: 0,
                             right: 0,
                             bottom: 0,
                             opacity: 0,
-                            cursor: 'pointer',
-                            width: '100%',
+                            cursor: "pointer",
+                            width: "100%",
                           }}
                           onChange={(e) => {
                             const chosenFiles = Array.prototype.slice.call(
@@ -2483,10 +2501,10 @@ export default function Budget(props) {
                               }
                             });
                             if (limit) {
-                              toast.error('You can upload maximum 5 files');
+                              toast.error("You can upload maximum 5 files");
                             } else if (showMsg) {
                               toast.error(
-                                'Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again.'
+                                "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
                               );
                             }
                             // if (createProposal) {
@@ -2494,7 +2512,7 @@ export default function Budget(props) {
                               isArray(newArr) &&
                               !isEmpty(newArr) &&
                               newArr?.filter(
-                                (elem) => typeof elem !== 'string'
+                                (elem) => typeof elem !== "string"
                               );
                             if (shouldUpload) {
                               UploadFileDirectly(shouldUpload);
@@ -2513,7 +2531,7 @@ export default function Budget(props) {
                         />
                         <FormHelperText
                           error={errObj.photoErr}
-                          style={{ fontFamily: 'Poppins-Regular' }}
+                          style={{ fontFamily: "Poppins-Regular" }}
                         >
                           {errObj.photoMsg}
                         </FormHelperText>
@@ -2523,9 +2541,9 @@ export default function Budget(props) {
                       item
                       style={{
                         marginTop: state?.photo_origin?.length > 0 && 40,
-                        overflowY: 'scroll',
+                        overflowY: "scroll",
                         maxHeight: 500,
-                        width: '100%',
+                        width: "100%",
                       }}
                     >
                       {displayImagesView()}
@@ -2534,7 +2552,7 @@ export default function Budget(props) {
                       item
                       container
                       columnGap={1}
-                      justifyContent={'space-between'}
+                      justifyContent={"space-between"}
                       alignItems="end"
                     >
                       <Grid item xs={5.7}>
@@ -2580,37 +2598,38 @@ const SingleAccordion = ({ budget, index, handleRowClick }) => {
   const [expanded, setExpanded] = React.useState(false);
   const handleChangeExpanded = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
+    console.log(budget, ">>>>>>budget");
   };
   return (
     <Grid item xs={12} style={{ marginTop: 5 }} key={index}>
       <Accordion
         key={budget.name}
         onChange={handleChangeExpanded(`panel_${budget.name}`)}
-        style={{ boxShadow: 'none', borderRadius: 'none' }}
+        style={{ boxShadow: "none", borderRadius: "none" }}
       >
         <AccordionSummary
           aria-controls="panel1a-content"
           id="panel1a-header"
-          sx={{ padding: 0, '.MuiAccordionSummary-content': { margin: 0 } }}
+          sx={{ padding: 0, ".MuiAccordionSummary-content": { margin: 0 } }}
         >
           <Grid container>
             <Grid
               item
               md={12}
               xs={12}
-              style={{ display: 'flex', justifyContent: 'space-between' }}
+              style={{ display: "flex", justifyContent: "space-between" }}
             >
               <Grid
                 item
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '16px',
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "16px",
                 }}
               >
                 <Grid>{expanded ? <ExpandMoreIcon /> : <ChevronRight />}</Grid>
                 <Grid>
-                  <div style={{ width: '128px', height: '128px' }}>
+                  <div style={{ width: "128px", height: "128px" }}>
                     {budget.photo_origin[0] ? (
                       <img
                         src={budget.photo_origin[0]}
@@ -2622,9 +2641,9 @@ const SingleAccordion = ({ budget, index, handleRowClick }) => {
                     ) : (
                       <div
                         style={{
-                          border: '1px solid black',
-                          width: '128px',
-                          height: '128px',
+                          border: "1px solid black",
+                          width: "128px",
+                          height: "128px",
                         }}
                       ></div>
                     )}
@@ -2634,9 +2653,9 @@ const SingleAccordion = ({ budget, index, handleRowClick }) => {
                   item
                   md={8}
                   xs={8}
-                  direction={'column'}
-                  display={'flex'}
-                  style={{ placeSelf: 'baseline', gap: '20px' }}
+                  direction={"column"}
+                  display={"flex"}
+                  style={{ placeSelf: "baseline", gap: "20px" }}
                 >
                   <Stack gap="12px">
                     <Stack>
@@ -2646,38 +2665,39 @@ const SingleAccordion = ({ budget, index, handleRowClick }) => {
                       <span className="disc">{budget.specification}</span>
                     </Stack>
                   </Stack>
-                  <Grid display={'flex'} gap="40px">
+                  <Grid display={"flex"} gap="40px">
                     <Grid
-                      display={'flex'}
+                      display={"flex"}
                       item
                       lg={7}
                       sm={12}
                       md={7}
                       xs={12}
-                      direction={'column'}
-                      style={{ whiteSpace: 'nowrap' }}
+                      direction={"column"}
+                      style={{ whiteSpace: "nowrap" }}
                     >
-                      <div component={'span'} className="accLabel">
+                      <div component={"span"} className="accLabel">
                         Payment Date
                       </div>
-                      <div component={'span'} className="accLabelValue">
+                      <div component={"span"} className="accLabelValue">
                         {budget?.milestone.end_date}
                       </div>
                     </Grid>
                     <Grid
-                      display={'flex'}
+                      display={"flex"}
                       item
                       lg={5}
                       sm={12}
                       md={5}
                       xs={12}
-                      direction={'column'}
+                      direction={"column"}
                     >
-                      <div component={'span'} className="accLabel">
+                      <div component={"span"} className="accLabel">
                         Amount
                       </div>
-                      <div component={'span'} className="accLabelValue">
-                        {budget?.milestone.amount || 'NA'}
+                      <div component={"span"} className="accLabelValue">
+                        {parseInt(budget?.material_unit_price || 0) *
+                          parseInt(budget?.qty || 0) || "NA"}
                       </div>
                     </Grid>
                   </Grid>
@@ -2698,57 +2718,58 @@ const SingleAccordion = ({ budget, index, handleRowClick }) => {
               marginTop: 24,
               marginBottom: 24,
               height: 1,
-              width: '100%',
-              background: '#EEF0F3',
+              width: "100%",
+              background: "#EEF0F3",
             }}
           />
-          <Grid item md={12} xs={12} style={{ display: 'flex' }}>
+          <Grid item md={12} xs={12} style={{ display: "flex" }}>
             <Grid
-              display={'flex'}
+              display={"flex"}
               item
               lg={3}
               sm={12}
               md={3}
               xs={12}
-              direction={'column'}
+              direction={"column"}
             >
-              <div component={'span'} className="accLabel">
-                start Date
+              <div component={"span"} className="accLabel">
+                Start Date
               </div>
-              <div component={'span'} className="accLabelValue">
+              <div component={"span"} className="accLabelValue">
                 {budget?.milestone.start_date}
               </div>
             </Grid>
             <Grid
-              display={'flex'}
+              display={"flex"}
               item
               lg={3}
               sm={12}
               md={3}
               xs={12}
-              direction={'column'}
+              direction={"column"}
             >
-              <div component={'span'} className="accLabel">
+              <div component={"span"} className="accLabel">
                 End Date
               </div>
-              <div component={'span'} className="accLabelValue">
+              <div component={"span"} className="accLabelValue">
                 {budget?.milestone.end_date}
               </div>
             </Grid>
             <Grid
-              display={'flex'}
+              display={"flex"}
               item
               lg={6}
               sm={12}
               md={6}
               xs={12}
-              direction={'column'}
+              direction={"column"}
             >
-              <div component={'span'} className="accLabel">
+              <div component={"span"} className="accLabel">
                 Amount
               </div>
-              <div component={'span'} className="accLabelValue">
-                {budget?.milestone.amount || 'NA'}
+              <div component={"span"} className="accLabelValue">
+                {parseInt(budget?.material_unit_price || 0) *
+                  parseInt(budget?.qty || 0) || "NA"}
               </div>
             </Grid>
           </Grid>
