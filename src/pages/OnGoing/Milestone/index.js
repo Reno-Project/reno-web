@@ -199,6 +199,9 @@ export default function Milestone(props) {
   const [completedMilestone, setcompletedMilestone] = useState([]);
   const [milestoneName, setMilestoneName] = useState([]);
   const [visibleDeleteBudget, setVisibleDeleteBudget] = useState(false);
+  const [visibleRequestPaymentMilestone, setVisibleRequestPaymentMilestone] =
+    useState(false);
+  const [visibleSubmitMilestone, setVisibleSubmitMilestone] = useState(false);
   const [pendingLoader, setPendingLoader] = useState(true);
   const [ongoingLoader, setongoingLoader] = useState(true);
   const [deliveryLoader, setdeliveryLoader] = useState(true);
@@ -207,7 +210,7 @@ export default function Milestone(props) {
 
   useEffect(() => {
     getMilestoneList("ongoing");
-    getMilestoneList("delivery");
+    getMilestoneList("delivered");
     getMilestoneList("completed");
     getMilestoneList("pending");
   }, []);
@@ -217,7 +220,7 @@ export default function Milestone(props) {
       setPendingLoader(true);
     } else if (type === "ongoing") {
       setongoingLoader(true);
-    } else if (type === "delivery") {
+    } else if (type === "delivered") {
       setdeliveryLoader(true);
     } else if (type === "completed") {
       setcompletedLoader(true);
@@ -234,7 +237,7 @@ export default function Milestone(props) {
             setPendingMilestone(response?.data);
           } else if (type === "ongoing") {
             setongoingMilestone(response?.data);
-          } else if (type === "delivery") {
+          } else if (type === "delivered") {
             if (bool) {
               setongoingMilestone([]);
               setTimeout(() => {
@@ -252,7 +255,7 @@ export default function Milestone(props) {
         setPendingLoader(false);
       } else if (type === "ongoing") {
         setongoingLoader(false);
-      } else if (type === "delivery") {
+      } else if (type === "delivered") {
         setdeliveryLoader(false);
       } else if (type === "completed") {
         setcompletedLoader(false);
@@ -262,7 +265,7 @@ export default function Milestone(props) {
         setPendingLoader(false);
       } else if (type === "ongoing") {
         setongoingLoader(false);
-      } else if (type === "delivery") {
+      } else if (type === "delivered") {
         setdeliveryLoader(false);
       } else if (type === "completed") {
         setcompletedLoader(false);
@@ -290,7 +293,7 @@ export default function Milestone(props) {
     setCounterLoader(false);
   }
 
-  async function paymentRequest() {
+  async function requestPayment() {
     setpaymentLoader(true);
     try {
       const response = await getApiData(
@@ -321,7 +324,7 @@ export default function Milestone(props) {
       if (response.success) {
         handleClose();
         setVisible(false);
-        getMilestoneList("delivery", true);
+        getMilestoneList("delivered", true);
       }
       setpaymentLoader(false);
     } catch (error) {
@@ -356,7 +359,12 @@ export default function Milestone(props) {
     setAnchorElBudget(null);
     setSelectedBudget(null);
   };
-  const handePayment = async () => {
+  const handlePayment = async () => {
+    setVisible(true);
+    setState(selectedMilestone.data);
+    await requestPayment();
+  };
+  const handleSubmitMilestone = async () => {
     setVisible(true);
     setState(selectedMilestone.data);
     await submitMilestone();
@@ -368,7 +376,7 @@ export default function Milestone(props) {
         ? [...pendingMilestone]
         : type === "ongoing"
         ? [...ongoingMilestone]
-        : type === "delivery"
+        : type === "delivered"
         ? [...deliveryMilestone]
         : [...completedMilestone];
     dummyarr[i].expanded = !dummyarr[i]?.expanded || false;
@@ -376,7 +384,7 @@ export default function Milestone(props) {
       ? setPendingMilestone(dummyarr)
       : type === "ongoing"
       ? setongoingMilestone(dummyarr)
-      : type === "delivery"
+      : type === "delivered"
       ? setdeliveryMilestone(dummyarr)
       : setongoingMilestone(dummyarr);
   };
@@ -2251,7 +2259,8 @@ export default function Milestone(props) {
                         fontSize: 12,
                       }}
                     >
-                      {_.find(milestoneCount, { type: "delivery" })?.value || 0}
+                      {_.find(milestoneCount, { type: "delivered" })?.value ||
+                        0}
                     </span>
                   </Typography>
                 }
@@ -3294,8 +3303,8 @@ export default function Milestone(props) {
                       {/* <IconButton
                         onClick={(e) => handleRowClick(e, milestone, index)}
                       >
-                        <MoreVertIcon />
-                      </IconButton> */}
+                        <MoreVertIcon /> */}
+                      {/* </IconButton> */}
                     </Grid>
                     <Grid
                       item
@@ -3344,7 +3353,7 @@ export default function Milestone(props) {
                           cursor: "pointer",
                         }}
                         onClick={() => {
-                          handleChange(milestone, index, "delivery");
+                          handleChange(milestone, index, "delivered");
                         }}
                       >
                         View Details
@@ -3455,12 +3464,12 @@ export default function Milestone(props) {
                                     >
                                       {item?.name}
                                     </Typography>
-                                    <IconButton
+                                    {/* <IconButton
                                       onClick={() => {}}
                                       //   handleRowClick(e, milestone, index)
                                     >
                                       <MoreVertIcon />
-                                    </IconButton>
+                                    </IconButton> */}
                                   </Grid>
                                   <TableContainer
                                     style={{
@@ -4083,6 +4092,26 @@ export default function Milestone(props) {
         )}
       </Grid>
       <ConfirmModel
+        visible={visibleRequestPaymentMilestone}
+        handleClose={() => setVisibleRequestPaymentMilestone(false)}
+        confirmation={() => {
+          handlePayment(selectedMilestone?.data?.id);
+          setVisibleRequestPaymentMilestone(false);
+        }}
+        message={`Are you sure you want to request payment for Milestone ${selectedMilestone?.data?.milestone_name}?`}
+        loader={btnUpdateLoader === "update" ? true : false}
+      />
+      <ConfirmModel
+        visible={visibleSubmitMilestone}
+        handleClose={() => setVisibleSubmitMilestone(false)}
+        confirmation={() => {
+          handleSubmitMilestone(selectedMilestone?.data?.id);
+          setVisibleSubmitMilestone(false);
+        }}
+        message={`Are you sure you want to submit Milestone ${selectedMilestone?.data?.milestone_name}?`}
+        loader={btnUpdateLoader === "update" ? true : false}
+      />
+      <ConfirmModel
         visible={visibleDeleteBudget}
         handleClose={() => setVisibleDeleteBudget(false)}
         confirmation={() => {
@@ -4146,7 +4175,7 @@ export default function Milestone(props) {
                 selectedMilestone?.data?.payment_status === ""
               ) {
               }
-              handePayment();
+              setVisibleRequestPaymentMilestone(true);
             }}
           >
             {selectedMilestone?.data?.payment_status === "pending" ||
@@ -4162,7 +4191,9 @@ export default function Milestone(props) {
               fontFamily: "Poppins-Medium",
               padding: "12px 36px 12px 16px",
             }}
-            onClick={handePayment}
+            onClick={() => {
+              setVisibleSubmitMilestone(true);
+            }}
           >
             Submit Milestone
           </MenuItem>
