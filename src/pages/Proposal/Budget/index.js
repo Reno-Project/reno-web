@@ -1527,7 +1527,22 @@ export default function Budget(props) {
                       let showMsg = false;
                       let limit = false;
                       const newArr = [...state?.photo_origin];
-                      chosenFiles.map((item) => {
+                      const rejected = chosenFiles.every(
+                        (item) =>
+                          item.type === "image/png" ||
+                          item.type === "image/jpg" ||
+                          item.type === "image/jpeg"
+                      );
+                      if (!rejected) {
+                        toast.error("You can only add jpeg,jpg or png");
+                      }
+                      const filteredFiles = chosenFiles.filter(
+                        (item) =>
+                          item.type === "image/png" ||
+                          item.type === "image/jpg" ||
+                          item.type === "image/jpeg"
+                      );
+                      filteredFiles.map((item) => {
                         const bool = checkImgSize(item);
                         if (bool && newArr.length < 5) {
                           newArr.push(item);
@@ -2485,10 +2500,25 @@ export default function Budget(props) {
                             const chosenFiles = Array.prototype.slice.call(
                               e.target.files
                             );
+                            const rejected = chosenFiles.every(
+                              (item) =>
+                                item.type === "image/png" ||
+                                item.type === "image/jpg" ||
+                                item.type === "image/jpeg"
+                            );
+                            if (!rejected) {
+                              toast.error("You can only add jpeg,jpg or png");
+                            }
+                            const filteredFiles = chosenFiles.filter(
+                              (item) =>
+                                item.type === "image/png" ||
+                                item.type === "image/jpg" ||
+                                item.type === "image/jpeg"
+                            );
                             let showMsg = false;
                             let limit = false;
                             const newArr = [...state?.photo_origin];
-                            chosenFiles.map((item) => {
+                            filteredFiles.map((item) => {
                               const bool = checkImgSize(item);
                               if (bool && newArr.length < 5) {
                                 newArr.push(item);
