@@ -29,41 +29,41 @@ import {
   AccordionSummary,
   AccordionDetails,
   Stack,
-} from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import useStyles from './styles';
-import { color } from '../../../config/theme';
-import CInput from '../../../components/CInput';
-import { useTheme } from '@emotion/react';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import moment from 'moment';
-import _, { isArray, isEmpty, isNull } from 'lodash';
-import ConfirmModel from '../../../components/ConfirmModel';
-import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
-import authActions from '../../../redux/reducers/auth/actions';
-import { getApiData } from '../../../utils/APIHelper';
-import { Setting } from '../../../utils/Setting';
-import './index.css';
-import { ChevronRight, Close } from '@mui/icons-material';
-import Images from '../../../config/images';
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import useStyles from "./styles";
+import { color } from "../../../config/theme";
+import CInput from "../../../components/CInput";
+import { useTheme } from "@emotion/react";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import moment from "moment";
+import _, { isArray, isEmpty, isNull } from "lodash";
+import ConfirmModel from "../../../components/ConfirmModel";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import authActions from "../../../redux/reducers/auth/actions";
+import { getApiData } from "../../../utils/APIHelper";
+import { Setting } from "../../../utils/Setting";
+import "./index.css";
+import { ChevronRight, Close } from "@mui/icons-material";
+import Images from "../../../config/images";
 
 const errorObj = {
   nameErr: false,
-  nameMsg: '',
+  nameMsg: "",
   descriptionErr: false,
-  descriptionMsg: '',
+  descriptionMsg: "",
   startErr: false,
-  startMsg: '',
+  startMsg: "",
   endErr: false,
-  endMsg: '',
+  endMsg: "",
   amountErr: false,
-  amountMsg: '',
+  amountMsg: "",
 };
 
 export default function Milestone(props) {
@@ -74,8 +74,8 @@ export default function Milestone(props) {
   const { setProposalDetails } = authActions;
 
   const [state, setState] = useState({
-    milestone_name: '',
-    description: '',
+    milestone_name: "",
+    description: "",
     start_date: null,
     end_date: null,
     amount: null,
@@ -89,16 +89,16 @@ export default function Milestone(props) {
   const [isCreationOpen, setIsCreationOpen] = useState(false);
 
   const theme = useTheme();
-  const md = useMediaQuery(theme.breakpoints.down('md'));
+  const md = useMediaQuery(theme.breakpoints.down("md"));
 
-  const sm = useMediaQuery(theme.breakpoints.down('sm'));
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     width: sm ? 300 : 500,
-    bgcolor: 'background.paper',
+    bgcolor: "background.paper",
     borderRadius: 1,
     boxShadow: 24,
     p: 4,
@@ -110,7 +110,7 @@ export default function Milestone(props) {
   const [amounts, setAmounts] = useState([]);
 
   const [visibleEditModal, setVisibleEditModal] = useState(false);
-  const [btnUpdateLoader, setBtnUpdateLoader] = useState('');
+  const [btnUpdateLoader, setBtnUpdateLoader] = useState("");
 
   const handleCloseCreation = () => {
     setIsCreationOpen(false);
@@ -118,12 +118,12 @@ export default function Milestone(props) {
   };
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     if (proposalDetails?.milestone_details?.previous) {
       setState(
         proposalDetails?.milestone_details?.formvalues || {
-          milestone_name: '',
-          description: '',
+          milestone_name: "",
+          description: "",
           start_date: null,
           end_date: null,
         }
@@ -205,7 +205,7 @@ export default function Milestone(props) {
     try {
       const response = await getApiData(
         `${Setting.endpoints.milestoneProposalList}?proposal_id=${villa?.proposal_id}`,
-        'GET',
+        "GET",
         {}
       );
       if (response.success) {
@@ -228,7 +228,7 @@ export default function Milestone(props) {
       setmilestoneLoader(false);
     } catch (error) {
       setmilestoneLoader(false);
-      console.log('err===>', error);
+      console.log("err===>", error);
     }
   }
 
@@ -236,7 +236,7 @@ export default function Milestone(props) {
     try {
       const response = await getApiData(
         `${Setting.endpoints.budgetList}/${villa?.proposal_id}`,
-        'GET',
+        "GET",
         {}
       );
       if (response.success) {
@@ -247,7 +247,7 @@ export default function Milestone(props) {
         }
       }
     } catch (error) {
-      console.log('err===>', error);
+      console.log("err===>", error);
     }
   }
 
@@ -269,7 +269,7 @@ export default function Milestone(props) {
     try {
       const response = await getApiData(
         Setting.endpoints.createMilestone,
-        'POST',
+        "POST",
         data
       );
 
@@ -277,8 +277,8 @@ export default function Milestone(props) {
         // toast.success(response.message);
         const milestone_details = {
           formvalues: {
-            milestone_name: '',
-            description: '',
+            milestone_name: "",
+            description: "",
             start_date: null,
             end_date: null,
           },
@@ -291,15 +291,15 @@ export default function Milestone(props) {
             milestone_details,
           })
         );
-        handleClick('next');
+        handleClick("next");
       } else {
         toast.error(response.message);
       }
-      setButtonLoader('');
+      setButtonLoader("");
     } catch (error) {
-      console.log('🚀 ~ file: index.js:330 ~ addPortfolio ~ error:', error);
+      console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
       toast.error(error.toString());
-      setButtonLoader('');
+      setButtonLoader("");
     }
   }
 
@@ -378,7 +378,7 @@ export default function Milestone(props) {
     try {
       const response = await getApiData(
         `${Setting.endpoints.deleteMilestone}/${selectedBudget?.data?.id}`,
-        'GET'
+        "GET"
       );
       if (response.success) {
         toast.success(response.message);
@@ -414,7 +414,7 @@ export default function Milestone(props) {
       }
       setmilestoneLoader(false);
     } catch (error) {
-      console.log('error===>>>>', error);
+      console.log("error===>>>>", error);
       toast.error(error.toString());
     }
     setmilestoneLoader(false);
@@ -428,56 +428,56 @@ export default function Milestone(props) {
     const enDate = new Date(state?.end_date);
     const todayDate = new Date();
 
-    const st = moment(stDate, 'DD/MM/YYYY').format('DD/MM/YYYY');
+    const st = moment(stDate, "DD/MM/YYYY").format("DD/MM/YYYY");
 
     if (isEmpty(state.milestone_name)) {
       valid = false;
       error.nameErr = true;
-      error.nameMsg = 'Please enter the name';
+      error.nameMsg = "Please enter the name";
     }
 
     if (isEmpty(state.description)) {
       valid = false;
       error.descriptionErr = true;
-      error.descriptionMsg = 'Please enter description';
+      error.descriptionMsg = "Please enter description";
     }
 
     if (isNull(state?.start_date)) {
       valid = false;
       error.startErr = true;
-      error.startMsg = 'Please select the start date';
+      error.startMsg = "Please select the start date";
     } else if (
       (!isNull(stDate) &&
-        (stDate?.toString() === 'Invalid date' ||
-          stDate?.toString() === 'Invalid Date')) ||
-      st === 'Invalid date' ||
-      st === 'Invalid Date'
+        (stDate?.toString() === "Invalid date" ||
+          stDate?.toString() === "Invalid Date")) ||
+      st === "Invalid date" ||
+      st === "Invalid Date"
     ) {
       valid = false;
       error.startErr = true;
-      error.startMsg = 'Please enter valid date';
-    } else if (moment(st).isBefore(moment(todayDate).format('DD/MM/YYYY'))) {
+      error.startMsg = "Please enter valid date";
+    } else if (moment(st).isBefore(moment(todayDate).format("DD/MM/YYYY"))) {
       valid = false;
       error.startErr = true;
-      error.startMsg = 'Please enter valid date';
+      error.startMsg = "Please enter valid date";
     }
 
     if (isNull(state.end_date)) {
       valid = false;
       error.endErr = true;
-      error.endMsg = 'Please select the end date';
+      error.endMsg = "Please select the end date";
     } else if (
       !isNull(enDate) &&
-      (enDate?.toString() === 'Invalid date' ||
-        enDate?.toString() === 'Invalid Date')
+      (enDate?.toString() === "Invalid date" ||
+        enDate?.toString() === "Invalid Date")
     ) {
       valid = false;
       error.endErr = true;
-      error.endMsg = 'Please enter valid date';
+      error.endMsg = "Please enter valid date";
     } else if (stDate > enDate) {
       valid = false;
       error.endErr = true;
-      error.endMsg = 'Please enter valid date';
+      error.endMsg = "Please enter valid date";
     }
 
     // if (isEmpty(state.amount.toString())) {
@@ -575,19 +575,19 @@ export default function Milestone(props) {
           milestone_details,
         })
       );
-      handleClick('next');
+      handleClick("next");
       // } else {
       //   addMilestone();
       // }
     } else {
-      toast.warning('Please add at least one milestone');
+      toast.warning("Please add at least one milestone");
     }
   };
 
   function clearData() {
     setState({
-      milestone_name: '',
-      description: '',
+      milestone_name: "",
+      description: "",
       start_date: null,
       end_date: null,
     });
@@ -600,23 +600,23 @@ export default function Milestone(props) {
       <Modal open={isCreationOpen} onClose={handleCloseCreation}>
         <Fade in={isCreationOpen}>
           <Box sx={style}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div className="addMilestoneHeader">Create Milestone</div>
               <Close
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
                 onClick={() => handleCloseCreation()}
               />
             </div>
-            <Grid container style={{ padding: '24px 24px 0px 24px' }}>
+            <Grid container>
               <Grid item xs={12} id="name" mt={2}>
                 <CInput
                   label={<span className="fieldTitle">Milestone Name</span>}
                   placeholder="Enter Milestone Name..."
                   value={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? state.milestone_name
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : state.milestone_name
                   }
                   onChange={(e) => {
@@ -624,22 +624,22 @@ export default function Milestone(props) {
                     setErrObj({
                       ...errObj,
                       nameErr: false,
-                      nameMsg: '',
+                      nameMsg: "",
                     });
                   }}
                   inputProps={{ maxLength: 50 }}
                   error={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.nameErr
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.nameErr
                   }
                   helpertext={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.nameMsg
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.nameMsg
                   }
                 />
@@ -651,10 +651,10 @@ export default function Milestone(props) {
                   label={<span className="fieldTitle">Description:</span>}
                   placeholder="Write description here..."
                   value={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? state.description
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : state.description
                   }
                   onChange={(e) => {
@@ -662,21 +662,21 @@ export default function Milestone(props) {
                     setErrObj({
                       ...errObj,
                       descriptionErr: false,
-                      descriptionMsg: '',
+                      descriptionMsg: "",
                     });
                   }}
                   error={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.descriptionErr
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.descriptionErr
                   }
                   helpertext={
-                    mode === 'modal' && visibleEditModal
+                    mode === "modal" && visibleEditModal
                       ? errObj.descriptionMsg
-                      : mode === 'form' && visibleEditModal
-                      ? ''
+                      : mode === "form" && visibleEditModal
+                      ? ""
                       : errObj.descriptionMsg
                   }
                 />
@@ -702,19 +702,19 @@ export default function Milestone(props) {
                   helpertext={errObj.amountMsg}
                 />
               </Grid> */}
-              <Grid item container columnGap={1} wrap={md ? 'wrap' : 'nowrap'}>
+              <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
                 <Grid item xs={12} md={6} mb={2}>
                   <FormControl
                     variant="standard"
                     fullWidth
                     error={
-                      mode === 'modal' && visibleEditModal
+                      mode === "modal" && visibleEditModal
                         ? errObj.startErr
-                        : mode === 'form' && visibleEditModal
-                        ? ''
+                        : mode === "form" && visibleEditModal
+                        ? ""
                         : errObj.startErr
                     }
-                    style={{ position: 'relative' }}
+                    style={{ position: "relative" }}
                   >
                     <span className="fieldTitle" htmlFor="start-date">
                       Start Date:
@@ -723,9 +723,9 @@ export default function Milestone(props) {
                       <DatePicker
                         disablePast
                         value={
-                          mode === 'modal' && visibleEditModal
+                          mode === "modal" && visibleEditModal
                             ? new Date(state.start_date)
-                            : mode === 'form' && visibleEditModal
+                            : mode === "form" && visibleEditModal
                             ? null
                             : state.start_date
                             ? new Date(state?.start_date)
@@ -734,18 +734,18 @@ export default function Milestone(props) {
                         onChange={(e, v) => {
                           setState({
                             ...state,
-                            start_date: moment(e).format('MMMM DD, yyyy'),
+                            start_date: moment(e).format("MMMM DD, yyyy"),
                             end_date: null,
                           });
                           setErrObj({
                             ...errObj,
                             startErr: false,
-                            startMsg: '',
+                            startMsg: "",
                           });
                         }}
                         sx={{
-                          width: '100%',
-                          marginTop: '6px',
+                          width: "100%",
+                          marginTop: "6px",
                         }}
                         components={{
                           OpenPickerIcon: () => (
@@ -759,18 +759,18 @@ export default function Milestone(props) {
                         slotProps={{
                           textField: {
                             helperText:
-                              mode === 'modal' && visibleEditModal
+                              mode === "modal" && visibleEditModal
                                 ? errObj.startMsg
-                                : mode === 'form' && visibleEditModal
-                                ? ''
+                                : mode === "form" && visibleEditModal
+                                ? ""
                                 : errObj.startMsg,
                             error:
-                              mode === 'modal' && visibleEditModal
+                              mode === "modal" && visibleEditModal
                                 ? errObj.startErr
-                                : mode === 'form' && visibleEditModal
-                                ? ''
+                                : mode === "form" && visibleEditModal
+                                ? ""
                                 : errObj.startErr,
-                            id: 'start-date',
+                            id: "start-date",
                           },
                         }}
                       />
@@ -782,13 +782,13 @@ export default function Milestone(props) {
                     variant="standard"
                     fullWidth
                     error={
-                      mode === 'modal' && visibleEditModal
+                      mode === "modal" && visibleEditModal
                         ? errObj.endErr
-                        : mode === 'form' && visibleEditModal
-                        ? ''
+                        : mode === "form" && visibleEditModal
+                        ? ""
                         : errObj.endErr
                     }
-                    style={{ position: 'relative' }}
+                    style={{ position: "relative" }}
                   >
                     <span className="fieldTitle" htmlFor="end-date">
                       End Date:
@@ -797,9 +797,9 @@ export default function Milestone(props) {
                       <DatePicker
                         minDate={new Date(state?.start_date)}
                         value={
-                          mode === 'modal' && visibleEditModal
+                          mode === "modal" && visibleEditModal
                             ? new Date(state.end_date)
-                            : mode === 'form' && visibleEditModal
+                            : mode === "form" && visibleEditModal
                             ? null
                             : state?.end_date
                             ? new Date(state?.end_date)
@@ -808,17 +808,17 @@ export default function Milestone(props) {
                         onChange={(e) => {
                           setState({
                             ...state,
-                            end_date: moment(e).format('MMMM DD, yyyy'),
+                            end_date: moment(e).format("MMMM DD, yyyy"),
                           });
                           setErrObj({
                             ...errObj,
                             endErr: false,
-                            endMsg: '',
+                            endMsg: "",
                           });
                         }}
                         sx={{
-                          width: '100%',
-                          marginTop: '6px',
+                          width: "100%",
+                          marginTop: "6px",
                         }}
                         components={{
                           OpenPickerIcon: () => (
@@ -831,18 +831,18 @@ export default function Milestone(props) {
                         slotProps={{
                           textField: {
                             helperText:
-                              mode === 'modal' && visibleEditModal
+                              mode === "modal" && visibleEditModal
                                 ? errObj.endMsg
-                                : mode === 'form' && visibleEditModal
-                                ? ''
+                                : mode === "form" && visibleEditModal
+                                ? ""
                                 : errObj.endMsg,
                             error:
-                              mode === 'modal' && visibleEditModal
+                              mode === "modal" && visibleEditModal
                                 ? errObj.endErr
-                                : mode === 'form' && visibleEditModal
-                                ? ''
+                                : mode === "form" && visibleEditModal
+                                ? ""
                                 : errObj.endErr,
-                            id: 'end-date',
+                            id: "end-date",
                           },
                         }}
                         format="MMMM dd, yyyy"
@@ -855,10 +855,10 @@ export default function Milestone(props) {
             <Grid
               item
               container
-              justifyContent={'center'}
+              justifyContent={"center"}
               gap={sm ? 1 : 2}
               wrap="nowrap"
-              marginTop={'10px'}
+              marginTop={"10px"}
             >
               <Grid item xs={6}>
                 <div className="cancel" onClick={handleCloseCreation}>
@@ -884,9 +884,9 @@ export default function Milestone(props) {
   return (
     <>
       <Grid container gap="28px">
-        <Grid item container xs={12} justifyContent={'space-between'}>
-          <div className={'alert'}>
-            {' '}
+        <Grid item container xs={12} justifyContent={"space-between"}>
+          <div className={"alert"}>
+            {" "}
             <span className="label">Total Milestones Created</span>
             <span className="cur">
               AED {amounts.reduce((acc, curr) => acc + curr, 0)}
@@ -896,18 +896,18 @@ export default function Milestone(props) {
 
         <Divider width="100%" />
 
-        {isCreationOpen && renderMilestoneCreateForm('form')}
+        {isCreationOpen && renderMilestoneCreateForm("form")}
 
         {milestoneLoader ? (
           <Grid
             item
             container
-            justifyContent={'center'}
-            alignItems={'center'}
+            justifyContent={"center"}
+            alignItems={"center"}
             sx={12}
             minHeight={220}
           >
-            <CircularProgress style={{ color: '#274BF1' }} size={26} />
+            <CircularProgress style={{ color: "#274BF1" }} size={26} />
           </Grid>
         ) : (
           isArray(milestones) &&
@@ -940,7 +940,7 @@ export default function Milestone(props) {
           )
         )}
 
-        <Grid item container alignItems={'center'}>
+        <Grid item container alignItems={"center"}>
           <div
             className="btnSubmit"
             onClick={() => {
@@ -959,13 +959,13 @@ export default function Milestone(props) {
           container
           columnGap={1}
           rowGap={1}
-          justifyContent={'space-between'}
+          justifyContent={"space-between"}
         >
           <Grid item sm={5.9} xs={12}>
             <Button
               variant="outlined"
               size="small"
-              sx={{ boxShadow: 'none', padding: '12px 24px' }}
+              sx={{ boxShadow: "none", padding: "12px 24px" }}
               onClick={() => {
                 const milestone_details = {
                   formvalues: state,
@@ -979,7 +979,7 @@ export default function Milestone(props) {
                   })
                 );
 
-                handleClick('back');
+                handleClick("back");
               }}
             >
               Previous Step
@@ -990,12 +990,12 @@ export default function Milestone(props) {
               variant="contained"
               size="small"
               onClick={handleSubmit}
-              style={{ padding: '12px 24px' }}
+              style={{ padding: "12px 24px" }}
             >
               {buttonLoader ? (
-                <CircularProgress size={26} style={{ color: '#fff' }} />
+                <CircularProgress size={26} style={{ color: "#fff" }} />
               ) : (
-                'Continue'
+                "Continue"
               )}
             </Button>
           </Grid>
@@ -1018,10 +1018,10 @@ export default function Milestone(props) {
         PaperProps={{
           elevation: 0,
           sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             ml: 18,
-            '& .MuiAvatar-root': {
+            "& .MuiAvatar-root": {
               width: 32,
               height: 32,
               ml: -0.5,
@@ -1030,18 +1030,18 @@ export default function Milestone(props) {
           },
         }}
         transformOrigin={{
-          horizontal: 'right',
-          vertical: 'top',
+          horizontal: "right",
+          vertical: "top",
         }}
         anchorOrigin={{
-          horizontal: 'right',
-          vertical: 'bottom',
+          horizontal: "right",
+          vertical: "bottom",
         }}
       >
         <MenuItem
           style={{
-            fontFamily: 'Poppins-Regular',
-            padding: '12px 36px 12px 12px',
+            fontFamily: "Poppins-Regular",
+            padding: "12px 36px 12px 12px",
           }}
         >
           Request Payment
@@ -1049,8 +1049,8 @@ export default function Milestone(props) {
         <Divider style={{ margin: 0 }} />
         <MenuItem
           style={{
-            fontFamily: 'Poppins-Regular',
-            padding: '12px 36px 12px 12px',
+            fontFamily: "Poppins-Regular",
+            padding: "12px 36px 12px 12px",
           }}
           onClick={handleEdit}
         >
@@ -1059,8 +1059,8 @@ export default function Milestone(props) {
         <Divider style={{ margin: 0 }} />
         <MenuItem
           style={{
-            fontFamily: 'Poppins-Regular',
-            padding: '12px 36px 12px 12px',
+            fontFamily: "Poppins-Regular",
+            padding: "12px 36px 12px 12px",
           }}
           onClick={() => {
             setVisible(true);
@@ -1074,7 +1074,7 @@ export default function Milestone(props) {
       <Modal
         open={visibleEditModal}
         onClose={() => {
-          if (btnUpdateLoader === 'update') {
+          if (btnUpdateLoader === "update") {
             return null;
           } else {
             setVisibleEditModal(false);
@@ -1084,30 +1084,29 @@ export default function Milestone(props) {
         closeAfterTransition
         disableAutoFocus
         slotProps={{ backdrop: Backdrop }}
-        style={{ overflowY: 'scroll' }}
+        style={{ overflowY: "scroll" }}
       >
         <Fade in={visibleEditModal}>
           <Box sx={style}>
             <Grid container justifyContent="center" alignItems="center">
               <Grid item xs={12}>
-                {/* {renderMilestoneCreateForm("modal")} */}
                 <Box sx={style}>
                   <div
-                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                    style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <div className="addMilestoneHeader">Create Milestone</div>
+                    <div className="addMilestoneHeader">
+                      Update Milestone Details
+                    </div>
                     <Close
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                       onClick={() => handleCloseCreation()}
                     />
                   </div>
-                  <Grid container style={{ padding: '24px 24px 0px 24px' }}>
+                  <Grid container>
                     <Grid item xs={12} id="name" mt={2}>
                       <CInput
                         label={
-                          <span className="fieldTitle">
-                            Update Milestone Details
-                          </span>
+                          <span className="fieldTitle">Milestone Name</span>
                         }
                         placeholder="Enter Milestone Name..."
                         value={state.milestone_name}
@@ -1119,7 +1118,7 @@ export default function Milestone(props) {
                           setErrObj({
                             ...errObj,
                             nameErr: false,
-                            nameMsg: '',
+                            nameMsg: "",
                           });
                         }}
                         inputProps={{ maxLength: 50 }}
@@ -1139,7 +1138,7 @@ export default function Milestone(props) {
                           setErrObj({
                             ...errObj,
                             descriptionErr: false,
-                            descriptionMsg: '',
+                            descriptionMsg: "",
                           });
                         }}
                         error={errObj.descriptionErr}
@@ -1171,14 +1170,14 @@ export default function Milestone(props) {
                       item
                       container
                       columnGap={1}
-                      wrap={md ? 'wrap' : 'nowrap'}
+                      wrap={md ? "wrap" : "nowrap"}
                     >
                       <Grid item xs={12} md={6} mb={2}>
                         <FormControl
                           variant="standard"
                           fullWidth
                           error={errObj.startErr}
-                          style={{ position: 'relative' }}
+                          style={{ position: "relative" }}
                         >
                           <span className="fieldTitle" htmlFor="start-date">
                             Start Date:
@@ -1194,25 +1193,33 @@ export default function Milestone(props) {
                               onChange={(e, v) => {
                                 setState({
                                   ...state,
-                                  start_date: moment(e).format('MMMM DD, yyyy'),
+                                  start_date: moment(e).format("MMMM DD, yyyy"),
                                   end_date: null,
                                 });
                                 setErrObj({
                                   ...errObj,
                                   startErr: false,
-                                  startMsg: '',
+                                  startMsg: "",
                                 });
                               }}
                               sx={{
-                                width: '100%',
-                                marginTop: '6px',
+                                width: "100%",
+                                marginTop: "6px",
+                              }}
+                              components={{
+                                OpenPickerIcon: () => (
+                                  <img
+                                    src={Images.calendarIcon}
+                                    alt="calendar-icon"
+                                  ></img>
+                                ),
                               }}
                               format="MMMM dd, yyyy"
                               slotProps={{
                                 textField: {
                                   helperText: errObj.startMsg,
                                   error: errObj.startErr,
-                                  id: 'start-date',
+                                  id: "start-date",
                                 },
                               }}
                             />
@@ -1224,7 +1231,7 @@ export default function Milestone(props) {
                           variant="standard"
                           fullWidth
                           error={errObj.endErr}
-                          style={{ position: 'relative' }}
+                          style={{ position: "relative" }}
                         >
                           <span className="fieldTitle" htmlFor="end-date">
                             End Date:
@@ -1240,23 +1247,31 @@ export default function Milestone(props) {
                               onChange={(e) => {
                                 setState({
                                   ...state,
-                                  end_date: moment(e).format('MMMM DD, yyyy'),
+                                  end_date: moment(e).format("MMMM DD, yyyy"),
                                 });
                                 setErrObj({
                                   ...errObj,
                                   endErr: false,
-                                  endMsg: '',
+                                  endMsg: "",
                                 });
                               }}
                               sx={{
-                                width: '100%',
-                                marginTop: '6px',
+                                width: "100%",
+                                marginTop: "6px",
+                              }}
+                              components={{
+                                OpenPickerIcon: () => (
+                                  <img
+                                    src={Images.calendarIcon}
+                                    alt="calendar-icon"
+                                  ></img>
+                                ),
                               }}
                               slotProps={{
                                 textField: {
                                   helperText: errObj.endMsg,
                                   error: errObj.endErr,
-                                  id: 'end-date',
+                                  id: "end-date",
                                 },
                               }}
                               format="MMMM dd, yyyy"
@@ -1270,7 +1285,7 @@ export default function Milestone(props) {
                     item
                     container
                     columnGap={1}
-                    justifyContent={'space-between'}
+                    justifyContent={"space-between"}
                   >
                     <Grid item xs={5.7}>
                       <Button
@@ -1282,7 +1297,7 @@ export default function Milestone(props) {
                           clearData();
                           setSelectedBudget(null);
                         }}
-                        disabled={btnUpdateLoader === 'update'}
+                        disabled={btnUpdateLoader === "update"}
                       >
                         Close
                       </Button>
@@ -1297,15 +1312,15 @@ export default function Milestone(props) {
                         onClick={() => {
                           validate(true);
                         }}
-                        disabled={btnUpdateLoader === 'update'}
+                        disabled={btnUpdateLoader === "update"}
                       >
-                        {btnUpdateLoader === 'update' ? (
+                        {btnUpdateLoader === "update" ? (
                           <CircularProgress
-                            style={{ color: '#fff' }}
+                            style={{ color: "#fff" }}
                             size={26}
                           />
                         ) : (
-                          'Update'
+                          "Update"
                         )}
                       </Button>
                     </Grid>
@@ -1329,11 +1344,11 @@ const SingleAccordion = ({ milestone, index, amounts, handleRowClick }) => {
       <Accordion
         key={milestone.id}
         onChange={handleChangeExpanded(`panel_${milestone.id}`)}
-        style={{ boxShadow: 'none', borderRadius: 'none' }}
+        style={{ boxShadow: "none", borderRadius: "none" }}
       >
         <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
           <Grid container>
-            <Grid item md={8} xs={8} style={{ display: 'flex', gap: '2px' }}>
+            <Grid item md={8} xs={8} style={{ display: "flex", gap: "2px" }}>
               {expanded ? <ExpandLessIcon /> : <ChevronRight />}
 
               <div style={{ marginRight: 10 }}>
@@ -1352,53 +1367,53 @@ const SingleAccordion = ({ milestone, index, amounts, handleRowClick }) => {
                   />
                 </svg>
               </div>
-              <span style={{ fontFamily: 'Poppins-Regular' }}>
+              <span style={{ fontFamily: "Poppins-Regular" }}>
                 {milestone.milestone_name}
               </span>
             </Grid>
-            <Grid item md={4} xs={4} style={{ display: 'flex' }}>
+            <Grid item md={4} xs={4} style={{ display: "flex" }}>
               <Grid
-                display={'flex'}
+                display={"flex"}
                 item
                 lg={7}
                 sm={12}
                 md={7}
                 xs={12}
-                direction={'column'}
+                direction={"column"}
               >
-                <div component={'span'} className="accLabel">
+                <div component={"span"} className="accLabel">
                   Due Date
                 </div>
-                <div component={'span'} className="accLabelValue">
+                <div component={"span"} className="accLabelValue">
                   {milestone?.end_date}
                 </div>
               </Grid>
               {amounts?.reduce((acc, curr) => acc + curr, 0) > 0 ? (
                 <Grid
-                  display={'flex'}
+                  display={"flex"}
                   item
                   lg={5}
                   sm={12}
                   md={5}
                   xs={12}
-                  direction={'column'}
+                  direction={"column"}
                 >
-                  <div component={'span'} className="accLabel">
+                  <div component={"span"} className="accLabel">
                     Amount
                   </div>
-                  <div component={'span'} className="accLabelValue">
+                  <div component={"span"} className="accLabelValue">
                     AED {amounts.reduce((acc, curr) => acc + curr, 0)}
                   </div>
                 </Grid>
               ) : (
                 <Grid
-                  display={'flex'}
+                  display={"flex"}
                   item
                   lg={5}
                   sm={12}
                   md={5}
                   xs={12}
-                  direction={'column'}
+                  direction={"column"}
                 ></Grid>
               )}
               <Grid item>
@@ -1418,57 +1433,57 @@ const SingleAccordion = ({ milestone, index, amounts, handleRowClick }) => {
               marginTop: 24,
               marginBottom: 24,
               height: 1,
-              width: '100%',
-              background: '#EEF0F3',
+              width: "100%",
+              background: "#EEF0F3",
             }}
           />
-          <Grid item md={12} xs={12} style={{ display: 'flex' }}>
+          <Grid item md={12} xs={12} style={{ display: "flex" }}>
             <Grid
-              display={'flex'}
+              display={"flex"}
               item
               lg={3}
               sm={12}
               md={3}
               xs={12}
-              direction={'column'}
+              direction={"column"}
             >
-              <div component={'span'} className="accLabel">
+              <div component={"span"} className="accLabel">
                 start Date
               </div>
-              <div component={'span'} className="accLabelValue">
+              <div component={"span"} className="accLabelValue">
                 {milestone?.start_date}
               </div>
             </Grid>
             <Grid
-              display={'flex'}
+              display={"flex"}
               item
               lg={3}
               sm={12}
               md={3}
               xs={12}
-              direction={'column'}
+              direction={"column"}
             >
-              <div component={'span'} className="accLabel">
+              <div component={"span"} className="accLabel">
                 End Date
               </div>
-              <div component={'span'} className="accLabelValue">
+              <div component={"span"} className="accLabelValue">
                 {milestone?.end_date}
               </div>
             </Grid>
             <Grid
-              display={'flex'}
+              display={"flex"}
               item
               lg={6}
               sm={12}
               md={6}
               xs={12}
-              direction={'column'}
+              direction={"column"}
             >
-              <div component={'span'} className="accLabel">
+              <div component={"span"} className="accLabel">
                 Amount
               </div>
-              <div component={'span'} className="accLabelValue">
-                {milestone?.amount || 'NA'}
+              <div component={"span"} className="accLabelValue">
+                {milestone?.amount || "NA"}
               </div>
             </Grid>
           </Grid>
