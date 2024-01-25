@@ -26,7 +26,6 @@ import {
   Backdrop,
   Tabs,
   Tab,
-  Tooltip,
   FormHelperText,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -41,7 +40,6 @@ import _, { isArray, isEmpty, isNull } from "lodash";
 import ConfirmModel from "../../../components/ConfirmModel";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import authActions from "../../../redux/reducers/auth/actions";
 import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import Images from "../../../config/images";
@@ -51,10 +49,11 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useNavigate } from "react-router-dom";
 import {
-  ArrowDownwardRounded,
+  Close,
   HighlightOffOutlined,
   ImageOutlined,
 } from "@mui/icons-material";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useRef } from "react";
 import CAutocomplete from "../../../components/CAutocomplete";
 
@@ -142,6 +141,7 @@ export default function Milestone(props) {
   const [selectedBudget, setSelectedBudget] = useState({});
   const [milestoneCount, setMilestoneCount] = useState([]);
   const [counterLoader, setCounterLoader] = useState(true);
+  const [isCreationOpen, setIsCreationOpen] = useState(false);
 
   const [errObj, setErrObj] = useState(errorObj);
 
@@ -356,9 +356,10 @@ export default function Milestone(props) {
     setAnchorElBudget(null);
     setSelectedBudget(null);
   };
-  const handePayment = () => {
+  const handePayment = async () => {
     setVisible(true);
     setState(selectedMilestone.data);
+    await submitMilestone();
   };
 
   const handleChange = (e, i, type) => {
@@ -389,208 +390,40 @@ export default function Milestone(props) {
     setVisibleBudgetModal(true);
     setStateBudget(selectedBudget?.data);
   };
+  const handleCloseCreation = () => {
+    setIsCreationOpen(false);
+    setVisibleEditModal(false);
+  };
   function renderMilestoneCreateForm(mode) {
     return (
-      <>
-        <Grid
-          item
-          xs={12}
-          id="name"
-          mt={2}
-          style={{ fontFamily: "Poppins-Regular" }}
-        >
-          <CInput
-            style={{ fontFamily: "Poppins-Regular" }}
-            label="Milestone Name"
-            placeholder="Enter Milestone Name..."
-            value={
-              mode === "modal" && visibleEditModal
-                ? state.milestone_name
-                : mode === "form" && visibleEditModal
-                ? ""
-                : state.milestone_name
-            }
-            onChange={(e) => {
-              setState({ ...state, milestone_name: e.target.value });
-              setErrObj({
-                ...errObj,
-                nameErr: false,
-                nameMsg: "",
-              });
-            }}
-            inputProps={{ maxLength: 50 }}
-            error={
-              mode === "modal" && visibleEditModal
-                ? errObj.nameErr
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.nameErr
-            }
-            helpertext={
-              mode === "modal" && visibleEditModal
-                ? errObj.nameMsg
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.nameMsg
-            }
-          />
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          id="desctiption"
-          style={{ fontFamily: "Poppins-Regular" }}
-        >
-          <CInput
-            style={{ fontFamily: "Poppins-Regular" }}
-            multiline={true}
-            rows={3}
-            label="Description:"
-            placeholder="Write description here..."
-            value={
-              mode === "modal" && visibleEditModal
-                ? state.description
-                : mode === "form" && visibleEditModal
-                ? ""
-                : state.description
-            }
-            onChange={(e) => {
-              setState({ ...state, description: e.target.value });
-              setErrObj({
-                ...errObj,
-                descriptionErr: false,
-                descriptionMsg: "",
-              });
-            }}
-            error={
-              mode === "modal" && visibleEditModal
-                ? errObj.descriptionErr
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.descriptionErr
-            }
-            helpertext={
-              mode === "modal" && visibleEditModal
-                ? errObj.descriptionMsg
-                : mode === "form" && visibleEditModal
-                ? ""
-                : errObj.descriptionMsg
-            }
-          />
-        </Grid>
-        <Grid
-          item
-          container
-          columnGap={1}
-          wrap={md ? "wrap" : "nowrap"}
-          style={{ fontFamily: "Poppins-Regular" }}
-        >
-          <Grid item xs={12} md={6} mb={2}>
-            <FormControl
-              variant="standard"
-              fullWidth
-              error={
-                mode === "modal" && visibleEditModal
-                  ? errObj.startErr
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.startErr
-              }
-              style={{ position: "relative" }}
-            >
-              <InputLabel shrink htmlFor="start-date">
-                Start Date:
-              </InputLabel>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  disablePast
+      <Modal open={isCreationOpen} onClose={handleCloseCreation}>
+        <Fade in={isCreationOpen}>
+          <Box sx={style}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div className="addMilestoneHeader">Create Milestone</div>
+              <Close
+                style={{ cursor: "pointer" }}
+                onClick={() => handleCloseCreation()}
+              />
+            </div>
+            <Grid container>
+              <Grid item xs={12} id="name" mt={2}>
+                <CInput
+                  label={<span className="fieldTitle">Milestone Name</span>}
+                  placeholder="Enter Milestone Name..."
                   value={
                     mode === "modal" && visibleEditModal
-                      ? new Date(state.start_date)
+                      ? state.milestone_name
                       : mode === "form" && visibleEditModal
-                      ? null
-                      : state.start_date
-                      ? new Date(state?.start_date)
-                      : null
-                  }
-                  onChange={(e, v) => {
-                    setState({
-                      ...state,
-                      start_date: moment(e).format("MMMM DD, yyyy"),
-                      end_date: null,
-                    });
-                    setErrObj({
-                      ...errObj,
-                      startErr: false,
-                      startMsg: "",
-                    });
-                  }}
-                  sx={{
-                    width: "100%",
-                    marginTop: "24px",
-                  }}
-                  components={{
-                    OpenPickerIcon:()=><img src={Images.calendarIcon} alt="calender-icon"></img>
-                  }}
-                  format="MMMM dd, yyyy"
-                  slotProps={{
-                    textField: {
-                      helperText:
-                        mode === "modal" && visibleEditModal
-                          ? errObj.startMsg
-                          : mode === "form" && visibleEditModal
-                          ? ""
-                          : errObj.startMsg,
-                      error:
-                        mode === "modal" && visibleEditModal
-                          ? errObj.startErr
-                          : mode === "form" && visibleEditModal
-                          ? ""
-                          : errObj.startErr,
-                      id: "start-date",
-                    },
-                  }}
-                />
-              </LocalizationProvider>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} md={6} mb={2}>
-            <FormControl
-              variant="standard"
-              fullWidth
-              error={
-                mode === "modal" && visibleEditModal
-                  ? errObj.endErr
-                  : mode === "form" && visibleEditModal
-                  ? ""
-                  : errObj.endErr
-              }
-              style={{ position: "relative" }}
-            >
-              <InputLabel shrink htmlFor="end-date">
-                End Date:
-              </InputLabel>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  minDate={new Date(state?.start_date)}
-                  value={
-                    mode === "modal" && visibleEditModal
-                      ? new Date(state.end_date)
-                      : mode === "form" && visibleEditModal
-                      ? null
-                      : state?.end_date
-                      ? new Date(state?.end_date)
-                      : null
+                      ? ""
+                      : state.milestone_name
                   }
                   onChange={(e) => {
-                    setState({
-                      ...state,
-                      end_date: moment(e).format("MMMM DD, yyyy"),
-                    });
+                    setState({ ...state, milestone_name: e.target.value });
                     setErrObj({
                       ...errObj,
-                      endErr: false,
-                      endMsg: "",
+                      nameErr: false,
+                      nameMsg: "",
                     });
                   }}
                   sx={{
@@ -598,7 +431,9 @@ export default function Milestone(props) {
                     marginTop: "24px",
                   }}
                   components={{
-                    OpenPickerIcon:()=><img src={Images.calendarIcon} alt="calender-icon"></img>
+                    OpenPickerIcon: () => (
+                      <img src={Images.calendarIcon} alt="calender-icon"></img>
+                    ),
                   }}
                   slotProps={{
                     textField: {
@@ -619,11 +454,241 @@ export default function Milestone(props) {
                   }}
                   format="MMMM dd, yyyy"
                 />
-              </LocalizationProvider>
-            </FormControl>
-          </Grid>
-        </Grid>
-      </>
+              </Grid>
+              <Grid item xs={12} id="desctiption">
+                <CInput
+                  multiline={true}
+                  rows={3}
+                  label={<span className="fieldTitle">Description:</span>}
+                  placeholder="Write description here..."
+                  value={
+                    mode === "modal" && visibleEditModal
+                      ? state.description
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : state.description
+                  }
+                  onChange={(e) => {
+                    setState({ ...state, description: e.target.value });
+                    setErrObj({
+                      ...errObj,
+                      descriptionErr: false,
+                      descriptionMsg: "",
+                    });
+                  }}
+                  error={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.descriptionErr
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.descriptionErr
+                  }
+                  helpertext={
+                    mode === "modal" && visibleEditModal
+                      ? errObj.descriptionMsg
+                      : mode === "form" && visibleEditModal
+                      ? ""
+                      : errObj.descriptionMsg
+                  }
+                />
+              </Grid>
+              {/* <Grid item xs={12} id="amount">
+                <CInput
+                  type={"number"}
+                  label="Price:"
+                  placeholder="Enter Price "
+                  value={state.amount}
+                  inputProps={{
+                    onWheel: (event) => event.currentTarget.blur(),
+                  }}
+                  onChange={(e) => {
+                    setState({ ...state, amount: e.target.value });
+                    setErrObj({
+                      ...errObj,
+                      amountErr: false,
+                      amountMsg: "",
+                    });
+                  }}
+                  error={errObj.amountErr}
+                  helpertext={errObj.amountMsg}
+                />
+              </Grid> */}
+              <Grid item container columnGap={1} wrap={md ? "wrap" : "nowrap"}>
+                <Grid item xs={12} md={6} mb={2}>
+                  <FormControl
+                    variant="standard"
+                    fullWidth
+                    error={
+                      mode === "modal" && visibleEditModal
+                        ? errObj.startErr
+                        : mode === "form" && visibleEditModal
+                        ? ""
+                        : errObj.startErr
+                    }
+                    style={{ position: "relative" }}
+                  >
+                    <span className="fieldTitle" htmlFor="start-date">
+                      Start Date:
+                    </span>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        disablePast
+                        value={
+                          mode === "modal" && visibleEditModal
+                            ? new Date(state.start_date)
+                            : mode === "form" && visibleEditModal
+                            ? null
+                            : state.start_date
+                            ? new Date(state?.start_date)
+                            : null
+                        }
+                        onChange={(e, v) => {
+                          setState({
+                            ...state,
+                            start_date: moment(e).format("MMMM DD, yyyy"),
+                            end_date: null,
+                          });
+                          setErrObj({
+                            ...errObj,
+                            startErr: false,
+                            startMsg: "",
+                          });
+                        }}
+                        sx={{
+                          width: "100%",
+                          marginTop: "6px",
+                        }}
+                        format="MMMM dd, yyyy"
+                        components={{
+                          OpenPickerIcon: () => (
+                            <img
+                              src={Images.calendarIcon}
+                              alt="calendar-icon"
+                            ></img>
+                          ),
+                        }}
+                        slotProps={{
+                          textField: {
+                            helperText:
+                              mode === "modal" && visibleEditModal
+                                ? errObj.startMsg
+                                : mode === "form" && visibleEditModal
+                                ? ""
+                                : errObj.startMsg,
+                            error:
+                              mode === "modal" && visibleEditModal
+                                ? errObj.startErr
+                                : mode === "form" && visibleEditModal
+                                ? ""
+                                : errObj.startErr,
+                            id: "start-date",
+                          },
+                        }}
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={6} mb={2}>
+                  <FormControl
+                    variant="standard"
+                    fullWidth
+                    error={
+                      mode === "modal" && visibleEditModal
+                        ? errObj.endErr
+                        : mode === "form" && visibleEditModal
+                        ? ""
+                        : errObj.endErr
+                    }
+                    style={{ position: "relative" }}
+                  >
+                    <span className="fieldTitle" htmlFor="end-date">
+                      End Date:
+                    </span>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        minDate={new Date(state?.start_date)}
+                        value={
+                          mode === "modal" && visibleEditModal
+                            ? new Date(state.end_date)
+                            : mode === "form" && visibleEditModal
+                            ? null
+                            : state?.end_date
+                            ? new Date(state?.end_date)
+                            : null
+                        }
+                        onChange={(e) => {
+                          setState({
+                            ...state,
+                            end_date: moment(e).format("MMMM DD, yyyy"),
+                          });
+                          setErrObj({
+                            ...errObj,
+                            endErr: false,
+                            endMsg: "",
+                          });
+                        }}
+                        sx={{
+                          width: "100%",
+                          marginTop: "6px",
+                        }}
+                        components={{
+                          OpenPickerIcon: () => (
+                            <img
+                              src={Images.calendarIcon}
+                              alt="calendar-icon"
+                            ></img>
+                          ),
+                        }}
+                        slotProps={{
+                          textField: {
+                            helperText:
+                              mode === "modal" && visibleEditModal
+                                ? errObj.endMsg
+                                : mode === "form" && visibleEditModal
+                                ? ""
+                                : errObj.endMsg,
+                            error:
+                              mode === "modal" && visibleEditModal
+                                ? errObj.endErr
+                                : mode === "form" && visibleEditModal
+                                ? ""
+                                : errObj.endErr,
+                            id: "end-date",
+                          },
+                        }}
+                        format="MMMM dd, yyyy"
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid
+              item
+              container
+              justifyContent={"center"}
+              gap={sm ? 1 : 2}
+              wrap="nowrap"
+              marginTop={"10px"}
+            >
+              <Grid item xs={6}>
+                <div className="cancel" onClick={handleCloseCreation}>
+                  Cancel
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={() => validate(false)}
+                >
+                  Create Milestone
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </Fade>
+      </Modal>
     );
   }
   function checkImgSize(img) {
@@ -797,28 +862,34 @@ export default function Milestone(props) {
             <>
               <div
                 style={{
-                  backgroundColor: "#F9F9FA",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
                   width: "100%",
                   height: 170,
-                  border: errObj.photoErr ? "1px solid red" : "none",
+                  border: "1px dashed #9CA3AF",
+
                   borderRadius: 4,
                 }}
               >
-                <ImageOutlined
-                  style={{
-                    color: "grey",
-                    marginBottom: 20,
-                    fontSize: 30,
-                  }}
-                />
+                <div style={{ width: "24px", height: "24px" }}>
+                  <img src={Images.upload_icon} alt="upload-icon"></img>
+                </div>
                 <InputLabel>
-                  <b>Upload Photo</b>
+                  <b>
+                    <span
+                      style={{
+                        cursor: "pointer",
+                        color: "#2563EB",
+                      }}
+                    >
+                      Click to upload Images
+                    </span>{" "}
+                    or drag and drop{" "}
+                  </b>
                 </InputLabel>
-                <InputLabel style={{ fontSize: 12 }}>
+                <InputLabel style={{ fontSize: 12, color: "#6B7280" }}>
                   {"PNG, JPG, (max size 1200*800)"}
                 </InputLabel>
               </div>
@@ -1318,10 +1389,10 @@ export default function Milestone(props) {
         _.isObject(selectedMilestone?.data) &&
         !_.isEmpty(selectedMilestone?.data)
       ) {
-        // const newArray = [...pendingMilestone]; // create a copy of the array
-        // newArray[selectedMilestone?.index] = state; // modify the copy
-        // setPendingMilestone(newArray);
-        // setSelectedMilestone({});
+        const newArray = [...pendingMilestone]; // create a copy of the array
+        newArray[selectedMilestone?.index] = state; // modify the copy
+        setPendingMilestone(newArray);
+        setSelectedMilestone({});
       }
       clearData();
     }
@@ -1532,6 +1603,7 @@ export default function Milestone(props) {
 
     setErrObj(error);
 
+    console.log(valid, ">>>>>>>>>>>>>>>>>>> valid here");
     if (valid) {
       if (isUpdateModalVisible) {
         createSingleBudgetApiCall(stateBudget);
@@ -1541,14 +1613,15 @@ export default function Milestone(props) {
         _.isObject(selectedMilestone?.data) &&
         !_.isEmpty(selectedMilestone?.data)
       ) {
-        // const newArray = [...pendingMilestone]; // create a copy of the array
-        // newArray[selectedMilestone?.index] = state; // modify the copy
-        // setPendingMilestone(newArray);
-        // setSelectedMilestone({});
+        const newArray = [...pendingMilestone]; // create a copy of the array
+        newArray[selectedMilestone?.index] = state; // modify the copy
+        setPendingMilestone(newArray);
+        setSelectedMilestone({});
       }
       clearData();
     }
   };
+
   function clearData() {
     setState({
       milestone_name: "",
@@ -2027,6 +2100,7 @@ export default function Milestone(props) {
           )}
         </Grid> */}
         {/* {renderMilestoneCreateForm("form")} */}
+        {isCreationOpen && renderMilestoneCreateForm("form")}
 
         <Grid
           style={{ marginTop: 28, marginBottom: 28 }}
@@ -2061,9 +2135,9 @@ export default function Milestone(props) {
               variant="caption"
               color={"#8C92A4"}
             >
-              End date
+              Project Starting date
             </Typography>
-            <Typography style={{ fontSize: 18 }} fontFamily={"Poppins-Regular"}>
+            <Typography style={{ fontSize: 18 }} fontFamily={"Poppins-Medium"}>
               March 12, 2023
             </Typography>
           </Grid>
@@ -2073,10 +2147,10 @@ export default function Milestone(props) {
               variant="caption"
               color={"#8C92A4"}
             >
-              Amount
+              Project Ending date
             </Typography>
-            <Typography style={{ fontSize: 18 }} fontFamily={"Poppins-Regular"}>
-              $1,500
+            <Typography style={{ fontSize: 18 }} fontFamily={"Poppins-Medium"}>
+              March 23, 2023
             </Typography>
           </Grid>
         </Grid>
@@ -2087,7 +2161,7 @@ export default function Milestone(props) {
           item
           container
           xs={12}
-          style={{ borderBottom: "1px solid #F2F3F4" }}
+          style={{ borderBottom: "1px solid #F2F3F4", marginTop: "20px" }}
           justifyContent={"space-between"}
         >
           <Grid item xs={12}>
@@ -2101,7 +2175,7 @@ export default function Milestone(props) {
               <Tab
                 label={
                   <Typography style={{ display: "flex", alignItems: "center" }}>
-                    pending
+                    Not Started
                     <span
                       style={{
                         padding: "2px 8px",
@@ -2255,7 +2329,7 @@ export default function Milestone(props) {
                             lineHeight: "24px",
                             color: "#030F1C",
                           }}
-                          fontFamily={"Poppins-Regular"}
+                          fontFamily={"Poppins-Medium"}
                         >
                           {milestone?.milestone_name}
                         </Typography>
@@ -2269,7 +2343,7 @@ export default function Milestone(props) {
                           wrap: "no-wrap",
                         }}
                       >
-                        {milestone?.payment_status === "pending" ||
+                        {milestone?.payment_status === "Not Started" ||
                         milestone?.payment_status === "" ? null : (
                           <div
                             style={{
@@ -2315,7 +2389,7 @@ export default function Milestone(props) {
                         </Typography>
                         <Typography
                           style={{ fontSize: 18 }}
-                          fontFamily={"Poppins-Regular"}
+                          fontFamily={"Poppins-Medium"}
                         >
                           {milestone.end_date
                             ? moment(milestone.end_date).format("MMMM DD, YYYY")
@@ -2333,7 +2407,7 @@ export default function Milestone(props) {
                         </Typography>
                         <Typography
                           style={{ fontSize: 18 }}
-                          fontFamily={"Poppins-Regular"}
+                          fontFamily={"Poppins-Medium"}
                         >
                           {`AED ${milestone?.amount}` || `AED 0`}
                         </Typography>
@@ -2353,7 +2427,7 @@ export default function Milestone(props) {
                           cursor: "pointer",
                           fontSize: "16px",
                           lineHeight: "24px",
-                          fontFamily: "Poppins-Regular",
+                          fontFamily: "Poppins-Medium",
                         }}
                         onClick={() => {
                           handleChange(milestone, index, "pending");
@@ -2437,8 +2511,9 @@ export default function Milestone(props) {
                                 container
                                 className={classes.card}
                                 rowGap={2}
+                                style={{ fontFamily: "Poppins-Regular" }}
                               >
-                                {isArray(item?.buget_image) &&
+                                {/* {isArray(item?.buget_image) &&
                                   !isEmpty(item?.buget_image) && (
                                     <Grid
                                       item
@@ -2457,7 +2532,7 @@ export default function Milestone(props) {
                                         alt="budget"
                                       />
                                     </Grid>
-                                  )}
+                                  )} */}
                                 {
                                   <Grid
                                     item
@@ -2726,6 +2801,28 @@ export default function Milestone(props) {
             ) : (
               <NoData />
             )}
+            {/* <Stack flexDirection="row" alignItems="center"gap={1}>
+                <img src={Images.add} alt="add-icon"></img>
+                  <Typography className={classes.newMilestone}>
+                  New Milestone
+                </Typography>
+            </Stack> */}
+            {/* <Grid
+              item
+              container
+              alignItems={"center"}
+              style={{ marginTop: 18, marginBottom: 18 }}
+            >
+              <div
+                className="btnSubmit"
+                onClick={() => {
+                  setIsCreationOpen(true);
+                }}
+              >
+                <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
+                New Milestone
+              </div>
+            </Grid> */}
           </Grid>
         )}
         {tabValue === 1 && (
@@ -3998,25 +4095,12 @@ export default function Milestone(props) {
           sx: {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
-            ml: 16,
+            ml: 18,
             "& .MuiAvatar-root": {
               width: 32,
               height: 32,
               ml: -0.5,
               mr: 1,
-            },
-            "&:before": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              left: 14,
-              width: 10,
-              height: 10,
-              bgcolor: "background.paper",
-              transform: "translateY(-50%) rotate(45deg)",
-              zIndex: 0,
             },
           },
         }}
@@ -4031,7 +4115,10 @@ export default function Milestone(props) {
       >
         {tabValue === 0 && (
           <MenuItem
-            style={{ fontFamily: "Poppins-Regular" }}
+            style={{
+              fontFamily: "Poppins-Medium",
+              padding: "12px 36px 12px 16px",
+            }}
             disabled={
               selectedMilestone?.data?.payment_status === "pending" ||
               selectedMilestone?.data?.payment_status === ""
@@ -4053,16 +4140,24 @@ export default function Milestone(props) {
               : "Requested for payment"}
           </MenuItem>
         )}
+        <Divider style={{ margin: 0 }} />
         {tabValue !== 0 && (
           <MenuItem
-            style={{ fontFamily: "Poppins-Regular" }}
+            style={{
+              fontFamily: "Poppins-Medium",
+              padding: "12px 36px 12px 16px",
+            }}
             onClick={handePayment}
           >
             Submit Milestone
           </MenuItem>
         )}
+        <Divider style={{ margin: "0px" }} />
         <MenuItem
-          style={{ fontFamily: "Poppins-Regular" }}
+          style={{
+            fontFamily: "Poppins-Medium",
+            padding: "12px 36px 12px 16px",
+          }}
           disabled={
             selectedMilestone?.data?.payment_status === "completed"
               ? true
@@ -4072,8 +4167,12 @@ export default function Milestone(props) {
         >
           Edit
         </MenuItem>
+        <Divider style={{ margin: "0px" }} />
         <MenuItem
-          style={{ fontFamily: "Poppins-Regular" }}
+          style={{
+            fontFamily: "Poppins-Medium",
+            padding: "12px 36px 12px 16px",
+          }}
           disabled={
             selectedMilestone?.data?.payment_status === "completed"
               ? true
@@ -4096,24 +4195,12 @@ export default function Milestone(props) {
           sx: {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
+            ml: 5,
             "& .MuiAvatar-root": {
               width: 32,
               height: 32,
               ml: -0.5,
               mr: 1,
-            },
-            "&:before": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: "background.paper",
-              transform: "translateY(-50%) rotate(45deg)",
-              zIndex: 0,
             },
           },
         }}
@@ -4136,6 +4223,7 @@ export default function Milestone(props) {
         >
           Edit
         </MenuItem>
+        <Divider style={{ margin: "0px" }} />
         <MenuItem
           disabled={
             selectedMilestone?.data?.payment_status === "completed"
@@ -4166,58 +4254,262 @@ export default function Milestone(props) {
         style={{ overflowY: "scroll" }}
       >
         <Fade in={visibleEditModal}>
-          <Box sx={style}>
+          <Box>
             <Grid container justifyContent="center" alignItems="center">
-              <Typography
-                fontFamily="Poppins-Regular"
-                className={classes.forgotHeaderText}
-              >
-                Update Milestone Details
-              </Typography>
               <Grid item xs={12}>
-                {renderMilestoneCreateForm("modal")}
-              </Grid>
-
-              <Grid
-                item
-                container
-                columnGap={1}
-                justifyContent={"space-between"}
-              >
-                <Grid item xs={5.7}>
-                  <Button
-                    color="primary"
-                    fullWidth
-                    style={{ marginTop: 20, marginBottom: 20 }}
-                    onClick={() => {
-                      setVisibleEditModal(false);
-                      clearData();
-                      setSelectedMilestone(null);
-                    }}
-                    disabled={btnUpdateLoader === "update"}
+                <Box sx={style}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    Close
-                  </Button>
-                </Grid>
-
-                <Grid item xs={5.7}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    style={{ marginTop: 20, marginBottom: 20 }}
-                    onClick={() => {
-                      validateMilestone(true);
-                    }}
-                    disabled={btnUpdateLoader === "update"}
+                    <div className="addMilestoneHeader">
+                      Update Milestone Details
+                    </div>
+                    <Close
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleCloseCreation()}
+                    />
+                  </div>
+                  <Grid container>
+                    <Grid item xs={12} id="name" mt={2}>
+                      <CInput
+                        label={
+                          <span className="fieldTitle">Milestone Name</span>
+                        }
+                        placeholder="Enter Milestone Name..."
+                        value={state.milestone_name}
+                        onChange={(e) => {
+                          setState({
+                            ...state,
+                            milestone_name: e.target.value,
+                          });
+                          setErrObj({
+                            ...errObj,
+                            nameErr: false,
+                            nameMsg: "",
+                          });
+                        }}
+                        sx={{
+                          width: "100%",
+                          marginTop: "24px",
+                        }}
+                        components={{
+                          OpenPickerIcon: () => (
+                            <img
+                              src={Images.calendarIcon}
+                              alt="calender-icon"
+                            ></img>
+                          ),
+                        }}
+                        slotProps={{
+                          textField: {
+                            helperText: errObj.endMsg,
+                            error: errObj.endErr,
+                            id: "end-date",
+                          },
+                        }}
+                        format="MMMM dd, yyyy"
+                      />
+                    </Grid>
+                    <Grid item xs={12} id="desctiption">
+                      <CInput
+                        multiline={true}
+                        rows={3}
+                        label={<span className="fieldTitle">Description:</span>}
+                        placeholder="Write description here..."
+                        value={state.description}
+                        onChange={(e) => {
+                          setState({ ...state, description: e.target.value });
+                          setErrObj({
+                            ...errObj,
+                            descriptionErr: false,
+                            descriptionMsg: "",
+                          });
+                        }}
+                        error={errObj.descriptionErr}
+                        helpertext={errObj.descriptionMsg}
+                      />
+                    </Grid>
+                    {/* <Grid item xs={12} id="amount">
+                <CInput
+                  type={"number"}
+                  label="Price:"
+                  placeholder="Enter Price "
+                  value={state.amount}
+                  inputProps={{
+                    onWheel: (event) => event.currentTarget.blur(),
+                  }}
+                  onChange={(e) => {
+                    setState({ ...state, amount: e.target.value });
+                    setErrObj({
+                      ...errObj,
+                      amountErr: false,
+                      amountMsg: "",
+                    });
+                  }}
+                  error={errObj.amountErr}
+                  helpertext={errObj.amountMsg}
+                />
+              </Grid> */}
+                    <Grid
+                      item
+                      container
+                      columnGap={1}
+                      wrap={md ? "wrap" : "nowrap"}
+                    >
+                      <Grid item xs={12} md={6} mb={2}>
+                        <FormControl
+                          variant="standard"
+                          fullWidth
+                          error={errObj.startErr}
+                          style={{ position: "relative" }}
+                        >
+                          <span className="fieldTitle" htmlFor="start-date">
+                            Start Date:
+                          </span>
+                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                              disablePast
+                              value={
+                                state.start_date
+                                  ? new Date(state?.start_date)
+                                  : null
+                              }
+                              onChange={(e, v) => {
+                                setState({
+                                  ...state,
+                                  start_date: moment(e).format("MMMM DD, yyyy"),
+                                  end_date: null,
+                                });
+                                setErrObj({
+                                  ...errObj,
+                                  startErr: false,
+                                  startMsg: "",
+                                });
+                              }}
+                              sx={{
+                                width: "100%",
+                                marginTop: "6px",
+                              }}
+                              format="MMMM dd, yyyy"
+                              components={{
+                                OpenPickerIcon: () => (
+                                  <img
+                                    src={Images.calendarIcon}
+                                    alt="calendar-icon"
+                                  ></img>
+                                ),
+                              }}
+                              slotProps={{
+                                textField: {
+                                  helperText: errObj.startMsg,
+                                  error: errObj.startErr,
+                                  id: "start-date",
+                                },
+                              }}
+                            />
+                          </LocalizationProvider>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} md={6} mb={2}>
+                        <FormControl
+                          variant="standard"
+                          fullWidth
+                          error={errObj.endErr}
+                          style={{ position: "relative" }}
+                        >
+                          <span className="fieldTitle" htmlFor="end-date">
+                            End Date:
+                          </span>
+                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                              minDate={new Date(state?.start_date)}
+                              value={
+                                state?.end_date
+                                  ? new Date(state?.end_date)
+                                  : null
+                              }
+                              onChange={(e) => {
+                                setState({
+                                  ...state,
+                                  end_date: moment(e).format("MMMM DD, yyyy"),
+                                });
+                                setErrObj({
+                                  ...errObj,
+                                  endErr: false,
+                                  endMsg: "",
+                                });
+                              }}
+                              sx={{
+                                width: "100%",
+                                marginTop: "6px",
+                              }}
+                              components={{
+                                OpenPickerIcon: () => (
+                                  <img
+                                    src={Images.calendarIcon}
+                                    alt="calendar-icon"
+                                  ></img>
+                                ),
+                              }}
+                              slotProps={{
+                                textField: {
+                                  helperText: errObj.endMsg,
+                                  error: errObj.endErr,
+                                  id: "end-date",
+                                },
+                              }}
+                              format="MMMM dd, yyyy"
+                            />
+                          </LocalizationProvider>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    item
+                    container
+                    columnGap={1}
+                    justifyContent={"space-between"}
                   >
-                    {btnUpdateLoader === "update" ? (
-                      <CircularProgress style={{ color: "#fff" }} size={26} />
-                    ) : (
-                      "Update"
-                    )}
-                  </Button>
-                </Grid>
+                    <Grid item xs={5.7}>
+                      <Button
+                        color="primary"
+                        fullWidth
+                        style={{ marginTop: 20, marginBottom: 20 }}
+                        onClick={() => {
+                          setVisibleEditModal(false);
+                          clearData();
+                          setSelectedMilestone(null);
+                        }}
+                        disabled={btnUpdateLoader === "update"}
+                      >
+                        Close
+                      </Button>
+                    </Grid>
+
+                    <Grid item xs={5.7}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        style={{ marginTop: 20, marginBottom: 20 }}
+                        onClick={() => {
+                          validateMilestone(true);
+                        }}
+                        disabled={btnUpdateLoader === "update"}
+                      >
+                        {btnUpdateLoader === "update" ? (
+                          <CircularProgress
+                            style={{ color: "#fff" }}
+                            size={26}
+                          />
+                        ) : (
+                          "Update"
+                        )}
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
               </Grid>
             </Grid>
           </Box>
@@ -4247,7 +4539,10 @@ export default function Milestone(props) {
                 justifyContent="center"
                 alignItems="center"
               >
-                <Typography className={classes.forgotHeaderText}>
+                <Typography
+                  className={classes.forgotHeaderText}
+                  style={{ fontFamily: "Poppins-SemiBold", fontSize: "24px" }}
+                >
                   {visibleAddBudget
                     ? "Add Budget Details"
                     : "Update Budget Details"}

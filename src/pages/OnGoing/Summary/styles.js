@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "14px !important",
     lineHeight: "24px !important",
     fontWeight: "500 !important",
+    color:"#274BF1"
   },
   titleStyle: {
     fontFamily: "Poppins-Regular  !important",

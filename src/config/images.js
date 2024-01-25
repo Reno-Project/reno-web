@@ -19,6 +19,7 @@ const Images = {
   bathroom: "/assets/images/bathroom.svg",
   size: "/assets/images/size.svg",
   profile_logo: "/assets/images/profile_logo.svg",
+  add:"/assets/images/add.svg",
 
   Heart: "/assets/images/Heart.svg",
   reply: "/assets/images/reply.svg",
