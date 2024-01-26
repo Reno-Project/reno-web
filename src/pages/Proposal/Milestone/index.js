@@ -1021,7 +1021,7 @@ export default function Milestone(props) {
           sx: {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            ml: 18,
+            ml: 8,
             "& .MuiAvatar-root": {
               width: 32,
               height: 32,
@@ -1039,15 +1039,6 @@ export default function Milestone(props) {
           vertical: "bottom",
         }}
       >
-        <MenuItem
-          style={{
-            fontFamily: "Poppins-Regular",
-            padding: "12px 36px 12px 12px",
-          }}
-        >
-          Request Payment
-        </MenuItem>
-        <Divider style={{ margin: 0 }} />
         <MenuItem
           style={{
             fontFamily: "Poppins-Regular",
@@ -1449,7 +1440,7 @@ const SingleAccordion = ({ milestone, index, amounts, handleRowClick }) => {
               direction={"column"}
             >
               <div component={"span"} className="accLabel">
-                start Date
+                Start Date
               </div>
               <div component={"span"} className="accLabelValue">
                 {milestone?.start_date}

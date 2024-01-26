@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
   //     color: color.LightSurface,
   //   },
   // },
+
   card: {
     border: `1px solid ${color.borderColor}`,
     borderRadius: 8,
