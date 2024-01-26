@@ -11,6 +11,7 @@ import {
   Divider,
   TableCell,
   TableRow,
+  Stack,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
@@ -411,7 +412,7 @@ export default function Summary(props) {
                             textAlign={"start"}
                           >
                             <Typography className={classes.acctext}>
-                              Start Date:
+                              Project Start Date:
                             </Typography>
                           </Grid>
                           <Grid
@@ -440,7 +441,7 @@ export default function Summary(props) {
                         >
                           <Grid item lg={5} sm={6} md={6} xs={12}>
                             <Typography className={classes.acctext}>
-                              End Date:
+                              Project End Date:
                             </Typography>
                           </Grid>
                           <Grid
@@ -1876,18 +1877,8 @@ export default function Summary(props) {
                           </>
                         )}
                     </Grid>
-                    <Grid item container justifyContent={"space-between"}>
-                      <Grid
-                        item
-                        container
-                        justifyContent={"flex-end"}
-                        alignContent={"flex-start"}
-                        margin={0}
-                        xl={6}
-                        md={6}
-                        sm={12}
-                        pb={2}
-                      >
+                    <Stack flexDirection="column" gap="16px">
+                      <Stack>
                         <Grid item lg={12} sm={12} md={12} xs={12}>
                           <Typography className={classes.acctext}>
                             Scope of work:
@@ -1898,25 +1889,11 @@ export default function Summary(props) {
                             {projectDetails?.scope_of_work}
                           </Typography>
                         </Grid>
-                      </Grid>
-                      <Grid
-                        item
-                        container
-                        justifyContent={"flex-end"}
-                        margin={0}
-                        xl={6}
-                        md={6}
-                        sm={12}
-                        pb={2}
-                      >
+                      </Stack>
+                      <Stack>
                         {isArray(projectDetails?.project_image) &&
                           projectDetails?.project_image.length > 0 && (
-                            <Grid
-                              item
-                              container
-                              alignContent={"flex-start"}
-                              alignItems={"flex-start"}
-                            >
+                            <Grid item container>
                               <Grid item xs={12}>
                                 <Typography className={classes.acctext}>
                                   Project Files:
@@ -1933,6 +1910,7 @@ export default function Summary(props) {
                                             : null
                                         }
                                         target="_blank"
+                                        rel="noreferrer"
                                       >
                                         <img
                                           onClick={() => {
@@ -1965,8 +1943,8 @@ export default function Summary(props) {
                               </Grid>
                             </Grid>
                           )}
-                      </Grid>
-                    </Grid>
+                      </Stack>
+                    </Stack>
                     {/* <div
                       style={{
                         width: "100%",

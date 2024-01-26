@@ -1519,6 +1519,7 @@ export default function Budget(props) {
                       opacity: 0,
                       cursor: "pointer",
                       width: "100%",
+                      height: "130px",
                     }}
                     onChange={(e) => {
                       const chosenFiles = Array.prototype.slice.call(
@@ -1591,8 +1592,8 @@ export default function Budget(props) {
                 item
                 style={{
                   marginTop: state?.photo_origin?.length > 0 && 40,
-                  overflowY: "scroll",
-                  maxHeight: 500,
+                  overflowY: "auto",
+                  maxHeight: "200px",
                   width: "100%",
                 }}
               >
@@ -1680,7 +1681,7 @@ export default function Budget(props) {
               <Stack gap="24px" divider={<Divider />} width="100%">
                 <div className="secondaryTitle">Budget Items</div>
                 <Grid container>
-                  <Stack divider={<Divider />} width="100%">
+                  <Stack divider={<Divider />} width="100%" gap="20px">
                     {budgetDetails?.map((item, index) => {
                       const milestoneValue = item?.milestone_id
                         ? milestones?.find((e, i) => {
@@ -2104,7 +2105,7 @@ export default function Budget(props) {
           sx: {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            ml: 18,
+            ml: 8,
             "& .MuiAvatar-root": {
               width: 32,
               height: 32,
@@ -2122,15 +2123,6 @@ export default function Budget(props) {
           vertical: "bottom",
         }}
       >
-        <MenuItem
-          style={{
-            fontFamily: "Poppins-Medium",
-            padding: "12px 36px 12px 12px",
-          }}
-        >
-          Request Payment
-        </MenuItem>
-        <Divider style={{ margin: 0 }} />
         <MenuItem
           style={{
             fontFamily: "Poppins-Medium",
@@ -2624,6 +2616,7 @@ export default function Budget(props) {
 
 const SingleAccordion = ({ budget, index, handleRowClick }) => {
   const [expanded, setExpanded] = React.useState(false);
+  const classes = useStyles();
   const handleChangeExpanded = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
     console.log(budget, ">>>>>>budget");
@@ -2669,11 +2662,17 @@ const SingleAccordion = ({ budget, index, handleRowClick }) => {
                     ) : (
                       <div
                         style={{
-                          border: "1px solid black",
                           width: "128px",
                           height: "128px",
                         }}
-                      ></div>
+                      >
+                        <img
+                          width="100%"
+                          height="100%"
+                          src="https://renohome.blob.core.windows.net/reno-cms/e56d3d53-e335-425f-990e-16e6b2bbee1b"
+                          alt="placeholder"
+                        ></img>
+                      </div>
                     )}
                   </div>
                 </Grid>
@@ -2724,8 +2723,11 @@ const SingleAccordion = ({ budget, index, handleRowClick }) => {
                         Amount
                       </div>
                       <div component={"span"} className="accLabelValue">
+                        AED{" "}
                         {parseInt(budget?.material_unit_price || 0) *
-                          parseInt(budget?.qty || 0) || "NA"}
+                          parseInt(budget?.qty || 0) +
+                          parseInt(budget?.manpower_rate || 0) *
+                            parseInt(budget?.days || 0) || "NA"}
                       </div>
                     </Grid>
                   </Grid>
@@ -2741,66 +2743,219 @@ const SingleAccordion = ({ budget, index, handleRowClick }) => {
         </AccordionSummary>
         <AccordionDetails style={{ padding: 24 }}>
           <div className="disc">{budget.description}</div>
+
+          <Divider style={{ width: "100%", margin: "24px 0" }} />
           <div
+            className="responsive-table"
             style={{
-              marginTop: 24,
-              marginBottom: 24,
-              height: 1,
-              width: "100%",
-              background: "#EEF0F3",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}
-          />
-          <Grid item md={12} xs={12} style={{ display: "flex" }}>
-            <Grid
-              display={"flex"}
-              item
-              lg={3}
-              sm={12}
-              md={3}
-              xs={12}
-              direction={"column"}
+          >
+            <Stack gap="28px" width="25%">
+              <Stack
+                style={{
+                  fontFamily: "Poppins-Regular",
+                  fontSize: "18px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Budget Details
+              </Stack>
+            </Stack>
+            <TableContainer
+              style={{ padding: "16px", boxSizing: "border-box" }}
             >
-              <div component={"span"} className="accLabel">
-                Start Date
+              <Table className={classes.customtable}>
+                <Typography fontFamily={"Poppins-Regular"} fontSize={18}>
+                  Manpower
+                </Typography>
+                <TableBody>
+                  <TableRow>
+                    <TableCell
+                      align="right"
+                      style={{
+                        color: color.captionText,
+                        fontFamily: "Poppins-Regular !important",
+                      }}
+                    >
+                      Milestone
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        color: color.captionText,
+                        fontFamily: "Poppins-Regular !important",
+                      }}
+                      align="right"
+                    >
+                      Manpower rate
+                    </TableCell>
+
+                    <TableCell
+                      style={{
+                        color: color.captionText,
+                        fontFamily: "Poppins-Regular !important",
+                      }}
+                      align="right"
+                    >
+                      Days
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        color: color.captionText,
+                        fontFamily: "Poppins-Regular !important",
+                      }}
+                      align="right"
+                    >
+                      Amount
+                    </TableCell>
+                    {/* <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Poppins-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Status
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Poppins-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Last Change
+                            </TableCell> */}
+                  </TableRow>
+                  <TableRow key={"Manpower"}>
+                    <TableCell align="right">
+                      <Typography fontFamily={"Poppins-Regular"}>
+                        {budget?.milestone.milestone_name || "-"}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography fontFamily={"Poppins-Regular"}>
+                        {budget?.manpower_rate || "-"}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography fontFamily={"Poppins-Regular"}>
+                        {budget?.days || "-"}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography fontFamily={"Poppins-Regular"}>
+                        AED{" "}
+                        {parseInt(budget.manpower_rate || 0) *
+                          parseInt(budget.days || 0)}
+                      </Typography>
+                    </TableCell>
+
+                    {/* <TableCell align="right">
+                              <Typography fontFamily={"Poppins-Regular"}>
+                                {item?.manpowerStatus || "-"}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="right">
+                              <Typography fontFamily={"Poppins-Regular"}>
+                                {item?.manpowerLastChange || "-"}
+                              </Typography>
+                            </TableCell> */}
+                  </TableRow>
+                </TableBody>
+              </Table>
+              <div style={{ width: "100%", padding: "10px 0px 14px 0px" }}>
+                <Divider />
               </div>
-              <div component={"span"} className="accLabelValue">
-                {budget?.milestone.start_date}
-              </div>
-            </Grid>
-            <Grid
-              display={"flex"}
-              item
-              lg={3}
-              sm={12}
-              md={3}
-              xs={12}
-              direction={"column"}
-            >
-              <div component={"span"} className="accLabel">
-                End Date
-              </div>
-              <div component={"span"} className="accLabelValue">
-                {budget?.milestone.end_date}
-              </div>
-            </Grid>
-            <Grid
-              display={"flex"}
-              item
-              lg={6}
-              sm={12}
-              md={6}
-              xs={12}
-              direction={"column"}
-            >
-              <div component={"span"} className="accLabel">
-                Amount
-              </div>
-              <div component={"span"} className="accLabelValue">
-                {parseInt(budget?.material_unit_price || 0) *
-                  parseInt(budget?.qty || 0) || "NA"}
-              </div>
-            </Grid>
-          </Grid>
+              <Table className={classes.customtable}>
+                <Typography fontFamily={"Poppins-Regular"} fontSize={18}>
+                  Material
+                </Typography>
+                <TableBody>
+                  <TableRow>
+                    <TableCell
+                      align="right"
+                      style={{
+                        color: color.captionText,
+                        fontFamily: "Poppins-Regular !important",
+                      }}
+                    >
+                      Material Type
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      style={{
+                        color: color.captionText,
+                        fontFamily: "Poppins-Regular !important",
+                      }}
+                    >
+                      Material Unit
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        color: color.captionText,
+                        fontFamily: "Poppins-Regular !important",
+                      }}
+                      align="right"
+                    >
+                      Unit Price
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        color: color.captionText,
+                        fontFamily: "Poppins-Regular !important",
+                      }}
+                      align="right"
+                    >
+                      Quantity
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        color: color.captionText,
+                        fontFamily: "Poppins-Regular !important",
+                      }}
+                      align="right"
+                    >
+                      Amount
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key={"Manpower"}>
+                    <TableCell align="right">
+                      <Typography fontFamily={"Poppins-Regular"}>
+                        {budget?.material_type || "-"}
+                      </Typography>
+                    </TableCell>
+
+                    <TableCell align="right">
+                      <Typography fontFamily={"Poppins-Regular"}>
+                        {budget?.material_unit || "-"}
+                      </Typography>
+                    </TableCell>
+
+                    <TableCell align="right">
+                      <Typography fontFamily={"Poppins-Regular"}>
+                        AED {budget?.material_unit_price || "0"}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography fontFamily={"Poppins-Regular"}>
+                        {budget?.qty || "-"}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography fontFamily={"Poppins-Regular"}>
+                        AED{" "}
+                        {parseInt(budget.material_unit_price || 0) *
+                          parseInt(budget.qty || 0)}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
         </AccordionDetails>
       </Accordion>
     </Grid>

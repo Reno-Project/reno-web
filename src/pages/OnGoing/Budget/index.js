@@ -23,6 +23,7 @@ import {
   Backdrop,
   Tab,
   Tabs,
+  Stack,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import useStyles from "./styles";
@@ -201,7 +202,6 @@ export default function Budget(props) {
       console.log("err===>", error);
     }
   }
-
   const handleChange = (e, i) => {
     let dummyarr = [...budgetDetails];
     dummyarr[i].expanded = !dummyarr[i].expanded;
@@ -574,10 +574,10 @@ export default function Budget(props) {
 
             return (
               <Grid container className={classes.card}>
-                <Grid item container wrap={sm ? "wrap" : "nowrap"}>
-                  <Grid item sx={12} justifyContent={"flex-start"}>
-                    {isArray(item?.buget_image) && !isEmpty(item?.buget_image) && (
-                      <>
+                <Grid item container wrap={sm ? "wrap" : "nowrap"} gap="12px">
+                  <Grid item sx={12} rowGap="16px">
+                    <Stack>
+                      {item?.buget_image ? (
                         <img
                           style={{
                             width: md ? 150 : 220,
@@ -588,45 +588,23 @@ export default function Budget(props) {
                           src={item?.buget_image[0]?.image}
                           alt="budget"
                         />
-                      </>
-                    )}
-                  </Grid>
-                  <Grid
-                    item
-                    container
-                    sx={12}
-                    p={sm ? "10px" : 2}
-                    justifyContent={sm ? "flex-start" : "flex-end"}
-                  >
-                    <Grid
-                      item
-                      container
-                      justifyContent={"space-between"}
-                      alignItems={"flex-start"}
-                      wrap="nowrap"
-                    >
-                      <Typography variant="h5" fontFamily={"Poppins-Regular"}>
-                        {item?.name || "-"}
-                      </Typography>
-                    </Grid>
-                    <Grid item textAlign={sm ? "start" : "end"}>
-                      <Typography fontFamily={"Poppins-Regular"}>
-                        AED {amounts[index] || 0}
-                      </Typography>
-                      <Typography
-                        fontFamily={"Poppins-Regular"}
-                        style={{
-                          display: "flex",
-                          alignItems: "baseline",
-                        }}
-                      >
-                        <Typography fontFamily={"Poppins-Regular"} mr={1}>
-                          Last updated:
-                        </Typography>
-                        {moment(item?.updatedAt).format("MMMM DD, YYYY")}
-                      </Typography>
-                    </Grid>
-                    <Grid item container justifyContent={"flex-start"}>
+                      ) : (
+                        <div
+                          style={{
+                            width: "128px",
+                            height: "128px",
+                          }}
+                        >
+                          <img
+                            width="100%"
+                            height="100%"
+                            src="https://renohome.blob.core.windows.net/reno-cms/e56d3d53-e335-425f-990e-16e6b2bbee1b"
+                            alt="placeholder"
+                          ></img>
+                        </div>
+                      )}
+                    </Stack>
+                    <Grid item container>
                       <ListItemButton
                         style={{
                           color: color.primary,
@@ -636,13 +614,65 @@ export default function Budget(props) {
                           handleChange(item, index);
                         }}
                       >
-                        {item?.expanded ? "Collapse" : "View Subitems"}
+                        {item?.expanded ? "Hide Details" : "View Details"}
                         {item?.expanded ? (
                           <ExpandLessIcon sx={{ ml: 1 }} />
                         ) : (
                           <ExpandMoreIcon sx={{ ml: 1 }} />
                         )}
                       </ListItemButton>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    item
+                    md={8}
+                    xs={8}
+                    direction={"column"}
+                    display={"flex"}
+                    style={{ gap: "20px" }}
+                  >
+                    <Stack gap="12px">
+                      <Stack>
+                        <span className="budgetName">{item.name}</span>
+                      </Stack>
+                      <Stack>
+                        <span className="disc">{item.specification}</span>
+                      </Stack>
+                    </Stack>
+                    <Grid display="flex" gap="40px">
+                      <Grid
+                        display={"flex"}
+                        item
+                        lg={7}
+                        sm={12}
+                        md={7}
+                        xs={12}
+                        direction="column"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        <div component={"span"} className="accLabel">
+                          Payment Date
+                        </div>
+                        <div component={"span"} className="accLabelValue">
+                          {moment(item?.updatedAt).format("MMMM DD, YYYY")}
+                        </div>
+                      </Grid>
+                      <Grid
+                        display={"flex"}
+                        item
+                        lg={5}
+                        sm={12}
+                        md={5}
+                        xs={12}
+                        direction={"column"}
+                      >
+                        <div component={"span"} className="accLabel">
+                          Amount
+                        </div>
+                        <Typography fontFamily={"Poppins-Regular"}>
+                          AED {amounts[index] || 0}
+                        </Typography>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -652,20 +682,7 @@ export default function Budget(props) {
                   unmountOnExit
                   style={{ width: "100%" }}
                 >
-                  {/* <CardContent
-                    style={{
-                      position: "relative",
-                      boxSizing: "border-box",
-                      width: "100%",
-                    }}
-                  > */}
                   <Grid item padding={"10px 10px 0px 10px"}>
-                    <Typography fontFamily={"Poppins-Regular"} fontSize={18}>
-                      Specifications
-                    </Typography>
-                    <Typography fontFamily={"Poppins-Regular"}>
-                      {item?.specification || "-"}
-                    </Typography>
                     <div
                       style={{
                         width: "100%",
@@ -676,9 +693,28 @@ export default function Budget(props) {
                       <Divider />
                     </div>
                   </Grid>
-                  <div className="responsive-table">
+                  <div
+                    className="responsive-table"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Stack gap="28px" width="25%">
+                      <Stack
+                        style={{
+                          fontFamily: "Poppins-Regular",
+                          fontSize: "18px",
+                          whiteSpace: "nowrap",
+                          padding: "10px",
+                        }}
+                      >
+                        Budget Details
+                      </Stack>
+                    </Stack>
                     <TableContainer
-                      style={{ padding: 10, boxSizing: "border-box" }}
+                      style={{ padding: "16px", boxSizing: "border-box" }}
                     >
                       <Table className={classes.customtable}>
                         <Typography
@@ -748,7 +784,7 @@ export default function Budget(props) {
                           <TableRow key={"Manpower"}>
                             <TableCell align="right">
                               <Typography fontFamily={"Poppins-Regular"}>
-                                {milestoneValue?.milestone_name || "-"}
+                                {item?.milestone_name || "-"}
                               </Typography>
                             </TableCell>
                             <TableCell align="right">

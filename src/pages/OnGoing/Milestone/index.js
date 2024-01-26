@@ -2535,258 +2535,299 @@ export default function Milestone(props) {
                                 container
                                 className={classes.card}
                                 rowGap={2}
-                                style={{ fontFamily: "Poppins-Regular" }}
                               >
-                                {/* {isArray(item?.buget_image) &&
-                                  !isEmpty(item?.buget_image) && (
-                                    <Grid
-                                      item
-                                      xs={12}
-                                      md={3}
-                                      justifyContent={"flex-start"}
+                                <Grid item container xs={12}>
+                                  <Typography
+                                    fontFamily={"Poppins-Regular"}
+                                    fontWeight="bold"
+                                    padding="16px 8px"
+                                    fontSize="18px"
+                                  >
+                                    Budget Details
+                                  </Typography>
+                                  {/* <IconButton
+                                      onClick={() => {}}
+                                      //   handleRowClick(e, milestone, index)
+                                    >
+                                      <MoreVertIcon />
+                                    </IconButton> */}
+                                </Grid>
+                                <div
+                                  style={{
+                                    width: "128px",
+                                    height: "128px",
+                                    padding: "10px",
+                                  }}
+                                >
+                                  {isArray(item?.buget_image) &&
+                                  !isEmpty(item?.buget_image) ? (
+                                    <img
+                                      style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        borderRadius: 4,
+                                        objectFit: "contain",
+                                      }}
+                                      src={item?.buget_image[0]?.image}
+                                      alt="budget"
+                                    />
+                                  ) : (
+                                    <div
+                                      style={{
+                                        width: "128px",
+                                        height: "128px",
+                                      }}
                                     >
                                       <img
-                                        style={{
-                                          width: "100%",
-                                          height: 170,
-                                          objectFit: "contain",
-                                          borderRadius: 4,
-                                        }}
-                                        src={item?.buget_image[0]?.image}
-                                        alt="budget"
-                                      />
-                                    </Grid>
-                                  )} */}
-                                {
-                                  <Grid
-                                    item
-                                    container
-                                    xs={12}
-                                    md={
-                                      !isArray(item?.buget_image) ||
-                                      isEmpty(item?.buget_image)
-                                        ? 12
-                                        : 9
-                                    }
+                                        width="100%"
+                                        height="100%"
+                                        src="https://renohome.blob.core.windows.net/reno-cms/e56d3d53-e335-425f-990e-16e6b2bbee1b"
+                                        alt="placeholder"
+                                      ></img>
+                                    </div>
+                                  )}
+                                </div>
+                                <Grid item container xs={12} md={9}>
+                                  <TableContainer
+                                    style={{
+                                      padding: "16px",
+                                      boxSizing: "border-box",
+                                      whiteSpace: "nowrap",
+                                    }}
                                   >
-                                    <Grid
-                                      item
-                                      container
-                                      xs={12}
-                                      justifyContent={"space-between"}
+                                    <Table className={classes.customtable}>
+                                      <Typography
+                                        fontFamily={"Poppins-Regular"}
+                                        fontSize={18}
+                                      >
+                                        Manpower
+                                      </Typography>
+                                      <TableBody>
+                                        <TableRow>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                          >
+                                            Milestone
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Manpower rate
+                                          </TableCell>
+
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Days
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Amount
+                                          </TableCell>
+                                          {/* <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Poppins-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Status
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Poppins-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Last Change
+                            </TableCell> */}
+                                        </TableRow>
+                                        <TableRow key={"Manpower"}>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {milestone?.milestone_name || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.manpower_rate || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.days || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              AED{" "}
+                                              {parseInt(
+                                                item.manpower_rate || 0
+                                              ) * parseInt(item.days || 0)}
+                                            </Typography>
+                                          </TableCell>
+
+                                          {/* <TableCell align="right">
+                              <Typography fontFamily={"Poppins-Regular"}>
+                                {item?.manpowerStatus || "-"}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="right">
+                              <Typography fontFamily={"Poppins-Regular"}>
+                                {item?.manpowerLastChange || "-"}
+                              </Typography>
+                            </TableCell> */}
+                                        </TableRow>
+                                      </TableBody>
+                                    </Table>
+                                    <div
+                                      style={{
+                                        width: "100%",
+                                        padding: "10px 0px 14px 0px",
+                                      }}
+                                    >
+                                      <Divider />
+                                    </div>
+                                    <Table
+                                      className={classes.customtable}
+                                      style={{ whiteSpace: "nowrap" }}
                                     >
                                       <Typography
                                         fontFamily={"Poppins-Regular"}
-                                        fontWeight="bold"
-                                        pl={1}
+                                        fontSize={18}
                                       >
-                                        {item?.name}
+                                        Material
                                       </Typography>
-                                      <IconButton
-                                        onClick={(e) => {
-                                          handleRowClick1(
-                                            e,
-                                            milestone,
-                                            item,
-                                            index
-                                          );
-                                        }}
-                                      >
-                                        <MoreVertIcon />
-                                      </IconButton>
-                                    </Grid>
-                                    <TableContainer
-                                      style={{
-                                        padding: 10,
-                                        boxSizing: "border-box",
-                                      }}
-                                    >
-                                      <Table className={classes.customtable}>
-                                        <Typography
-                                          fontFamily={"Poppins-Regular"}
-                                          fontSize={18}
-                                        >
-                                          Manpower
-                                        </Typography>
-                                        <TableBody>
-                                          <TableRow>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
+                                      <TableBody>
+                                        <TableRow>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                          >
+                                            Material Type
+                                          </TableCell>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                          >
+                                            Material Unit
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Unit Price
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Quantity
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Amount
+                                          </TableCell>
+                                        </TableRow>
+                                        <TableRow key={"Manpower"}>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
                                             >
-                                              Manpower rate
-                                            </TableCell>
+                                              {item?.material_type || "-"}
+                                            </Typography>
+                                          </TableCell>
 
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
                                             >
-                                              Days
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Amount
-                                            </TableCell>
-                                          </TableRow>
-                                          <TableRow key={"Manpower"}>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.manpower_rate || "-"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.days || "-"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                AED{" "}
-                                                {parseInt(
-                                                  item.manpower_rate || 0
-                                                ) * parseInt(item.days || 0)}
-                                              </Typography>
-                                            </TableCell>
-                                          </TableRow>
-                                        </TableBody>
-                                      </Table>
-                                      <div
-                                        style={{
-                                          width: "100%",
-                                          padding: "10px 0px 14px 0px",
-                                        }}
-                                      >
-                                        <Divider />
-                                      </div>
-                                      <Table className={classes.customtable}>
-                                        <Typography
-                                          fontFamily={"Poppins-Regular"}
-                                          fontSize={18}
-                                        >
-                                          Material
-                                        </Typography>
-                                        <TableBody>
-                                          <TableRow>
-                                            <TableCell
-                                              align="right"
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                            >
-                                              Material Type
-                                            </TableCell>
-                                            <TableCell
-                                              align="right"
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                            >
-                                              Material Unit
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Unit Price
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Quantity
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Amount
-                                            </TableCell>
-                                          </TableRow>
-                                          <TableRow key={"Manpower"}>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.material_type || "-"}
-                                              </Typography>
-                                            </TableCell>
+                                              {item?.material_unit || "-"}
+                                            </Typography>
+                                          </TableCell>
 
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.material_unit || "-"}
-                                              </Typography>
-                                            </TableCell>
-
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                AED{" "}
-                                                {item?.material_unit_price ||
-                                                  "0"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.qty || "-"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                AED{" "}
-                                                {parseInt(
-                                                  item.material_unit_price || 0
-                                                ) * parseInt(item.qty || 0)}
-                                              </Typography>
-                                            </TableCell>
-                                          </TableRow>
-                                        </TableBody>
-                                      </Table>
-                                    </TableContainer>
-                                  </Grid>
-                                }
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              AED{" "}
+                                              {item?.material_unit_price || "0"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.qty || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              AED{" "}
+                                              {parseInt(
+                                                item.material_unit_price || 0
+                                              ) * parseInt(item.qty || 0)}
+                                            </Typography>
+                                          </TableCell>
+                                        </TableRow>
+                                      </TableBody>
+                                    </Table>
+                                  </TableContainer>
+                                </Grid>
                               </Grid>
                             );
                           }
@@ -3019,239 +3060,298 @@ export default function Milestone(props) {
                                 className={classes.card}
                                 rowGap={2}
                               >
-                                {isArray(item?.buget_image) &&
-                                  !isEmpty(item?.buget_image) && (
-                                    <Grid
-                                      item
-                                      xs={12}
-                                      md={3}
-                                      justifyContent={"flex-start"}
-                                    >
-                                      <img
-                                        style={{
-                                          width: "100%",
-                                          height: 170,
-                                          objectFit: "contain",
-                                          borderRadius: 4,
-                                        }}
-                                        src={item?.buget_image[0]?.image}
-                                        alt="budget"
-                                      />
-                                    </Grid>
-                                  )}
-                                {
-                                  <Grid
-                                    item
-                                    container
-                                    xs={12}
-                                    md={
-                                      !isArray(item?.buget_image) ||
-                                      isEmpty(item?.buget_image)
-                                        ? 12
-                                        : 9
-                                    }
+                                <Grid item container xs={12}>
+                                  <Typography
+                                    fontFamily={"Poppins-Regular"}
+                                    fontWeight="bold"
+                                    padding="16px 8px"
+                                    fontSize="18px"
                                   >
-                                    <Grid item container xs={12}>
-                                      <Typography
-                                        fontFamily={"Poppins-Regular"}
-                                        fontWeight="bold"
-                                        pl={1}
-                                      >
-                                        {item?.name}
-                                      </Typography>
-                                    </Grid>
-                                    <TableContainer
+                                    Budget Details
+                                  </Typography>
+                                  {/* <IconButton
+                                      onClick={() => {}}
+                                      //   handleRowClick(e, milestone, index)
+                                    >
+                                      <MoreVertIcon />
+                                    </IconButton> */}
+                                </Grid>
+                                <div
+                                  style={{
+                                    width: "128px",
+                                    height: "128px",
+                                    padding: "10px",
+                                  }}
+                                >
+                                  {isArray(item?.buget_image) &&
+                                  !isEmpty(item?.buget_image) ? (
+                                    <img
                                       style={{
-                                        padding: 10,
-                                        boxSizing: "border-box",
+                                        width: "100%",
+                                        height: "100%",
+                                        borderRadius: 4,
+                                        objectFit: "contain",
+                                      }}
+                                      src={item?.buget_image[0]?.image}
+                                      alt="budget"
+                                    />
+                                  ) : (
+                                    <div
+                                      style={{
+                                        width: "128px",
+                                        height: "128px",
                                       }}
                                     >
-                                      <Table className={classes.customtable}>
-                                        <Typography
-                                          fontFamily={"Poppins-Regular"}
-                                          fontSize={18}
-                                        >
-                                          Manpower
-                                        </Typography>
-                                        <TableBody>
-                                          <TableRow>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Manpower rate
-                                            </TableCell>
-
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Days
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Amount
-                                            </TableCell>
-                                          </TableRow>
-                                          <TableRow key={"Manpower"}>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.manpower_rate || "-"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.days || "-"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                AED{" "}
-                                                {parseInt(
-                                                  item.manpower_rate || 0
-                                                ) * parseInt(item.days || 0)}
-                                              </Typography>
-                                            </TableCell>
-                                          </TableRow>
-                                        </TableBody>
-                                      </Table>
-                                      <div
-                                        style={{
-                                          width: "100%",
-                                          padding: "10px 0px 14px 0px",
-                                        }}
+                                      <img
+                                        width="100%"
+                                        height="100%"
+                                        src="https://renohome.blob.core.windows.net/reno-cms/e56d3d53-e335-425f-990e-16e6b2bbee1b"
+                                        alt="placeholder"
+                                      ></img>
+                                    </div>
+                                  )}
+                                </div>
+                                <Grid item container xs={12} md={9}>
+                                  <TableContainer
+                                    style={{
+                                      padding: "16px",
+                                      boxSizing: "border-box",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    <Table className={classes.customtable}>
+                                      <Typography
+                                        fontFamily={"Poppins-Regular"}
+                                        fontSize={18}
                                       >
-                                        <Divider />
-                                      </div>
-                                      <Table className={classes.customtable}>
-                                        <Typography
-                                          fontFamily={"Poppins-Regular"}
-                                          fontSize={18}
-                                        >
-                                          Material
-                                        </Typography>
-                                        <TableBody>
-                                          <TableRow>
-                                            <TableCell
-                                              align="right"
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                            >
-                                              Material Type
-                                            </TableCell>
-                                            <TableCell
-                                              align="right"
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                            >
-                                              Material Unit
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Unit Price
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Quantity
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Amount
-                                            </TableCell>
-                                          </TableRow>
-                                          <TableRow key={"Manpower"}>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.material_type || "-"}
-                                              </Typography>
-                                            </TableCell>
+                                        Manpower
+                                      </Typography>
+                                      <TableBody>
+                                        <TableRow>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                          >
+                                            Milestone
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Manpower rate
+                                          </TableCell>
 
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.material_unit || "-"}
-                                              </Typography>
-                                            </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Days
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Amount
+                                          </TableCell>
+                                          {/* <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Poppins-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Status
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Poppins-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Last Change
+                            </TableCell> */}
+                                        </TableRow>
+                                        <TableRow key={"Manpower"}>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {milestone?.milestone_name || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.manpower_rate || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.days || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              AED{" "}
+                                              {parseInt(
+                                                item.manpower_rate || 0
+                                              ) * parseInt(item.days || 0)}
+                                            </Typography>
+                                          </TableCell>
 
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                AED{" "}
-                                                {item?.material_unit_price ||
-                                                  "0"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.qty || "-"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                AED{" "}
-                                                {parseInt(
-                                                  item.material_unit_price || 0
-                                                ) * parseInt(item.qty || 0)}
-                                              </Typography>
-                                            </TableCell>
-                                          </TableRow>
-                                        </TableBody>
-                                      </Table>
-                                    </TableContainer>
-                                  </Grid>
-                                }
+                                          {/* <TableCell align="right">
+                              <Typography fontFamily={"Poppins-Regular"}>
+                                {item?.manpowerStatus || "-"}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="right">
+                              <Typography fontFamily={"Poppins-Regular"}>
+                                {item?.manpowerLastChange || "-"}
+                              </Typography>
+                            </TableCell> */}
+                                        </TableRow>
+                                      </TableBody>
+                                    </Table>
+                                    <div
+                                      style={{
+                                        width: "100%",
+                                        padding: "10px 0px 14px 0px",
+                                      }}
+                                    >
+                                      <Divider />
+                                    </div>
+                                    <Table
+                                      className={classes.customtable}
+                                      style={{ whiteSpace: "nowrap" }}
+                                    >
+                                      <Typography
+                                        fontFamily={"Poppins-Regular"}
+                                        fontSize={18}
+                                      >
+                                        Material
+                                      </Typography>
+                                      <TableBody>
+                                        <TableRow>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                          >
+                                            Material Type
+                                          </TableCell>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                          >
+                                            Material Unit
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Unit Price
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Quantity
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Amount
+                                          </TableCell>
+                                        </TableRow>
+                                        <TableRow key={"Manpower"}>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.material_type || "-"}
+                                            </Typography>
+                                          </TableCell>
+
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.material_unit || "-"}
+                                            </Typography>
+                                          </TableCell>
+
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              AED{" "}
+                                              {item?.material_unit_price || "0"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.qty || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              AED{" "}
+                                              {parseInt(
+                                                item.material_unit_price || 0
+                                              ) * parseInt(item.qty || 0)}
+                                            </Typography>
+                                          </TableCell>
+                                        </TableRow>
+                                      </TableBody>
+                                    </Table>
+                                  </TableContainer>
+                                </Grid>
                               </Grid>
                             );
                           }
@@ -3435,46 +3535,63 @@ export default function Milestone(props) {
                                 className={classes.card}
                                 rowGap={2}
                               >
-                                {isArray(item?.buget_image) &&
-                                  !isEmpty(item?.buget_image) && (
-                                    <Grid
-                                      item
-                                      xs={12}
-                                      md={3}
-                                      justifyContent={"flex-start"}
-                                    >
-                                      <img
-                                        style={{
-                                          width: "100%",
-                                          height: 170,
-                                          objectFit: "contain",
-                                          borderRadius: 4,
-                                        }}
-                                        src={item?.buget_image[0]?.image}
-                                        alt="budget"
-                                      />
-                                    </Grid>
-                                  )}
-                                <Grid item container xs={12} md={9}>
-                                  <Grid item container xs={12}>
-                                    <Typography
-                                      fontFamily={"Poppins-Regular"}
-                                      fontWeight="bold"
-                                      pl={1}
-                                    >
-                                      {item?.name}
-                                    </Typography>
-                                    {/* <IconButton
+                                <Grid item container xs={12}>
+                                  <Typography
+                                    fontFamily={"Poppins-Regular"}
+                                    fontWeight="bold"
+                                    padding="16px 8px"
+                                    fontSize="18px"
+                                  >
+                                    Budget Details
+                                  </Typography>
+                                  {/* <IconButton
                                       onClick={() => {}}
                                       //   handleRowClick(e, milestone, index)
                                     >
                                       <MoreVertIcon />
                                     </IconButton> */}
-                                  </Grid>
+                                </Grid>
+                                <div
+                                  style={{
+                                    width: "128px",
+                                    height: "128px",
+                                    padding: "10px",
+                                  }}
+                                >
+                                  {isArray(item?.buget_image) &&
+                                  !isEmpty(item?.buget_image) ? (
+                                    <img
+                                      style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        borderRadius: 4,
+                                        objectFit: "contain",
+                                      }}
+                                      src={item?.buget_image[0]?.image}
+                                      alt="budget"
+                                    />
+                                  ) : (
+                                    <div
+                                      style={{
+                                        width: "128px",
+                                        height: "128px",
+                                      }}
+                                    >
+                                      <img
+                                        width="100%"
+                                        height="100%"
+                                        src="https://renohome.blob.core.windows.net/reno-cms/e56d3d53-e335-425f-990e-16e6b2bbee1b"
+                                        alt="placeholder"
+                                      ></img>
+                                    </div>
+                                  )}
+                                </div>
+                                <Grid item container xs={12} md={9}>
                                   <TableContainer
                                     style={{
-                                      padding: 10,
+                                      padding: "16px",
                                       boxSizing: "border-box",
+                                      whiteSpace: "nowrap",
                                     }}
                                   >
                                     <Table className={classes.customtable}>
@@ -3486,6 +3603,16 @@ export default function Milestone(props) {
                                       </Typography>
                                       <TableBody>
                                         <TableRow>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                          >
+                                            Milestone
+                                          </TableCell>
                                           <TableCell
                                             style={{
                                               color: color.captionText,
@@ -3517,8 +3644,33 @@ export default function Milestone(props) {
                                           >
                                             Amount
                                           </TableCell>
+                                          {/* <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Poppins-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Status
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                color: color.captionText,
+                                fontFamily: "Poppins-Regular !important",
+                              }}
+                              align="right"
+                            >
+                              Last Change
+                            </TableCell> */}
                                         </TableRow>
                                         <TableRow key={"Manpower"}>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {milestone?.milestone_name || "-"}
+                                            </Typography>
+                                          </TableCell>
                                           <TableCell align="right">
                                             <Typography
                                               fontFamily={"Poppins-Regular"}
@@ -3543,6 +3695,17 @@ export default function Milestone(props) {
                                               ) * parseInt(item.days || 0)}
                                             </Typography>
                                           </TableCell>
+
+                                          {/* <TableCell align="right">
+                              <Typography fontFamily={"Poppins-Regular"}>
+                                {item?.manpowerStatus || "-"}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="right">
+                              <Typography fontFamily={"Poppins-Regular"}>
+                                {item?.manpowerLastChange || "-"}
+                              </Typography>
+                            </TableCell> */}
                                         </TableRow>
                                       </TableBody>
                                     </Table>
@@ -3554,7 +3717,10 @@ export default function Milestone(props) {
                                     >
                                       <Divider />
                                     </div>
-                                    <Table className={classes.customtable}>
+                                    <Table
+                                      className={classes.customtable}
+                                      style={{ whiteSpace: "nowrap" }}
+                                    >
                                       <Typography
                                         fontFamily={"Poppins-Regular"}
                                         fontSize={18}
@@ -3844,239 +4010,298 @@ export default function Milestone(props) {
                                 className={classes.card}
                                 rowGap={2}
                               >
-                                {isArray(item?.buget_image) &&
-                                  !isEmpty(item?.buget_image) && (
-                                    <Grid
-                                      item
-                                      xs={12}
-                                      md={3}
-                                      justifyContent={"flex-start"}
-                                    >
-                                      <img
-                                        style={{
-                                          width: "100%",
-                                          height: 170,
-                                          objectFit: "contain",
-                                          borderRadius: 4,
-                                        }}
-                                        src={item?.buget_image[0]?.image}
-                                        alt="budget"
-                                      />
-                                    </Grid>
-                                  )}
-                                {
-                                  <Grid
-                                    item
-                                    container
-                                    xs={12}
-                                    md={
-                                      !isArray(item?.buget_image) ||
-                                      isEmpty(item?.buget_image)
-                                        ? 12
-                                        : 9
-                                    }
+                                <Grid item container xs={12}>
+                                  <Typography
+                                    fontFamily={"Poppins-Regular"}
+                                    fontWeight="bold"
+                                    padding="16px 8px"
+                                    fontSize="18px"
                                   >
-                                    <Grid item container xs={12}>
-                                      <Typography
-                                        fontFamily={"Poppins-Regular"}
-                                        fontWeight="bold"
-                                        pl={1}
-                                      >
-                                        {item?.name}
-                                      </Typography>
-                                    </Grid>
-                                    <TableContainer
+                                    Budget Details
+                                  </Typography>
+                                  {/* <IconButton
+                                    onClick={() => {}}
+                                    //   handleRowClick(e, milestone, index)
+                                  >
+                                    <MoreVertIcon />
+                                  </IconButton> */}
+                                </Grid>
+                                <div
+                                  style={{
+                                    width: "128px",
+                                    height: "128px",
+                                    padding: "10px",
+                                  }}
+                                >
+                                  {isArray(item?.buget_image) &&
+                                  !isEmpty(item?.buget_image) ? (
+                                    <img
                                       style={{
-                                        padding: 10,
-                                        boxSizing: "border-box",
+                                        width: "100%",
+                                        height: "100%",
+                                        borderRadius: 4,
+                                        objectFit: "contain",
+                                      }}
+                                      src={item?.buget_image[0]?.image}
+                                      alt="budget"
+                                    />
+                                  ) : (
+                                    <div
+                                      style={{
+                                        width: "128px",
+                                        height: "128px",
                                       }}
                                     >
-                                      <Table className={classes.customtable}>
-                                        <Typography
-                                          fontFamily={"Poppins-Regular"}
-                                          fontSize={18}
-                                        >
-                                          Manpower
-                                        </Typography>
-                                        <TableBody>
-                                          <TableRow>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Manpower rate
-                                            </TableCell>
-
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Days
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Amount
-                                            </TableCell>
-                                          </TableRow>
-                                          <TableRow key={"Manpower"}>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.manpower_rate || "-"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.days || "-"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                AED{" "}
-                                                {parseInt(
-                                                  item.manpower_rate || 0
-                                                ) * parseInt(item.days || 0)}
-                                              </Typography>
-                                            </TableCell>
-                                          </TableRow>
-                                        </TableBody>
-                                      </Table>
-                                      <div
-                                        style={{
-                                          width: "100%",
-                                          padding: "10px 0px 14px 0px",
-                                        }}
+                                      <img
+                                        width="100%"
+                                        height="100%"
+                                        src="https://renohome.blob.core.windows.net/reno-cms/e56d3d53-e335-425f-990e-16e6b2bbee1b"
+                                        alt="placeholder"
+                                      ></img>
+                                    </div>
+                                  )}
+                                </div>
+                                <Grid item container xs={12} md={9}>
+                                  <TableContainer
+                                    style={{
+                                      padding: "16px",
+                                      boxSizing: "border-box",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    <Table className={classes.customtable}>
+                                      <Typography
+                                        fontFamily={"Poppins-Regular"}
+                                        fontSize={18}
                                       >
-                                        <Divider />
-                                      </div>
-                                      <Table className={classes.customtable}>
-                                        <Typography
-                                          fontFamily={"Poppins-Regular"}
-                                          fontSize={18}
-                                        >
-                                          Material
-                                        </Typography>
-                                        <TableBody>
-                                          <TableRow>
-                                            <TableCell
-                                              align="right"
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                            >
-                                              Material Type
-                                            </TableCell>
-                                            <TableCell
-                                              align="right"
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                            >
-                                              Material Unit
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Unit Price
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Quantity
-                                            </TableCell>
-                                            <TableCell
-                                              style={{
-                                                color: color.captionText,
-                                                fontFamily:
-                                                  "Poppins-Regular !important",
-                                              }}
-                                              align="right"
-                                            >
-                                              Amount
-                                            </TableCell>
-                                          </TableRow>
-                                          <TableRow key={"Manpower"}>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.material_type || "-"}
-                                              </Typography>
-                                            </TableCell>
+                                        Manpower
+                                      </Typography>
+                                      <TableBody>
+                                        <TableRow>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                          >
+                                            Milestone
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Manpower rate
+                                          </TableCell>
 
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.material_unit || "-"}
-                                              </Typography>
-                                            </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Days
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Amount
+                                          </TableCell>
+                                          {/* <TableCell
+                            style={{
+                              color: color.captionText,
+                              fontFamily: "Poppins-Regular !important",
+                            }}
+                            align="right"
+                          >
+                            Status
+                          </TableCell>
+                          <TableCell
+                            style={{
+                              color: color.captionText,
+                              fontFamily: "Poppins-Regular !important",
+                            }}
+                            align="right"
+                          >
+                            Last Change
+                          </TableCell> */}
+                                        </TableRow>
+                                        <TableRow key={"Manpower"}>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {milestone?.milestone_name || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.manpower_rate || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.days || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              AED{" "}
+                                              {parseInt(
+                                                item.manpower_rate || 0
+                                              ) * parseInt(item.days || 0)}
+                                            </Typography>
+                                          </TableCell>
 
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                AED{" "}
-                                                {item?.material_unit_price ||
-                                                  "0"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                {item?.qty || "-"}
-                                              </Typography>
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Typography
-                                                fontFamily={"Poppins-Regular"}
-                                              >
-                                                AED{" "}
-                                                {parseInt(
-                                                  item.material_unit_price || 0
-                                                ) * parseInt(item.qty || 0)}
-                                              </Typography>
-                                            </TableCell>
-                                          </TableRow>
-                                        </TableBody>
-                                      </Table>
-                                    </TableContainer>
-                                  </Grid>
-                                }
+                                          {/* <TableCell align="right">
+                            <Typography fontFamily={"Poppins-Regular"}>
+                              {item?.manpowerStatus || "-"}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Typography fontFamily={"Poppins-Regular"}>
+                              {item?.manpowerLastChange || "-"}
+                            </Typography>
+                          </TableCell> */}
+                                        </TableRow>
+                                      </TableBody>
+                                    </Table>
+                                    <div
+                                      style={{
+                                        width: "100%",
+                                        padding: "10px 0px 14px 0px",
+                                      }}
+                                    >
+                                      <Divider />
+                                    </div>
+                                    <Table
+                                      className={classes.customtable}
+                                      style={{ whiteSpace: "nowrap" }}
+                                    >
+                                      <Typography
+                                        fontFamily={"Poppins-Regular"}
+                                        fontSize={18}
+                                      >
+                                        Material
+                                      </Typography>
+                                      <TableBody>
+                                        <TableRow>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                          >
+                                            Material Type
+                                          </TableCell>
+                                          <TableCell
+                                            align="right"
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                          >
+                                            Material Unit
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Unit Price
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Quantity
+                                          </TableCell>
+                                          <TableCell
+                                            style={{
+                                              color: color.captionText,
+                                              fontFamily:
+                                                "Poppins-Regular !important",
+                                            }}
+                                            align="right"
+                                          >
+                                            Amount
+                                          </TableCell>
+                                        </TableRow>
+                                        <TableRow key={"Manpower"}>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.material_type || "-"}
+                                            </Typography>
+                                          </TableCell>
+
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.material_unit || "-"}
+                                            </Typography>
+                                          </TableCell>
+
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              AED{" "}
+                                              {item?.material_unit_price || "0"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              {item?.qty || "-"}
+                                            </Typography>
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <Typography
+                                              fontFamily={"Poppins-Regular"}
+                                            >
+                                              AED{" "}
+                                              {parseInt(
+                                                item.material_unit_price || 0
+                                              ) * parseInt(item.qty || 0)}
+                                            </Typography>
+                                          </TableCell>
+                                        </TableRow>
+                                      </TableBody>
+                                    </Table>
+                                  </TableContainer>
+                                </Grid>
                               </Grid>
                             );
                           }
