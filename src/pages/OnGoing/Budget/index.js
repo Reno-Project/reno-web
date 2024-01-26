@@ -202,7 +202,6 @@ export default function Budget(props) {
       console.log("err===>", error);
     }
   }
-
   const handleChange = (e, i) => {
     let dummyarr = [...budgetDetails];
     dummyarr[i].expanded = !dummyarr[i].expanded;
@@ -785,7 +784,7 @@ export default function Budget(props) {
                           <TableRow key={"Manpower"}>
                             <TableCell align="right">
                               <Typography fontFamily={"Poppins-Regular"}>
-                                {item?.milestone || "-"}
+                                {item?.milestone_name || "-"}
                               </Typography>
                             </TableCell>
                             <TableCell align="right">

@@ -2669,7 +2669,7 @@ export default function Milestone(props) {
                                             <Typography
                                               fontFamily={"Poppins-Regular"}
                                             >
-                                              {item?.milestone || "-"}
+                                              {milestone?.milestone_name || "-"}
                                             </Typography>
                                           </TableCell>
                                           <TableCell align="right">
@@ -3193,7 +3193,7 @@ export default function Milestone(props) {
                                             <Typography
                                               fontFamily={"Poppins-Regular"}
                                             >
-                                              {item?.milestone || "-"}
+                                              {milestone?.milestone_name || "-"}
                                             </Typography>
                                           </TableCell>
                                           <TableCell align="right">
@@ -3668,7 +3668,7 @@ export default function Milestone(props) {
                                             <Typography
                                               fontFamily={"Poppins-Regular"}
                                             >
-                                              {item?.milestone || "-"}
+                                              {milestone?.milestone_name || "-"}
                                             </Typography>
                                           </TableCell>
                                           <TableCell align="right">
@@ -4143,7 +4143,7 @@ export default function Milestone(props) {
                                             <Typography
                                               fontFamily={"Poppins-Regular"}
                                             >
-                                              {item?.milestone || "-"}
+                                              {milestone?.milestone_name || "-"}
                                             </Typography>
                                           </TableCell>
                                           <TableCell align="right">
