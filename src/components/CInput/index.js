@@ -74,10 +74,7 @@ function CInput(props) {
         <ShowPasswordValidation password={passValue} />
       ) : null}
 
-      <FormHelperText
-        error={error}
-        style={{ marginBottom: 20, fontFamily: "Poppins-Regular" }}
-      >
+      <FormHelperText error={error} style={{ fontFamily: "Poppins-Regular" }}>
         {helpertext}
       </FormHelperText>
     </FormControl>
