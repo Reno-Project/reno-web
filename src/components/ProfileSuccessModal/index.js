@@ -29,9 +29,9 @@ function ProfileSuccessModal(props) {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: sm ? 300 : 330,
+    width: sm ? 300 : 500,
     bgcolor: "background.paper",
-    borderRadius: 1,
+    borderRadius: "8px",
     boxShadow: 24,
     padding: "60px 60px 48px 60px",
   };
@@ -53,13 +53,15 @@ function ProfileSuccessModal(props) {
         closeAfterTransition
         disableAutoFocus
         slotProps={{ backdrop: Backdrop }}
-        style={{ overflowY: "scroll"}}
+        style={{ overflowY: "scroll" }}
       >
         <Fade in={isOpen}>
           <Box sx={style}>
             <div className={classes.container}>
               <img src={Images.success} alt="success_img" />
-              <div style={{display:"flex", flexDirection:"column",gap:"4px"}}>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "4px" }}
+              >
                 <Typography className={classes.title}>{title}</Typography>
                 <Typography className={classes.descTextStyle}>{msg}</Typography>
               </div>

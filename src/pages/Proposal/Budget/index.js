@@ -1482,7 +1482,7 @@ export default function Budget(props) {
                       width: "100%",
                       height: 130,
                       border: "1px dashed #9CA3AF",
-                      borderRadius: 4,
+                      borderRadius: "8px",
                     }}
                   >
                     <div style={{ width: "24px", height: "24px" }}>

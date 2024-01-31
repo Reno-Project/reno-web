@@ -1,3 +1,4 @@
-.MuiStepLabel-labelContainer {
+.Mui-completed {
   width: "60% !important";
+  color: #00cd9e !important;
 }

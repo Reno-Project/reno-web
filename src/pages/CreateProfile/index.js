@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
   CircularProgress,
+  Stack,
 } from "@mui/material";
 import {
   CreateOutlined,
@@ -1030,107 +1031,108 @@ const CreateProfile = (props) => {
   }
 
   return (
-    <div style={{ backgroundColor: "#F9F9FA" }}>
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-        style={{ padding: "40px 0 120px" }}
-      >
-        <Grid className={classes.headerContainer}>
-          <Typography className={classes.welcomeTextStyle}>
-            Welcome to Reno
-          </Typography>
-        </Grid>
-
+    <>
+      <div style={{ backgroundColor: "#F9F9FA" }}>
         <Grid
-          item
-          xs={12}
-          sm={7}
-          md={5}
-          lg={3}
-          className={classes.formContainerStyle}
+          container
+          alignItems="center"
+          justifyContent="center"
+          flexDirection="column"
         >
-          <Grid container justifyContent={"center"}>
-            <Grid item xs={12}>
-              <Typography className={classes.loginHeaderText}>
-                Create your Contractor Profile
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <CStepper
-                data={[
-                  "Contractor Profile",
-                  "Upload Portfolio",
-                  "Billing Information",
-                ]}
-                activeStep={activeStep}
-              />
-            </Grid>
-            <Grid
-              item
-              xs={10}
-              style={{ marginTop: 20 }}
-              alignItems="center"
-              justifyContent="center"
-              display="flex"
-              flexDirection="column"
-              id="logo"
-            >
-              <div
-                style={{
-                  marginTop: 15,
-                  marginBottom: 15,
-                  backgroundColor: "transparent",
-                  position: "relative",
-                }}
+          <Grid className={classes.headerContainer}>
+            <Typography className={classes.welcomeTextStyle}>
+              Welcome to Reno
+            </Typography>
+          </Grid>
+
+          <Grid
+            item
+            xs={8}
+            sm={9}
+            md={7}
+            lg={7}
+            className={classes.formContainerStyle}
+          >
+            <Grid container justifyContent={"center"} gap="32px">
+              <Stack gap="40px" width="100%">
+                <Grid item xs={12}>
+                  <Typography className={classes.loginHeaderText}>
+                    Create your Contractor Profile
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <CStepper
+                    data={[
+                      "Contractor Profile",
+                      "Upload Portfolio",
+                      "Billing Information",
+                    ]}
+                    activeStep={activeStep}
+                  />
+                </Grid>
+              </Stack>
+              <Grid
+                item
+                xs={10}
+                alignItems="center"
+                justifyContent="center"
+                display="flex"
+                flexDirection="column"
+                id="logo"
               >
-                <Button
-                  component="label"
+                <div
                   style={{
-                    position: "relative",
-                    height: 120,
-                    width: 120,
+                    marginTop: 15,
+                    marginBottom: 15,
                     backgroundColor: "transparent",
-                    boxShadow: "none",
-                    padding: "0px",
+                    position: "relative",
                   }}
                 >
-                  {bLogo ? (
-                    <>
-                      <img
-                        src={bLogo}
-                        alt="business_logo"
-                        style={{
-                          height: "100%",
-                          width: "100%",
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                        }}
-                      />
-                      {activeStep === 0 && (
+                  <Button
+                    component="label"
+                    style={{
+                      position: "relative",
+                      height: 120,
+                      width: 120,
+                      backgroundColor: "transparent",
+                      boxShadow: "none",
+                      padding: "0px",
+                    }}
+                  >
+                    {bLogo ? (
+                      <>
+                        <img
+                          src={bLogo}
+                          alt="business_logo"
+                          style={{
+                            height: "100%",
+                            width: "100%",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                          }}
+                        />
+                        {activeStep === 0 && (
+                          <div className={classes.buttonAbsoluteDiv}>
+                            <div className={classes.uploadIcon}>
+                              <CreateOutlined
+                                style={{
+                                  fontSize: "18px",
+                                  color: "#FFF",
+                                  position: "absolute",
+                                  top: 7,
+                                  left: 8,
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div className={classes.uploadImgDivStyle}>
+                        <Image style={{ color: "#FFF", fontSize: 30 }} />
                         <div className={classes.buttonAbsoluteDiv}>
                           <div className={classes.uploadIcon}>
-                            <CreateOutlined
-                              style={{
-                                fontSize: "18px",
-                                color: "#FFF",
-                                position: "absolute",
-                                top: 7,
-                                left: 8,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className={classes.uploadImgDivStyle}>
-                      <Image style={{ color: "#FFF", fontSize: 30 }} />
-                      <div className={classes.buttonAbsoluteDiv}>
-                        <div className={classes.uploadIcon}>
-                          {/* <CreateOutlined
+                            {/* <CreateOutlined
                             style={{
                               fontSize: "16px",
                               color: "#FFF",
@@ -1139,117 +1141,127 @@ const CreateProfile = (props) => {
                               left: 8,
                             }}
                           /> */}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </Button>
-                <input
-                  disabled={activeStep !== 0}
-                  type="file"
-                  accept="image/jpeg, image/png, image/jpg"
-                  multiple={false}
-                  onChange={(e) => {
-                    setState({
-                      ...state,
-                      businessLogo: e.target.files[0],
-                    });
-                  }}
-                  className={classes.uploadFileStyle}
-                />
-              </div>
-              <Typography
-                style={{ fontFamily: "Poppins-Regular", color: "#475569" }}
-              >
-                {activeStep === 0 && "Upload business logo"}
-              </Typography>
-            </Grid>
-            {activeStep === 0 ? (
-              <>
-                <Grid item xs={10} style={{ marginTop: 20 }} id="cname">
-                  <CInput
-                    // label="Company Name"
-                    label={<span className="labelField">Company Name</span>}
-                    required
-                    placeholder="Enter Company Name..."
-                    value={state.cname}
+                    )}
+                  </Button>
+                  <input
+                    disabled={activeStep !== 0}
+                    type="file"
+                    accept="image/jpeg, image/png, image/jpg"
+                    multiple={false}
                     onChange={(e) => {
-                      setState({ ...state, cname: e.target.value });
-                      setErrObj({ ...errObj, cnameErr: false, cnameMsg: "" });
-                    }}
-                    inputProps={{
-                      maxLength: 40,
-                    }}
-                    error={errObj.cnameErr}
-                    helpertext={errObj.cnameMsg}
-                  />
-                </Grid>
-                <Grid item xs={10} id="description">
-                  <CInput
-                    multiline={true}
-                    // label="Description"
-                    label={<span className="labelField">Description</span>}
-                    // required
-                    placeholder="Write Description"
-                    value={state.description}
-                    inputProps={{ maxLength: 1000 }}
-                    onChange={(e) => {
-                      setState({ ...state, description: e.target.value });
-                      setErrObj({
-                        ...errObj,
-                        descriptionErr: false,
-                        descriptionMsg: "",
+                      setState({
+                        ...state,
+                        businessLogo: e.target.files[0],
                       });
                     }}
-                    error={errObj.descriptionErr}
-                    helpertext={errObj.descriptionMsg}
+                    className={classes.uploadFileStyle}
                   />
-                </Grid>
-
-                <Grid item container xs={10} justifyContent={"space-between"}>
-                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="web">
+                </div>
+                <Typography
+                  style={{ fontFamily: "Poppins-Regular", color: "#475569" }}
+                >
+                  {activeStep === 0 && "Upload business logo"}
+                </Typography>
+              </Grid>
+              {activeStep === 0 ? (
+                <>
+                  <Grid item xs={10} id="cname">
                     <CInput
-                      // label="Website"
-                      label={<span className="labelField">Website</span>}
-                      placeholder="Link Here..."
-                      value={state.website}
-                      onChange={(e) => {
-                        setState({ ...state, website: e.target.value });
-                        setErrObj({ ...errObj, webErr: false, webMsg: "" });
-                      }}
-                      error={errObj.webErr}
-                      helpertext={errObj.webMsg}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="year">
-                    <Cselect
-                      // label="Number of Years in Business"
-                      label={
-                        <span className="labelField">
-                          Number of Years in Business
-                        </span>
-                      }
+                      // label="Company Name"
+                      label={<span className="labelField">Company Name</span>}
                       required
-                      placeholder="Select No. of Years"
-                      value={state.businessYear}
-                      handleSelect={(e) => {
-                        console.log("e ===businessyear==>>> ", e);
-                        setState({
-                          ...state,
-                          businessYear: _.isNumber(e) ? e.toString() : e,
-                        });
-                        setErrObj({ ...errObj, yearErr: false, yearMsg: "" });
+                      placeholder="Enter Company Name..."
+                      value={state.cname}
+                      onChange={(e) => {
+                        setState({ ...state, cname: e.target.value });
+                        setErrObj({ ...errObj, cnameErr: false, cnameMsg: "" });
                       }}
-                      renderTags={contractArr}
-                      error={errObj.yearErr}
-                      helpertext={errObj.yearMsg}
+                      inputProps={{
+                        maxLength: 40,
+                      }}
+                      error={errObj.cnameErr}
+                      helpertext={errObj.cnameMsg}
                     />
                   </Grid>
-                </Grid>
 
-                <Grid item container xs={10} justifyContent="space-between">
-                  {/* <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="phone">
+                  <Grid item xs={10} id="description">
+                    <CInput
+                      multiline={true}
+                      // label="Description"
+                      label={<span className="labelField">Description</span>}
+                      // required
+                      placeholder="Write Description"
+                      value={state.description}
+                      inputProps={{ maxLength: 1000 }}
+                      onChange={(e) => {
+                        setState({ ...state, description: e.target.value });
+                        setErrObj({
+                          ...errObj,
+                          descriptionErr: false,
+                          descriptionMsg: "",
+                        });
+                      }}
+                      error={errObj.descriptionErr}
+                      helpertext={errObj.descriptionMsg}
+                    />
+                  </Grid>
+                  <Grid container justifyContent="center">
+                    <Grid
+                      item
+                      container
+                      xs={10}
+                      justifyContent={"space-between"}
+                    >
+                      <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="web">
+                        <CInput
+                          // label="Website"
+                          label={<span className="labelField">Website</span>}
+                          placeholder="Link Here..."
+                          value={state.website}
+                          onChange={(e) => {
+                            setState({ ...state, website: e.target.value });
+                            setErrObj({ ...errObj, webErr: false, webMsg: "" });
+                          }}
+                          error={errObj.webErr}
+                          helpertext={errObj.webMsg}
+                        />
+                      </Grid>
+
+                      <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="year">
+                        <Cselect
+                          // label="Number of Years in Business"
+                          label={
+                            <span className="labelField">
+                              Number of Years in Business
+                            </span>
+                          }
+                          required
+                          placeholder="Select No. of Years"
+                          value={state.businessYear}
+                          handleSelect={(e) => {
+                            console.log("e ===businessyear==>>> ", e);
+                            setState({
+                              ...state,
+                              businessYear: _.isNumber(e) ? e.toString() : e,
+                            });
+                            setErrObj({
+                              ...errObj,
+                              yearErr: false,
+                              yearMsg: "",
+                            });
+                          }}
+                          renderTags={contractArr}
+                          error={errObj.yearErr}
+                          helpertext={errObj.yearMsg}
+                        />
+                      </Grid>
+                    </Grid>
+
+                    <Grid item container xs={10} justifyContent="space-between">
+                      {/* <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="phone">
                     <InputLabel shrink htmlFor="bootstrap-input">
                       <span className="labelField">Phone</span>
                     </InputLabel>
@@ -1289,471 +1301,511 @@ const CreateProfile = (props) => {
                       helpertext={errObj.phoneMsg}
                     />
                   </Grid> */}
-                </Grid>
+                    </Grid>
 
-                <Grid item container xs={10} justifyContent="space-between">
-                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="employee">
-                    <Cselect
-                      // label="Number of Employees"
-                      label={
-                        <span className="labelField">Number of Employees</span>
-                      }
-                      required
-                      placeholder="Select No. of Employees"
-                      value={state.employees}
-                      handleSelect={(e) => {
-                        console.log("e ==employee===>>> ", e);
-                        setState({
-                          ...state,
-                          employees: _.isNumber(e) ? e.toString() : e,
-                        });
-                        setErrObj({
-                          ...errObj,
-                          employeeErr: false,
-                          employeeMsg: "",
-                        });
-                      }}
-                      renderTags={employeeArr}
-                      error={errObj.employeeErr}
-                      helpertext={errObj.employeeMsg}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="contract">
-                    <CInput
-                      // label="Number of Contracts Annually"
-                      label={
+                    <Grid item container xs={10} justifyContent="space-between">
+                      <Grid
+                        item
+                        xs={12}
+                        sm={5.5}
+                        md={5.5}
+                        lg={5.5}
+                        id="employee"
+                      >
+                        <Cselect
+                          // label="Number of Employees"
+                          label={
+                            <span className="labelField">
+                              Number of Employees
+                            </span>
+                          }
+                          required
+                          placeholder="Select No. of Employees"
+                          value={state.employees}
+                          handleSelect={(e) => {
+                            console.log("e ==employee===>>> ", e);
+                            setState({
+                              ...state,
+                              employees: _.isNumber(e) ? e.toString() : e,
+                            });
+                            setErrObj({
+                              ...errObj,
+                              employeeErr: false,
+                              employeeMsg: "",
+                            });
+                          }}
+                          renderTags={employeeArr}
+                          error={errObj.employeeErr}
+                          helpertext={errObj.employeeMsg}
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        sm={5.5}
+                        md={5.5}
+                        lg={5.5}
+                        id="contract"
+                      >
+                        <CInput
+                          // label="Number of Contracts Annually"
+                          label={
+                            <span className="labelField">
+                              Number of Contracts Annually
+                            </span>
+                          }
+                          required
+                          placeholder="Enter No. of Contracts"
+                          value={state.annualContract}
+                          onChange={(e) => {
+                            const bool = /^[0-9]+$/.test(
+                              Number(e.target.value)
+                            );
+                            if (bool) {
+                              setState({
+                                ...state,
+                                annualContract: e.target.value,
+                              });
+                            }
+                            setErrObj({
+                              ...errObj,
+                              contractErr: false,
+                              contarctMsg: "",
+                            });
+                          }}
+                          error={errObj.contractErr}
+                          helpertext={errObj.contarctMsg}
+                        />
+                      </Grid>
+                    </Grid>
+
+                    <Grid item xs={10} id="expertise">
+                      <Cselect
+                        multiple={true}
+                        // label="Expertise Area"
+                        label={
+                          <span className="labelField">Expertise Area</span>
+                        }
+                        required
+                        placeholder={
+                          isArray(state?.expertise) &&
+                          state?.expertise.length > 0
+                            ? ""
+                            : "Select Area of Expertise"
+                        }
+                        value={state.expertise}
+                        handleSelect={(e) => {
+                          setState({ ...state, expertise: e });
+                          setErrObj({
+                            ...errObj,
+                            expertiseErr: false,
+                            expertiseMsg: "",
+                          });
+                        }}
+                        renderTags={expertiseList}
+                        error={errObj.expertiseErr}
+                        helpertext={errObj.expertiseMsg}
+                      />
+                    </Grid>
+
+                    <Grid item xs={10} id="location" marginBottom={2}>
+                      <InputLabel
+                        error={errObj.locationErr}
+                        shrink
+                        htmlFor="bootstrap-input"
+                      >
+                        <span className="labelField">Location</span>
+                      </InputLabel>
+                      <PlaceAutoComplete
+                        placeholder="Enter Location Here..."
+                        style={{ marginBottom: 10, width: "100%" }}
+                        onChange={(obj) => {
+                          setUserLocation(obj?.location);
+                          setSelectedLocation(obj);
+                          setErrObj({
+                            ...errObj,
+                            locationErr: false,
+                            locationMsg: "",
+                          });
+                        }}
+                        defaultValue={selectedLocation?.location}
+                        error={errObj.locationErr}
+                        helperText={errObj.locationMsg}
+                      />
+                    </Grid>
+
+                    <Grid item xs={10} id="certi">
+                      <InputLabel shrink htmlFor="bootstrap-input">
+                        <span className="labelField">ISO Certificate</span>
+                      </InputLabel>
+                      {renderISOCertificate()}
+                      {isArray(state.certificate) &&
+                      state.certificate.length > 4 ? null : (
+                        <div style={{ position: "relative" }}>
+                          <TextField
+                            fullWidth
+                            placeholder="Upload ISO Certificate"
+                            style={{ marginBottom: 20 }}
+                            value={""}
+                            InputProps={{
+                              endAdornment: (
+                                <>
+                                  <InputAdornment position="end">
+                                    <AttachFileOutlined />
+                                  </InputAdornment>
+                                </>
+                              ),
+                            }}
+                            error={errObj.certiErr}
+                            helperText={errObj.certiMsg}
+                          />
+                          <input
+                            type="file"
+                            accept="image/jpeg, image/png, image/jpg"
+                            multiple
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              opacity: 0,
+                            }}
+                            onChange={(e) => {
+                              const chosenFiles = Array.prototype.slice.call(
+                                e.target.files
+                              );
+                              const data = [...state.certificate];
+                              let showMsg = false;
+                              let limit = false;
+                              chosenFiles.map((item) => {
+                                const bool = checkImgSize(item);
+                                if (bool && data.length < 5) {
+                                  data.push(item);
+                                } else if (data.length >= 4) {
+                                  limit = true;
+                                } else {
+                                  showMsg = true;
+                                }
+                              });
+                              if (limit) {
+                                toast.error("You can upload maximum 5 files");
+                              } else if (showMsg) {
+                                toast.error(
+                                  "Some certificate you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                                );
+                              }
+                              setState({ ...state, certificate: data });
+                            }}
+                          />
+                        </div>
+                      )}
+                    </Grid>
+                    <Grid item xs={10} id="license">
+                      <InputLabel shrink htmlFor="bootstrap-input">
+                        <span className="labelField">Licenses</span>
+                      </InputLabel>
+                      {renderLicenses()}
+                      {isArray(state.license) &&
+                      state.license.length > 4 ? null : (
+                        <div style={{ position: "relative" }}>
+                          <TextField
+                            fullWidth
+                            placeholder="Upload Licenses"
+                            value={""}
+                            style={{ marginBottom: 20 }}
+                            InputProps={{
+                              endAdornment: (
+                                <>
+                                  <InputAdornment position="end">
+                                    <AttachFileOutlined />
+                                  </InputAdornment>
+                                </>
+                              ),
+                            }}
+                            error={errObj.licenseErr}
+                            helperText={
+                              errObj.licenseErr ? errObj.licenseMsg : null
+                            }
+                          />
+                          <input
+                            type="file"
+                            accept="image/jpeg, image/png, image/jpg"
+                            multiple
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              opacity: 0,
+                            }}
+                            onChange={(e) => {
+                              const chosenFiles = Array.prototype.slice.call(
+                                e.target.files
+                              );
+                              const data = [...state.license];
+                              let showMsg = false;
+                              let limit = false;
+                              chosenFiles.map((item) => {
+                                const bool = checkImgSize(item);
+                                if (bool && data.length < 5) {
+                                  data.push(item);
+                                } else if (data.length >= 4) {
+                                  limit = true;
+                                } else {
+                                  showMsg = true;
+                                }
+                              });
+                              if (limit) {
+                                toast.error("You can upload maximum 5 files");
+                              } else if (showMsg) {
+                                toast.error(
+                                  "Some license you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                                );
+                              }
+                              setState({ ...state, license: data });
+                            }}
+                          />
+                        </div>
+                      )}
+                    </Grid>
+                    <Grid item xs={10} id="registartion">
+                      <InputLabel shrink htmlFor="bootstrap-input">
+                        <span className="labelField">Company Registration</span>
+                      </InputLabel>
+                      {renderRegistration()}
+                      {isArray(state.registraion) &&
+                      state.registraion.length > 4 ? null : (
+                        <div style={{ position: "relative" }}>
+                          <TextField
+                            fullWidth
+                            placeholder="Upload Company Registration"
+                            value={""}
+                            style={{ marginBottom: 20 }}
+                            InputProps={{
+                              endAdornment: (
+                                <>
+                                  <InputAdornment position="end">
+                                    <AttachFileOutlined />
+                                  </InputAdornment>
+                                </>
+                              ),
+                            }}
+                            error={errObj.registrationErr}
+                            helperText={
+                              errObj.registrationErr
+                                ? errObj.registrationMsg
+                                : null
+                            }
+                          />
+                          <input
+                            type="file"
+                            accept="image/jpeg, image/png, image/jpg"
+                            multiple
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              opacity: 0,
+                            }}
+                            onChange={(e) => {
+                              const chosenFiles = Array.prototype.slice.call(
+                                e.target.files
+                              );
+                              const data = [...state.registraion];
+
+                              let showMsg = false;
+                              let limit = false;
+                              chosenFiles.map((item) => {
+                                const bool = checkImgSize(item);
+                                if (bool && data.length < 5) {
+                                  data.push(item);
+                                } else if (data.length >= 4) {
+                                  limit = true;
+                                } else {
+                                  showMsg = true;
+                                }
+                              });
+                              if (limit) {
+                                toast.error("You can upload maximum 5 files");
+                              } else if (showMsg) {
+                                toast.error(
+                                  "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                                );
+                              }
+                              setState({ ...state, registraion: data });
+                            }}
+                          />
+                        </div>
+                      )}
+                    </Grid>
+
+                    <Grid item xs={10} id="linkedIn">
+                      <InputLabel shrink htmlFor="bootstrap-input">
                         <span className="labelField">
-                          Number of Contracts Annually
+                          Team LinkedIn Profile
                         </span>
-                      }
-                      required
-                      placeholder="Enter No. of Contracts"
-                      value={state.annualContract}
-                      onChange={(e) => {
-                        const bool = /^[0-9]+$/.test(Number(e.target.value));
-                        if (bool) {
-                          setState({
-                            ...state,
-                            annualContract: e.target.value,
-                          });
-                        }
-                        setErrObj({
-                          ...errObj,
-                          contractErr: false,
-                          contarctMsg: "",
-                        });
-                      }}
-                      error={errObj.contractErr}
-                      helpertext={errObj.contarctMsg}
-                    />
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={10} id="expertise">
-                  <Cselect
-                    multiple={true}
-                    // label="Expertise Area"
-                    label={<span className="labelField">Expertise Area</span>}
-                    required
-                    placeholder={
-                      isArray(state?.expertise) && state?.expertise.length > 0
-                        ? ""
-                        : "Select Area of Expertise"
-                    }
-                    value={state.expertise}
-                    handleSelect={(e) => {
-                      setState({ ...state, expertise: e });
-                      setErrObj({
-                        ...errObj,
-                        expertiseErr: false,
-                        expertiseMsg: "",
-                      });
-                    }}
-                    renderTags={expertiseList}
-                    error={errObj.expertiseErr}
-                    helpertext={errObj.expertiseMsg}
-                  />
-                </Grid>
-
-                <Grid item xs={10} id="location" marginBottom={2}>
-                  <InputLabel
-                    error={errObj.locationErr}
-                    shrink
-                    htmlFor="bootstrap-input"
-                  >
-                    <span className="labelField">Location</span>
-                  </InputLabel>
-                  <PlaceAutoComplete
-                    placeholder="Enter Location Here..."
-                    style={{ marginBottom: 10, width: "100%" }}
-                    onChange={(obj) => {
-                      setUserLocation(obj?.location);
-                      setSelectedLocation(obj);
-                      setErrObj({
-                        ...errObj,
-                        locationErr: false,
-                        locationMsg: "",
-                      });
-                    }}
-                    defaultValue={selectedLocation?.location}
-                    error={errObj.locationErr}
-                    helperText={errObj.locationMsg}
-                  />
-                </Grid>
-
-                <Grid item xs={10} id="certi">
-                  <InputLabel shrink htmlFor="bootstrap-input">
-                    <span className="labelField">ISO Certificate</span>
-                  </InputLabel>
-                  {renderISOCertificate()}
-                  {isArray(state.certificate) &&
-                  state.certificate.length > 4 ? null : (
-                    <div style={{ position: "relative" }}>
+                      </InputLabel>
                       <TextField
                         fullWidth
-                        placeholder="Upload ISO Certificate"
-                        style={{ marginBottom: 20 }}
-                        value={""}
+                        placeholder="Enter link..."
+                        style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
                         InputProps={{
-                          endAdornment: (
-                            <>
-                              <InputAdornment position="end">
-                                <AttachFileOutlined />
-                              </InputAdornment>
-                            </>
+                          style: { paddingLeft: "0px" },
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {/* <LinkedInIcon/> */}
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flex: 1,
+                                  padding: 10,
+                                  backgroundColor: "#F5F6F8",
+                                }}
+                              >
+                                <img
+                                  src={Images.Linkedin2}
+                                  alt="Linkedin"
+                                  style={{ borderRadius: 2 }}
+                                  // className={classes.imgStyleLanguage}
+                                />
+                              </div>
+                            </InputAdornment>
                           ),
                         }}
-                        error={errObj.certiErr}
-                        helperText={errObj.certiMsg}
-                      />
-                      <input
-                        type="file"
-                        accept="image/jpeg, image/png, image/jpg"
-                        multiple
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          opacity: 0,
-                        }}
+                        value={state.linkedin}
                         onChange={(e) => {
-                          const chosenFiles = Array.prototype.slice.call(
-                            e.target.files
-                          );
-                          const data = [...state.certificate];
-                          let showMsg = false;
-                          let limit = false;
-                          chosenFiles.map((item) => {
-                            const bool = checkImgSize(item);
-                            if (bool && data.length < 5) {
-                              data.push(item);
-                            } else if (data.length >= 4) {
-                              limit = true;
-                            } else {
-                              showMsg = true;
-                            }
+                          setState({ ...state, linkedin: e.target.value });
+                          setErrObj({
+                            ...errObj,
+                            linkedInErr: false,
+                            linkedInMsg: "",
                           });
-                          if (limit) {
-                            toast.error("You can upload maximum 5 files");
-                          } else if (showMsg) {
-                            toast.error(
-                              "Some certificate you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
-                            );
-                          }
-                          setState({ ...state, certificate: data });
                         }}
+                        error={errObj.linkedInErr}
+                        helperText={errObj.linkedInMsg}
                       />
-                    </div>
-                  )}
-                </Grid>
-                <Grid item xs={10} id="license">
-                  <InputLabel shrink htmlFor="bootstrap-input">
-                    <span className="labelField">Licenses</span>
-                  </InputLabel>
-                  {renderLicenses()}
-                  {isArray(state.license) && state.license.length > 4 ? null : (
-                    <div style={{ position: "relative" }}>
+                    </Grid>
+
+                    <Grid item xs={10} id="social">
+                      <InputLabel shrink htmlFor="bootstrap-input">
+                        <span className="labelField"> Social Media</span>
+                      </InputLabel>
                       <TextField
                         fullWidth
-                        placeholder="Upload Licenses"
-                        value={""}
-                        style={{ marginBottom: 20 }}
+                        placeholder="Enter link..."
+                        style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
                         InputProps={{
-                          endAdornment: (
-                            <>
-                              <InputAdornment position="end">
-                                <AttachFileOutlined />
-                              </InputAdornment>
-                            </>
+                          style: { paddingLeft: "0px" },
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flex: 1,
+                                  padding: 10,
+                                  backgroundColor: "#F5F6F8",
+                                }}
+                              >
+                                <img
+                                  src={Images.fb}
+                                  alt="facebook"
+                                  // className={classes.imgStyleLanguage}
+                                />
+                              </div>
+                            </InputAdornment>
                           ),
                         }}
-                        error={errObj.licenseErr}
-                        helperText={
-                          errObj.licenseErr ? errObj.licenseMsg : null
-                        }
-                      />
-                      <input
-                        type="file"
-                        accept="image/jpeg, image/png, image/jpg"
-                        multiple
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          opacity: 0,
-                        }}
+                        value={state.social}
                         onChange={(e) => {
-                          const chosenFiles = Array.prototype.slice.call(
-                            e.target.files
-                          );
-                          const data = [...state.license];
-                          let showMsg = false;
-                          let limit = false;
-                          chosenFiles.map((item) => {
-                            const bool = checkImgSize(item);
-                            if (bool && data.length < 5) {
-                              data.push(item);
-                            } else if (data.length >= 4) {
-                              limit = true;
-                            } else {
-                              showMsg = true;
-                            }
+                          setState({ ...state, social: e.target.value });
+                          setErrObj({
+                            ...errObj,
+                            socialErr: false,
+                            socialMsg: "",
                           });
-                          if (limit) {
-                            toast.error("You can upload maximum 5 files");
-                          } else if (showMsg) {
-                            toast.error(
-                              "Some license you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
-                            );
-                          }
-                          setState({ ...state, license: data });
                         }}
+                        error={errObj.socialErr}
+                        helperText={errObj.socialMsg}
                       />
-                    </div>
-                  )}
-                </Grid>
-                <Grid item xs={10} id="registartion">
-                  <InputLabel shrink htmlFor="bootstrap-input">
-                    <span className="labelField">Company Registration</span>
-                  </InputLabel>
-                  {renderRegistration()}
-                  {isArray(state.registraion) &&
-                  state.registraion.length > 4 ? null : (
-                    <div style={{ position: "relative" }}>
+                    </Grid>
+
+                    <Grid item xs={10} id="instagram">
+                      <InputLabel shrink htmlFor="bootstrap-input">
+                        <span className="labelField"> Instagram</span>
+                      </InputLabel>
                       <TextField
                         fullWidth
-                        placeholder="Upload Company Registration"
-                        value={""}
-                        style={{ marginBottom: 20 }}
+                        placeholder="Enter link..."
+                        style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
                         InputProps={{
-                          endAdornment: (
-                            <>
-                              <InputAdornment position="end">
-                                <AttachFileOutlined />
-                              </InputAdornment>
-                            </>
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <Instagram />
+                            </InputAdornment>
                           ),
                         }}
-                        error={errObj.registrationErr}
-                        helperText={
-                          errObj.registrationErr ? errObj.registrationMsg : null
-                        }
-                      />
-                      <input
-                        type="file"
-                        accept="image/jpeg, image/png, image/jpg"
-                        multiple
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          opacity: 0,
-                        }}
+                        value={state?.insta}
                         onChange={(e) => {
-                          const chosenFiles = Array.prototype.slice.call(
-                            e.target.files
-                          );
-                          const data = [...state.registraion];
-                          let showMsg = false;
-                          let limit = false;
-                          chosenFiles.map((item) => {
-                            const bool = checkImgSize(item);
-                            if (bool && data.length < 5) {
-                              data.push(item);
-                            } else if (data.length >= 4) {
-                              limit = true;
-                            } else {
-                              showMsg = true;
-                            }
+                          setState({ ...state, insta: e.target.value });
+                          setErrObj({
+                            ...errObj,
+                            instaErr: false,
+                            instaMsg: "",
                           });
-                          if (limit) {
-                            toast.error("You can upload maximum 5 files");
-                          } else if (showMsg) {
-                            toast.error(
-                              "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
-                            );
-                          }
-                          setState({ ...state, registraion: data });
                         }}
+                        error={errObj.instaErr}
+                        helperText={errObj.instaMsg}
                       />
-                    </div>
-                  )}
-                </Grid>
+                    </Grid>
 
-                <Grid item xs={10} id="linkedIn">
-                  <InputLabel shrink htmlFor="bootstrap-input">
-                    <span className="labelField">Team LinkedIn Profile</span>
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    placeholder="Enter link..."
-                    style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
-                    InputProps={{
-                      style: { paddingLeft: "0px" },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          {/* <LinkedInIcon/> */}
-                          <div
-                            style={{
-                              display: "flex",
-                              flex: 1,
-                              padding: 10,
-                              backgroundColor: "#F5F6F8",
-                            }}
-                          >
-                            <img
-                              src={Images.Linkedin2}
-                              alt="Linkedin"
-                              style={{ borderRadius: 2 }}
-                              // className={classes.imgStyleLanguage}
-                            />
-                          </div>
-                        </InputAdornment>
-                      ),
-                    }}
-                    value={state.linkedin}
-                    onChange={(e) => {
-                      setState({ ...state, linkedin: e.target.value });
-                      setErrObj({
-                        ...errObj,
-                        linkedInErr: false,
-                        linkedInMsg: "",
-                      });
-                    }}
-                    error={errObj.linkedInErr}
-                    helperText={errObj.linkedInMsg}
-                  />
-                </Grid>
+                    <Grid item xs={10}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        style={{ marginTop: 20, marginBottom: 20 }}
+                        onClick={CheckValidattion}
+                        disabled={buttonLoader == "step1"}
+                      >
+                        {buttonLoader == "step1" ? (
+                          <CircularProgress
+                            style={{ color: "#fff" }}
+                            size={26}
+                          />
+                        ) : (
+                          "Continue"
+                        )}
+                      </Button>
+                    </Grid>
 
-                <Grid item xs={10} id="social">
-                  <InputLabel shrink htmlFor="bootstrap-input">
-                    <span className="labelField"> Social Media</span>
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    placeholder="Enter link..."
-                    style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
-                    InputProps={{
-                      style: { paddingLeft: "0px" },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <div
-                            style={{
-                              display: "flex",
-                              flex: 1,
-                              padding: 10,
-                              backgroundColor: "#F5F6F8",
-                            }}
-                          >
-                            <img
-                              src={Images.fb}
-                              alt="facebook"
-                              // className={classes.imgStyleLanguage}
-                            />
-                          </div>
-                        </InputAdornment>
-                      ),
-                    }}
-                    value={state.social}
-                    onChange={(e) => {
-                      setState({ ...state, social: e.target.value });
-                      setErrObj({ ...errObj, socialErr: false, socialMsg: "" });
-                    }}
-                    error={errObj.socialErr}
-                    helperText={errObj.socialMsg}
-                  />
-                </Grid>
+                    <Grid
+                      item
+                      xs={10}
+                      justifyContent={"center"}
+                      gap="2px"
+                      container
+                    >
+                      <Typography
+                        style={{ textAlign: "center", color: "#646F86" }}
+                        className="already"
+                      >
+                        Already have an account?
+                      </Typography>
+                      <span
+                        onClick={() => {
+                          dispatch(clearAllData());
+                        }}
+                        className="loginText"
+                      >
+                        Login
+                      </span>
+                    </Grid>
 
-                <Grid item xs={10} id="instagram">
-                  <InputLabel shrink htmlFor="bootstrap-input">
-                    <span className="labelField"> Instagram</span>
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    placeholder="Enter link..."
-                    style={{ marginBottom: 20, backgroundColor: "#F5F6F8" }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Instagram />
-                        </InputAdornment>
-                      ),
-                    }}
-                    value={state?.insta}
-                    onChange={(e) => {
-                      setState({ ...state, insta: e.target.value });
-                      setErrObj({
-                        ...errObj,
-                        instaErr: false,
-                        instaMsg: "",
-                      });
-                    }}
-                    error={errObj.instaErr}
-                    helperText={errObj.instaMsg}
-                  />
-                </Grid>
-
-                <Grid item xs={10}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    style={{ marginTop: 20, marginBottom: 20 }}
-                    onClick={CheckValidattion}
-                    disabled={buttonLoader == "step1"}
-                  >
-                    {buttonLoader == "step1" ? (
-                      <CircularProgress style={{ color: "#fff" }} size={26} />
-                    ) : (
-                      "Continue"
-                    )}
-                  </Button>
-                </Grid>
-
-                <Grid item xs={10} justifyContent={"center"} container>
-                  <Typography
-                    style={{ textAlign: "center", color: "#646F86" }}
-                    className="already"
-                  >
-                    Already have an account,{" "}
-                  </Typography>
-                  <span
-                    onClick={() => {
-                      dispatch(clearAllData());
-                    }}
-                    className="loginText"
-                  >
-                    Login
-                  </span>
-                </Grid>
-
-                {/* <Grid
+                    {/* <Grid
                   item
                   xs={12}
                   style={{ display: "flex", justifyContent: "center" }}
@@ -1785,259 +1837,327 @@ const CreateProfile = (props) => {
                     </b>
                   </NavLink>
                 </Grid> */}
-              </>
-            ) : activeStep === 1 ? (
-              <>
-                <Grid container xs={10} style={{ marginTop: 20 }}>
-                  <Grid item xs={12} style={{ position: "relative" }}>
-                    <InputLabel htmlFor="bootstrap-input">
-                      <span className="labelField"> Upload Photo</span>
-                    </InputLabel>
-                    <div
-                      style={{
-                        backgroundColor: "#F9F9FA",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: "100%",
-                        height: 170,
-                      }}
-                    >
-                      <ImageOutlined
-                        style={{
-                          color: "grey",
-                          marginBottom: 20,
-                          fontSize: 30,
-                        }}
-                      />
-                      <InputLabel>
-                        <b>Upload Your Portfolio Photos</b>
-                      </InputLabel>
-                      <InputLabel style={{ fontSize: 12 }}>
-                        {"PNG, JPG, (max size 1200*800)"}
-                      </InputLabel>
-                    </div>
-                    <input
-                      type="file"
-                      multiple
-                      accept="image/jpeg, image/png, image/jpg"
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        opacity: 0,
-                        cursor: "pointer",
-                      }}
-                      onChange={(e) => {
-                        const chosenFiles = Array.prototype.slice.call(
-                          e.target.files
-                        );
-                        const nArr = [...state.portfolio];
-                        let showMsg = false;
-                        chosenFiles.map((item, index) => {
-                          const bool = checkImgSize(item);
-                          if (bool) {
-                            nArr.push(item);
-                          } else {
-                            showMsg = true;
-                          }
-                        });
-                        if (showMsg) {
-                          toast.error(
-                            "Some image you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
-                          );
-                        }
-                        setState({ ...state, portfolio: nArr });
-                      }}
-                    />
                   </Grid>
-                  <Grid item style={{ marginTop: 40, width: "100%" }}>
-                    {isArray(state.portfolio) &&
-                      state.portfolio.length > 0 &&
-                      state.portfolio.map((item, index) => {
-                        let imgUrl = "";
-                        if (typeof item?.image === "string") {
-                          imgUrl = item?.image;
-                        } else {
-                          imgUrl = URL.createObjectURL(item);
-                        }
-                        return (
-                          <div
+                </>
+              ) : activeStep === 1 ? (
+                <>
+                  <Grid container xs={10} rowGap="32px">
+                    <Grid item xs={12} style={{ position: "relative" }}>
+                      <InputLabel htmlFor="bootstrap-input">
+                        <span className="labelField"> Upload Photo</span>
+                      </InputLabel>
+                      <div
+                        style={{
+                          backgroundColor: "#F9FAFC",
+                          display: "flex",
+                          gap: "8px",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          width: "100%",
+                          height: 140,
+                          borderRadius: "8px",
+                          border: "1px dashed #EAECF0",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <img src={Images.upload_icon} alt="upload-icon"></img>
+                        </div>
+                        <Stack>
+                          <InputLabel style={{ fontFamily: "Poppins-Medium" }}>
+                            <b>Upload Your Portfolio Photos</b>
+                          </InputLabel>
+                          <InputLabel
                             style={{
-                              display: "flex",
-                              border: "1px solid #F2F3F4",
-                              borderRadius: 6,
-                              marginBottom: 10,
-                              padding: 3,
+                              fontSize: 12,
+                              color: "#646F86",
+                              textAlign: "center",
                             }}
                           >
-                            <img
-                              style={{
-                                width: 60,
-                                height: 70,
-                                borderRadius: 6,
-                                marginRight: 20,
-                                objectFit: "cover",
-                              }}
-                              src={imgUrl}
-                              alt="Portfolio Photos"
-                            />
-                            <div style={{ margin: "auto 0" }}>
-                              <Typography
-                                style={{
-                                  fontFamily: "Poppins-Regular",
-                                  fontWeight: "500",
-                                  color: "#202939",
-                                  fontSize: 18,
-                                }}
-                              >
-                                {item?.name ||
-                                  `Portfolio Image ${index + 1}` ||
-                                  ""}
-                              </Typography>
-                              {/* <Typography
-                                style={{
-                                  fontFamily: "Poppins-Regular",
-                                  color: "#787B8C",
-                                }}
-                              >
-                                {isString(item)
-                                  ? ""
-                                  : `${(item?.size / 1000).toFixed(2)} kb`}
-                              </Typography> */}
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                marginLeft: "auto",
-                                marginRight: 10,
-                              }}
-                            >
-                              <HighlightOffOutlined
-                                style={{
-                                  zIndex: 10,
-                                  cursor: "pointer",
-                                  fontSize: 28,
-                                  color: "#FC5555",
-                                }}
-                                onClick={() => {
-                                  item?.id && deletePortfolio(item?.id);
-                                  const nArr = [...state.portfolio];
-                                  nArr.splice(index, 1);
-                                  setState({ ...state, portfolio: nArr });
-                                }}
-                              />
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </Grid>
-                  <Grid
-                    flex
-                    xs={12}
-                    item
-                    container
-                    gap={1}
-                    style={{
-                      marginTop: 40,
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Grid item>
-                      <Button
+                            {"PNG, JPG, (max size 1200*800)"}
+                          </InputLabel>
+                        </Stack>
+                      </div>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/jpeg, image/png, image/jpg"
                         style={{
-                          width: "110px",
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          opacity: 0,
                           cursor: "pointer",
-                          backgroundColor: "#F5F6F8",
                         }}
-                        onClick={() => previousStep()}
-                      >
-                        Back
-                      </Button>
+                        onChange={(e) => {
+                          const chosenFiles = Array.prototype.slice.call(
+                            e.target.files
+                          );
+                          const nArr = [...state.portfolio];
+                          let showMsg = false;
+                          let limit = false;
+                          const rejected = chosenFiles.every(
+                            (item) =>
+                              item.type === "image/png" ||
+                              item.type === "image/jpg" ||
+                              item.type === "image/jpeg"
+                          );
+                          if (!rejected) {
+                            toast.error("You can only add jpeg,jpg or png");
+                          }
+                          const filteredFiles = chosenFiles.filter(
+                            (item) =>
+                              item.type === "image/png" ||
+                              item.type === "image/jpg" ||
+                              item.type === "image/jpeg"
+                          );
+                          filteredFiles.map((item) => {
+                            const bool = checkImgSize(item);
+                            if (bool && nArr.length < 5) {
+                              nArr.push(item);
+                            } else if (nArr.length >= 4) {
+                              limit = true;
+                            } else {
+                              showMsg = true;
+                            }
+                          });
+                          if (limit) {
+                            toast.error("You can upload maximum 5 files");
+                          } else if (showMsg) {
+                            toast.error(
+                              "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                            );
+                          }
+                          setState({ ...state, portfolio: nArr });
+                        }}
+                      />
                     </Grid>
-                    <Grid item>
-                      <Button
-                        style={{ width: "300px" }}
-                        variant="contained"
-                        onClick={() => continueStep(2)}
-                        disabled={buttonLoader == "step2"}
-                      >
-                        {buttonLoader == "step2" ? (
-                          <CircularProgress
-                            style={{ color: "#fff" }}
-                            size={26}
-                          />
-                        ) : (
-                          "Upload & Continue"
-                        )}
-                      </Button>
+
+                    <Grid item style={{ width: "100%" }}>
+                      {state.portfolio.length > 0 && (
+                        <Typography
+                          style={{
+                            fontFamily: "Poppins-Regular",
+                            fontSize: "14px",
+                          }}
+                        >
+                          Uploaded files
+                        </Typography>
+                      )}
+                      {isArray(state.portfolio) &&
+                        state.portfolio.length > 0 &&
+                        state.portfolio.map((item, index) => {
+                          let itemSize = item?.size / 1024;
+
+                          let imgUrl = "";
+                          if (typeof item?.image === "string") {
+                            imgUrl = item?.image;
+                          } else {
+                            imgUrl = URL.createObjectURL(item);
+                          }
+                          return (
+                            <Stack gap="6px">
+                              <div
+                                style={{
+                                  display: "flex",
+                                  border: "1px solid #F2F3F4",
+                                  borderRadius: 6,
+
+                                  padding: 3,
+                                }}
+                              >
+                                <img
+                                  style={{
+                                    width: 60,
+                                    height: 70,
+                                    borderRadius: 6,
+                                    marginRight: 20,
+                                    objectFit: "cover",
+                                  }}
+                                  src={imgUrl}
+                                  alt="Portfolio Photos"
+                                />
+                                <div
+                                  style={{
+                                    margin: "auto 0",
+                                    overflow: "hidden",
+                                  }}
+                                >
+                                  <Typography
+                                    style={{
+                                      fontFamily: "Poppins-Regular",
+                                      fontWeight: "500",
+                                      color: "#202939",
+                                      fontSize: 18,
+                                      whiteSpace: "nowrap",
+                                      textOverflow: "ellipsis",
+                                      overflow: "hidden",
+                                    }}
+                                  >
+                                    {item?.name ||
+                                      `Portfolio Image ${index + 1}` ||
+                                      ""}
+                                  </Typography>
+                                  <Typography
+                                    style={{
+                                      fontFamily: "Poppins-Regular",
+                                      color: "#787B8C",
+                                    }}
+                                  >
+                                    {itemSize < 1000
+                                      ? `${itemSize.toFixed(2)}kb`
+                                      : `${(itemSize / 1024).toFixed(2)}mb`}
+                                  </Typography>
+                                </div>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    marginLeft: "auto",
+                                    marginRight: 10,
+                                  }}
+                                >
+                                  <HighlightOffOutlined
+                                    style={{
+                                      zIndex: 10,
+                                      cursor: "pointer",
+                                      fontSize: 28,
+                                      color: "#FC5555",
+                                    }}
+                                    onClick={() => {
+                                      item?.id && deletePortfolio(item?.id);
+                                      const nArr = [...state.portfolio];
+                                      nArr.splice(index, 1);
+                                      setState({ ...state, portfolio: nArr });
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </Stack>
+                          );
+                        })}
+                    </Grid>
+                    <Grid
+                      flex
+                      xs={12}
+                      item
+                      container
+                      gap="20px"
+                      style={{
+                        marginTop: "30px",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Grid item width="25%">
+                        <Button
+                          style={{
+                            width: "100%",
+                            height: "48px",
+                            cursor: "pointer",
+                            padding: "24px 24px",
+                            backgroundColor: "#F5F6F8",
+                            color: "#202939",
+                            boxShadow: "none",
+                          }}
+                          onClick={() => previousStep()}
+                        >
+                          Back
+                        </Button>
+                      </Grid>
+                      <Grid item display="flex" flex={1}>
+                        <Button
+                          style={{
+                            width: "100%",
+                            height: "48px",
+                            padding: "24px 14px",
+                            boxShadow: "none",
+                          }}
+                          variant="contained"
+                          onClick={() => continueStep(2)}
+                          disabled={buttonLoader == "step2"}
+                        >
+                          {buttonLoader == "step2" ? (
+                            <CircularProgress
+                              style={{ color: "#fff" }}
+                              size={26}
+                            />
+                          ) : (
+                            "Upload & Continue"
+                          )}
+                        </Button>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              </>
-            ) : (
-              <>
-                <Grid item xs={10} style={{ marginTop: 20 }} id="name">
-                  <CInput
-                    label={
-                      <span className="labelField">Beneficiary Name:</span>
-                    }
-                    // label="Beneficiary Name"
-                    placeholder="Enter Beneficiary Name"
-                    value={state.bname}
-                    required
-                    onChange={(e) => {
-                      setState({ ...state, bname: e.target.value });
-                      setErrObj({ ...errObj, bnameErr: false, bnameMsg: "" });
-                    }}
-                    error={errObj.bnameErr}
-                    helpertext={errObj.bnameMsg}
-                  />
-                </Grid>
+                </>
+              ) : (
+                <>
+                  <Grid item xs={10} style={{ marginTop: 20 }} id="name">
+                    <CInput
+                      label={
+                        <span className="labelField">Beneficiary Name:</span>
+                      }
+                      // label="Beneficiary Name"
+                      placeholder="Enter Beneficiary Name"
+                      value={state.bname}
+                      required
+                      onChange={(e) => {
+                        setState({ ...state, bname: e.target.value });
+                        setErrObj({ ...errObj, bnameErr: false, bnameMsg: "" });
+                      }}
+                      error={errObj.bnameErr}
+                      helpertext={errObj.bnameMsg}
+                    />
+                  </Grid>
 
-                <Grid item xs={10} id="iban">
-                  <CInput
-                    label={<span className="labelField">IBAN:</span>}
-                    // label="IBAN"
-                    placeholder="Enter IBAN"
-                    required
-                    value={state.iban}
-                    onChange={(e) => {
-                      setState({ ...state, iban: e.target.value });
-                      setErrObj({
-                        ...errObj,
-                        ibanErr: false,
-                        ibanMsg: "",
-                      });
-                    }}
-                    error={errObj.ibanErr}
-                    helpertext={errObj.ibanMsg}
-                  />
-                </Grid>
+                  <Grid item xs={10} id="iban">
+                    <CInput
+                      label={<span className="labelField">IBAN:</span>}
+                      // label="IBAN"
+                      placeholder="Enter IBAN"
+                      required
+                      value={state.iban}
+                      onChange={(e) => {
+                        setState({ ...state, iban: e.target.value });
+                        setErrObj({
+                          ...errObj,
+                          ibanErr: false,
+                          ibanMsg: "",
+                        });
+                      }}
+                      error={errObj.ibanErr}
+                      helpertext={errObj.ibanMsg}
+                    />
+                  </Grid>
 
-                <Grid item xs={10} id="bank">
-                  <CInput
-                    label={<span className="labelField">Bank Name:</span>}
-                    // label="Bank Name"
-                    placeholder="Enter Bank"
-                    required
-                    value={state.bank}
-                    onChange={(e) => {
-                      setState({ ...state, bank: e.target.value });
-                      setErrObj({
-                        ...errObj,
-                        bankErr: false,
-                        bankMsg: "",
-                      });
-                    }}
-                    error={errObj.bankErr}
-                    helpertext={errObj.bankMsg}
-                  />
-                  {/* <Cselect
+                  <Grid item xs={10} id="bank">
+                    <CInput
+                      label={<span className="labelField">Bank Name:</span>}
+                      // label="Bank Name"
+                      placeholder="Enter Bank"
+                      required
+                      value={state.bank}
+                      onChange={(e) => {
+                        setState({ ...state, bank: e.target.value });
+                        setErrObj({
+                          ...errObj,
+                          bankErr: false,
+                          bankMsg: "",
+                        });
+                      }}
+                      error={errObj.bankErr}
+                      helpertext={errObj.bankMsg}
+                    />
+                    {/* <Cselect
                     label="Bank Name"
                     placeholder="Select Bank"
                     value={state.bank}
@@ -2053,123 +2173,154 @@ const CreateProfile = (props) => {
                     error={errObj.bankErr}
                     helpertext={errObj.bankMsg}
                   /> */}
-                </Grid>
+                  </Grid>
 
-                <Grid item container xs={10} justifyContent="space-between">
-                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="baccount">
+                  <Grid item container xs={10} justifyContent="space-between">
+                    <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="baccount">
+                      <CInput
+                        label={
+                          <span className="labelField">Bank Account:</span>
+                        }
+                        // label="Bank Account"
+                        inputProps={{ maxLength: 30 }}
+                        placeholder="Enter Bank Account Number"
+                        required
+                        value={state.acc}
+                        onChange={(e) => {
+                          setState({ ...state, acc: e.target.value });
+                          setErrObj({ ...errObj, accErr: false, accMsg: "" });
+                        }}
+                        error={errObj.accErr}
+                        helpertext={errObj.accMsg}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="swift">
+                      <CInput
+                        label={<span className="labelField">SWIFT code:</span>}
+                        //  label="SWIFT code"
+                        placeholder="Enter SWIFT Code"
+                        required
+                        value={state.swift}
+                        onChange={(e) => {
+                          setState({ ...state, swift: e.target.value });
+                          setErrObj({
+                            ...errObj,
+                            swiftErr: false,
+                            swiftMsg: "",
+                          });
+                        }}
+                        error={errObj.swiftErr}
+                        helpertext={errObj.swiftMsg}
+                      />
+                    </Grid>
+                  </Grid>
+
+                  <Grid item xs={10} id="Address">
                     <CInput
-                      label={<span className="labelField">Bank Account:</span>}
-                      // label="Bank Account"
-                      inputProps={{ maxLength: 30 }}
-                      placeholder="Enter Bank Account Number"
+                      label={<span className="labelField">Address:</span>}
+                      multiline
+                      // label="Address"
+                      placeholder="Enter Address"
                       required
-                      value={state.acc}
+                      value={state.address}
                       onChange={(e) => {
-                        setState({ ...state, acc: e.target.value });
-                        setErrObj({ ...errObj, accErr: false, accMsg: "" });
+                        setState({ ...state, address: e.target.value });
+                        setErrObj({
+                          ...errObj,
+                          addErr: false,
+                          addMsg: "",
+                        });
                       }}
-                      error={errObj.accErr}
-                      helpertext={errObj.accMsg}
+                      error={errObj.addErr}
+                      helpertext={errObj.addMsg}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={5.5} md={5.5} lg={5.5} id="swift">
-                    <CInput
-                      label={<span className="labelField">SWIFT code:</span>}
-                      //  label="SWIFT code"
-                      placeholder="Enter SWIFT Code"
-                      required
-                      value={state.swift}
-                      onChange={(e) => {
-                        setState({ ...state, swift: e.target.value });
-                        setErrObj({ ...errObj, swiftErr: false, swiftMsg: "" });
-                      }}
-                      error={errObj.swiftErr}
-                      helpertext={errObj.swiftMsg}
-                    />
-                  </Grid>
-                </Grid>
 
-                <Grid item xs={10} id="Address">
-                  <CInput
-                    label={<span className="labelField">Address:</span>}
-                    multiline
-                    // label="Address"
-                    placeholder="Enter Address"
-                    required
-                    value={state.address}
-                    onChange={(e) => {
-                      setState({ ...state, address: e.target.value });
-                      setErrObj({
-                        ...errObj,
-                        addErr: false,
-                        addMsg: "",
-                      });
+                  <Grid
+                    flex
+                    xs={10}
+                    item
+                    container
+                    gap="20px"
+                    style={{
+                      justifyContent: "space-between",
                     }}
-                    error={errObj.addErr}
-                    helpertext={errObj.addMsg}
-                  />
-                </Grid>
-
-                <Grid
-                  xs={12}
-                  item
-                  container
-                  gap={3}
-                  style={{
-                    marginTop: 40,
-                    justifyContent: "center",
-                  }}
-                >
-                  <Grid item>
-                    <Button
-                      style={{
-                        width: "230px",
-                        cursor: "pointer",
-                        // marginTop: 5,
-                      }}
-                      onClick={() => previousStep()}
-                    >
-                      Back
-                    </Button>
+                  >
+                    <Grid item width="25%">
+                      <Button
+                        style={{
+                          width: "100%",
+                          height: "48px",
+                          cursor: "pointer",
+                          // marginTop: 5,
+                          padding: "24px 24px",
+                          backgroundColor: "#F5F6F8",
+                          color: "#202939",
+                          boxShadow: "none",
+                        }}
+                        onClick={() => previousStep()}
+                      >
+                        Back
+                      </Button>
+                    </Grid>
+                    <Grid item display="flex" flex={1}>
+                      <Button
+                        style={{
+                          width: "100%",
+                          height: "48px",
+                          padding: "24px 14px",
+                          boxShadow: "none",
+                        }}
+                        variant="contained"
+                        onClick={() => continueStep(3)}
+                      >
+                        {buttonLoader == "step3" ? (
+                          <CircularProgress
+                            style={{ color: "#fff" }}
+                            size={26}
+                          />
+                        ) : (
+                          "Save & Create Profile"
+                        )}
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <Button
-                      style={{ width: "292px" }}
-                      variant="contained"
-                      onClick={() => continueStep(3)}
-                    >
-                      {buttonLoader == "step3" ? (
-                        <CircularProgress style={{ color: "#fff" }} size={26} />
-                      ) : (
-                        "Save & Create Profile"
-                      )}
-                    </Button>
-                  </Grid>
-                </Grid>
-              </>
-            )}
+                </>
+              )}
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      {visible && <ProfileSuccessModal visible={visible} />}
-      <ConfirmModel
-        visible={deleteImg?.visible}
-        handleClose={() =>
-          setDeleteImg({
-            visible: false,
-            id: null,
-            index: null,
-            type: "",
-            loader: false,
-          })
-        }
-        loader={deleteImg?.loader}
-        confirmation={() => {
-          handleDeleteImage();
+        {visible && <ProfileSuccessModal visible={visible} />}
+        <ConfirmModel
+          visible={deleteImg?.visible}
+          handleClose={() =>
+            setDeleteImg({
+              visible: false,
+              id: null,
+              index: null,
+              type: "",
+              loader: false,
+            })
+          }
+          loader={deleteImg?.loader}
+          confirmation={() => {
+            handleDeleteImage();
+          }}
+          message={`Are you sure you want to delete?`}
+        />
+      </div>
+      <Typography
+        style={{
+          color: "#646F86",
+          fontFamily: "Poppins-Regular",
+          fontSize: "12px",
+          textAlign: "center",
+          transform: "translateY(-90px)",
         }}
-        message={`Are you sure you want to delete?`}
-      />
-    </div>
+      >
+        Copyright © 2023. All Rights Reserved by Reno.
+      </Typography>
+    </>
   );
 };
 

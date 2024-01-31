@@ -4,7 +4,7 @@ import StepConnector, {
   stepConnectorClasses,
 } from "@mui/material/StepConnector";
 import styled from "@emotion/styled";
-import { KeyboardArrowDown, Done } from "@mui/icons-material";
+import { Done } from "@mui/icons-material";
 import "./index.css";
 
 function CStepper(props) {
@@ -13,12 +13,12 @@ function CStepper(props) {
   const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.active}`]: {
       [`& .${stepConnectorClasses.line}`]: {
-        backgroundImage: "linear-gradient( 95deg,#274BF1 0%,#F2F4F7 100%)",
+        backgroundImage: "linear-gradient( 95deg,#00CD9E 0%,#00CD9E 100%)",
       },
     },
     [`&.${stepConnectorClasses.completed}`]: {
       [`& .${stepConnectorClasses.line}`]: {
-        backgroundImage: "linear-gradient( 95deg,#6BBBD8 0%,#6BBBD8 100%)",
+        backgroundImage: "linear-gradient( 95deg,#00CD9E 0%,#00CD9E 100%)",
       },
     },
     [`& .${stepConnectorClasses.line}`]: {
@@ -40,7 +40,7 @@ function CStepper(props) {
           width: 35,
           borderRadius: "50px",
           backgroundColor: completed
-            ? "#6BBBD8"
+            ? "#00CD9E"
             : active
             ? "#274BF1"
             : "#F2F4F7",
@@ -54,7 +54,7 @@ function CStepper(props) {
         ) : completed ? (
           <Done style={{ color: "#FFF" }} />
         ) : (
-          <KeyboardArrowDown style={{ color: "#FFF", fontSize: 30 }} />
+          <Typography style={{ color: "#FFF" }}>{icon}</Typography>
         )}
       </div>
     );
@@ -69,8 +69,16 @@ function CStepper(props) {
       >
         {data.map((label) => {
           return (
-            <Step key={label} l>
-              <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
+            <Step key={label}>
+              <StepLabel StepIconComponent={QontoStepIcon}>
+                <p
+                  style={{
+                    fontFamily: "Poppins-Medium",
+                  }}
+                >
+                  {label}
+                </p>
+              </StepLabel>
             </Step>
           );
         })}
