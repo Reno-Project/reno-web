@@ -2290,7 +2290,14 @@ const CreateProfile = (props) => {
             </Grid>
           </Grid>
         </Grid>
-        {visible && <ProfileSuccessModal visible={visible} />}
+        {visible && (
+          <ProfileSuccessModal
+            title="Congrats"
+            msg="Your profile has been created successfully"
+            btnTitle="Start Exploring"
+            visible={visible}
+          />
+        )}
         <ConfirmModel
           visible={deleteImg?.visible}
           handleClose={() =>

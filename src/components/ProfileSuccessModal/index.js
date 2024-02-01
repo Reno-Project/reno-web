@@ -44,7 +44,7 @@ function ProfileSuccessModal(props) {
         setIsDisable(true);
       }
     }
-  }, [visible]);
+  }, [userData, visible]);
 
   return (
     <div>
