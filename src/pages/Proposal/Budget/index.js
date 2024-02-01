@@ -2707,7 +2707,7 @@ const SingleAccordion = ({ budget, index, handleRowClick }) => {
                         Payment Date
                       </div>
                       <div component={"span"} className="accLabelValue">
-                        {budget?.milestone.end_date}
+                        {budget?.milestone.start_date}
                       </div>
                     </Grid>
                     <Grid
