@@ -581,7 +581,7 @@ const Dashboard = (props) => {
           )}
         </Grid>
 
-        {!visible && (
+        {visible && (
           <ProfileSuccessModal
             msg="Your profile will be reviewed soon. You will informed by email."
             visible={visible}
