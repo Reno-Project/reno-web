@@ -21,7 +21,8 @@ function Footer(props) {
     pathname === "/manage-project" ||
     pathname === "/ongoing-project" ||
     pathname === "/create-profile" ||
-    pathname === "/request-proposal";
+    pathname === "/request-proposal" ||
+    pathname === "/balance-breakdown";
 
   const handleDragStart = (event) => {
     event.preventDefault();

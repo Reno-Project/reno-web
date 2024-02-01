@@ -790,7 +790,7 @@ export default function Summary(props) {
                           disablePast
                           value={new Date(startDate)}
                           onChange={(e, v) => {
-                            setStartDate(moment(e).format("MMMM DD, yyyy"));
+                            setStartDate(moment(e).format("yyyy-MM-DD"));
                             setErrObj({
                               ...errObj,
                               startErr: false,
@@ -836,7 +836,7 @@ export default function Summary(props) {
                           minDate={new Date(startDate)}
                           value={new Date(endDate)}
                           onChange={(e) => {
-                            setEndDate(moment(e).format("MMMM DD, yyyy"));
+                            setEndDate(moment(e).format("yyyy-MM-DD"));
                             setErrObj({
                               ...errObj,
                               endErr: false,

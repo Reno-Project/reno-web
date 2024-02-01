@@ -2035,6 +2035,8 @@ export default function Budget(props) {
               project_type: proposalDetails?.project_type.project_name,
               exp_id: proposalDetails?.project_type.id,
               description: proposalDetails?.description,
+              start_date: proposalDetails?.start_date,
+              end_date: proposalDetails?.end_date,
               project_image: projectFiles,
               proposal: JSON.stringify({
                 scope_of_work: proposalDetails?.scope_of_work,
