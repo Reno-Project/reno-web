@@ -1,4 +1,4 @@
-import { Grid, IconButton, ListItemText, Typography } from "@mui/material";
+import { Grid, IconButton, Typography } from "@mui/material";
 import React from "react";
 import useStyles from "./styles";
 import { color } from "../../config/theme";
@@ -101,19 +101,25 @@ export default function BlueAbout() {
             </Typography>
           </Grid>
           {contactus.map((item, index) => {
-            return index == 1 ? (
+            return index === 1 ? (
               <div key={`contactus_${index}`}>
                 <a href="https://renohome.io/" className={classes.text}>
                   {item}
                 </a>
               </div>
-            ) : index == 2 ? (
+            ) : index === 2 ? (
               <a href={mailtoHref} className={classes.text}>
                 {item}
               </a>
             ) : (
-              <div key={`contactus_${index}`}>
-                <ListItemText className={classes.text}>{item}</ListItemText>
+              <div>
+                {
+                  <p>
+                    <a href="tel:++971 56 976 7673" className={classes.text}>
+                      {item}
+                    </a>
+                  </p>
+                }
               </div>
             );
           })}

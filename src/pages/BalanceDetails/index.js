@@ -11,12 +11,21 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import "./index.css";
-import { Divider, Stack } from "@mui/material";
+import {
+  CircularProgress,
+  Divider,
+  InputLabel,
+  MenuItem,
+  Pagination,
+  Select,
+  Stack,
+} from "@mui/material";
 import { Setting } from "../../utils/Setting";
 import { getApiData } from "../../utils/APIHelper";
 import { ChevronRight } from "@mui/icons-material";
 import Images from "../../config/images";
 import BlueAbout from "../../components/BlueAbout/index";
+import moment from "moment";
 
 const data = [
   {
@@ -57,6 +66,29 @@ const data = [
   },
 ];
 
+const Status = ({ status }) => {
+  return (
+    <p
+      style={{
+        display: "inline-block",
+        padding: "10px 16px",
+        borderRadius: "8px",
+        fontFamily: "Poppins-Medium",
+        backgroundColor:
+          status === "pending"
+            ? "#FFF3DF"
+            : status === "ongoing"
+            ? "#007AFF"
+            : status === "completed"
+            ? "#CCEEE9"
+            : "#F1C40F",
+      }}
+    >
+      {status}
+    </p>
+  );
+};
+
 function Details(props) {
   const { project } = props;
   const [open, setOpen] = React.useState(false);
@@ -67,20 +99,18 @@ function Details(props) {
         direction="row"
         justifyContent="space-between"
         alignItems="center"
+        onClick={() => setOpen(!open)}
+        style={{ cursor: "pointer" }}
       >
         <Stack direction="row" alignItems="center">
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
+          <IconButton aria-label="expand row" size="small">
             {open ? <KeyboardArrowDownIcon /> : <ChevronRight />}
           </IconButton>
           <div style={{ width: "24px", height: "24px", marginRight: "8px" }}>
             <img src={Images.file} alt="file"></img>
           </div>
           <Typography fontSize="18px" fontFamily="Poppins-Medium">
-            {project.project_type}
+            {project.name}
           </Typography>
         </Stack>
 
@@ -98,7 +128,7 @@ function Details(props) {
               fontFamily="Poppins-Medium"
               color="#202929"
             >
-              {project.id}
+              {project.project_id}
             </Typography>
           </span>
           <span>
@@ -114,7 +144,47 @@ function Details(props) {
               fontFamily="Poppins-Medium"
               color="#202929"
             >
-              {project.start_date || "NA"} - {project.end_date || "NA"}
+              {project.start_date === "undefined" ||
+              project.start_date === null ? (
+                <span>NA</span>
+              ) : (
+                <span>
+                  {moment(project.start_date).format("MMMM DD, yyyy")}-
+                  {moment(project.end_date).format("MMMM DD, yyyy")}
+                </span>
+              )}
+            </Typography>
+          </span>
+          <span>
+            <Typography
+              fontSize="14px"
+              fontFamily="Poppins-Medium"
+              color="#878F9C"
+            >
+              Reno Commission
+            </Typography>
+            <Typography
+              fontSize="16px"
+              fontFamily="Poppins-Medium"
+              color="#202929"
+            >
+              AED {project.reno_revenue || "NA"}
+            </Typography>
+          </span>
+          <span>
+            <Typography
+              fontSize="14px"
+              fontFamily="Poppins-Medium"
+              color="#878F9C"
+            >
+              Total Project Value
+            </Typography>
+            <Typography
+              fontSize="16px"
+              fontFamily="Poppins-Medium"
+              color="#202929"
+            >
+              AED {project.project_value_without_commission || "NA"}
             </Typography>
           </span>
           <span>
@@ -130,7 +200,7 @@ function Details(props) {
               fontFamily="Poppins-Medium"
               color="#202929"
             >
-              AED {project.project_balance}
+              AED {(project.project_balance || 0).toFixed(2)}
             </Typography>
           </span>
         </Stack>
@@ -149,24 +219,19 @@ function Details(props) {
                     height: "56px",
                   }}
                 >
+                  <TableCell className="detailsValue">Milestone Id</TableCell>
+
                   <TableCell className="detailsValue">Milestone Name</TableCell>
                   <TableCell className="detailsValue">
                     Milestone Amount
                   </TableCell>
                   <TableCell className="detailsValue">
-                    Paid by Homeowner
-                  </TableCell>
-                  <TableCell className="detailsValue">
-                    Approved by Homeowner
-                  </TableCell>
-
-                  <TableCell className="detailsValue">
-                    Released by Reno
+                    Milestone Status
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {project.project_milestones?.map((milestone) => (
+                {project.milestones?.map((milestone) => (
                   <TableRow
                     key={milestone.id}
                     style={{
@@ -178,93 +243,19 @@ function Details(props) {
                       scope="row"
                       className="milestone-value"
                     >
+                      {milestone.milestone_id}
+                    </TableCell>
+                    <TableCell className="milestone-value">
                       {milestone.milestone_name}
                     </TableCell>
                     <TableCell className="milestone-value">
-                      AED {milestone.amount}
+                      AED {milestone.milestone_value.toFixed(1)}
                     </TableCell>
                     <TableCell className="milestone-value">
-                      {milestone.status.is_paid_by_homeowner === "yes" ||
-                      milestone.status.is_paid_by_homeowner === "Yes" ? (
-                        <p
-                          style={{
-                            display: "inline-block",
-                            padding: "8px 16px",
-                            color: "#006557",
-                            backgroundColor: "#CCEEE9",
-                            borderRadius: "8px",
-                          }}
-                        >
-                          Yes
-                        </p>
+                      {milestone.milestone_status ? (
+                        <Status status={milestone.milestone_status} />
                       ) : (
-                        <p
-                          style={{
-                            display: "inline-block",
-                            padding: "8px 16px",
-                            color: "#664F27",
-                            backgroundColor: "#FFF3DF",
-                            borderRadius: "8px",
-                          }}
-                        >
-                          Pending Payment
-                        </p>
-                      )}
-                    </TableCell>
-                    <TableCell className="milestone-value">
-                      {milestone.status.is_approved_by_homwowner === "yes" ||
-                      milestone.status.is_approved_by_homwowner === "Yes" ? (
-                        <p
-                          style={{
-                            display: "inline-block",
-                            padding: "8px 16px",
-                            color: "#006557",
-                            backgroundColor: "CCEEE9",
-                            borderRadius: "8px",
-                          }}
-                        >
-                          Yes
-                        </p>
-                      ) : (
-                        <p
-                          style={{
-                            display: "inline-block",
-                            padding: "8px 16px",
-                            color: "#664F27",
-                            backgroundColor: "#FFF3DF",
-                            borderRadius: "8px",
-                          }}
-                        >
-                          Pending Approval
-                        </p>
-                      )}
-                    </TableCell>
-                    <TableCell className="milestone-value">
-                      {milestone.status.is_release_by_reno === "yes" ||
-                      milestone.status.is_release_by_reno === "Yes" ? (
-                        <p
-                          style={{
-                            display: "inline-block",
-                            padding: "8px 16px",
-                            color: "#006557",
-                            backgroundColor: "CCEEE9",
-                            borderRadius: "8px",
-                          }}
-                        >
-                          Yes
-                        </p>
-                      ) : (
-                        <p
-                          style={{
-                            display: "inline-block",
-                            padding: "8px 16px",
-                            color: "#664F27",
-                            backgroundColor: "#FFF3DF",
-                            borderRadius: "8px",
-                          }}
-                        >
-                          Pending Release
-                        </p>
+                        "NA"
                       )}
                     </TableCell>
                   </TableRow>
@@ -298,22 +289,49 @@ Details.propTypes = {
 
 export default function BalanceDetails() {
   const [totalBalance, setTotalBalance] = useState(0);
+
   const [projectDetails, setProjectDetails] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState(10);
+  const [pagination, setPagination] = useState({
+    totalPage: 0,
+    page: 1,
+    limit: 10,
+    totalCount: 0,
+  });
+
+  const handleLimit = (event) => {
+    setLimit(event.target.value);
+  };
+
+  const onPageChange = (event, page) => {
+    setCurrentPage(page);
+    setLoading(true);
+  };
 
   useEffect(() => {
     getBalanceBreakdown();
-  }, []);
+  }, [currentPage, limit]);
 
   async function getBalanceBreakdown() {
     try {
       const response = await getApiData(
-        Setting.endpoints.balanceBreakdown,
+        `${Setting.endpoints.balanceBreakdown}?page=${currentPage}&per_page=${limit}`,
         "GET",
         {}
       );
       if (response.success) {
-        setTotalBalance(response.data?.totalBalance);
-        setProjectDetails(response.data?.projectDetails);
+        console.log(response, ">>>>response");
+        setTotalBalance();
+        setProjectDetails(response.data);
+        setPagination({
+          totalPage: response.total_pages,
+          page: response.page,
+          limit: response.per_page,
+          totalCount: response.total_count,
+        });
+        setLoading(false);
       }
     } catch (error) {
       console.log("🚀 error:", error);
@@ -321,7 +339,7 @@ export default function BalanceDetails() {
   }
 
   return (
-    <Stack>
+    <Stack flex={1}>
       <div className="pageContainer">
         <Typography className="tableHeader">Balance Breakdown</Typography>
         <Stack className="tableContainer">
@@ -341,11 +359,60 @@ export default function BalanceDetails() {
             </Typography>
           </Stack>
           <Stack>
-            {projectDetails?.map((project) => (
-              <Details key={project.id} project={project} />
-            ))}
+            {loading ? (
+              <CircularProgress
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                }}
+              />
+            ) : (
+              <Stack>
+                {projectDetails?.map((project) => (
+                  <Details key={project.id} project={project} />
+                ))}
+              </Stack>
+            )}
           </Stack>
         </Stack>
+        <div
+          style={{
+            display: "flex",
+            padding: "20px",
+            position: "sticky",
+            bottom: 0,
+            backgroundColor: "white",
+          }}
+        >
+          <Stack direction="row" alignItems="center" gap="8px">
+            <InputLabel>Items per page</InputLabel>
+            <Select
+              value={limit}
+              onChange={handleLimit}
+              style={{ fontFamily: "Poppins-Medium", color: "#000" }}
+            >
+              <MenuItem value={10} style={{ fontFamily: "Poppins-Regular" }}>
+                10
+              </MenuItem>
+              <MenuItem value={20} style={{ fontFamily: "Poppins-Regular" }}>
+                20
+              </MenuItem>
+              <MenuItem value={25} style={{ fontFamily: "Poppins-Regular" }}>
+                25
+              </MenuItem>
+              <MenuItem value={40} style={{ fontFamily: "Poppins-Regular" }}>
+                40
+              </MenuItem>
+            </Select>
+          </Stack>
+          <Pagination
+            count={pagination.totalPage}
+            page={currentPage}
+            size="large"
+            onChange={onPageChange}
+          />
+        </div>
       </div>
       <BlueAbout />
     </Stack>

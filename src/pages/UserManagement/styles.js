@@ -86,6 +86,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "14px !important",
     color: `${color.secondary} !important`,
   },
+  buttonStyle: {
+    boxShadow: "none !important",
+  },
 }));
 
 export default useStyles;

@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
 import { isEmpty } from "lodash";
+import BlueAbout from "../../components/BlueAbout/index";
 import PhoneInput from "react-phone-input-2";
 import {
   PhoneNumberFormat,
@@ -24,6 +22,7 @@ import useStyles from "./styles";
 import {
   Button,
   Chip,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -32,13 +31,19 @@ import {
   Grid,
   InputAdornment,
   InputLabel,
-  Paper,
+  MenuItem,
+  Select,
+  Stack,
   SwipeableDrawer,
   TextField,
 } from "@mui/material";
 import Images from "../../config/images";
-import { DeleteOutline, Label } from "@mui/icons-material";
+import { DeleteOutline } from "@mui/icons-material";
 import CInput from "../../components/CInput";
+import { getApiData } from "../../utils/APIHelper";
+import { Setting } from "../../utils/Setting";
+import moment from "moment";
+import { toast } from "react-toastify";
 
 const data = [
   {
@@ -98,18 +103,20 @@ function Row(props) {
 
   return (
     <React.Fragment>
-      <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
+      <TableRow>
         <TableCell className="values">{row.id}</TableCell>
-        <TableCell className="values">{row.name}</TableCell>
-        <TableCell className="values">{row.phone}</TableCell>
+        <TableCell className="values">{row.username}</TableCell>
+        <TableCell className="values">{row.phone_no}</TableCell>
         <TableCell className="values">{row.email}</TableCell>
-        <TableCell className="values">{row.createdAt}</TableCell>
         <TableCell className="values">
+          {moment(row.createdAt).format("yyyy-MM-DD")}
+        </TableCell>
+        {/* <TableCell className="values">
           {" "}
           {row.assignedProjects?.map((item) => (
             <Chip label={item} />
           ))}
-        </TableCell>
+        </TableCell> */}
         <TableCell className="actions">
           <IconButton onClick={toggleDrawer("right", true)}>
             <img alt="View User" src={Images.eye} />
@@ -127,7 +134,7 @@ function Row(props) {
                 <CInput
                   label="User Name"
                   placeholder="Enter User Name..."
-                  value={row.name}
+                  value={row.username}
                   disabled={true}
                   error={errObj.cnameErr}
                   helpertext={errObj.cnameMsg}
@@ -160,19 +167,10 @@ function Row(props) {
                   style={{
                     marginBottom: 20,
                   }}
-                  value={row.phone}
-                  // InputProps={{
-                  //   startAdornment: (
-                  //     <InputAdornment position="start">
-                  //       <Typography style={{ fontSize: 14 }}>
-                  //         +{row.pCode}
-                  //       </Typography>
-                  //     </InputAdornment>
-                  //   ),
-                  // }}
+                  value={row.phone_no}
                 />
               </Grid>
-              <Grid item xs={12} id="assigne">
+              {/* <Grid item xs={12} id="assigne">
                 <InputLabel
                   shrink
                   htmlFor="bootstrap-input"
@@ -183,7 +181,7 @@ function Row(props) {
                 {row.assignedProjects?.map((item) => (
                   <Chip label={item} />
                 ))}
-              </Grid>
+              </Grid> */}
             </Grid>
           </SwipeableDrawer>
           <IconButton>
@@ -234,17 +232,31 @@ export default function UserManagement() {
     phone: "",
   });
 
+  // const dispatch = useDispatch()
+  // const {userData} = useSelector((state) => state.auth);
+
   const [errObj, setErrObj] = useState(errorObj);
-  const [btnLoad, setBtnLoad] = useState(false);
   const [phonePlaceholder, setPhonePlaceholder] = useState("");
-  const [locationData, setLocationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [open, setOpen] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [userList, setUserList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState(10);
+  const [pagination, setPagination] = useState({
+    totalPage: 0,
+    page: 1,
+    limit: 10,
+    totalCount: 0,
+  });
+
+  const handleLimit = (event) => {
+    setLimit(event.target.value);
+  };
 
   const onPageChange = (event, page) => {
     setCurrentPage(page);
+    setLoading(true);
   };
   const handleClose = () => {
     setState({
@@ -262,12 +274,55 @@ export default function UserManagement() {
   const handleDeleteUser = (row) => {
     setOpenDelete(true);
   };
+
   function isValidUsername(username) {
-    return username.length >= 3 && username.length <= 100;
+    return username.length >= 3 && username.length <= 20;
   }
 
-  function validation() {
-    const { uname, email, phone, countryCode } = state;
+  async function getUserList() {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.createUser}?page=${currentPage}&per_page=${limit}`,
+        "GET"
+      );
+      if (response.success) {
+        setUserList(response.data);
+        setPagination({
+          totalPage: response.total_pages,
+          page: response.page,
+          limit: response.per_page,
+          totalCount: response.total_count,
+        });
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  }
+
+  async function createUser(name, phoneNumber, phCode, email) {
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.createUser}`,
+        "POST",
+        {
+          username: name,
+          phone_no: phoneNumber,
+          phone_code: phCode,
+          email,
+        }
+      );
+      if (response.success) {
+        toast.success("User added successfully");
+      }
+    } catch (error) {
+      console.log("error");
+    }
+    getUserList();
+  }
+
+  async function validation() {
+    const { uname, email, phone, pCode, countryCode } = state;
     const error = { ...errObj };
     let valid = true;
 
@@ -279,7 +334,7 @@ export default function UserManagement() {
     } else if (!isValidUsername(uname)) {
       valid = false;
       error.unameErr = true;
-      error.unameMsg = "Username must be between 3 to 100 characters in long.";
+      error.unameMsg = "Username must be between 3 to 20 characters in long.";
     }
 
     // validate email
@@ -310,52 +365,108 @@ export default function UserManagement() {
 
     setErrObj(error);
     if (valid) {
-      // createUser();
+      await createUser(uname, phone, pCode, email);
+      handleClose();
     }
   }
 
-  return (
-    <div className="pageContainer">
-      <div className="tableContainer">
-        <div className="addUser">
-          <Button onClick={() => setOpen(true)} className="btn">
-            Add User
-          </Button>
-        </div>
+  useEffect(() => {
+    getUserList();
+  }, [currentPage, limit]);
 
-        <Table sx={{ maxHeight: 200 }}>
-          <TableHead>
-            <TableRow>
-              <TableCell className="detailsHeaderValue"> ID</TableCell>
-              <TableCell className="detailsHeaderValue">Name</TableCell>
-              <TableCell className="detailsHeaderValue">Phone</TableCell>
-              <TableCell className="detailsHeaderValue">Email</TableCell>
-              <TableCell className="detailsHeaderValue">
-                Creation Date
-              </TableCell>
-              <TableCell className="detailsHeaderValue">
-                Assigned Projects
-              </TableCell>
-              <TableCell className="detailsHeaderValue">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((row) => (
-              <Row key={row.id} row={row} handleDeleteUser={handleDeleteUser} />
-            ))}
-          </TableBody>
-        </Table>
-        <div style={{ padding: "30px 0 10px 20px" }}>
+  return (
+    <Stack flex={1}>
+      <div className="pageContainer">
+        <div className="tableContainer">
+          <div className="addUser">
+            <Button
+              variant="contained"
+              onClick={() => setOpen(true)}
+              className="btn"
+            >
+              Add User
+            </Button>
+          </div>
+
+          <Table sx={{ maxHeight: 200 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell className="detailsHeaderValue"> ID</TableCell>
+                <TableCell className="detailsHeaderValue">Name</TableCell>
+                <TableCell className="detailsHeaderValue">Phone</TableCell>
+                <TableCell className="detailsHeaderValue">Email</TableCell>
+                <TableCell className="detailsHeaderValue">
+                  Creation Date
+                </TableCell>
+                {/* <TableCell className="detailsHeaderValue">
+                  Assigned Projects
+                </TableCell> */}
+                <TableCell className="detailsHeaderValue">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {loading ? (
+                <CircularProgress
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                  }}
+                />
+              ) : (
+                <>
+                  {userList.map((row) => (
+                    <Row
+                      key={row.id}
+                      row={row}
+                      handleDeleteUser={handleDeleteUser}
+                    />
+                  ))}
+                </>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            padding: "20px",
+            position: "sticky",
+            bottom: 0,
+            backgroundColor: "white",
+          }}
+        >
+          <Stack direction="row" alignItems="center" gap="8px">
+            <InputLabel>Items per page</InputLabel>
+            <Select
+              value={limit}
+              onChange={handleLimit}
+              style={{ fontFamily: "Poppins-Medium", color: "#000" }}
+            >
+              <MenuItem value={10} style={{ fontFamily: "Poppins-Regular" }}>
+                10
+              </MenuItem>
+              <MenuItem value={20} style={{ fontFamily: "Poppins-Regular" }}>
+                20
+              </MenuItem>
+              <MenuItem value={25} style={{ fontFamily: "Poppins-Regular" }}>
+                25
+              </MenuItem>
+              <MenuItem value={40} style={{ fontFamily: "Poppins-Regular" }}>
+                40
+              </MenuItem>
+            </Select>
+          </Stack>
           <Pagination
-            count={Math.ceil(totalPages)}
+            count={pagination.totalPage}
             page={currentPage}
             size="large"
-            hidePrevButton
             onChange={onPageChange}
           />
         </div>
       </div>
 
+      <BlueAbout />
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle className="createHeader">Create User</DialogTitle>
         <DialogContent>
@@ -370,7 +481,7 @@ export default function UserManagement() {
                   setState({ ...state, uname: e.target.value });
                   setErrObj({ ...errObj, unameErr: false, unameMsg: "" });
                 }}
-                inputProps={{ maxLength: 100 }}
+                inputProps={{ maxLength: 20 }}
                 white={false}
                 error={errObj.unameErr}
                 helpertext={errObj.unameMsg}
@@ -450,12 +561,14 @@ export default function UserManagement() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
           <Button
-            onClick={() => {
-              validation();
-            }}
+            className={classes.buttonStyle}
+            variant="outlined"
+            onClick={handleClose}
           >
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={validation}>
             Create
           </Button>
         </DialogActions>
@@ -468,10 +581,18 @@ export default function UserManagement() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDelete}>Cancel</Button>
-          <Button onClick={handleCloseDelete}>Delete</Button>
+          <Button
+            className={classes.buttonStyle}
+            variant="outlined"
+            onClick={handleCloseDelete}
+          >
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={handleCloseDelete}>
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Stack>
   );
 }
