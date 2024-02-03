@@ -1,13 +1,11 @@
 import {
   Button,
   CircularProgress,
-  Collapse,
   Divider,
   FormHelperText,
   Grid,
   IconButton,
   InputLabel,
-  ListItemButton,
   Menu,
   MenuItem,
   Table,
@@ -27,20 +25,14 @@ import {
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import useStyles from "./styles";
-import {
-  ChevronRight,
-  Close,
-  HighlightOffOutlined,
-  ImageOutlined,
-} from "@mui/icons-material";
+import { ChevronRight, Close, HighlightOffOutlined } from "@mui/icons-material";
 import { color } from "../../../config/theme";
 import CInput from "../../../components/CInput";
 import { useTheme } from "@emotion/react";
 import Images from "../../../config/images";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import _, { create, isArray, isEmpty, isNull, isObject } from "lodash";
+import _, { isArray, isEmpty, isNull } from "lodash";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { Setting } from "../../../utils/Setting";
 import { toast } from "react-toastify";
@@ -667,6 +659,8 @@ export default function Budget(props) {
       project_type: villa?.project_type,
       exp_id: villa?.exp_id,
       scope_of_work: proposalDetails?.scope_of_work,
+      start_date: proposalDetails?.start_date,
+      end_date: proposalDetails?.end_date,
       milestone_details: JSON.stringify(
         proposalDetails?.milestone_details?.milestone?.map(
           (milestone, index) => {
@@ -722,7 +716,6 @@ export default function Budget(props) {
     //   proposal_id: villa?.proposal_id,
     //   budget_item: extractedData,
     // };
-    console.log("transformedData====>>>>>", transformedData);
     try {
       const response = await getAPIProgressData(
         Setting.endpoints.createproposal,
@@ -813,7 +806,6 @@ export default function Budget(props) {
   }
 
   async function UploadFileDirectly(img) {
-    console.log(">>>> state", state);
     const nArr1 = state.photo_origin ? [...state.photo_origin] : [];
     for (let i = 0; i < img.length; i++) {
       const base64Data = await convertToBase64(img[i]);

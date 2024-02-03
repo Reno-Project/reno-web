@@ -62,6 +62,7 @@ export const Setting = {
     milestoneDelete: "api/project/milestone-proposal-delete",
     contractorStates: "api/contractor/stats",
     balanceBreakdown: "api/project/balance-details",
+    createUser: "api/contractor/user",
   },
 
   JS_Regex: {

@@ -25,7 +25,7 @@ import NotificationPopup from "./components/NotificationPopUp";
 import "./App.css";
 import ContractorProfile from "./pages/ContractorProfile";
 import AccountSettings from "./pages/AccountSettings";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Stack } from "@mui/material";
 import Notifications from "./pages/Notifications";
 import RequestedProposal from "./pages/RequestedProposal";
 import Summary from "./pages/Proposal/Summary";
@@ -87,7 +87,7 @@ function App() {
               >
                 <Header />
                 {isLogin ? (
-                  <div className="MT70">
+                  <Stack className="MT70">
                     <Routes>
                       <Route
                         path={"/project/project-details/:id"}
@@ -146,7 +146,7 @@ function App() {
                         }
                       />
                     </Routes>
-                  </div>
+                  </Stack>
                 ) : (
                   <>
                     {/* <Route

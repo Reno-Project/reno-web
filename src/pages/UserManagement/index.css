@@ -1,7 +1,8 @@
 .pageContainer {
   padding: 40px;
   background-color: rgb(245, 246, 248);
-  height: 90%;
+  /* height: 90%; */
+  flex: 1;
 }
 
 .tableContainer {
@@ -14,26 +15,22 @@
 .detailsTitle {
   font-family: Poppins-Regular !important;
   font-size: 18px !important;
-  font-weight: 700 !important;
   line-height: 32px !important;
 }
 .detailsHeaderValue {
-  font-family: Poppins-Regular !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
+  font-family: Poppins-Medium !important;
+  font-size: 16px !important;
   line-height: 28px !important;
 }
 .values {
   font-family: Poppins-Regular !important;
-  font-size: 12px !important;
-  font-weight: 400 !important;
+  font-size: 14px !important;
   line-height: 24px !important;
 }
 .createHeader {
-  font-family: Poppins-Regular !important;
-  font-size: 22px !important;
+  font-family: Poppins-Medium !important;
+  font-size: 24px !important;
   line-height: 32px !important;
-  font-weight: bold;
 }
 
 .MuiTableCell-root {
@@ -47,7 +44,6 @@
   .btn {
     font-family: Poppins-Regular !important;
     font-size: 16px !important;
-    font-weight: 400 !important;
   }
 }
 

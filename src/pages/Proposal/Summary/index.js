@@ -106,6 +106,8 @@ export default function Summary(props) {
       setScope(proposalDetails?.scope_of_work);
       setProjectType(proposalDetails?.project_type || "");
       setName(proposalDetails?.name || "");
+      setStartDate(proposalDetails?.start_date || "");
+      setEndDate(proposalDetails?.end_date || "");
       setDescription(proposalDetails?.description || "");
       setCustomerName(proposalDetails?.customer_name || "");
       setEmail(proposalDetails?.email || "");
@@ -188,6 +190,8 @@ export default function Summary(props) {
             name,
             description: description,
             email,
+            start_date: startDate,
+            end_date: endDate,
             customer_name: customerName,
             project: originalDoc || [],
             // project_origin: originalDoc,
