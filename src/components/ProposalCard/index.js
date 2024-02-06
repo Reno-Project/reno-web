@@ -196,10 +196,7 @@ export default function ProposalCard(props) {
                 </Grid>
                 <Grid item lg={8} sm={8} md={8} xs={8} textAlign={"end"}>
                   <Typography className={classes.accRightText}>
-                    AED{" "}
-                    {(from === "ongoing"
-                      ? villa?.client_budget
-                      : villa?.budget) || 0}
+                    AED {villa?.budget || "NA"}
                   </Typography>
                 </Grid>
                 <Grid item lg={4} sm={4} md={4} xs={4}>
