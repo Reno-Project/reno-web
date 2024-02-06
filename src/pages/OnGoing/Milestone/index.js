@@ -1665,6 +1665,7 @@ export default function Milestone(props) {
       start_date: dataOfMilestone?.start_date,
       end_date: dataOfMilestone?.end_date,
       amount: dataOfMilestone?.amount,
+      description: dataOfMilestone?.description,
     };
     const endpoint = Setting.endpoints.updateMilestone;
 
@@ -4766,6 +4767,7 @@ export default function Milestone(props) {
                         style={{ marginTop: 20, marginBottom: 20 }}
                         onClick={() => {
                           validateMilestone(true);
+                          setVisibleEditModal(false);
                         }}
                         disabled={btnUpdateLoader === "update"}
                       >

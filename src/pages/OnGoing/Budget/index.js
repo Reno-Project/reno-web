@@ -366,7 +366,7 @@ export default function Budget(props) {
           </Grid>
 
           <Grid item container justifyContent="space-between" pb={2}>
-            <Grid
+            {/* <Grid
               item
               container
               alignItems="center"
@@ -379,8 +379,8 @@ export default function Budget(props) {
               <Typography variant="body1" style={{ color: "#ffffff" }}>
                 Released: AED {1000}
               </Typography>
-            </Grid>
-            <Grid
+            </Grid> */}
+            {/* <Grid
               item
               container
               alignItems="center"
@@ -393,9 +393,9 @@ export default function Budget(props) {
               <Typography variant="body1" style={{ color: "#ffffff" }}>
                 In escrow: AED {1500 - 1000}
               </Typography>
-            </Grid>
+            </Grid> */}
           </Grid>
-          <Grid item container justifyContent={"space-between"}>
+          {/* <Grid item container justifyContent={"space-between"}>
             <Grid
               item
               container
@@ -436,7 +436,7 @@ export default function Budget(props) {
                 </Typography>
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
           <div
             style={{
               width: "100%",
@@ -449,7 +449,7 @@ export default function Budget(props) {
         <Grid item container py={2}>
           <Typography className={classes.MainTitle}>Items:</Typography>
         </Grid>
-        <Grid item xs={12} style={{ borderBottom: "1px solid #F2F3F4" }}>
+        {/* <Grid item xs={12} style={{ borderBottom: "1px solid #F2F3F4" }}>
           <Tabs
             value={tabValue}
             variant="scrollable"
@@ -550,7 +550,7 @@ export default function Budget(props) {
               }
             />
           </Tabs>
-        </Grid>
+        </Grid> */}
         {budgetLoader ? (
           <Grid
             item

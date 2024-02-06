@@ -322,9 +322,8 @@ export default function BalanceDetails() {
         {}
       );
       if (response.success) {
-        console.log(response, ">>>>response");
-        setTotalBalance();
-        setProjectDetails(response.data);
+        setProjectDetails(response.data.projects);
+        setTotalBalance(response.data.balance);
         setPagination({
           totalPage: response.total_pages,
           page: response.page,
@@ -368,51 +367,59 @@ export default function BalanceDetails() {
                 }}
               />
             ) : (
-              <Stack>
-                {projectDetails?.map((project) => (
-                  <Details key={project.id} project={project} />
-                ))}
-              </Stack>
+              <>
+                {projectDetails?.length > 0 ? (
+                  projectDetails?.map((project) => (
+                    <Details key={project.id} project={project} />
+                  ))
+                ) : (
+                  <Stack textAlign="center">
+                    <p>No Data</p>
+                  </Stack>
+                )}
+              </>
             )}
           </Stack>
         </Stack>
-        <div
-          style={{
-            display: "flex",
-            padding: "20px",
-            position: "sticky",
-            bottom: 0,
-            backgroundColor: "white",
-          }}
-        >
-          <Stack direction="row" alignItems="center" gap="8px">
-            <InputLabel>Items per page</InputLabel>
-            <Select
-              value={limit}
-              onChange={handleLimit}
-              style={{ fontFamily: "Poppins-Medium", color: "#000" }}
-            >
-              <MenuItem value={10} style={{ fontFamily: "Poppins-Regular" }}>
-                10
-              </MenuItem>
-              <MenuItem value={20} style={{ fontFamily: "Poppins-Regular" }}>
-                20
-              </MenuItem>
-              <MenuItem value={25} style={{ fontFamily: "Poppins-Regular" }}>
-                25
-              </MenuItem>
-              <MenuItem value={40} style={{ fontFamily: "Poppins-Regular" }}>
-                40
-              </MenuItem>
-            </Select>
-          </Stack>
-          <Pagination
-            count={pagination.totalPage}
-            page={currentPage}
-            size="large"
-            onChange={onPageChange}
-          />
-        </div>
+        {projectDetails?.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              padding: "20px",
+              position: "sticky",
+              bottom: 0,
+              backgroundColor: "white",
+            }}
+          >
+            <Stack direction="row" alignItems="center" gap="8px">
+              <InputLabel>Items per page</InputLabel>
+              <Select
+                value={limit}
+                onChange={handleLimit}
+                style={{ fontFamily: "Poppins-Medium", color: "#000" }}
+              >
+                <MenuItem value={10} style={{ fontFamily: "Poppins-Regular" }}>
+                  10
+                </MenuItem>
+                <MenuItem value={20} style={{ fontFamily: "Poppins-Regular" }}>
+                  20
+                </MenuItem>
+                <MenuItem value={25} style={{ fontFamily: "Poppins-Regular" }}>
+                  25
+                </MenuItem>
+                <MenuItem value={40} style={{ fontFamily: "Poppins-Regular" }}>
+                  40
+                </MenuItem>
+              </Select>
+            </Stack>
+            <Pagination
+              count={pagination.totalPage}
+              page={currentPage}
+              size="large"
+              onChange={onPageChange}
+            />
+          </div>
+        )}
       </div>
       <BlueAbout />
     </Stack>
