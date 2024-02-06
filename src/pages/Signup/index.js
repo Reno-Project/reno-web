@@ -11,6 +11,9 @@ import {
   Box,
   Checkbox,
   FormHelperText,
+  FormControlLabel,
+  Stack,
+  Link,
 } from "@mui/material";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { isEmpty } from "lodash";
@@ -32,7 +35,7 @@ import useStyles from "./styles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { askForPermissionToReceiveNotifications } from "../../push-notification";
 import SignUpCover from "../../assets/images/SignUpCover.png";
-import TermsAndConditions from "../../components/TOSModal";
+import TermsAndConditionsDialog from "./TermsAndConditionsDialog";
 import { useTheme } from "@emotion/react";
 import { useMediaQuery } from "@mui/material";
 
@@ -79,17 +82,33 @@ const Signup = (props) => {
   const [btnLoad, setBtnLoad] = useState(false);
   const [phonePlaceholder, setPhonePlaceholder] = useState("");
   const [locationData, setLocationData] = useState({});
-  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [areTermsAccepted, setAreTermsAccepted] = useState(false);
+
+  const handleChangeTermsAcceptance = (e, checked) => {
+    setAreTermsAccepted(checked);
+  };
+
+  const handleAcceptTerms = () => {
+    setAreTermsAccepted(true);
+  };
+
+  const [isTermsAndConditionsDialogOpen, setIsTermsAndConditionsDialogOpen] =
+    useState(false);
+
+  const handleCloseTermsAndConditionsDialog = () => {
+    setIsTermsAndConditionsDialogOpen(false);
+  };
+
+  const handleClickTermsAndConditionsLink = () => {
+    setIsTermsAndConditionsDialogOpen(true);
+  };
+
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const handleClose = () => {
     setVisible(false);
   };
 
-  const acceptTerms = () => {
-    setIsTermsAccepted(true);
-    handleClose();
-  };
   useEffect(() => {
     setState({
       ...state,
@@ -133,7 +152,7 @@ const Signup = (props) => {
     const error = { ...errObj };
     let valid = true;
     //validate terms and condition
-    if (!isTermsAccepted) {
+    if (!areTermsAccepted) {
       valid = false;
       error.termsAndConditionErr = true;
       error.termsMessage = "Please accept terms & conditions";
@@ -514,42 +533,28 @@ const Signup = (props) => {
                   </Grid>
                 </>
               )}
-              <Grid
-                item
-                xs={12}
-                style={{
-                  marginBottom: 10,
-                  fontFamily: "Poppins-Regular !important",
-                }}
-              >
-                <Checkbox
-                  sx={{ padding: "0px 5px 0px 0px !important" }}
-                  size="small"
-                  checked={isTermsAccepted}
-                  onChange={(e) => {
-                    setIsTermsAccepted(e.target.checked);
-                    setErrObj({
-                      ...errObj,
-                      termsAndConditionErr: false,
-                      termsMessage: "",
-                    });
-                  }}
-                  // color={errObj.termsAndConditionErr && "error"}
+              <Grid item xs={12} sx={{ marginBottom: 2 }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      value={areTermsAccepted}
+                      checked={areTermsAccepted}
+                      onChange={handleChangeTermsAcceptance}
+                    />
+                  }
+                  label={
+                    <Stack direction="row" alignItems="baseline">
+                      Accept
+                      <Link
+                        className={classes.termsAndConditions}
+                        component={Button}
+                        onClick={handleClickTermsAndConditionsLink}
+                      >
+                        Terms and Conditions
+                      </Link>
+                    </Stack>
+                  }
                 />
-                <span
-                  style={{
-                    fontFamily: "Poppins-Regular !important",
-                    color: "#646F86",
-                  }}
-                >
-                  Accept{" "}
-                  <u
-                    onClick={() => setVisible(true)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Terms & Conditions
-                  </u>
-                </span>
                 {errObj.termsAndConditionErr && (
                   <FormHelperText
                     error
@@ -565,9 +570,8 @@ const Signup = (props) => {
                   color="primary"
                   fullWidth
                   style={{ marginBottom: 20 }}
+                  disabled={!areTermsAccepted || btnLoad}
                   onClick={validation}
-                  //     onClick={() => setVisible(true)}
-                  disabled={btnLoad}
                 >
                   {btnLoad ? (
                     <CircularProgress style={{ color: "#fff" }} size={26} />
@@ -592,10 +596,11 @@ const Signup = (props) => {
           </Grid>
         </Grid>
       </Grid>
-      <TermsAndConditions
-        acceptTerms={acceptTerms}
-        visible={visible}
-        handleClose={handleClose}
+      <TermsAndConditionsDialog
+        open={isTermsAndConditionsDialogOpen}
+        onClose={handleCloseTermsAndConditionsDialog}
+        areTermsAccepted={areTermsAccepted}
+        onAcceptTerms={handleAcceptTerms}
       />
     </div>
   );

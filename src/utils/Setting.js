@@ -13,6 +13,8 @@ export const Setting = {
     me: "api/user/me",
     login: "api/user/login",
     signup: "api/user/signup",
+    getContractorTermsAndConditions: "api/user/contractor-terms-and-conditions",
+    getHomeownerTermsAndConditions: "api/user/homeowner-terms-and-conditions",
     googleData: "auth/google",
     verifyOtp: "api/user/verify-otp",
     resendOtp: "api/user/resend-otp",

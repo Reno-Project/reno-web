@@ -106,6 +106,10 @@ const useStyles = makeStyles((theme) => {
       fontWeight: "400",
       color: "red",
     },
+    termsAndConditions: {
+      boxShadow: "none !important",
+      backgroundColor: "transparent !important",
+    },
   };
 });
 

@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
+  Outlet,
 } from "react-router-dom";
 import { Detector } from "react-detect-offline";
 import { ToastContainer } from "react-toastify";
@@ -45,6 +46,7 @@ import {
   CometChatUsersWithMessages,
 } from "@cometchat/chat-uikit-react";
 import UserManagement from "./pages/UserManagement";
+import HomeownerTermsAndConditions from "./pages/HomeownerTermsAndConditions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeJrr2C4h4tIh7Hj0L4-qa1QwRBTfyHXM",
@@ -77,18 +79,32 @@ function App() {
         return (
           <CometChatThemeContext.Provider value={ccContextValue}>
             <Router>
-              <div
-                style={{
-                  display: "flex",
-                  height: "100vh",
-                  boxSizing: "border-box",
-                  flexDirection: "column",
-                }}
-              >
-                <Header />
-                {isLogin ? (
-                  <Stack className="MT70">
-                    <Routes>
+              <Routes>
+                <Route
+                  path="/homeowner-terms-and-conditions"
+                  element={<HomeownerTermsAndConditions />}
+                />
+                <Route
+                  path="/"
+                  element={
+                    <div
+                      style={{
+                        display: "flex",
+                        height: "100vh",
+                        boxSizing: "border-box",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Header />
+                      <div className="MT70">
+                        <Outlet />
+                      </div>
+                      <Footer />
+                    </div>
+                  }
+                >
+                  {isLogin ? (
+                    <>
                       <Route
                         path={"/project/project-details/:id"}
                         element={<ProjectDetail />}
@@ -132,6 +148,21 @@ function App() {
                         element={<UserManagement />}
                       />
                       <Route
+                        index
+                        element={
+                          <Navigate
+                            to={
+                              userData?.contractor_data &&
+                              userData?.contractor_data?.profile_completed ===
+                                "pending"
+                                ? "/create-profile"
+                                : "/dashboard"
+                            }
+                          />
+                        }
+                        replace
+                      />
+                      <Route
                         path="*"
                         element={
                           <Navigate
@@ -145,32 +176,37 @@ function App() {
                           />
                         }
                       />
-                    </Routes>
-                  </Stack>
-                ) : (
-                  <>
-                    {/* <Route
-                          exact
-                          path={"/how-it-works"}
-                          element={<HowItWorks />}
-                        /> */}
-                    <Routes>
-                      <Route path={"/login"} element={<Login />} />
-                      <Route path={"/signup"} element={<Signup />} />
-                      <Route
-                        path={"/reset-password"}
-                        element={<ResetPassword />}
-                      />
-                      <Route path={"/otp-verify"} element={<OtpInput />} />
-                      <Route path={"/phone-verify"} element={<PhoneVerify />} />
-                      <Route path="*" element={<Navigate to={"/login"} />} />
-                    </Routes>
-                  </>
-                )}
-
-                <Footer />
-                <NotificationPopup />
-              </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* <Route
+                            exact
+                            path={"/how-it-works"}
+                            element={<HowItWorks />}
+                          /> */}
+                      <>
+                        <Route
+                          index
+                          element={<Navigate to="/login" replace />}
+                        />
+                        <Route path={"/login"} element={<Login />} />
+                        <Route path={"/signup"} element={<Signup />} />
+                        <Route
+                          path={"/reset-password"}
+                          element={<ResetPassword />}
+                        />
+                        <Route path={"/otp-verify"} element={<OtpInput />} />
+                        <Route
+                          path={"/phone-verify"}
+                          element={<PhoneVerify />}
+                        />
+                        <Route path="*" element={<Navigate to={"/login"} />} />
+                      </>
+                    </>
+                  )}
+                </Route>
+              </Routes>
+              <NotificationPopup />
               <ToastContainer
                 autoClose={3000}
                 pauseOnFocusLoss={false}
