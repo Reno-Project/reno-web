@@ -165,7 +165,7 @@ function Header(props) {
                         {userData?.contractor_data?.profile_completed ===
                         "pending" ? null : ( // </Button> //   Become contarctor // > //   style={{ padding: "6px 6px", fontSize: "14px" }} //   color="primary" //   variant="contained" //   }} //     logout("signup"); //   onClick={() => { // <Button
                           <>
-                            <Grid item>
+                            {/* <Grid item>
                               <Button
                                 variant="contained"
                                 onClick={() => {
@@ -183,7 +183,7 @@ function Header(props) {
                               >
                                 <img src={Images.chatico} alt="chat" />
                               </IconButton>
-                            </Grid>
+                            </Grid> */}
                           </>
                         )}
                       </>

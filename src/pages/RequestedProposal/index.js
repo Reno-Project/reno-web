@@ -1834,14 +1834,14 @@ export default function RequestedProposal() {
           padding: 5,
         }}
       >
-        <Fab
+        {/* <Fab
           variant="extended"
           color="primary"
           onClick={() => setIsChatStarted(true)}
         >
           <ChatBubbleOutline sx={{ mr: 1 }} />
           Chat
-        </Fab>
+        </Fab> */}
       </Grid>
       <Modal
         open={isChatStarted}
