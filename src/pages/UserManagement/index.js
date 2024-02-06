@@ -383,6 +383,7 @@ export default function UserManagement() {
               variant="contained"
               onClick={() => setOpen(true)}
               className="btn"
+              style={{ margin: "10px 0" }}
             >
               Add User
             </Button>
@@ -404,7 +405,7 @@ export default function UserManagement() {
                 <TableCell className="detailsHeaderValue">Actions</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody style={{ height: "430px" }}>
               {loading ? (
                 <CircularProgress
                   style={{
@@ -415,55 +416,74 @@ export default function UserManagement() {
                 />
               ) : (
                 <>
-                  {userList.map((row) => (
-                    <Row
-                      key={row.id}
-                      row={row}
-                      handleDeleteUser={handleDeleteUser}
-                    />
-                  ))}
+                  {userList.length > 0 ? (
+                    userList.map((row) => (
+                      <Row
+                        key={row.id}
+                        row={row}
+                        handleDeleteUser={handleDeleteUser}
+                      />
+                    ))
+                  ) : (
+                    <Stack
+                      position="absolute"
+                      left="50%"
+                      top="50%"
+                      style={{ transform: "translate(-50%,-50%)" }}
+                    >
+                      <Typography
+                        variant="p"
+                        fontFamily="Poppins-Medium"
+                        fontSize="24px"
+                      >
+                        No records to display
+                      </Typography>
+                    </Stack>
+                  )}
                 </>
               )}
             </TableBody>
           </Table>
         </div>
-        <div
-          style={{
-            display: "flex",
-            padding: "20px",
-            position: "sticky",
-            bottom: 0,
-            backgroundColor: "white",
-          }}
-        >
-          <Stack direction="row" alignItems="center" gap="8px">
-            <InputLabel>Items per page</InputLabel>
-            <Select
-              value={limit}
-              onChange={handleLimit}
-              style={{ fontFamily: "Poppins-Medium", color: "#000" }}
-            >
-              <MenuItem value={10} style={{ fontFamily: "Poppins-Regular" }}>
-                10
-              </MenuItem>
-              <MenuItem value={20} style={{ fontFamily: "Poppins-Regular" }}>
-                20
-              </MenuItem>
-              <MenuItem value={25} style={{ fontFamily: "Poppins-Regular" }}>
-                25
-              </MenuItem>
-              <MenuItem value={40} style={{ fontFamily: "Poppins-Regular" }}>
-                40
-              </MenuItem>
-            </Select>
-          </Stack>
-          <Pagination
-            count={pagination.totalPage}
-            page={currentPage}
-            size="large"
-            onChange={onPageChange}
-          />
-        </div>
+        {userList.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              padding: "20px",
+              position: "sticky",
+              bottom: 0,
+              backgroundColor: "white",
+            }}
+          >
+            <Stack direction="row" alignItems="center" gap="8px">
+              <InputLabel>Items per page</InputLabel>
+              <Select
+                value={limit}
+                onChange={handleLimit}
+                style={{ fontFamily: "Poppins-Medium", color: "#000" }}
+              >
+                <MenuItem value={10} style={{ fontFamily: "Poppins-Regular" }}>
+                  10
+                </MenuItem>
+                <MenuItem value={20} style={{ fontFamily: "Poppins-Regular" }}>
+                  20
+                </MenuItem>
+                <MenuItem value={25} style={{ fontFamily: "Poppins-Regular" }}>
+                  25
+                </MenuItem>
+                <MenuItem value={40} style={{ fontFamily: "Poppins-Regular" }}>
+                  40
+                </MenuItem>
+              </Select>
+            </Stack>
+            <Pagination
+              count={pagination.totalPage}
+              page={currentPage}
+              size="large"
+              onChange={onPageChange}
+            />
+          </div>
+        )}
       </div>
 
       <BlueAbout />

@@ -10,7 +10,7 @@
   gap: 30px;
   padding: 40px 36px;
   background-color: rgb(245, 246, 248);
-  flex: 1;
+  /* flex: 1; */
 }
 .tableContainer {
   display: flex;
@@ -19,7 +19,7 @@
   padding: 24px;
   border-radius: 8px;
   background: var(--gray-100, #fefeff);
-  flex: 1;
+  /* flex: 1; */
   /* font-family: Poppins-Regular !important; */
 }
 .detailsTitle {
