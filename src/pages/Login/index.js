@@ -512,16 +512,18 @@ const Login = (props) => {
                     onGoogleDone={(val) => googleDataApiCall(val?.code)}
                   />
                 </GoogleOAuthProvider>
-                <FacebookLoginButton
-                  loader={socialBtnLoad === "fb"}
-                  onSuccess={(response) => socialLoginApiCall(response, "fb")}
-                />
-                <AppleLoginButton
-                  loader={socialBtnLoad === "apple"}
-                  onSuccess={(response) =>
-                    socialLoginApiCall(response, "apple")
-                  }
-                />
+                {/*
+                  <FacebookLoginButton
+                    loader={socialBtnLoad === "fb"}
+                    onSuccess={(response) => socialLoginApiCall(response, "fb")}
+                  />
+                  <AppleLoginButton
+                    loader={socialBtnLoad === "apple"}
+                    onSuccess={(response) =>
+                      socialLoginApiCall(response, "apple")
+                    }
+                  />
+                */}
               </Grid>
               <Grid item xs={12} className={classes.needAccountContainer}>
                 <Typography className={classes.accountTextStyle}>
