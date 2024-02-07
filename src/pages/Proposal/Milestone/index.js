@@ -456,10 +456,6 @@ export default function Milestone(props) {
       valid = false;
       error.startErr = true;
       error.startMsg = "Please enter valid date";
-    } else if (moment(st).isBefore(moment(todayDate).format("DD/MM/YYYY"))) {
-      valid = false;
-      error.startErr = true;
-      error.startMsg = "Please enter valid date";
     }
 
     if (isNull(state.end_date)) {

@@ -2214,7 +2214,8 @@ export default function Milestone(props) {
                         fontSize: 12,
                       }}
                     >
-                      {_.find(milestoneCount, { type: "pending" })?.value || 0}
+                      {_.find(milestoneCount, { type: "not_started" })?.value ||
+                        0}
                     </span>
                   </Typography>
                 }
@@ -2434,7 +2435,7 @@ export default function Milestone(props) {
                           style={{ fontSize: 18 }}
                           fontFamily={"Poppins-Medium"}
                         >
-                          {`AED ${milestone?.amount}` || `AED 0`}
+                          AED {milestone.milestone_amount || "NA"}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -2961,7 +2962,7 @@ export default function Milestone(props) {
                           Amount
                         </Typography>
                         <Typography fontFamily={"Poppins-SemiBold"}>
-                          {`AED ${milestone?.amount}` || `AED 0`}
+                          {`AED ${milestone?.milestone_amount}` || `AED 0`}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -3381,6 +3382,7 @@ export default function Milestone(props) {
               </Grid>
             ) : isArray(deliveryMilestone) && !isEmpty(deliveryMilestone) ? (
               deliveryMilestone?.map((milestone, index) => {
+                console.log(deliveryMilestone, ">>>>>>>>>deliveryMilestone");
                 return (
                   <Card
                     sx={{
@@ -3436,7 +3438,7 @@ export default function Milestone(props) {
                           Amount
                         </Typography>
                         <Typography fontFamily={"Poppins-SemiBold"}>
-                          {`AED ${milestone?.amount}` || `AED 0`}
+                          {`AED ${milestone?.milestone_amount}` || `AED 0`}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -3911,7 +3913,7 @@ export default function Milestone(props) {
                           Amount
                         </Typography>
                         <Typography fontFamily={"Poppins-SemiBold"}>
-                          {`AED ${milestone?.amount}` || `AED 0`}
+                          {`AED ${milestone?.milestone_amount}` || `AED 0`}
                         </Typography>
                       </Grid>
                     </Grid>

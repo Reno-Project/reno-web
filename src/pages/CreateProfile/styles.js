@@ -2,8 +2,7 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
   headerContainer: {
-    display: "block",
-    paddingTop: "50px",
+    display: "flex",
     width: "100%",
     height: "261px",
     background:
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid #F2F4F7",
     marginBottom: 40,
     padding: "48px 0px",
-    transform: "translateY(-108px)",
+    transform: "translateY(-78px)",
   },
   buttonAbsoluteDiv: {
     position: "absolute",

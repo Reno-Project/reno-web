@@ -171,22 +171,22 @@ const Login = (props) => {
           navigate("/otp-verify", {
             state: { data: response?.data, type: "email" },
           });
-        } else if (
-          response?.is_phone_verified === false ||
-          response?.data?.is_phone_verified === false
-        ) {
-          navigate("/phone-verify", {
-            state: { data: response?.data, type: "phone" },
-          });
-        } else if (response?.data?.is_two_factor_verified) {
-          console.log("hiiiiiiiiiii");
-          navigate("/otp-verify", {
-            state: {
-              data: response?.data,
-              type: "email",
-              subtype: "two_factor",
-            },
-          });
+          // } else if (
+          //   response?.is_phone_verified === false ||
+          //   response?.data?.is_phone_verified === false
+          // ) {
+          //   navigate("/phone-verify", {
+          //     state: { data: response?.data, type: "phone" },
+          //   });
+          // } else if (response?.data?.is_two_factor_verified) {
+          //   console.log("hiiiiiiiiiii");
+          //   navigate("/otp-verify", {
+          //     state: {
+          //       data: response?.data,
+          //       type: "email",
+          //       subtype: "two_factor",
+          //     },
+          //   });
           // sendOtpVerifyingApiCall(response?.data);
         } else if (
           response?.data?.contractor_data &&

@@ -293,11 +293,11 @@ const Signup = (props) => {
           response?.data?.is_email_verified === false
         ) {
           navigate("/otp-verify", { state: { data, type: "email" } });
-        } else if (
-          response?.is_phone_verified === false ||
-          response?.data?.is_phone_verified === false
-        ) {
-          navigate("/phone-verify", { state: { data, type: "phone" } });
+          // } else if (
+          //   // response?.is_phone_verified === false ||
+          //   // response?.data?.is_phone_verified === false
+          // ) {
+          // navigate("/phone-verify", { state: { data, type: "phone" } });
         } else {
           dispatch(setToken(response?.token));
           dispatch(setUserData(response?.data));
