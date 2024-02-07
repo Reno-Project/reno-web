@@ -10,7 +10,7 @@
   background: var(--gray-100, #fefeff);
   padding: 20px;
   font-family: Poppins-Regular !important;
-  /* flex: 1; */
+  flex: 1;
 }
 
 .detailsTitle {
