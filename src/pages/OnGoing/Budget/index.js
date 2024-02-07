@@ -157,8 +157,6 @@ export default function Budget(props) {
   };
 
   const [amounts, setAmounts] = useState([]);
-  const [visibleEditModal, setVisibleEditModal] = useState(false);
-  const [btnUpdateLoader, setBtnUpdateLoader] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -320,7 +318,7 @@ export default function Budget(props) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item container className={classes.contentContainer}>
+        {/* <Grid item container className={classes.contentContainer}>
           <Grid item lg={12} sm={12} md={12} xs={12} pb={2}>
             <Typography className={classes.MainTitle}>Budget</Typography>
           </Grid>
@@ -337,9 +335,11 @@ export default function Budget(props) {
               pb={2}
             >
               <Grid item lg={12} sm={12} md={12} xs={12}>
-                <Typography className={classes.acctext}>New Amount:</Typography>
+                <Typography className={classes.acctext}>
+                  Remaining Amount:
+                </Typography>
                 <Typography className={classes.accRightText}>
-                  AED 2,000
+                  AED {villa?.milestone_budget_data.remaing_amount}
                 </Typography>
               </Grid>
             </Grid>
@@ -356,10 +356,10 @@ export default function Budget(props) {
             >
               <Grid item lg={12} sm={12} md={12} xs={12}>
                 <Typography className={classes.acctext}>
-                  Original amount:
+                  Next Payment:
                 </Typography>
                 <Typography className={classes.accRightText}>
-                  AED 1,750
+                  AED {villa?.milestone_budget_data.next_payment}
                 </Typography>
               </Grid>
             </Grid>
@@ -380,7 +380,7 @@ export default function Budget(props) {
                 Released: AED {1000}
               </Typography>
             </Grid> */}
-            {/* <Grid
+        {/* <Grid
               item
               container
               alignItems="center"
@@ -394,8 +394,8 @@ export default function Budget(props) {
                 In escrow: AED {1500 - 1000}
               </Typography>
             </Grid> */}
-          </Grid>
-          {/* <Grid item container justifyContent={"space-between"}>
+        {/* </Grid> */}
+        {/* <Grid item container justifyContent={"space-between"}>
             <Grid
               item
               container
@@ -437,7 +437,7 @@ export default function Budget(props) {
               </Grid>
             </Grid>
           </Grid> */}
-          <div
+        {/* <div
             style={{
               width: "100%",
               padding: "14px 0px",
@@ -445,7 +445,7 @@ export default function Budget(props) {
           >
             <Divider />
           </div>
-        </Grid>
+        </Grid> */}
         <Grid item container py={2}>
           <Typography className={classes.MainTitle}>Items:</Typography>
         </Grid>
@@ -918,7 +918,7 @@ export default function Budget(props) {
             );
           })
         )}
-        <Grid item container alignItems={"center"} mb={2}>
+        {/* <Grid item container alignItems={"center"} mb={2}>
           <Button
             variant="contained"
             onClick={() => {
@@ -930,7 +930,7 @@ export default function Budget(props) {
             />
             Add Budget
           </Button>
-        </Grid>
+        </Grid> */}
       </Grid>
     </>
   );

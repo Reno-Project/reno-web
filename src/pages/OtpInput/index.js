@@ -60,23 +60,21 @@ const OtpInput = (props) => {
       });
 
       if (response.success) {
-        if (fromType === "email" && is2Fa === false) {
-          navigate("/phone-verify", { state: { data: locationState } });
-        } else {
-          if (!response?.data?.is_two_factor_verified) {
-            toast.success(response?.message);
-          }
-          dispatch(setUserData(response?.data));
-          dispatch(setToken(response?.token));
-          // move to create profile screen
-          if (
-            response?.data?.contractor_data?.profile_completed === "pending"
-          ) {
-            navigate("/create-profile");
-          } else {
-            navigate("/dashboard");
-          }
+        // if (fromType === "email" && is2Fa === false) {
+        //   navigate("/phone-verify", { state: { data: locationState } });
+        // } else {
+        if (!response?.data?.is_two_factor_verified) {
+          toast.success(response?.message);
         }
+        dispatch(setUserData(response?.data));
+        dispatch(setToken(response?.token));
+        // move to create profile screen
+        if (response?.data?.contractor_data?.profile_completed === "pending") {
+          navigate("/create-profile");
+        } else {
+          navigate("/dashboard");
+        }
+        // }
       } else {
         toast.error(response?.message);
         setOutput("");
