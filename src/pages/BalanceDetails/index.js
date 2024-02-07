@@ -357,7 +357,7 @@ export default function BalanceDetails() {
               AED {totalBalance}
             </Typography>
           </Stack>
-          <Stack>
+          <Stack flex={1} position="relative">
             {loading ? (
               <CircularProgress
                 style={{
@@ -373,8 +373,15 @@ export default function BalanceDetails() {
                     <Details key={project.id} project={project} />
                   ))
                 ) : (
-                  <Stack textAlign="center">
-                    <p>No Data</p>
+                  <Stack
+                    justifyContent="center"
+                    alignItems="center"
+                    flex={1}
+                    border="1px dashed #B1B1B1"
+                  >
+                    <Typography fontFamily="Poppins-Medium" fontSize="16px">
+                      No records to display
+                    </Typography>
                   </Stack>
                 )}
               </>
