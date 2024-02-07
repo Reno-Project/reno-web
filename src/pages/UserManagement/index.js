@@ -389,61 +389,57 @@ export default function UserManagement() {
             </Button>
           </div>
 
-          <Table sx={{ maxHeight: 200 }}>
-            <TableHead>
-              <TableRow>
-                <TableCell className="detailsHeaderValue"> ID</TableCell>
-                <TableCell className="detailsHeaderValue">Name</TableCell>
-                <TableCell className="detailsHeaderValue">Phone</TableCell>
-                <TableCell className="detailsHeaderValue">Email</TableCell>
-                <TableCell className="detailsHeaderValue">
-                  Creation Date
-                </TableCell>
-                {/* <TableCell className="detailsHeaderValue">
+          {userList.length > 0 ? (
+            <Table sx={{ maxHeight: 200 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell className="detailsHeaderValue"> ID</TableCell>
+                  <TableCell className="detailsHeaderValue">Name</TableCell>
+                  <TableCell className="detailsHeaderValue">Phone</TableCell>
+                  <TableCell className="detailsHeaderValue">Email</TableCell>
+                  <TableCell className="detailsHeaderValue">
+                    Creation Date
+                  </TableCell>
+                  {/* <TableCell className="detailsHeaderValue">
                   Assigned Projects
                 </TableCell> */}
-                <TableCell className="detailsHeaderValue">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody style={{ height: "430px" }}>
-              {loading ? (
-                <CircularProgress
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                  }}
-                />
-              ) : (
-                <>
-                  {userList.length > 0 ? (
-                    userList.map((row) => (
+                  <TableCell className="detailsHeaderValue">Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {loading ? (
+                  <CircularProgress
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                    }}
+                  />
+                ) : (
+                  <>
+                    {userList.map((row) => (
                       <Row
                         key={row.id}
                         row={row}
                         handleDeleteUser={handleDeleteUser}
                       />
-                    ))
-                  ) : (
-                    <Stack
-                      position="absolute"
-                      left="50%"
-                      top="50%"
-                      style={{ transform: "translate(-50%,-50%)" }}
-                    >
-                      <Typography
-                        variant="p"
-                        fontFamily="Poppins-Medium"
-                        fontSize="24px"
-                      >
-                        No records to display
-                      </Typography>
-                    </Stack>
-                  )}
-                </>
-              )}
-            </TableBody>
-          </Table>
+                    ))}
+                  </>
+                )}
+              </TableBody>
+            </Table>
+          ) : (
+            <Stack
+              justifyContent="center"
+              alignItems="center"
+              flex={1}
+              border="1px dashed #B1B1B1"
+            >
+              <Typography fontFamily="Poppins-Medium" fontSize="16px">
+                No records to display
+              </Typography>
+            </Stack>
+          )}
         </div>
         {userList.length > 0 && (
           <div

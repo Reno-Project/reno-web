@@ -96,7 +96,10 @@ function App() {
                       }}
                     >
                       <Header />
-                      <div className="MT70">
+                      <div
+                        className="MT70"
+                        style={{ display: "flex", flexDirection: "column" }}
+                      >
                         <Outlet />
                       </div>
                       <Footer />
