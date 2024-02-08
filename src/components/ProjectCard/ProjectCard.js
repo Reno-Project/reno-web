@@ -25,9 +25,7 @@ const ProjectCard = (props) => {
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
-  const createdAt = moment(villa?.start_date, "DD/MM/YYYY").format(
-    "DD.MM.YYYY"
-  );
+  const createdAt = moment(villa?.createdAt).format("DD.MM.YYYY");
   const endDate = moment(villa?.end_date, "DD/MM/YYYY").format("DD.MM.YYYY");
   const updatedAt = moment(villa?.updatedAt).format("DD.MM.YYYY");
   const moveInDate = moment(villa?.move_in_date, "YYYY-MM-DD").format(

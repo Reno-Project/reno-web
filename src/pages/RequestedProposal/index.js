@@ -196,7 +196,7 @@ export default function RequestedProposal() {
                         color: color.white,
                       }}
                     >
-                      {isSubmitted ? "SUBMITTED" : "REQUEST"}
+                      {isSubmitted ? "Submitted" : "Request"}
                     </span>
                   </Grid>
                   <Grid item lg={3} md={3} sm={6} xs={6}>
@@ -772,9 +772,7 @@ export default function RequestedProposal() {
                         component={"span"}
                         className={classes.accRightText}
                       >
-                        {moment(villa?.start_date, "DD/MM/YYYY").format(
-                          "MMM DD, YYYY"
-                        )}
+                        {moment(villa?.start_date).format("MMM DD, YYYY")}
                       </Typography>
                     </Grid>
                     <Grid
@@ -797,9 +795,7 @@ export default function RequestedProposal() {
                         component={"span"}
                         className={classes.accRightText}
                       >
-                        {moment(villa?.end_date, "DD/MM/YYYY").format(
-                          "MMM DD, YYYY"
-                        )}
+                        {moment(villa?.end_date).format("MMM DD, YYYY")}
                       </Typography>
                     </Grid>
                   </>
@@ -1789,6 +1785,7 @@ export default function RequestedProposal() {
                     columnGap={1}
                     rowGap={1}
                     justifyContent={"space-between"}
+                    marginTop="16px"
                   >
                     <Grid item sm={5.9} xs={12}>
                       <Button

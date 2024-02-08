@@ -13,11 +13,10 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     backgroundColor: color.white,
-    height: "200px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: "23px 24px",
+    padding: "24px 24px",
     gap: "16px",
     flex: "1 0 0",
     borderRadius: "0px 12px",
@@ -51,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "16px !important",
     lineHeight: "24px !important",
     textAlign: "center",
+    whiteSpace: "nowrap",
   },
   annualC: {
     color: "#475569",
@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
     fontStyle: "normal",
     fontWeight: 400,
     lineHeight: "24px",
+    whiteSpace: "nowrap",
   },
   ptitle: {
     color: "#030F1C",

@@ -431,29 +431,15 @@ export default function Summary(props) {
       <div className={classes.title}>Submit Proposal</div>
       <Grid
         container
-        // flexDirection="row-reverse"
         style={{ padding: isMobile && !isTablet ? "20px 0" : md ? 20 : 40 }}
-        // justifyContent={!createProposal && !md ? "space-between" : "center"}
+        justifyContent={!createProposal && !md ? "space-between" : "center"}
         boxSizing={"border-box"}
       >
-        {/* {!createProposal && (
-          <Grid
-            item
-            container
-            xs={isMobile ? 11 : 10}
-            sm={10}
-            md={12}
-            xl={12}
-            className={classes.MainContainer}
-          >
-            <ProposalCard villa={villa} />
-          </Grid>
-        )} */}
         <Grid
           item
           xs={isMobile ? 11 : 10}
-          sm={9}
-          md={createProposal ? 12 : 7.5}
+          sm={10}
+          md={7.8}
           xl={8}
           className={classes.MainContainer}
         >
@@ -934,10 +920,10 @@ export default function Summary(props) {
           <Grid
             item
             container
-            xs={isMobile ? 10 : 5}
-            sm={3}
-            md={4.2}
-            xl={12}
+            xs={isMobile ? 11 : 10}
+            sm={10}
+            md={4}
+            xl={3}
             className={classes.MainContainer}
           >
             <ProposalCard villa={villa} />

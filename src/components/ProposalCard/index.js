@@ -75,7 +75,7 @@ export default function ProposalCard(props) {
                 color: "#FFFFFF",
               }}
             >
-              {villa?.status === "ongoing" ? "Ongoing" : "REQUEST"}
+              {villa?.status === "ongoing" ? "Ongoing" : "Request"}
             </span>
           </Grid>
         </Grid>
@@ -196,7 +196,7 @@ export default function ProposalCard(props) {
                 </Grid>
                 <Grid item lg={8} sm={8} md={8} xs={8} textAlign={"end"}>
                   <Typography className={classes.accRightText}>
-                    AED {villa?.budget || "NA"}
+                    AED {villa?.budget_without_commission || "NA"}
                   </Typography>
                 </Grid>
                 <Grid item lg={4} sm={4} md={4} xs={4}>
