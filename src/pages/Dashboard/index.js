@@ -5,11 +5,12 @@ import {
   Grid,
   IconButton,
   Rating,
+  Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import _, { isArray, isEmpty } from "lodash";
+import { isArray, isEmpty } from "lodash";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../redux/reducers/auth/actions";
@@ -34,6 +35,21 @@ import "slick-carousel/slick/slick-theme.css";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import "./index.css";
+
+const DashboardIcon = ({ children }) => {
+  return (
+    <Stack
+      justifyContent="center"
+      alignItems="center"
+      width="42px"
+      height="42px"
+      borderRadius="50%"
+      backgroundColor="rgba(39, 75, 241, 0.12)"
+    >
+      {children}
+    </Stack>
+  );
+};
 
 const Dashboard = (props) => {
   const classes = useStyles();
@@ -66,9 +82,9 @@ const Dashboard = (props) => {
     getStates();
     askForPermissionToReceiveNotifications();
     onMessageListener();
-    requestedProposalApiCall("proposal", true);
     requestedProposalApiCall("Requested", true);
     requestedProposalApiCall("ongoing", true);
+    requestedProposalApiCall("proposal", true);
 
     return () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -105,7 +121,7 @@ const Dashboard = (props) => {
     try {
       const response = await getApiData(
         `${Setting.endpoints.listcontractorproject}?status=${type}`,
-        "get",
+        "GET",
         {}
       );
       if (response?.success) {
@@ -183,6 +199,7 @@ const Dashboard = (props) => {
     //   },
     // ],
   };
+
   return (
     <>
       <Grid
@@ -213,6 +230,7 @@ const Dashboard = (props) => {
               </Typography>
               <Button
                 variant="contained"
+                style={{ whiteSpace: "nowrap" }}
                 onClick={() => {
                   dispatch(setProposalDetails({}));
                   navigate("/create-proposal", {
@@ -232,17 +250,9 @@ const Dashboard = (props) => {
               alignItems={"flex-start"}
               justifyContent={"center"}
             >
-              <img
-                alt="Annual contracts value"
-                src={Images.dollar}
-                style={{
-                  height: 24,
-                  width: 24,
-                  padding: 8,
-                  backgroundColor: "rgba(39, 75, 241, 0.12)",
-                  borderRadius: 30,
-                }}
-              />
+              <DashboardIcon>
+                <img alt="Annual contracts value" src={Images.dollar} />
+              </DashboardIcon>
               <Typography className={classes.annualC}>
                 Annual contracts value
               </Typography>
@@ -255,17 +265,9 @@ const Dashboard = (props) => {
               alignItems={"flex-start"}
               justifyContent={"center"}
             >
-              <img
-                alt="Annual contracts value"
-                src={Images.verify_green}
-                style={{
-                  height: 24,
-                  width: 24,
-                  padding: 8,
-                  backgroundColor: "rgba(92, 196, 133, 0.12)",
-                  borderRadius: 30,
-                }}
-              />
+              <DashboardIcon>
+                <img alt="Annual contracts value" src={Images.verify_green} />
+              </DashboardIcon>
               <Typography className={classes.annualC}>
                 Active Contracts
               </Typography>
@@ -278,17 +280,9 @@ const Dashboard = (props) => {
               alignItems={"flex-start"}
               justifyContent={"center"}
             >
-              <img
-                alt="Annual contracts value"
-                src={Images.eye}
-                style={{
-                  height: 24,
-                  width: 24,
-                  padding: 8,
-                  backgroundColor: "rgba(242, 107, 89, 0.12)",
-                  borderRadius: 30,
-                }}
-              />
+              <DashboardIcon>
+                <img alt="Annual contracts value" src={Images.eye} />
+              </DashboardIcon>
               <Typography className={classes.annualC}>
                 Profile Views today
               </Typography>
@@ -301,18 +295,9 @@ const Dashboard = (props) => {
               alignItems={"flex-start"}
               justifyContent={"center"}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "rgba(233, 181, 92, 0.12)",
-                  padding: 8,
-                  borderRadius: 25,
-                }}
-              >
+              <DashboardIcon>
                 <Rating name="rating" value={4.5} max={1} readOnly />
-              </div>
+              </DashboardIcon>
               <Typography className={classes.annualC}>455 Reviews</Typography>
               <span className={"card_value"}> {states?.average_rating}</span>
             </Grid>

@@ -7,4 +7,5 @@
   font-style: normal;
   font-weight: 600 !important;
   line-height: 32px !important; /* 133.333% */
+  white-space: nowrap;
 }
