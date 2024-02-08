@@ -439,8 +439,8 @@ export default function Summary(props) {
           item
           xs={isMobile ? 11 : 10}
           sm={10}
-          md={7.8}
-          xl={8}
+          md={createProposal ? 10 : 7.8}
+          xl={createProposal ? 11 : 8}
           className={classes.MainContainer}
         >
           <Grid

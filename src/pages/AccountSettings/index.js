@@ -27,7 +27,7 @@ export default function AccountSettings() {
 
   return (
     <>
-      <Grid container xs={12} sm={9} md={8} lg={6}>
+      <Grid container xs={12} sm={9} md={10} lg={10}>
         <Grid item xs={12}>
           <Typography className={classes.header}>Account Settings</Typography>
         </Grid>
