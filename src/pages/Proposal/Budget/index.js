@@ -305,7 +305,7 @@ export default function Budget(props) {
         error.materialUnitPriceMsg = "Please enter the material unit price";
       } else if (
         !regex.test(state.material_unit_price) ||
-        parseInt(state.material_unit_price) <= 0
+        parseInt(state.material_unit_price) < 0
       ) {
         valid = false;
         error.materialUnitPriceErr = true;
@@ -377,7 +377,7 @@ export default function Budget(props) {
           error.materialUnitPriceMsg = "Please enter the material unit price";
         } else if (
           !regex.test(state.material_unit_price) ||
-          parseInt(state.material_unit_price) <= 0
+          parseInt(state.material_unit_price) < 0
         ) {
           valid = false;
           error.materialUnitPriceErr = true;
