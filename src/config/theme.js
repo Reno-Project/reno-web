@@ -71,6 +71,10 @@ theme = createTheme(theme, {
           border: "0px",
           color: color.secondary,
           backgroundColor: color.LightSurface,
+          boxShadow: "none",
+          "&:hover": {
+            border: "none",
+          },
         },
       },
     },

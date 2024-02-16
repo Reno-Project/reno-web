@@ -4,6 +4,7 @@ import FormControl from "@mui/material/FormControl";
 import styled from "@emotion/styled";
 import ShowPasswordValidation from "../CSelect/ShowPasswordValidation";
 import { isEmpty } from "lodash";
+import useStyles from "./styles";
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
   padding: 0,
@@ -31,6 +32,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 }));
 
 function CInput(props) {
+  const classes = useStyles();
   const {
     label = "",
     placeholder = "",
@@ -48,7 +50,7 @@ function CInput(props) {
 
   return (
     <FormControl variant="standard" fullWidth required={required} error={error}>
-      <InputLabel shrink htmlFor="bootstrap-input">
+      <InputLabel shrink htmlFor="bootstrap-input" className={classes.title}>
         {label}
       </InputLabel>
 
