@@ -47,6 +47,9 @@ const SingleMilestoneAccordion = ({
               margin: 0,
               padding: "10px",
             },
+            "Mui-expanded": {
+              margin: "0px",
+            },
           }}
         >
           <Grid container>

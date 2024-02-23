@@ -87,10 +87,8 @@ export default function Summary(props) {
       setPageLoad(false);
     }
   }
-  console.log(projectDetails, "project details");
-
   return (
-    <>
+    <div>
       <div style={{ padding: md ? 20 : 40, backgroundColor: "#F9F9FA" }}>
         <Grid item container>
           <Typography className={classes.header}>Ongoing Project</Typography>
@@ -109,7 +107,7 @@ export default function Summary(props) {
             xs={isMobile ? 11 : 10}
             sm={10}
             md={4}
-            xl={3}
+            xl={3.7}
             className={classes.MainContainer}
           >
             <ProposalCard villa={projectDetails} from="ongoing" />
@@ -2422,6 +2420,6 @@ export default function Summary(props) {
           setIsPressed(false);
         }}
       />
-    </>
+    </div>
   );
 }

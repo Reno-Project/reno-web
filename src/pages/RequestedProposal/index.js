@@ -336,7 +336,7 @@ export default function RequestedProposal() {
                     </span>
                   </Typography>
                 </Stack>
-                <Divider />
+                {villa?.milestone?.length > 1 && <Divider />}
                 <Stack width="100%" gap="8px">
                   {villa?.milestone?.map((milestone, index) => {
                     return (
@@ -367,7 +367,7 @@ export default function RequestedProposal() {
               </Stack>
             </>
           )}
-          <Divider />
+          {villa?.milestone?.length > 0 && <Divider />}
         </Grid>
       </Grid>
       <Grid

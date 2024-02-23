@@ -6,7 +6,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import useStyles from "./styles";
 import Images from "../../config/images";
 import theme from "../../config/theme";
@@ -14,8 +14,12 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
 import ImageViewer from "../ImageViewer";
+
+import { TabPanel } from "../TabPanel";
+import CometChatComponent from "./CometChatComponent";
+import { isArray } from "lodash";
+import { isEmpty } from "lodash";
 
 const errorObj = {
   scpErr: false,
@@ -23,11 +27,13 @@ const errorObj = {
 };
 
 export default function ProposalCard(props) {
-  const { villa, from } = props;
+  const { villa } = props;
   const classes = useStyles();
+
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
     : villa?.user_data || {};
+
   const [expandProjectInfo, setExpandProjectInfo] = useState(true);
   const [expandAttachments, setExpandAttachments] = useState(true);
   const [isPressed, setIsPressed] = useState(false);
@@ -94,7 +100,7 @@ export default function ProposalCard(props) {
           </Tabs>
         </Grid>
       </Grid>
-      {tabValueforcard === 0 ? (
+      <TabPanel value={tabValueforcard} index={0}>
         <>
           <Accordion
             style={{ marginTop: 10, boxShadow: "none" }}
@@ -147,7 +153,7 @@ export default function ProposalCard(props) {
                     {villa?.space || "NA"}
                   </Typography>
                 </Grid>
-                {/* {isArray(villa?.form_json) &&
+                {isArray(villa?.form_json) &&
                   !isEmpty(villa?.form_json) &&
                   villa?.form_json?.map((item, index) => {
                     return (
@@ -188,7 +194,7 @@ export default function ProposalCard(props) {
                         </Grid>
                       </>
                     );
-                  })} */}
+                  })}
                 <Grid item lg={4} sm={4} md={4} xs={4}>
                   <Typography className={classes.acctext}>
                     Project Budget:
@@ -247,9 +253,13 @@ export default function ProposalCard(props) {
             <AccordionDetails>
               <Grid item container alignContent={"center"}>
                 <Grid item lg={12}>
-                  {villa?.project_image?.map((item, index) => {
+                  {villa?.project_image?.map((item) => {
                     return (
-                      <a href={url ? `${url}` : null} target="_blank">
+                      <a
+                        href={url ? `${url}` : null}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         <img
                           onClick={() => {
                             if (item?.type?.includes("image")) {
@@ -283,26 +293,18 @@ export default function ProposalCard(props) {
             </AccordionDetails>
           </Accordion>
         </>
-      ) : tabValueforcard === 1 ? (
-        <>
-          <Grid item style={{ marginTop: 10 }}>
-            <Typography className={classes.titleText}>Coming Soon</Typography>
-          </Grid>
-        </>
-      ) : null}
-      <ImageViewer
+      </TabPanel>
+      <TabPanel value={tabValueforcard} index={1}>
+        <CometChatComponent GUID={villa?.project_slug} />
+      </TabPanel>
+      {/* <ImageViewer
         url={imgurl}
         visible={isPressed}
         isPdf={url}
         onClose={() => {
           setIsPressed(false);
         }}
-      />
-      {/* {tabValueforcard === 1 ? (
-        <>
-          <Grid item xs={12}></Grid>
-        </>
-      ) : null} */}
+      /> */}
     </Grid>
   );
 }

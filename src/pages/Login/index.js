@@ -139,26 +139,27 @@ const Login = (props) => {
       };
 
       if (response.success) {
+        console.log(response, ">>>>>>response");
         // fetch(
-        //   `https://appid.api-us.cometchat.io/v3/users/${cometChatUserdata.uid}/auth_tokens`
+        //   `https://appid.api-us.cometchat.io/v3/users/${response.data.cometChatData.uid}/auth_tokens`
         // ).then((res) => {
-        //   CometChatUIKit.getLoggedinUser().then(
-        //     (user) => {
-        //       if (!user) {
-        //         CometChatUIKit.login(res.authToken).then(
-        //           (user) => {
-        //             console.log("Login Successful:", { user });
-        //           },
-        //           (error) => {
-        //             console.log("Login failed with exception:", { error });
-        //           }
-        //         );
-        //       }
-        //     },
-        //     (error) => {
-        //       console.log("Something went wrong", error);
-        //     }
-        //   );
+        CometChatUIKit.getLoggedinUser().then(
+          (user) => {
+            if (!user) {
+              CometChatUIKit.login(response.data.cometChatData.uid).then(
+                (user) => {
+                  console.log("Login Successful:", { user });
+                },
+                (error) => {
+                  console.log("Login failed with exception:", { error });
+                }
+              );
+            }
+          },
+          (error) => {
+            console.log("Something went wrong", error);
+          }
+        );
         // });
 
         dispatch(setToken(response?.token));

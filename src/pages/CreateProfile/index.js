@@ -252,11 +252,11 @@ const CreateProfile = (props) => {
     const newUser = new CometChat.User(newUserUid);
     newUser.setName(uname);
     newUser.setStatus("online");
-    if (logo) {
-      const imgUrl = URL.createObjectURL(logo);
-      console.log(">>>> imgUrl ", imgUrl);
-      //   newUser.setAvatar(imgUrl);
-    }
+    // if (logo) {
+    //   const imgUrl = URL.createObjectURL(logo);
+    //   console.log(">>>> imgUrl ", imgUrl);
+    //     newUser.setAvatar(imgUrl);
+    // }
 
     CometChat.createUser(newUser, process.env.REACT_APP_AUTHKEY)
       .then((res) => {
@@ -719,6 +719,7 @@ const CreateProfile = (props) => {
         data.business_logo = state?.businessLogo ? state?.businessLogo : "";
       }
       data.cometChatUid = uuid();
+
       const response = await getAPIProgressData(
         Setting.endpoints.addContractorDetails,
         "POST",
@@ -728,8 +729,8 @@ const CreateProfile = (props) => {
 
       if (response.success) {
         // createUserInCometChat(
-        //   userData.cometChatUid,
-        //   userData.username,
+        //   response.data.contractor_data.cometChatUid,
+        //   response.data.username,
         //   state?.businessLogo ? state?.businessLogo : ""
         // );
         continueStep(1);
