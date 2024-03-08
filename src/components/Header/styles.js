@@ -4,7 +4,7 @@ import { color } from "../../config/theme";
 const useStyles = makeStyles((theme) => ({
   headerMainCon: {
     top: 0,
-    zIndex: 1000,
+    zIndex: 2,
     position: "sticky",
     height: "70px",
     padding: "10px 40px",

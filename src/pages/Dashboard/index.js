@@ -39,10 +39,10 @@ import "./index.css";
 const DashboardIcon = ({ children }) => {
   return (
     <Stack
-      justifyContent="center"
-      alignItems="center"
       width="42px"
       height="42px"
+      justifyContent="center"
+      alignItems="center"
       borderRadius="50%"
       backgroundColor="rgba(39, 75, 241, 0.12)"
     >
@@ -51,7 +51,7 @@ const DashboardIcon = ({ children }) => {
   );
 };
 
-const Dashboard = (props) => {
+const Dashboard = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const emailRegex =
@@ -66,8 +66,6 @@ const Dashboard = (props) => {
   const [states, setStates] = useState(null);
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
-  const md = useMediaQuery(theme.breakpoints.down("md"));
-  const lg = useMediaQuery(theme.breakpoints.down("lg"));
 
   const [ongoingProjects, setOngoingProjects] = useState([]);
   const [requestedProposal, setRequestedProposal] = useState([]);
@@ -170,7 +168,6 @@ const Dashboard = (props) => {
   const settings = {
     dots: false,
     infinite: false,
-    // slidesToShow: 4,
     slidesToScroll: 1,
     swipeToSlide: false,
     variableWidth: true,

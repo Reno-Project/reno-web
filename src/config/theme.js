@@ -303,6 +303,22 @@ theme = createTheme(theme, {
         },
       },
     },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          "&:last-child": {
+            paddingBottom: "16px",
+          },
+        },
+      },
+    },
+    MuiListItemText: {
+      styleOverrides: {
+        root: {
+          margin: "0px",
+        },
+      },
+    },
   },
 });
 
