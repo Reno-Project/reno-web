@@ -1,0 +1,36 @@
+.cc-threaded-messages__bubbleview,
+.cc__messagelist__bubble {
+  overflow: hidden !important;
+  font-family: Poppins-Regular !important;
+  padding: 8px 0px !important;
+  margin-bottom: 8px !important;
+}
+
+.cc__messagelist__bubble {
+  margin-bottom: 0px !important;
+}
+
+.cc-threaded-messages__actionview {
+  display: none !important;
+}
+
+.cc__messageinfo {
+  overflow: auto !important;
+  height: 50vh !important;
+}
+
+.cc-messages__threaded {
+  overflow: hidden !important;
+}
+
+.cc-threaded-messages__header {
+  border-bottom: 1px solid #f3f4f9;
+}
+
+.cc__messageinfo .cc__messageinfo__header {
+  font-size: 20px !important;
+}
+
+.cc-message-composer__header {
+  display: none !important;
+}

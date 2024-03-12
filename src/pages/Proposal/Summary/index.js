@@ -32,6 +32,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import moment from "moment";
 import { FormControl } from "@mui/material";
 import Images from "../../../config/images";
+import Details from "../Details";
 
 const errorObj = {
   scpErr: false,
@@ -92,8 +93,7 @@ export default function Summary(props) {
   const [disableBudget, setDisableBudget] = useState(true);
   const [loader, setloader] = useState(false);
   const [expertiseList, setExpertiesList] = useState([]);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [disableDetailsTab, setDisableDetailsTab] = useState(true);
 
   useEffect(() => {
     if (
@@ -106,8 +106,6 @@ export default function Summary(props) {
       setScope(proposalDetails?.scope_of_work);
       setProjectType(proposalDetails?.project_type || "");
       setName(proposalDetails?.name || "");
-      setStartDate(proposalDetails?.start_date || "");
-      setEndDate(proposalDetails?.end_date || "");
       setDescription(proposalDetails?.description || "");
       setCustomerName(proposalDetails?.customer_name || "");
       setEmail(proposalDetails?.email || "");
@@ -129,16 +127,6 @@ export default function Summary(props) {
       error.scpMsg = "Please enter scope of project";
     }
 
-    if (isEmpty(startDate)) {
-      valid = false;
-      error.startErr = true;
-      error.startMsg = "Please enter start date";
-    }
-    if (isEmpty(endDate)) {
-      valid = false;
-      error.endErr = true;
-      error.endMsg = "Please enter end date";
-    }
     if (createProposal) {
       if (!projectType) {
         valid = false;
@@ -190,8 +178,6 @@ export default function Summary(props) {
             name,
             description: description,
             email,
-            start_date: startDate,
-            end_date: endDate,
             customer_name: customerName,
             project: originalDoc || [],
             // project_origin: originalDoc,
@@ -427,12 +413,20 @@ export default function Summary(props) {
     }
   }
   return (
-    <div style={{ backgroundColor: "#F9F9FA" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        backgroundColor: "#F9F9FA",
+      }}
+    >
       <div className={classes.title}>Submit Proposal</div>
       <Grid
         container
         style={{ padding: isMobile && !isTablet ? "20px 0" : md ? 20 : 40 }}
         justifyContent={!createProposal && !md ? "space-between" : "center"}
+        flex={1}
         boxSizing={"border-box"}
       >
         <Grid
@@ -461,6 +455,7 @@ export default function Summary(props) {
                 <Tab label="Summary" />
                 <Tab label="Milestone" disabled={disableMilestone} />
                 <Tab label="Budget" disabled={disableBudget} />
+                <Tab label="Details" disabled={disableDetailsTab} />
               </Tabs>
             </Grid>
             {tabValue === 0 ? (
@@ -758,106 +753,6 @@ export default function Summary(props) {
                     </Grid>
                   </>
                 )}
-
-                <Grid
-                  item
-                  container
-                  columnGap={1}
-                  wrap={md ? "wrap" : "nowrap"}
-                >
-                  <Grid item xs={12} md={6} mb={2}>
-                    <FormControl
-                      variant="standard"
-                      fullWidth
-                      error={errObj.startErr}
-                      style={{ position: "relative" }}
-                    >
-                      <InputLabel shrink htmlFor="start-date">
-                        Start Date:
-                      </InputLabel>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                          disablePast
-                          value={new Date(startDate)}
-                          onChange={(e, v) => {
-                            setStartDate(moment(e).format("yyyy-MM-DD"));
-                            setErrObj({
-                              ...errObj,
-                              startErr: false,
-                              startMsg: "",
-                            });
-                          }}
-                          sx={{
-                            width: "100%",
-                            marginTop: "24px",
-                          }}
-                          format="MMMM dd, yyyy"
-                          components={{
-                            OpenPickerIcon: () => (
-                              <img
-                                src={Images.calendarIcon}
-                                alt="calender-icon"
-                              ></img>
-                            ),
-                          }}
-                          slotProps={{
-                            textField: {
-                              helperText: errObj.startMsg,
-                              error: errObj.startErr,
-                              id: "start-date",
-                            },
-                          }}
-                        />
-                      </LocalizationProvider>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={6} mb={2}>
-                    <FormControl
-                      variant="standard"
-                      fullWidth
-                      error={errObj.endErr}
-                      style={{ position: "relative" }}
-                    >
-                      <InputLabel shrink htmlFor="end-date">
-                        End Date:
-                      </InputLabel>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                          minDate={new Date(startDate)}
-                          value={new Date(endDate)}
-                          onChange={(e) => {
-                            setEndDate(moment(e).format("yyyy-MM-DD"));
-                            setErrObj({
-                              ...errObj,
-                              endErr: false,
-                              endMsg: "",
-                            });
-                          }}
-                          sx={{
-                            width: "100%",
-                            marginTop: "24px",
-                          }}
-                          components={{
-                            OpenPickerIcon: () => (
-                              <img
-                                src={Images.calendarIcon}
-                                alt="calender-icon"
-                              ></img>
-                            ),
-                          }}
-                          slotProps={{
-                            textField: {
-                              helperText: errObj.endMsg,
-                              error: errObj.endErr,
-                              id: "end-date",
-                            },
-                          }}
-                          format="MMMM dd, yyyy"
-                        />
-                      </LocalizationProvider>
-                    </FormControl>
-                  </Grid>
-                </Grid>
                 <Grid
                   item
                   container
@@ -867,8 +762,7 @@ export default function Summary(props) {
                 >
                   <Button
                     variant="outlined"
-                    size="small"
-                    sx={{ boxShadow: "none" }}
+                    size="large"
                     onClick={() => {
                       navigate(-1);
                       dispatch(setProposalDetails({}));
@@ -907,6 +801,21 @@ export default function Summary(props) {
                 handleClick={(type, data) => {
                   if (type === "back") {
                     setTabValue(1);
+                  } else if (type === "next") {
+                    setDisableDetailsTab(false);
+                    setTabValue(3);
+                  }
+                }}
+                villa={villa}
+                createProposal={createProposal}
+                fromManageProject={fromManageProject}
+              />
+            ) : null}
+            {tabValue === 3 ? (
+              <Details
+                handleClick={(type, data) => {
+                  if (type === "back") {
+                    setTabValue(2);
                   }
                 }}
                 villa={villa}

@@ -41,9 +41,9 @@ const useStyles = makeStyles((theme) => ({
     color: "#646F86",
   },
   dateStyle: {
-    fontSize: "14px !important",
+    fontSize: "16px !important",
     lineHeight: "24px !important",
-    fontFamily: "Poppins-Regular !important",
+    fontFamily: "Poppins-Medium !important",
     color: "#202939",
     textAlign: "end",
     fontWeight: "bold",
@@ -111,6 +111,28 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: "bold !important",
       fontFamily: "Poppins-Regular !important",
     },
+  },
+  projectInformation: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    padding: "16px",
+    borderRadius: "10px",
+    fontFamily: "Poppins-Medium !important",
+    // backgroundColor: "#F3F4F9",
+  },
+
+  informationCard: {
+    fontSize: "14px !important",
+    padding: "0 12px",
+    color: "#646f86",
+    fontFamily: "Poppins-Regular !important",
+  },
+
+  value: {
+    fontSize: "16px !important",
+    padding: "4px 12px",
+    fontFamily: "Poppins-Medium !important",
   },
 }));
 

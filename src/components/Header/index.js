@@ -258,6 +258,7 @@ function Header(props) {
                                 <img
                                   src={userData?.profile_url}
                                   width={"40px"}
+                                  alt="profile-url"
                                 />
                               </div>
                             </Grid>

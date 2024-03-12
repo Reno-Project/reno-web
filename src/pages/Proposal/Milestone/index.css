@@ -48,7 +48,7 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
-  margin-top: 5px;
+  padding: 0px 16px;
 }
 .milestoneHeader {
   color: var(--gray-800-header-text, #030f1c);
@@ -96,7 +96,7 @@
 .addMilestoneHeader {
   color: #030f1c;
   font-family: Poppins-SemiBold !important;
-  font-size: 24px;
+  font-size: 20px !important;
   font-style: normal;
   font-weight: 600;
   line-height: 32px; /* 133.333% */
@@ -120,7 +120,6 @@
 }
 
 .disc {
-  color: #646f86;
   font-family: Poppins-Regular;
   font-size: 14px;
   font-style: normal;

@@ -71,6 +71,10 @@ theme = createTheme(theme, {
           border: "0px",
           color: color.secondary,
           backgroundColor: color.LightSurface,
+          boxShadow: "none",
+          "&:hover": {
+            border: "none",
+          },
         },
       },
     },
@@ -296,6 +300,22 @@ theme = createTheme(theme, {
           textTransform: "capitalize",
           fontFamily: "Poppins-Regular",
           fontWeight: "500",
+        },
+      },
+    },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          "&:last-child": {
+            paddingBottom: "16px",
+          },
+        },
+      },
+    },
+    MuiListItemText: {
+      styleOverrides: {
+        root: {
+          margin: "0px",
         },
       },
     },

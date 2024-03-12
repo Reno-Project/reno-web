@@ -4,16 +4,11 @@ import { color } from "../../config/theme";
 const useStyles = makeStyles((theme) => ({
   headerMainCon: {
     top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1000,
-    display: "flex",
-    position: "fixed",
+    zIndex: 2,
+    position: "sticky",
     height: "70px",
-    padding: "0px 40px",
-    alignItems: "center",
+    padding: "10px 40px",
     backgroundColor: color.white,
-    // boxShadow: "0px 2px 5px #D9DFEB",
   },
   leftContainer: {
     display: "flex",
@@ -33,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   imgStyle: { height: "100%", width: "100%", objectFit: "contain" },
   menuTitleStyle: {
     color: "#202939",
-    fontSize: "15px !important",
+    fontSize: "16px !important",
     fontFamily: "Poppins-Regular !important",
     textAlign: "center",
   },
