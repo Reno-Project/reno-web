@@ -4,47 +4,35 @@ import {
   Divider,
   FormHelperText,
   Grid,
-  IconButton,
   InputLabel,
   Menu,
   MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
   Typography,
   useMediaQuery,
   Modal,
   Fade,
   Box,
   Backdrop,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import useStyles from "./styles";
-import { ChevronRight, Close, HighlightOffOutlined } from "@mui/icons-material";
-import { color } from "../../../config/theme";
+import { Close, HighlightOffOutlined } from "@mui/icons-material";
 import CInput from "../../../components/CInput";
 import { useTheme } from "@emotion/react";
 import Images from "../../../config/images";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import _, { isArray, isEmpty, isNull } from "lodash";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { Setting } from "../../../utils/Setting";
 import { toast } from "react-toastify";
-import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
+import { getApiData } from "../../../utils/APIHelper";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
 import ConfirmModel from "../../../components/ConfirmModel";
 import CAutocomplete from "../../../components/CAutocomplete";
-import ProfileSuccessModal from "../../../components/ProfileSuccessModal";
 import moment from "moment";
 import "./index.css";
 import { Stack } from "@mui/system";
+import SingleMilestoneAccordion from "../../../components/SingleMilestoneAccordian";
+import SingleBudgetAccordion from "../../../components/SingleBudgetAccordian";
 
 const errorObj = {
   bNameErr: false,
@@ -70,13 +58,7 @@ const errorObj = {
 };
 
 export default function Budget(props) {
-  const {
-    handleClick = () => null,
-    villa,
-    createProposal,
-    fromManageProject,
-  } = props;
-  const classes = useStyles();
+  const { handleClick = () => null, villa } = props;
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
   const [deleteIND, setDeleteIND] = useState(null);
@@ -103,17 +85,12 @@ export default function Budget(props) {
   const [milestones, setMilestones] = useState([]);
   const [visible, setVisible] = useState(false);
   const [visibleLoader, setVisibleLoader] = useState(false);
-  const [alreadySubmittedPop, setAlreadySubmittedPop] = useState(false);
-  const [alreadySubmittedPopLoader, setAlreadySubmittedPopLoader] =
-    useState(false);
-  const [visibleFinal, setVisibleFinal] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState(null);
-  const [buttonLoader, setButtonLoader] = useState(false);
   const [submitLoader, setsubmitLoader] = useState(false);
   const [uploadLoader, setUploadLoader] = useState(false);
-  const [proposalModal, setProposalModal] = useState(false);
+  const [milestoneLoader, setmilestoneLoader] = useState(false);
 
   const [errObj, setErrObj] = useState(errorObj);
 
@@ -121,6 +98,7 @@ export default function Budget(props) {
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -131,10 +109,9 @@ export default function Budget(props) {
     bgcolor: "background.paper",
     borderRadius: 1,
     boxShadow: 24,
-    p: 4,
-    overflow: "scroll",
+    padding: "24px",
+    overflow: "auto",
   };
-
   const [amounts, setAmounts] = useState([]);
   const [visibleEditModal, setVisibleEditModal] = useState(false);
   const [btnUpdateLoader, setBtnUpdateLoader] = useState(false);
@@ -142,8 +119,8 @@ export default function Budget(props) {
   const handleCloseCreation = () => {
     setIsCreationOpen(false);
     setVisibleEditModal(false);
+    clearData();
   };
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     // if (createProposal) {
@@ -195,16 +172,25 @@ export default function Budget(props) {
   }, [milestones]);
 
   useEffect(() => {
-    const array = [];
+    const newAmounts = [];
 
-    budgetDetails.map((bud) => {
-      let count =
-        parseInt(bud.material_unit_price || 0) * parseInt(bud.qty || 0) +
-        parseInt(bud.manpower_rate || 0) * parseInt(bud.days || 0);
-      array.push(count);
+    milestones.forEach((milestone) => {
+      let amount = 0;
+      if (isArray(budgetDetails) && budgetDetails.length > 0) {
+        budgetDetails.forEach((bud) => {
+          if (bud?.milestone?.id === milestone?.id) {
+            let count =
+              parseInt(bud?.material_unit_price || 0) *
+                parseInt(bud?.qty || 0) +
+              parseInt(bud?.manpower_rate || 0) * parseInt(bud?.days || 0);
+            amount += count;
+          }
+        });
+      }
+      newAmounts.push(amount);
     });
-    setAmounts(array);
-  }, [budgetDetails]);
+    setAmounts(newAmounts);
+  }, [budgetDetails, milestones]);
 
   async function getBudgetList() {
     setBudgetLoader(true);
@@ -252,6 +238,11 @@ export default function Budget(props) {
       console.log("err===>", error);
     }
   }
+
+  const [expanded, setExpanded] = React.useState(false);
+  const handleChangeExpanded = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
+  };
 
   const handleChange = (e, i) => {
     let dummyarr = [...budgetDetails];
@@ -439,22 +430,6 @@ export default function Budget(props) {
         // }
       }
     }
-
-    if (
-      isEmpty(state?.milestone?.id?.toString()) ||
-      state?.milestone === undefined ||
-      state?.milestone === ""
-    ) {
-      valid = false;
-      error.manpowerMilestoneErr = true;
-      error.manpowerMilestoneMsg = "Please select the milestone";
-    }
-
-    if (isEmpty(state?.specification)) {
-      valid = false;
-      error.specificationsErr = true;
-      error.specificationsMsg = "Please enter the specification";
-    }
     setErrObj(error);
 
     if (valid) {
@@ -529,7 +504,7 @@ export default function Budget(props) {
   };
 
   const handleEdit = (data, index) => {
-    console.log(data, "edit");
+    setAnchorEl(null);
     setVisibleEditModal(true);
     setErrObj(errorObj);
 
@@ -616,187 +591,158 @@ export default function Budget(props) {
     setVisibleLoader(false);
   }
 
-  async function getMilestoneList() {
-    try {
-      const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}/${villa?.proposal_id}`,
-        "GET",
-        {}
-      );
-      if (response.success) {
-        setMilestones(response?.data);
-      }
-    } catch (error) {
-      console.log("err===>", error);
-    }
-  }
+  // async function getMilestoneList() {
+  //   try {
+  //     const response = await getApiData(
+  //       `${Setting.endpoints.milestoneProposalList}/${villa?.proposal_id}`,
+  //       "GET",
+  //       {}
+  //     );
+  //     if (response.success) {
+  //       setMilestones(response?.data);
+  //     }
+  //   } catch (error) {
+  //     console.log("err===>", error);
+  //   }
+  // }
 
-  async function addBudget() {
-    setButtonLoader(true);
-    setAlreadySubmittedPopLoader(true);
-    // const extractedData = budgetDetails?.map((item) => {
-    //   return {
-    //     name: item?.name,
-    //     material_type: item?.material_type,
-    //     material_unit: item?.material_unit || "",
-    //     material_unit_price: item?.material_unit_price || "0",
-    //     qty: item?.qty || "0",
-    //     milestone_id: item?.milestone?.id,
-    //     manpower_rate: item?.manpower_rate || "0",
-    //     days: item?.days || "0",
-    //     specification: item?.specification,
-    //     image: item?.photo_url,
-    //   };
-    // });
+  // async function addBudget() {
+  //   setButtonLoader(true);
+  //   setAlreadySubmittedPopLoader(true);
+  //   // const extractedData = budgetDetails?.map((item) => {
+  //   //   return {
+  //   //     name: item?.name,
+  //   //     material_type: item?.material_type,
+  //   //     material_unit: item?.material_unit || "",
+  //   //     material_unit_price: item?.material_unit_price || "0",
+  //   //     qty: item?.qty || "0",
+  //   //     milestone_id: item?.milestone?.id,
+  //   //     manpower_rate: item?.manpower_rate || "0",
+  //   //     days: item?.days || "0",
+  //   //     specification: item?.specification,
+  //   //     image: item?.photo_url,
+  //   //   };
+  //   // });
 
-    // const data = {
-    //   proposal_id: villa?.proposal_id,
-    //   budget_item: extractedData,
-    // };
-    let i = 0;
-    const transformedData = {
-      proposal_id: villa?.proposal_id,
-      project_type: villa?.project_type,
-      exp_id: villa?.exp_id,
-      scope_of_work: proposalDetails?.scope_of_work,
-      start_date: proposalDetails?.start_date,
-      end_date: proposalDetails?.end_date,
-      milestone_details: JSON.stringify(
-        proposalDetails?.milestone_details?.milestone?.map(
-          (milestone, index) => {
-            let mainObj = {
-              milestone_name: milestone?.milestone_name,
-              description: milestone?.description,
-              start_date: milestone?.start_date,
-              end_date: milestone?.end_date,
-              budget_item: proposalDetails?.budget_details?.budgets
-                ?.filter((item) => item?.milestone?.id === milestone?.id)
-                .map((item) => {
-                  const obj = {
-                    name: item?.name,
-                    budget_id: i + 1,
-                    material_type: item?.material_type,
-                    material_unit: item?.material_unit || "",
-                    material_unit_price: item?.material_unit_price || "0",
-                    qty: item?.qty || "0",
-                    manpower_rate: item?.manpower_rate || "0",
-                    days: item?.days || "0",
-                    specification: item?.specification,
-                  };
-                  i++;
-                  return obj;
-                }),
-            };
+  //   // const data = {
+  //   //   proposal_id: villa?.proposal_id,
+  //   //   budget_item: extractedData,
+  //   // };
+  //   let i = 0;
+  //   const transformedData = {
+  //     proposal_id: villa?.proposal_id,
+  //     project_type: villa?.project_type,
+  //     exp_id: villa?.exp_id,
+  //     scope_of_work: proposalDetails?.scope_of_work,
+  //     start_date: startDate,
+  //     end_date: endDate,
+  //     milestone_details: JSON.stringify(
+  //       proposalDetails?.milestone_details?.milestone?.map(
+  //         (milestone, index) => {
+  //           let mainObj = {
+  //             milestone_name: milestone?.milestone_name,
+  //             description: milestone?.description,
+  //             start_date: milestone?.start_date,
+  //             end_date: milestone?.end_date,
+  //             budget_item: proposalDetails?.budget_details?.budgets
+  //               ?.filter((item) => item?.milestone?.id === milestone?.id)
+  //               .map((item) => {
+  //                 const obj = {
+  //                   name: item?.name,
+  //                   budget_id: i + 1,
+  //                   material_type: item?.material_type,
+  //                   material_unit: item?.material_unit || "",
+  //                   material_unit_price: item?.material_unit_price || "0",
+  //                   qty: item?.qty || "0",
+  //                   manpower_rate: item?.manpower_rate || "0",
+  //                   days: item?.days || "0",
+  //                   specification: item?.specification,
+  //                 };
+  //                 i++;
+  //                 return obj;
+  //               }),
+  //           };
 
-            return mainObj;
-          }
-        )
-      ),
-    };
-    proposalDetails?.budget_details?.budgets?.forEach((budget, ind) => {
-      const photoOriginFiles = convertPhotoOriginToFiles(budget);
-      transformedData[`budget_image_${ind + 1}`] = photoOriginFiles;
-    });
-    // const extractedData = budgetDetails?.map((item) => {
-    //   return {
-    //     name: item?.name,
-    //     material_type: item?.material_type,
-    //     material_unit: item?.material_unit || "",
-    //     material_unit_price: item?.material_unit_price || "0",
-    //     qty: item?.qty || "0",
-    //     milestone_id: item?.milestone?.id,
-    //     manpower_rate: item?.manpower_rate || "0",
-    //     days: item?.days || "0",
-    //     specification: item?.specification,
-    //     image: item?.photo_url,
-    //   };
-    // });
+  //           return mainObj;
+  //         }
+  //       )
+  //     ),
+  //   };
+  //   proposalDetails?.budget_details?.budgets?.forEach((budget, ind) => {
+  //     const photoOriginFiles = convertPhotoOriginToFiles(budget);
+  //     transformedData[`budget_image_${ind + 1}`] = photoOriginFiles;
+  //   });
+  //   // const extractedData = budgetDetails?.map((item) => {
+  //   //   return {
+  //   //     name: item?.name,
+  //   //     material_type: item?.material_type,
+  //   //     material_unit: item?.material_unit || "",
+  //   //     material_unit_price: item?.material_unit_price || "0",
+  //   //     qty: item?.qty || "0",
+  //   //     milestone_id: item?.milestone?.id,
+  //   //     manpower_rate: item?.manpower_rate || "0",
+  //   //     days: item?.days || "0",
+  //   //     specification: item?.specification,
+  //   //     image: item?.photo_url,
+  //   //   };
+  //   // });
 
-    // const data = {
-    //   proposal_id: villa?.proposal_id,
-    //   budget_item: extractedData,
-    // };
-    try {
-      const response = await getAPIProgressData(
-        Setting.endpoints.createproposal,
-        "POST",
-        transformedData,
-        true
-      );
+  //   // const data = {
+  //   //   proposal_id: villa?.proposal_id,
+  //   //   budget_item: extractedData,
+  //   // };
+  //   try {
+  //     const response = await getAPIProgressData(
+  //       Setting.endpoints.createproposal,
+  //       "POST",
+  //       transformedData,
+  //       true
+  //     );
 
-      if (response.success) {
-        toast.success(response.message);
-        setAlreadySubmittedPop(false);
-        setVisibleFinal(false);
-        setProposalModal(true);
-        dispatch(setProposalDetails({}));
-      } else {
-        toast.error(response.message);
-      }
-      setButtonLoader("");
-      setAlreadySubmittedPopLoader(false);
-    } catch (error) {
-      console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
-      toast.error(error.toString());
-      setButtonLoader("");
-      setAlreadySubmittedPopLoader(false);
-    }
-  }
+  //     if (response.success) {
+  //       toast.success(response.message);
+  //       setAlreadySubmittedPop(false);
+  //       setVisibleFinal(false);
+  //       setProposalModal(true);
+  //       dispatch(setProposalDetails({}));
+  //     } else {
+  //       toast.error(response.message);
+  //     }
+  //     setButtonLoader("");
+  //     setAlreadySubmittedPopLoader(false);
+  //   } catch (error) {
+  //     console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
+  //     toast.error(error.toString());
+  //     setButtonLoader("");
+  //     setAlreadySubmittedPopLoader(false);
+  //   }
+  // }
 
-  async function checkSubmitted() {
-    setsubmitLoader(true);
-    try {
-      const response = await getApiData(
-        `${Setting.endpoints.alreadySentProposal}/${villa?.proposal_id}`,
-        "GET",
-        {}
-      );
-      if (response.success) {
-        setAlreadySubmittedPop(true);
-      } else {
-        setVisibleFinal(true);
-      }
-      setsubmitLoader(false);
-    } catch (error) {
-      setsubmitLoader(false);
-      console.log("err===>", error);
-    }
-  }
-
-  async function createproposalApicall(data) {
-    setButtonLoader(true);
-    try {
-      const response = await getAPIProgressData(
-        Setting.endpoints.directproposal,
-        "POST",
-        data,
-        true
-      );
-
-      if (response.success) {
-        setVisibleFinal(false);
-        setProposalModal(true);
-        dispatch(setProposalDetails({}));
-      } else {
-        toast.error(response.message);
-      }
-      setButtonLoader("");
-    } catch (error) {
-      console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
-      toast.error(error.toString());
-      setButtonLoader("");
-    }
-  }
+  // async function checkSubmitted() {
+  //   setsubmitLoader(true);
+  //   try {
+  //     const response = await getApiData(
+  //       `${Setting.endpoints.alreadySentProposal}/${villa?.proposal_id}`,
+  //       "GET",
+  //       {}
+  //     );
+  //     if (response.success) {
+  //       setAlreadySubmittedPop(true);
+  //     } else {
+  //       setVisibleFinal(true);
+  //     }
+  //     setsubmitLoader(false);
+  //   } catch (error) {
+  //     setsubmitLoader(false);
+  //     console.log("err===>", error);
+  //   }
+  // }
 
   const handleSubmit = () => {
-    if (isArray(budgetDetails) && !isEmpty(budgetDetails)) {
-      if (createProposal) {
-        setVisibleFinal(true);
-      } else {
-        checkSubmitted();
-      }
-    } else {
+    if (isEmpty(budgetDetails)) {
       toast.warning("Please add at least one budget");
+    } else {
+      handleClick("next");
     }
   };
 
@@ -811,7 +757,6 @@ export default function Budget(props) {
       const base64Data = await convertToBase64(img[i]);
       nArr1.push(base64Data);
     }
-    console.log(">>> nArr1 ", nArr1);
     setState({ ...state, photo_origin: nArr1 });
 
     setErrObj({
@@ -900,51 +845,6 @@ export default function Budget(props) {
       };
     });
   };
-
-  const convertBase64ToImageFile = (base64String, filename) => {
-    const arr = base64String.split(",");
-    const mimeType = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const uint8Array = new Uint8Array(n);
-
-    while (n--) {
-      uint8Array[n] = bstr.charCodeAt(n);
-    }
-    const file = new File([uint8Array], filename, { type: mimeType });
-
-    // if (meta) {
-    //   file.budget_id = meta;
-    // }
-
-    return file;
-  };
-
-  const convertProjectToFiles = () => {
-    const projectFiles = proposalDetails?.project?.map(
-      (base64String, index) => {
-        const filename = `project_image_${index + 1}.jpg`;
-        return convertBase64ToImageFile(base64String, filename);
-      }
-    );
-
-    return projectFiles;
-  };
-
-  const convertPhotoOriginToFiles = (budget, budInd) => {
-    const photoOriginFiles = budget.photo_origin.map((base64String, index) => {
-      const filename = `photo_origin_${index + 1}.jpg`;
-      // Meta data for photo origin
-      // let obj = {
-      //   budget_id: budInd,
-      //   file: convertBase64ToImageFile(base64String, filename),
-      // };
-      return convertBase64ToImageFile(base64String, filename);
-    });
-
-    return photoOriginFiles;
-  };
-
   function checkImgSize(img) {
     let valid = true;
     if (img.size > 3145728) {
@@ -1087,7 +987,7 @@ export default function Budget(props) {
             </div>
             <div
               style={{
-                marginTop: 24,
+                marginTop: 12,
 
                 height: 1,
                 width: "100%",
@@ -1368,43 +1268,6 @@ export default function Budget(props) {
                   }
                 />
               </Grid>
-              <Grid item xs={12} md={4} id="manpowerMilestone">
-                <CAutocomplete
-                  label={<span className="fieldTitle">Milestone</span>}
-                  placeholder="N/A"
-                  value={
-                    mode === "modal" && visibleEditModal
-                      ? state?.milestone
-                      : mode === "form" && visibleEditModal
-                      ? ""
-                      : state?.milestone
-                  }
-                  onChange={(e, newValue) => {
-                    setState({ ...state, milestone: newValue });
-                    setErrObj({
-                      ...errObj,
-                      manpowerMilestoneErr: false,
-                      manpowerMilestoneMsg: "",
-                    });
-                  }}
-                  options={milestones}
-                  getOptionLabel={(option) => option.milestone_name}
-                  error={
-                    mode === "modal" && visibleEditModal
-                      ? errObj.manpowerMilestoneErr
-                      : mode === "form" && visibleEditModal
-                      ? ""
-                      : errObj.manpowerMilestoneErr
-                  }
-                  helpertext={
-                    mode === "modal" && visibleEditModal
-                      ? errObj.manpowerMilestoneMsg
-                      : mode === "form" && visibleEditModal
-                      ? ""
-                      : errObj.manpowerMilestoneMsg
-                  }
-                />
-              </Grid>
             </Grid>
             <Grid item xs={12} id="description">
               <CInput
@@ -1448,6 +1311,7 @@ export default function Budget(props) {
               xs={12}
               style={{
                 position: "relative",
+                margin: "8px 0",
               }}
             >
               {uploadLoader &&
@@ -1594,8 +1458,8 @@ export default function Budget(props) {
             </Grid>
             <div
               style={{
-                marginTop: 24,
-                marginBottom: 24,
+                marginTop: 12,
+                marginBottom: 12,
                 height: 1,
                 width: "100%",
                 background: "#EEF0F3",
@@ -1607,7 +1471,6 @@ export default function Budget(props) {
               justifyContent={"center"}
               gap={sm ? 1 : 2}
               wrap="nowrap"
-              marginTop={"10px"}
             >
               <Grid item xs={6}>
                 <div className="cancel" onClick={handleCloseCreation}>
@@ -1632,7 +1495,7 @@ export default function Budget(props) {
 
   return (
     <>
-      <Grid container gap="28px">
+      <Grid container gap="16px">
         <div className={"alert"}>
           {" "}
           <span className="label"> Total Budget amount </span>
@@ -1654,300 +1517,85 @@ export default function Budget(props) {
         {renderBudgetCreateForm("form")}
 
         <Divider width="100%" />
-
-        {budgetLoader ? (
+        {milestoneLoader ? (
           <Grid
             item
             container
-            justifyContent={"center"}
-            alignItems={"center"}
+            justifyContent="center"
+            alignItems="center"
             sx={12}
             minHeight={220}
           >
             <CircularProgress style={{ color: "#274BF1" }} size={26} />
           </Grid>
         ) : (
-          isArray(budgetDetails) &&
-          !isEmpty(budgetDetails) && (
-            <Grid container>
-              <Stack gap="24px" divider={<Divider />} width="100%">
-                <div className="secondaryTitle">Budget Items</div>
+          isArray(milestones) &&
+          !isEmpty(milestones) && (
+            <>
+              <Grid container gap="16px">
+                <div className="secondaryTitle">Milestones</div>
+                <Divider width="100%" />
                 <Grid container>
-                  <Stack divider={<Divider />} width="100%" gap="20px">
-                    {budgetDetails?.map((item, index) => {
-                      const milestoneValue = item?.milestone_id
-                        ? milestones?.find((e, i) => {
-                            return e?.id === item?.milestone_id;
-                          })
-                        : item?.milestone;
-
+                  <Stack width="100%" gap="8px">
+                    {milestones.map((milestone, index) => {
                       return (
-                        <SingleAccordion
-                          budget={item}
+                        <SingleMilestoneAccordion
+                          milestone={milestone}
                           index={index}
-                          handleRowClick={handleRowClick}
-                        />
-                        // <Grid container className={classes.customCard}>
-                        //   <Grid item container wrap={sm ? "wrap" : "nowrap"}>
-                        //     <Grid item sx={12} justifyContent={"flex-start"}>
-                        //       {isArray(item?.photo_origin) &&
-                        //         !isEmpty(item?.photo_origin) && (
-                        //           <>
-                        //             <img
-                        //               style={{
-                        //                 width: md ? 150 : 220,
-                        //                 maxHeight: 170,
-                        //                 objectFit: "contain",
-                        //                 borderRadius: 4,
-                        //               }}
-                        //               src={item?.photo_origin[0]}
-                        //               alt="budget"
-                        //             />
-                        //           </>
-                        //         )}
-                        //     </Grid>
-                        //     <Grid
-                        //       item
-                        //       container
-                        //       sx={12}
-                        //       p={sm ? "10px" : 2}
-                        //       justifyContent={sm ? "flex-start" : "flex-end"}
-                        //     >
-                        //       <Grid
-                        //         item
-                        //         container
-                        //         flexDirection={"column"}
-                        //         wrap="nowrap"
-                        //       >
-                        //         <div className="detailsHeader">
-                        //           <span className="budgetName">
-                        //             {item?.name || "-"}
-                        //           </span>
-                        //           <IconButton
-                        //             onClick={(e) => handleRowClick(e, item, index)}
-                        //           >
-                        //             <MoreVertIcon fontSize="20px" color="red" />
-                        //           </IconButton>
-                        //         </div>
+                          amounts={amounts}
+                        >
+                          <Stack width="100%">
+                            {budgetDetails?.map((budget, index) => {
+                              if (
+                                budget.milestone?.milestone_name ===
+                                milestone?.milestone_name
+                              ) {
+                                return (
+                                  <Stack padding="16px">
+                                    <SingleBudgetAccordion
+                                      budget={budget}
+                                      index={index}
+                                      key={index}
+                                      handleRowClick={handleRowClick}
+                                    />
+                                  </Stack>
+                                );
+                              }
+                            })}
+                          </Stack>
+                          <Grid
+                            item
+                            container
+                            alignItems={"center"}
+                            padding="16px 32px"
+                          >
+                            <Button
+                              variant="contained"
+                              onClick={(e) => {
+                                setState({
+                                  ...state,
+                                  milestone: milestone,
+                                });
 
-                        //         <div className="spec">
-                        //           {item?.specification || "-"}
-                        //         </div>
-                        //       </Grid>
-
-                        //       {/* <Grid item textAlign={sm ? "start" : "end"}>
-                        //         <Typography fontFamily={"Poppins-Regular"}>
-                        //           AED {amounts[index] || 0}
-                        //         </Typography>
-                        //       </Grid> */}
-                        //       <div className="detailsContent">
-                        //         <dic md={3} className="firstItem">
-                        //           <div className="detailLabel"> Amount</div>
-                        //           <div className="detailValue">
-                        //             {" "}
-                        //             AED {amounts[index] || 0}
-                        //           </div>
-                        //         </dic>
-                        //         <div md={4} className="secondItem">
-                        //           <div className="detailLabel"> Status</div>
-                        //           <div className="detailValue"> Completed</div>
-                        //         </div>
-                        //         <div md={3} className="lastItem">
-                        //           <div className="detailLabel"> Payment Date</div>
-                        //           <div className="detailValue"> March 01, 2023</div>
-                        //         </div>
-                        //       </div>
-                        //     </Grid>
-                        //   </Grid>
-                        //   <Grid item container justifyContent={"flex-start"}>
-                        //     <ListItemButton
-                        //       style={{
-                        //         color: color.primary,
-                        //         padding: sm && "10px 0px",
-                        //       }}
-                        //       onClick={() => {
-                        //         handleChange(item, index);
-                        //       }}
-                        //     >
-                        //       {item?.expanded ? "Collapse" : "View Subitems"}
-                        //       {item?.expanded ? (
-                        //         <ExpandLessIcon sx={{ ml: 1 }} />
-                        //       ) : (
-                        //         <ExpandMoreIcon sx={{ ml: 1 }} />
-                        //       )}
-                        //     </ListItemButton>
-                        //   </Grid>
-                        //   <Collapse
-                        //     in={item?.expanded}
-                        //     timeout="auto"
-                        //     unmountOnExit
-                        //     style={{ width: "100%" }}
-                        //   >
-                        //     {/* <CardContent
-                        //   style={{
-                        //     position: "relative",
-                        //     boxSizing: "border-box",
-                        //     width: "100%",
-                        //   }}
-                        // > */}
-                        //     <Grid item padding={"10px 10px 0px 10px"}>
-                        //       <div className="budgetName">Specifications</div>
-                        //       <div className="detailValue">
-                        //         {item?.specification || "-"}
-                        //       </div>
-                        //       <div
-                        //         style={{
-                        //           width: "100%",
-                        //           paddingTop: 14,
-                        //           paddingBottom: 4,
-                        //         }}
-                        //       >
-                        //         <Divider />
-                        //       </div>
-                        //     </Grid>
-                        //     <div className="responsive-table">
-                        //       <TableContainer
-                        //         style={{ padding: 10, boxSizing: "border-box" }}
-                        //       >
-                        //         <Table className={classes.customtable}>
-                        //           <Typography className="budgetName">
-                        //             Manpower
-                        //           </Typography>
-                        //           <TableBody>
-                        //             <TableRow>
-                        //               <TableCell align="right">
-                        //                 <div className="endDate">Milestone</div>
-                        //               </TableCell>
-                        //               <TableCell align="right">
-                        //                 <div className="endDate"> Manpower rate</div>
-                        //               </TableCell>
-
-                        //               <TableCell align="right">
-                        //                 <div className="endDate"> Days</div>
-                        //               </TableCell>
-                        //               <TableCell align="right">
-                        //                 <div className="endDate"> Amount</div>
-                        //               </TableCell>
-                        //             </TableRow>
-                        //             <TableRow key={"Manpower"}>
-                        //               <TableCell align="right">
-                        //                 <div className="endDateValue">
-                        //                   {milestoneValue?.milestone_name || "-"}
-                        //                 </div>
-                        //               </TableCell>
-                        //               <TableCell align="right">
-                        //                 <div className="endDateValue">
-                        //                   {item?.manpower_rate || "-"}
-                        //                 </div>
-                        //               </TableCell>
-                        //               <TableCell align="right">
-                        //                 <div className="endDateValue">
-                        //                   {item?.days || "-"}
-                        //                 </div>
-                        //               </TableCell>
-                        //               <TableCell align="right">
-                        //                 <div className="endDateValue">
-                        //                   AED{" "}
-                        //                   {parseInt(item.manpower_rate || 0) *
-                        //                     parseInt(item.days || 0)}
-                        //                 </div>
-                        //               </TableCell>
-                        //             </TableRow>
-                        //           </TableBody>
-                        //         </Table>
-                        //         <div
-                        //           style={{
-                        //             width: "100%",
-                        //             padding: "10px 0px 14px 0px",
-                        //           }}
-                        //         >
-                        //           <Divider />
-                        //         </div>
-                        //         <Table className={classes.customtable}>
-                        //           <Typography className="budgetName">
-                        //             Material
-                        //           </Typography>
-                        //           <TableBody>
-                        //             <TableRow>
-                        //               <TableCell align="right">
-                        //                 <div className="endDate"> Material Type</div>
-                        //               </TableCell>
-                        //               <TableCell align="right">
-                        //                 <div className="endDate"> Material Unit</div>
-                        //               </TableCell>
-                        //               <TableCell align="right">
-                        //                 <div className="endDate"> Unit Price</div>
-                        //               </TableCell>
-                        //               <TableCell align="right">
-                        //                 <div className="endDate"> Quantity</div>
-                        //               </TableCell>
-                        //               <TableCell align="right">
-                        //                 <div className="endDate"> Amount</div>
-                        //               </TableCell>
-                        //             </TableRow>
-                        //             <TableRow key={"Manpower"}>
-                        //               <TableCell align="right">
-                        //                 <div className="endDateValue">
-                        //                   {item?.material_type || "-"}
-                        //                 </div>
-                        //               </TableCell>
-
-                        //               <TableCell align="right">
-                        //                 <div className="endDateValue">
-                        //                   {item?.material_unit || "-"}
-                        //                 </div>
-                        //               </TableCell>
-
-                        //               <TableCell align="right">
-                        //                 <div className="endDateValue">
-                        //                   AED {item?.material_unit_price || "0"}
-                        //                 </div>
-                        //               </TableCell>
-                        //               <TableCell align="right">
-                        //                 <div className="endDateValue">
-                        //                   {item?.qty || "-"}
-                        //                 </div>
-                        //               </TableCell>
-                        //               <TableCell align="right">
-                        //                 <div className="endDateValue">
-                        //                   AED{" "}
-                        //                   {parseInt(item.material_unit_price || 0) *
-                        //                     parseInt(item.qty || 0)}
-                        //                 </div>
-                        //               </TableCell>
-                        //             </TableRow>
-                        //           </TableBody>
-                        //         </Table>
-                        //       </TableContainer>
-                        //     </div>
-                        //   </Collapse>
-                        // </Grid>
+                                setIsCreationOpen(true);
+                              }}
+                            >
+                              <AddCircleOutlineOutlinedIcon
+                                style={{ marginRight: 4 }}
+                              />
+                              Add Budget
+                            </Button>
+                          </Grid>
+                        </SingleMilestoneAccordion>
                       );
                     })}
                   </Stack>
                 </Grid>
-              </Stack>
-            </Grid>
+              </Grid>
+            </>
           )
         )}
-
-        {budgetDetails.length > 0 && <Divider width="100%" />}
-
-        <Grid item container alignItems={"center"}>
-          <div
-            className="btnSubmit"
-            onClick={() => {
-              // validate(false);
-              setIsCreationOpen(true);
-            }}
-          >
-            <AddCircleOutlineOutlinedIcon style={{ marginRight: 4 }} />
-            Add Budget Item
-          </div>
-        </Grid>
-
-        <Divider width="100%" />
-
+        <Divider sx={{ width: "100%" }} />
         <Grid
           item
           container
@@ -1989,7 +1637,9 @@ export default function Budget(props) {
                 variant="contained"
                 size="small"
                 className="conBtn"
-                onClick={handleSubmit}
+                onClick={() => {
+                  handleSubmit();
+                }}
                 sx={{ padding: "12px 24px" }}
               >
                 {submitLoader ? (
@@ -2010,83 +1660,6 @@ export default function Budget(props) {
           handleDelete();
         }}
         message={`Are you sure you want to delete ${selectedBudget?.data?.name} budget?`}
-      />
-      <ConfirmModel
-        visible={visibleFinal}
-        loader={buttonLoader}
-        title={"Submit"}
-        handleClose={() => setVisibleFinal(false)}
-        confirmation={() => {
-          if (createProposal) {
-            const projectFiles = convertProjectToFiles();
-            let i = 0;
-            const transformedData = {
-              email: proposalDetails?.email,
-              name: proposalDetails?.name,
-              username: proposalDetails?.customer_name,
-              project_type: proposalDetails?.project_type.project_name,
-              exp_id: proposalDetails?.project_type.id,
-              description: proposalDetails?.description,
-              start_date: proposalDetails?.start_date,
-              end_date: proposalDetails?.end_date,
-              project_image: projectFiles,
-              proposal: JSON.stringify({
-                scope_of_work: proposalDetails?.scope_of_work,
-                milestone_details:
-                  proposalDetails?.milestone_details?.milestone?.map(
-                    (milestone, index) => {
-                      let mainObj = {
-                        milestone_name: milestone?.milestone_name,
-                        description: milestone?.description,
-                        start_date: milestone?.start_date,
-                        end_date: milestone?.end_date,
-                        budget_item: proposalDetails?.budget_details?.budgets
-                          ?.filter(
-                            (item) => item?.milestone?.id === milestone?.id
-                          )
-                          .map((item) => {
-                            const obj = {
-                              name: item?.name,
-                              budget_id: i + 1,
-                              material_type: item?.material_type,
-                              material_unit: item?.material_unit || "",
-                              material_unit_price:
-                                item?.material_unit_price || "0",
-                              qty: item?.qty || "0",
-                              manpower_rate: item?.manpower_rate || "0",
-                              days: item?.days || "0",
-                              specification: item?.specification,
-                            };
-                            i++;
-                            return obj;
-                          }),
-                      };
-
-                      return mainObj;
-                    }
-                  ),
-              }),
-            };
-            proposalDetails?.budget_details?.budgets?.forEach((budget, ind) => {
-              const photoOriginFiles = convertPhotoOriginToFiles(budget);
-              transformedData[`budget_image_${ind + 1}`] = photoOriginFiles;
-            });
-            createproposalApicall(transformedData);
-          } else {
-            addBudget();
-          }
-        }}
-        message={`Are you sure you want to submit proposal?`}
-      />
-
-      <ConfirmModel
-        visible={alreadySubmittedPop}
-        loader={alreadySubmittedPopLoader}
-        handleClose={() => setAlreadySubmittedPop(false)}
-        confirmation={() => {
-          addBudget();
-        }}
-        message={`Reno has already submitted another proposal that you created for the same project. Are you sure you want to submit this new proposal?`}
       />
 
       <Menu
@@ -2134,20 +1707,12 @@ export default function Budget(props) {
           }}
           onClick={() => {
             setVisible(true);
+            setAnchorEl(null);
           }}
         >
           Delete
         </MenuItem>
       </Menu>
-      {proposalModal && (
-        <ProfileSuccessModal
-          title="Congrats!"
-          msg="Proposal successfully submitted!"
-          btnTitle="Continue"
-          visible={proposalModal}
-          navigatePath={fromManageProject ? "/manage-project" : ""}
-        />
-      )}
 
       {/* Edit details for Budget Modal */}
       {visibleEditModal ? (
@@ -2174,7 +1739,6 @@ export default function Budget(props) {
               alignItems="center"
             >
               <Grid item xs={12}>
-                {/* {renderBudgetCreateForm("modal")} */}
                 <Box sx={style}>
                   <div
                     style={{
@@ -2190,8 +1754,7 @@ export default function Budget(props) {
                   </div>
                   <div
                     style={{
-                      marginTop: 24,
-
+                      marginTop: 12,
                       height: 1,
                       width: "100%",
                       background: "#EEF0F3",
@@ -2412,6 +1975,9 @@ export default function Budget(props) {
                     xs={12}
                     style={{
                       position: "relative",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "4px",
                     }}
                   >
                     {uploadLoader &&
@@ -2441,6 +2007,7 @@ export default function Budget(props) {
                             height: 130,
                             border: "1px dashed #9CA3AF",
                             borderRadius: 4,
+                            marginTop: "8px",
                           }}
                         >
                           <div style={{ width: "24px", height: "24px" }}>
@@ -2572,8 +2139,8 @@ export default function Budget(props) {
                       <Grid item xs={5.7}>
                         <Button
                           color="primary"
+                          variant="outlined"
                           fullWidth
-                          style={{ marginTop: 20, marginBottom: 20 }}
                           onClick={() => {
                             setVisibleEditModal(false);
                             clearData();
@@ -2588,7 +2155,6 @@ export default function Budget(props) {
                           variant="contained"
                           color="primary"
                           fullWidth
-                          style={{ marginTop: 20, marginBottom: 20 }}
                           onClick={() => {
                             validate(true);
                           }}
@@ -2607,351 +2173,3 @@ export default function Budget(props) {
     </>
   );
 }
-
-const SingleAccordion = ({ budget, index, handleRowClick }) => {
-  const [expanded, setExpanded] = React.useState(false);
-  const classes = useStyles();
-  const handleChangeExpanded = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
-    console.log(budget, ">>>>>>budget");
-  };
-  return (
-    <Grid item xs={12} style={{ marginTop: 5 }} key={index}>
-      <Accordion
-        key={budget.name}
-        onChange={handleChangeExpanded(`panel_${budget.name}`)}
-        style={{ boxShadow: "none", borderRadius: "none" }}
-      >
-        <AccordionSummary
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-          sx={{ padding: 0, ".MuiAccordionSummary-content": { margin: 0 } }}
-        >
-          <Grid container>
-            <Grid
-              item
-              md={12}
-              xs={12}
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <Grid
-                item
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "16px",
-                }}
-              >
-                <Grid>{expanded ? <ExpandMoreIcon /> : <ChevronRight />}</Grid>
-                <Grid>
-                  <div style={{ width: "128px", height: "128px" }}>
-                    {budget.photo_origin[0] ? (
-                      <img
-                        src={budget.photo_origin[0]}
-                        loading="lazy"
-                        width="100%"
-                        height="100%"
-                        alt="budget-item"
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          width: "128px",
-                          height: "128px",
-                        }}
-                      >
-                        <img
-                          width="100%"
-                          height="100%"
-                          src="https://renohome.blob.core.windows.net/reno-cms/e56d3d53-e335-425f-990e-16e6b2bbee1b"
-                          alt="placeholder"
-                        ></img>
-                      </div>
-                    )}
-                  </div>
-                </Grid>
-                <Grid
-                  item
-                  md={8}
-                  xs={8}
-                  direction={"column"}
-                  display={"flex"}
-                  style={{ placeSelf: "baseline", gap: "20px" }}
-                >
-                  <Stack gap="12px">
-                    <Stack>
-                      <span className="budgetName">{budget.name}</span>
-                    </Stack>
-                    <Stack>
-                      <span className="disc">{budget.specification}</span>
-                    </Stack>
-                  </Stack>
-                  <Grid display={"flex"} gap="40px">
-                    <Grid
-                      display={"flex"}
-                      item
-                      lg={7}
-                      sm={12}
-                      md={7}
-                      xs={12}
-                      direction={"column"}
-                      style={{ whiteSpace: "nowrap" }}
-                    >
-                      <div component={"span"} className="accLabel">
-                        Payment Date
-                      </div>
-                      <div component={"span"} className="accLabelValue">
-                        {budget?.milestone.start_date}
-                      </div>
-                    </Grid>
-                    <Grid
-                      display={"flex"}
-                      item
-                      lg={5}
-                      sm={12}
-                      md={5}
-                      xs={12}
-                      direction={"column"}
-                    >
-                      <div component={"span"} className="accLabel">
-                        Amount
-                      </div>
-                      <div component={"span"} className="accLabelValue">
-                        AED{" "}
-                        {parseInt(budget?.material_unit_price || 0) *
-                          parseInt(budget?.qty || 0) +
-                          parseInt(budget?.manpower_rate || 0) *
-                            parseInt(budget?.days || 0) || "NA"}
-                      </div>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <IconButton onClick={(e) => handleRowClick(e, budget, index)}>
-                  <MoreVertIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
-          </Grid>
-        </AccordionSummary>
-        <AccordionDetails style={{ padding: 24 }}>
-          <div className="disc">{budget.description}</div>
-
-          <Divider style={{ width: "100%", margin: "24px 0" }} />
-          <div
-            className="responsive-table"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}
-          >
-            <Stack gap="28px" width="25%">
-              <Stack
-                style={{
-                  fontFamily: "Poppins-Regular",
-                  fontSize: "18px",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Budget Details
-              </Stack>
-            </Stack>
-            <TableContainer
-              style={{ padding: "16px", boxSizing: "border-box" }}
-            >
-              <Table className={classes.customtable}>
-                <Typography fontFamily={"Poppins-Regular"} fontSize={18}>
-                  Manpower
-                </Typography>
-                <TableBody>
-                  <TableRow>
-                    <TableCell
-                      align="right"
-                      style={{
-                        color: color.captionText,
-                        fontFamily: "Poppins-Regular !important",
-                      }}
-                    >
-                      Milestone
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        color: color.captionText,
-                        fontFamily: "Poppins-Regular !important",
-                      }}
-                      align="right"
-                    >
-                      Manpower rate
-                    </TableCell>
-
-                    <TableCell
-                      style={{
-                        color: color.captionText,
-                        fontFamily: "Poppins-Regular !important",
-                      }}
-                      align="right"
-                    >
-                      Days
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        color: color.captionText,
-                        fontFamily: "Poppins-Regular !important",
-                      }}
-                      align="right"
-                    >
-                      Amount
-                    </TableCell>
-                    {/* <TableCell
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Poppins-Regular !important",
-                              }}
-                              align="right"
-                            >
-                              Status
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                color: color.captionText,
-                                fontFamily: "Poppins-Regular !important",
-                              }}
-                              align="right"
-                            >
-                              Last Change
-                            </TableCell> */}
-                  </TableRow>
-                  <TableRow key={"Manpower"}>
-                    <TableCell align="right">
-                      <Typography fontFamily={"Poppins-Regular"}>
-                        {budget?.milestone.milestone_name || "-"}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography fontFamily={"Poppins-Regular"}>
-                        {budget?.manpower_rate || "-"}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography fontFamily={"Poppins-Regular"}>
-                        {budget?.days || "-"}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography fontFamily={"Poppins-Regular"}>
-                        AED{" "}
-                        {parseInt(budget.manpower_rate || 0) *
-                          parseInt(budget.days || 0)}
-                      </Typography>
-                    </TableCell>
-
-                    {/* <TableCell align="right">
-                              <Typography fontFamily={"Poppins-Regular"}>
-                                {item?.manpowerStatus || "-"}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                              <Typography fontFamily={"Poppins-Regular"}>
-                                {item?.manpowerLastChange || "-"}
-                              </Typography>
-                            </TableCell> */}
-                  </TableRow>
-                </TableBody>
-              </Table>
-              <div style={{ width: "100%", padding: "10px 0px 14px 0px" }}>
-                <Divider />
-              </div>
-              <Table className={classes.customtable}>
-                <Typography fontFamily={"Poppins-Regular"} fontSize={18}>
-                  Material
-                </Typography>
-                <TableBody>
-                  <TableRow>
-                    <TableCell
-                      align="right"
-                      style={{
-                        color: color.captionText,
-                        fontFamily: "Poppins-Regular !important",
-                      }}
-                    >
-                      Material Type
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      style={{
-                        color: color.captionText,
-                        fontFamily: "Poppins-Regular !important",
-                      }}
-                    >
-                      Material Unit
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        color: color.captionText,
-                        fontFamily: "Poppins-Regular !important",
-                      }}
-                      align="right"
-                    >
-                      Unit Price
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        color: color.captionText,
-                        fontFamily: "Poppins-Regular !important",
-                      }}
-                      align="right"
-                    >
-                      Quantity
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        color: color.captionText,
-                        fontFamily: "Poppins-Regular !important",
-                      }}
-                      align="right"
-                    >
-                      Amount
-                    </TableCell>
-                  </TableRow>
-                  <TableRow key={"Manpower"}>
-                    <TableCell align="right">
-                      <Typography fontFamily={"Poppins-Regular"}>
-                        {budget?.material_type || "-"}
-                      </Typography>
-                    </TableCell>
-
-                    <TableCell align="right">
-                      <Typography fontFamily={"Poppins-Regular"}>
-                        {budget?.material_unit || "-"}
-                      </Typography>
-                    </TableCell>
-
-                    <TableCell align="right">
-                      <Typography fontFamily={"Poppins-Regular"}>
-                        AED {budget?.material_unit_price || "0"}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography fontFamily={"Poppins-Regular"}>
-                        {budget?.qty || "-"}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography fontFamily={"Poppins-Regular"}>
-                        AED{" "}
-                        {parseInt(budget.material_unit_price || 0) *
-                          parseInt(budget.qty || 0)}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </div>
-        </AccordionDetails>
-      </Accordion>
-    </Grid>
-  );
-};

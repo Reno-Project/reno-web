@@ -490,7 +490,7 @@ const ManageProject = (props) => {
                     return (
                       <div key={`Submitted_Proposal_${index}`}>
                         <ProjectCard
-                          type="manageProject"
+                          type="ongoing"
                           villa={villa}
                           onClick={() => {
                             if (tabVal === 0) {

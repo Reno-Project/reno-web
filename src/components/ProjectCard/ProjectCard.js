@@ -4,6 +4,7 @@ import {
   CardMedia,
   Divider,
   IconButton,
+  Stack,
   Typography,
   useMediaQuery,
   useTheme,
@@ -12,7 +13,6 @@ import Images from "../../config/images";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { color } from "../../config/theme";
 import useStyles from "./styles";
-import { EastOutlined } from "@mui/icons-material";
 import moment from "moment";
 
 const ProjectCard = (props) => {
@@ -25,125 +25,115 @@ const ProjectCard = (props) => {
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
-  const createdAt = moment(villa?.createdAt).format("DD.MM.YYYY");
-  const endDate = moment(villa?.end_date, "DD/MM/YYYY").format("DD.MM.YYYY");
-  const updatedAt = moment(villa?.updatedAt).format("DD.MM.YYYY");
+  const startDate = moment(villa?.start_date).format("DD.MM.YYYY");
+  const endDate = moment(villa?.end_date).format("DD.MM.YYYY");
   const moveInDate = moment(villa?.move_in_date, "YYYY-MM-DD").format(
     "DD.MM.YYYY"
   );
-  const nData = villa?.submitted_by_reno
-    ? villa?.reno_data || {}
-    : villa?.user_data || {};
-  const ispdf = villa?.project_image[0]?.type === "application/pdf";
+
+  // const ispdf = villa?.project_image[0]?.type === "application/pdf";
+
   return (
     <Card key={villa?.id} className={classes.card} onClick={onClick}>
       <CardMedia
         component="img"
-        height="140"
-        image={ispdf ? Images.pdf : villa?.project_image[0]?.image}
-        style={{ objectFit: ispdf ? "contain" : "cover" }}
+        height="120"
+        image={villa?.project_image[0]?.image}
+        style={{ objectFit: "cover" }}
         alt={"project_image"}
       />
-      <CardContent>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "8px",
-          }}
+      <CardContent
+        sx={{ display: "flex", flexDirection: "column", gap: "8px" }}
+      >
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          <Typography className={classes.name} gutterBottom component="div">
-            {villa?.name}
-          </Typography>
+          <Typography className={classes.name}>{villa?.name}</Typography>
           {/* <IconButton>
-            <MoreVertIcon style={{ color: color.black }} />
+            <MoreVertIcon sx={{ color: color.black }} />
           </IconButton> */}
-        </div>
+        </Stack>
         <div className={classes.rowJustified}>
-          <Typography className={classes.code}>
-            <img src={Images.LocationBlue} alt="Location" />
+          <Typography
+            fontSize="12px"
+            fontFamily="Poppins-Regular"
+            color="#202939"
+          >
             {villa?.project_slug}
           </Typography>
 
           <Typography className={classes.code1}>
-            <Typography className={classes.code1} color={"#8C92A4"} mr={0.5}>
-              {manageProject || ongoing
-                ? "Order Date"
-                : requested
-                ? "Requested"
-                : "Submitted"}
-              :{" "}
-            </Typography>{" "}
-            {requested ? createdAt : updatedAt}
+            <Typography className={classes.code1} color="#8C92A4">
+              Start-Date:
+            </Typography>
+            {startDate}
           </Typography>
         </div>
+        {/* <Divider /> */}
         {/* <div className={classes.rowJustified}>
-          <Typography className={classes.row} fontFamily={"Poppins-Regular"}>
-            <img src={Images.badroom} alt="badroom" />
-            {villa?.form_json[0]?.bedrooms?.title || 0}
+          <Typography className={classes.row}>
+            <img src={Images.bedroom} alt="badroom" />
+            {villa?.form_json?.bedrooms || 0}
           </Typography>
-          <Typography className={classes.row} fontFamily={"Poppins-Regular"}>
+          <Typography className={classes.row}>
             <img src={Images.bathroom} alt="bathroom" />{" "}
-            {villa?.form_json[0]?.bathrooms?.title || 0}
+            {villa?.form_json?.bathrooms || 0}
           </Typography>
-          <Typography className={classes.row} fontFamily={"Poppins-Regular"}>
-            <img src={Images.size} alt="size" />{" "}
-            {villa?.form_json[0]?.size || 0} sqm
+          <Typography className={classes.row}>
+            <img src={Images.size} alt="size" /> {villa?.form_json?.size || 0}{" "}
+            sqm
           </Typography>
         </div> */}
         {!manageProject && (
           <>
-            <div style={{ width: "100%", margin: "10px 0px" }}>
-              <Divider style={{ color: "#F2F3F4" }} />
-            </div>
+            <Divider style={{ color: "#F2F3F4" }} />
             <Typography className={classes.company}>
               <img
-                src={nData?.profile_url}
-                width={"28px"}
-                height={"28px"}
+                src={villa?.user_data?.profile_url}
+                width="28px"
+                height="28px"
                 alt="profile_logo"
-                style={{ margin: 0, marginRight: 8, borderRadius: "100%" }}
-              />{" "}
-              {nData?.username}
-              {nData?.submitted_by_reno
-                ? null
-                : nData?.is_email_verified && (
-                    <img
-                      src={Images.verified}
-                      alt="verified"
-                      style={{ marginLeft: 8 }}
-                    />
-                  )}
+                style={{ borderRadius: "100%" }}
+              />
+              {villa?.user_data?.username}
+              {villa?.user_data?.is_email_verified && (
+                <img
+                  src={Images.verified}
+                  alt="verified"
+                  style={{ marginLeft: 8 }}
+                />
+              )}
             </Typography>
           </>
         )}
 
-        {!manageProject && (
+        {!requested && !manageProject && (
           <div className={classes.rowJustified}>
             <Typography className={classes.row}>
-              {requested ? "Client Budget" : "Budget"}:
+              {!requested && "Budget:"}
             </Typography>
-            <Typography className={classes.budget}>
-              AED {villa?.budget || 0}
-            </Typography>
+            {!requested && (
+              <Typography className={classes.budget}>
+                AED {villa?.budget || 0}
+              </Typography>
+            )}
           </div>
         )}
 
-        {submitted && (
+        {(submitted || ongoing) && (
           <>
             <div className={classes.rowJustified}>
-              <Typography className={classes.row}>
-                Client move-in date:
-              </Typography>
-              {!md && <EastOutlined style={{ color: "#475569" }} />}
-              <Typography className={classes.budget}>{moveInDate}</Typography>
+              <Typography className={classes.row}>End Date</Typography>
+              {!md && <img src={Images.arrow} alt="arrow"></img>}
+              <Typography className={classes.budget}>{endDate}</Typography>
             </div>
           </>
         )}
         {manageProject && (
           <>
-            <div style={{ width: "100%", margin: "10px 0px" }}>
+            <div style={{ width: "100%" }}>
               <Divider style={{ color: "#F2F3F4" }} />
             </div>
             <div className={classes.rowJustified}>
@@ -160,7 +150,7 @@ const ProjectCard = (props) => {
             </div>
             <div className={classes.rowJustified}>
               <Typography className={classes.row}>Start Date:</Typography>
-              <Typography className={classes.budget}>{createdAt}</Typography>
+              <Typography className={classes.budget}>{startDate}</Typography>
             </div>
             <div className={classes.rowJustified}>
               <Typography className={classes.row}>End Date:</Typography>
