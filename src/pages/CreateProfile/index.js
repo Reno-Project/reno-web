@@ -12,7 +12,6 @@ import {
 import {
   CreateOutlined,
   AttachFileOutlined,
-  ImageOutlined,
   ClearOutlined,
   HighlightOffOutlined,
   Image,
@@ -131,7 +130,7 @@ const CreateProfile = (props) => {
   const [userLocation, setUserLocation] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
   const [visible, setVisible] = useState(false);
-  const [bLogo, setBLogo] = useState();
+  const [bLogo, setBLogo] = useState(userData?.profile_url);
   const [deleteImg, setDeleteImg] = useState({
     visible: false,
     id: null,
@@ -169,10 +168,7 @@ const CreateProfile = (props) => {
   useEffect(() => {
     if (state?.businessLogo && _.isObject(state?.businessLogo)) {
       const imgUrl = URL.createObjectURL(state?.businessLogo);
-
       setBLogo(imgUrl);
-    } else {
-      setBLogo(state?.businessLogo || "");
     }
   }, [state.businessLogo]);
 
@@ -868,10 +864,42 @@ const CreateProfile = (props) => {
     }
   }
 
+  async function handleSkipBillingDetails() {
+    try {
+      setButtonLoader("step3");
+      const data = {
+        beneficiary_name: "",
+        iban: "",
+        bank_name: "",
+        bank_account: "",
+        swift_code: "",
+        address: "",
+      };
+
+      const response = await getApiData(
+        Setting.endpoints.addBillingInfo,
+        "POST",
+        data
+      );
+
+      if (response.success) {
+        toast.success(response.message);
+        setVisible(true);
+      } else {
+        toast.error(response.message);
+      }
+      setButtonLoader("");
+    } catch (error) {
+      setButtonLoader("");
+      console.log("🚀 ~ file: index.js:63 ~ connect api call ~ error:", error);
+      toast.error(error.toString());
+    }
+  }
+
   // this function checks image size validation
   function checkImgSize(img) {
     let valid = true;
-    if (img.size > 3145728) {
+    if (img.size > 5 * 1048576) {
       valid = false;
     } else {
       valid = true;
@@ -1157,6 +1185,7 @@ const CreateProfile = (props) => {
                         ...state,
                         businessLogo: e.target.files[0],
                       });
+                      toast.success("Logo updated successfully");
                     }}
                     className={classes.uploadFileStyle}
                   />
@@ -1171,7 +1200,6 @@ const CreateProfile = (props) => {
                 <>
                   <Grid item xs={10} id="cname">
                     <CInput
-                      // label="Company Name"
                       label={<span className="labelField">Company Name</span>}
                       required
                       placeholder="Enter Company Name..."
@@ -1181,7 +1209,7 @@ const CreateProfile = (props) => {
                         setErrObj({ ...errObj, cnameErr: false, cnameMsg: "" });
                       }}
                       inputProps={{
-                        maxLength: 40,
+                        maxLength: 200,
                       }}
                       error={errObj.cnameErr}
                       helpertext={errObj.cnameMsg}
@@ -1462,7 +1490,7 @@ const CreateProfile = (props) => {
                           />
                           <input
                             type="file"
-                            accept="image/jpeg, image/png, image/jpg"
+                            accept="image/jpeg, image/png, image/jpg, application/pdf"
                             multiple
                             style={{
                               position: "absolute",
@@ -1493,7 +1521,7 @@ const CreateProfile = (props) => {
                                 toast.error("You can upload maximum 5 files");
                               } else if (showMsg) {
                                 toast.error(
-                                  "Some certificate you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                                  "Some certificate you are attempting to upload exceeds the maximum file size limit of 5 MB. Please reduce the size of your image and try again."
                                 );
                               }
                               setState({ ...state, certificate: data });
@@ -1531,7 +1559,7 @@ const CreateProfile = (props) => {
                           />
                           <input
                             type="file"
-                            accept="image/jpeg, image/png, image/jpg"
+                            accept="image/jpeg, image/png, image/jpg, application/pdf"
                             multiple
                             style={{
                               position: "absolute",
@@ -1562,7 +1590,7 @@ const CreateProfile = (props) => {
                                 toast.error("You can upload maximum 5 files");
                               } else if (showMsg) {
                                 toast.error(
-                                  "Some license you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                                  "Some license you are attempting to upload exceeds the maximum file size limit of 5 MB. Please reduce the size of your image and try again."
                                 );
                               }
                               setState({ ...state, license: data });
@@ -1602,7 +1630,7 @@ const CreateProfile = (props) => {
                           />
                           <input
                             type="file"
-                            accept="image/jpeg, image/png, image/jpg"
+                            accept="image/jpeg, image/png, image/jpg, application/pdf"
                             multiple
                             style={{
                               position: "absolute",
@@ -1634,7 +1662,7 @@ const CreateProfile = (props) => {
                                 toast.error("You can upload maximum 5 files");
                               } else if (showMsg) {
                                 toast.error(
-                                  "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                                  "Some registraion you are attempting to upload exceeds the maximum file size limit of 5 MB. Please reduce the size of your image and try again."
                                 );
                               }
                               setState({ ...state, registraion: data });
@@ -1842,7 +1870,7 @@ const CreateProfile = (props) => {
                 </>
               ) : activeStep === 1 ? (
                 <>
-                  <Grid container xs={10} rowGap="32px">
+                  <Grid container xs={10} rowGap="32px" height="100%">
                     <Grid item xs={12} style={{ position: "relative" }}>
                       <InputLabel htmlFor="bootstrap-input">
                         <span className="labelField"> Upload Photo</span>
@@ -1924,28 +1952,32 @@ const CreateProfile = (props) => {
                           );
                           filteredFiles.map((item) => {
                             const bool = checkImgSize(item);
-                            if (bool && nArr.length < 5) {
+                            if (bool && nArr.length < 15) {
                               nArr.push(item);
-                            } else if (nArr.length >= 4) {
+                            } else if (nArr.length >= 15) {
                               limit = true;
                             } else {
                               showMsg = true;
                             }
                           });
                           if (limit) {
-                            toast.error("You can upload maximum 5 files");
+                            toast.error("You can upload maximum 15 files");
                           } else if (showMsg) {
                             toast.error(
-                              "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                              "Some registraion you are attempting to upload exceeds the maximum file size limit of 5 MB. Please reduce the size of your image and try again."
                             );
                           }
                           setState({ ...state, portfolio: nArr });
                         }}
                       />
                     </Grid>
-
-                    <Grid item style={{ width: "100%" }}>
-                      {state.portfolio.length > 0 && (
+                    {state.portfolio.length > 0 && (
+                      <Stack
+                        width="100%"
+                        height="100%"
+                        gap="16px"
+                        overflow="hidden"
+                      >
                         <Typography
                           style={{
                             fontFamily: "Poppins-Regular",
@@ -1954,100 +1986,104 @@ const CreateProfile = (props) => {
                         >
                           Uploaded files
                         </Typography>
-                      )}
-                      {isArray(state.portfolio) &&
-                        state.portfolio.length > 0 &&
-                        state.portfolio.map((item, index) => {
-                          let itemSize = item?.size / 1024;
+                        <Stack
+                          maxHeight="300px"
+                          paddingRight="8px"
+                          overflow="auto"
+                          gap="8px"
+                        >
+                          {isArray(state.portfolio) &&
+                            state.portfolio.length > 0 &&
+                            state.portfolio.map((item, index) => {
+                              let itemSize = item?.size / 1024;
 
-                          let imgUrl = "";
-                          if (typeof item?.image === "string") {
-                            imgUrl = item?.image;
-                          } else {
-                            imgUrl = URL.createObjectURL(item);
-                          }
-                          return (
-                            <Stack gap="6px">
-                              <div
-                                style={{
-                                  display: "flex",
-                                  border: "1px solid #F2F3F4",
-                                  borderRadius: 6,
-
-                                  padding: 3,
-                                }}
-                              >
-                                <img
-                                  style={{
-                                    width: 60,
-                                    height: 70,
-                                    borderRadius: 6,
-                                    marginRight: 20,
-                                    objectFit: "cover",
-                                  }}
-                                  src={imgUrl}
-                                  alt="Portfolio Photos"
-                                />
-                                <div
-                                  style={{
-                                    margin: "auto 0",
-                                    overflow: "hidden",
-                                  }}
+                              let imgUrl = "";
+                              if (typeof item?.image === "string") {
+                                imgUrl = item?.image;
+                              } else {
+                                imgUrl = URL.createObjectURL(item);
+                              }
+                              return (
+                                <Stack
+                                  direction="row"
+                                  gap="6px"
+                                  padding="4px"
+                                  border="1px solid #F2F3F4"
+                                  borderRadius="6px"
                                 >
-                                  <Typography
+                                  <img
                                     style={{
-                                      fontFamily: "Poppins-Regular",
-                                      fontWeight: "500",
-                                      color: "#202939",
-                                      fontSize: 18,
-                                      whiteSpace: "nowrap",
-                                      textOverflow: "ellipsis",
+                                      width: 60,
+                                      height: 70,
+                                      borderRadius: 6,
+                                      marginRight: 20,
+                                      objectFit: "cover",
+                                    }}
+                                    src={imgUrl}
+                                    alt="Portfolio Photos"
+                                  />
+                                  <div
+                                    style={{
+                                      margin: "auto 0",
                                       overflow: "hidden",
                                     }}
                                   >
-                                    {item?.name ||
-                                      `Portfolio Image ${index + 1}` ||
-                                      ""}
-                                  </Typography>
-                                  <Typography
+                                    <Typography
+                                      style={{
+                                        fontFamily: "Poppins-Regular",
+                                        fontWeight: "500",
+                                        color: "#202939",
+                                        fontSize: 18,
+                                        whiteSpace: "nowrap",
+                                        textOverflow: "ellipsis",
+                                        overflow: "hidden",
+                                      }}
+                                    >
+                                      {item?.name ||
+                                        `Portfolio Image ${index + 1}` ||
+                                        ""}
+                                    </Typography>
+                                    <Typography
+                                      style={{
+                                        fontFamily: "Poppins-Regular",
+                                        color: "#787B8C",
+                                      }}
+                                    >
+                                      {itemSize < 1000
+                                        ? `${itemSize.toFixed(2)}kb`
+                                        : `${(itemSize / 1024).toFixed(2)}mb`}
+                                    </Typography>
+                                  </div>
+                                  <div
                                     style={{
-                                      fontFamily: "Poppins-Regular",
-                                      color: "#787B8C",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      marginLeft: "auto",
+                                      marginRight: 10,
                                     }}
                                   >
-                                    {itemSize < 1000
-                                      ? `${itemSize.toFixed(2)}kb`
-                                      : `${(itemSize / 1024).toFixed(2)}mb`}
-                                  </Typography>
-                                </div>
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    marginLeft: "auto",
-                                    marginRight: 10,
-                                  }}
-                                >
-                                  <HighlightOffOutlined
-                                    style={{
-                                      zIndex: 10,
-                                      cursor: "pointer",
-                                      fontSize: 28,
-                                      color: "#FC5555",
-                                    }}
-                                    onClick={() => {
-                                      item?.id && deletePortfolio(item?.id);
-                                      const nArr = [...state.portfolio];
-                                      nArr.splice(index, 1);
-                                      setState({ ...state, portfolio: nArr });
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            </Stack>
-                          );
-                        })}
-                    </Grid>
+                                    <HighlightOffOutlined
+                                      style={{
+                                        zIndex: 10,
+                                        cursor: "pointer",
+                                        fontSize: 28,
+                                        color: "#FC5555",
+                                      }}
+                                      onClick={() => {
+                                        item?.id && deletePortfolio(item?.id);
+                                        const nArr = [...state.portfolio];
+                                        nArr.splice(index, 1);
+                                        setState({ ...state, portfolio: nArr });
+                                      }}
+                                    />
+                                  </div>
+                                </Stack>
+                              );
+                            })}
+                        </Stack>
+                      </Stack>
+                    )}
+
                     <Grid
                       flex
                       xs={12}
@@ -2251,26 +2287,38 @@ const CreateProfile = (props) => {
                       <Button
                         style={{
                           width: "100%",
-                          height: "48px",
-                          cursor: "pointer",
-                          // marginTop: 5,
-                          padding: "24px 24px",
-                          backgroundColor: "#F5F6F8",
-                          color: "#202939",
-                          boxShadow: "none",
+                          padding: "12px 24px",
                         }}
+                        variant="outlined"
                         onClick={() => previousStep()}
                       >
                         Back
                       </Button>
                     </Grid>
-                    <Grid item display="flex" flex={1}>
+                    <Grid item width="25%">
                       <Button
                         style={{
                           width: "100%",
-                          height: "48px",
-                          padding: "24px 14px",
-                          boxShadow: "none",
+                          padding: "12px 24px",
+                        }}
+                        variant="outlined"
+                        onClick={handleSkipBillingDetails}
+                      >
+                        {buttonLoader === "step3" ? (
+                          <CircularProgress
+                            style={{ color: "#fff" }}
+                            size={26}
+                          />
+                        ) : (
+                          "Skip"
+                        )}
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        style={{
+                          width: "100%",
+                          padding: "12px 24px",
                         }}
                         variant="contained"
                         onClick={() => continueStep(3)}
@@ -2323,7 +2371,7 @@ const CreateProfile = (props) => {
           fontFamily: "Poppins-Regular",
           fontSize: "12px",
           textAlign: "center",
-          transform: "translateY(-90px)",
+          transform: "translateY(-50px)",
         }}
       >
         Copyright © 2023. All Rights Reserved by Reno.
