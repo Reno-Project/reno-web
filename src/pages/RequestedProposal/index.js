@@ -80,6 +80,7 @@ export default function RequestedProposal() {
   const navigate = useNavigate();
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  console.log(villa, ">>>>>villa");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -204,169 +205,322 @@ export default function RequestedProposal() {
                   </Grid>
                 </Grid>
               </Grid>
-              <Stack width="100%" gap="16px">
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  className={classes.projectInformation}
-                  sx={{
-                    backgroundColor: "#F3F4F9",
-                  }}
-                >
-                  Project Details
-                  <Stack>
-                    <Typography className={classes.informationCard}>
-                      Total Amount
-                    </Typography>
-                    <Typography className={classes.value}>
-                      AED {villa?.budget || "NA"}
-                    </Typography>
-                  </Stack>
-                </Stack>
-                <Stack gap="8px" width="100%">
+
+              {/* {isSubmitted && ( */}
+              <>
+                <Stack width="100%" gap="16px">
                   <Stack
                     direction="row"
-                    gap="8px"
-                    padding="0 12px"
-                    width="100%"
                     justifyContent="space-between"
-                    flexWrap="wrap"
+                    className={classes.projectInformation}
+                    sx={{
+                      backgroundColor: "#F3F4F9",
+                    }}
                   >
+                    Project Details
                     <Stack>
                       <Typography className={classes.informationCard}>
-                        Project Name
+                        Total Amount
                       </Typography>
                       <Typography className={classes.value}>
-                        {villa?.name}
-                      </Typography>
-                    </Stack>
-                    <Stack>
-                      <Typography className={classes.informationCard}>
-                        Project Type
-                      </Typography>
-                      <Typography className={classes.value}>
-                        {villa?.project_type}
-                      </Typography>
-                    </Stack>
-                    <Stack>
-                      <Typography className={classes.informationCard}>
-                        Email
-                      </Typography>
-                      <Typography className={classes.value}>
-                        {villa.customer_email}
-                      </Typography>
-                    </Stack>
-                    <Stack>
-                      <Typography className={classes.informationCard}>
-                        Project Dates
-                      </Typography>
-                      <Typography className={classes.value}>
-                        {moment(villa?.start_date).format("MMM DD, YYYY")} -{" "}
-                        {moment(villa?.end_date).format("MMM DD, YYYY")}
+                        AED {villa?.budget || "NA"}
                       </Typography>
                     </Stack>
                   </Stack>
-                  <Divider />
-                  <Stack padding="0 12px">
-                    <Stack>
-                      <Typography className={classes.informationCard}>
-                        Scope of work
-                      </Typography>
-                      <Typography className={classes.value}>
-                        {villa?.scope_of_work}
-                      </Typography>
+                  <Stack gap="8px" width="100%">
+                    <Stack
+                      direction="row"
+                      gap="8px"
+                      padding="0 12px"
+                      width="100%"
+                      justifyContent="space-between"
+                      flexWrap="wrap"
+                    >
+                      <Stack>
+                        <Typography className={classes.informationCard}>
+                          Project Name
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {villa?.name}
+                        </Typography>
+                      </Stack>
+                      <Stack>
+                        <Typography className={classes.informationCard}>
+                          Project Type
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {villa?.project_type}
+                        </Typography>
+                      </Stack>
+                      <Stack>
+                        <Typography className={classes.informationCard}>
+                          Email
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {villa.customer_email}
+                        </Typography>
+                      </Stack>
+                      <Stack>
+                        <Typography className={classes.informationCard}>
+                          Project Dates
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {moment(villa?.start_date).format("MMM DD, YYYY")} -{" "}
+                          {moment(villa?.end_date).format("MMM DD, YYYY")}
+                        </Typography>
+                      </Stack>
                     </Stack>
-                  </Stack>
-                  <Divider />
-                  <Stack padding="0 12px">
-                    <Stack>
+                    <Divider />
+                    <Stack padding="0 12px">
+                      <Stack>
+                        <Typography className={classes.informationCard}>
+                          Scope of work
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {villa?.scope_of_work}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                    <Divider />
+                    <Stack padding="0 12px">
+                      <Stack>
+                        <Typography className={classes.informationCard}>
+                          Project Description
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {villa?.description}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                    <Divider />
+                    <Stack padding="0 12px">
                       <Typography className={classes.informationCard}>
-                        Project Description
+                        Assigned Contractors
                       </Typography>
-                      <Typography className={classes.value}>
+                      <Grid item lg={7} sm={12} md={6} xs={12} pt={1} px={1}>
+                        {assignedContractors.map((contractor) => (
+                          <Chip
+                            label={contractor.label}
+                            key={contractor.value}
+                            style={{ marginRight: 2, padding: "0px 16px" }}
+                          />
+                        ))}
+                        <IconButton onClick={handleAddContractor}>
+                          {assignedContractors.length === 5 ? (
+                            <RemoveRedEye />
+                          ) : (
+                            <Add />
+                          )}
+                        </IconButton>
+                      </Grid>
+                    </Stack>
+                    <Divider />
+                  </Stack>
+                </Stack>
+                <Stack gap="12px" width="100%">
+                  <Stack direction="row" gap="4px" width="100%">
+                    <Typography
+                      className={classes.projectInformation}
+                      padding="8px 16px"
+                    >
+                      Milestones
+                      <span
+                        style={{
+                          fontSize: "12px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          padding: "4px 10px",
+                          margin: "0px 8px",
+                          backgroundColor: "#E9B55C",
+                          borderRadius: 22,
+                        }}
+                      >
+                        {villa?.milestone?.length}
+                      </span>
+                    </Typography>
+                  </Stack>
+                  {villa?.milestone?.length > 1 && <Divider />}
+                  <Stack width="100%" gap="8px">
+                    {villa?.milestone?.map((milestone, index) => {
+                      return (
+                        <SingleMilestoneAccordion
+                          milestone={milestone}
+                          index={index}
+                          amounts={[]}
+                          amount={milestone?.amount}
+                        >
+                          <Stack padding="16px" gap="16px" width="100%">
+                            {milestone?.budget?.map((budget, index) => {
+                              if (budget?.milestone_id === milestone?.id) {
+                                return (
+                                  <>
+                                    <SingleBudgetAccordion
+                                      budget={budget}
+                                      index={index}
+                                    />
+                                  </>
+                                );
+                              }
+                            })}
+                          </Stack>
+                        </SingleMilestoneAccordion>
+                      );
+                    })}
+                  </Stack>
+                </Stack>
+              </>
+              {/* )} */}
+
+              {!isSubmitted && (
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="end"
+                  gap="8px"
+                >
+                  <Button variant="outlined">Request Clarifications</Button>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                      navigate("/create-proposal", {
+                        state: {
+                          villa,
+                          fromManageProject,
+                        },
+                      });
+                    }}
+                  >
+                    Submit Proposal
+                  </Button>
+                </Stack>
+              )}
+              {/* {!isSubmitted && (
+                <Stack width="100%" gap="16px">
+                  <Typography
+                    fontSize="24px"
+                    fontFamily="Poppins-SemiBold"
+                    padding="4px 12px"
+                  >
+                    Project Information
+                  </Typography>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography className={classes.label}>
+                      Project Name
+                    </Typography>
+                    <Typography className={classes.value}>
+                      {villa?.name}
+                    </Typography>
+                  </Stack>
+                  <Stack>
+                    <Typography className={classes.label}>
+                      Project Descriptions
+                    </Typography>
+                    <Stack
+                      style={{ backgroundColor: "#F5F6F8", marginLeft: "12px" }}
+                    >
+                      <Typography padding="16px 55px 16px 16px">
                         {villa?.description}
                       </Typography>
                     </Stack>
                   </Stack>
-                  <Divider />
-                  <Stack padding="0 12px">
-                    <Typography className={classes.informationCard}>
-                      Assigned Contractors
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography className={classes.label}>
+                      Property Type
                     </Typography>
-                    <Grid item lg={7} sm={12} md={6} xs={12} pt={1} px={1}>
-                      {assignedContractors.map((contractor) => (
-                        <Chip
-                          label={contractor.label}
-                          key={contractor.value}
-                          style={{ marginRight: 2, padding: "0px 16px" }}
-                        />
-                      ))}
-                      <IconButton onClick={handleAddContractor}>
-                        {assignedContractors.length === 5 ? (
-                          <RemoveRedEye />
-                        ) : (
-                          <Add />
-                        )}
-                      </IconButton>
-                    </Grid>
+                    <Typography className={classes.value}>
+                      {villa?.project_type}
+                    </Typography>
                   </Stack>
                   <Divider />
-                </Stack>
-              </Stack>
-              <Stack gap="12px" width="100%">
-                <Stack direction="row" gap="4px" width="100%">
-                  <Typography
-                    className={classes.projectInformation}
-                    padding="8px 16px"
-                  >
-                    Milestones
-                    <span
-                      style={{
-                        fontSize: "12px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: "4px 10px",
-                        margin: "0px 8px",
-                        backgroundColor: "#E9B55C",
-                        borderRadius: 22,
-                      }}
-                    >
-                      {villa?.milestone?.length}
-                    </span>
-                  </Typography>
-                </Stack>
-                {villa?.milestone?.length > 1 && <Divider />}
-                <Stack width="100%" gap="8px">
-                  {villa?.milestone?.map((milestone, index) => {
-                    return (
-                      <SingleMilestoneAccordion
-                        milestone={milestone}
-                        index={index}
-                        amounts={[]}
-                        amount={milestone?.amount}
-                      >
-                        <Stack padding="16px" gap="16px" width="100%">
-                          {milestone?.budget?.map((budget, index) => {
-                            if (budget?.milestone_id === milestone?.id) {
-                              return (
-                                <>
-                                  <SingleBudgetAccordion
-                                    budget={budget}
-                                    index={index}
-                                  />
-                                </>
-                              );
+                  {villa?.project_type === "Kitchen" ? (
+                    <>
+                      <Stack direction="row" justifyContent="space-between">
+                        <Typography className={classes.label}>
+                          Built In Appliances
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {villa?.form_json?.appliances?.builtin_appliances ===
+                          true
+                            ? "True"
+                            : "False"}
+                        </Typography>
+                      </Stack>
+                      <Divider />
+                      <Stack direction="row" justifyContent="space-between">
+                        <Typography className={classes.label}>
+                          Selected Appliances
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {villa?.form_json?.appliances?.selected_appliances.map(
+                            (appliances) => {
+                              return <span>{appliances}</span>;
                             }
-                          })}
-                        </Stack>
-                      </SingleMilestoneAccordion>
-                    );
-                  })}
-                </Stack>
-              </Stack>
+                          ) || "NA"}
+                        </Typography>
+                      </Stack>
+                    </>
+                  ) : (
+                    <>
+                      <Stack direction="row" justifyContent="space-between">
+                        <Typography className={classes.label}>
+                          Bathroom
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {villa?.form_json?.bathrooms || "NA"}
+                        </Typography>
+                      </Stack>
+                      <Stack direction="row" justifyContent="space-between">
+                        <Typography className={classes.label}>
+                          Bedroom
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {villa?.form_json?.bedrooms || "NA"}
+                        </Typography>
+                      </Stack>
+                      <Stack direction="row" justifyContent="space-between">
+                        <Typography className={classes.label}>
+                          Indoor Space
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {villa?.indoor_space || "NA"}
+                        </Typography>
+                      </Stack>
+                      <Stack direction="row" justifyContent="space-between">
+                        <Typography className={classes.label}>
+                          Outdoor Space
+                        </Typography>
+                        <Typography className={classes.value}>
+                          {villa?.outdoor_space || "NA"}
+                        </Typography>
+                      </Stack>
+                    </>
+                  )}
+                  <Divider />
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography className={classes.label}>
+                      Property Budget
+                    </Typography>
+                    <Typography className={classes.value}>
+                      {villa?.budget}
+                    </Typography>
+                  </Stack>
+                  <Divider />
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography className={classes.label}>
+                      Property Location
+                    </Typography>
+                    <Typography className={classes.value}>
+                      {villa?.location || "NA"}
+                    </Typography>
+                  </Stack>
+                  <Divider />
+                 
+              )} */}
             </>
           )}
+
           {villa?.milestone?.length > 0 && <Divider />}
         </Grid>
       </Grid>

@@ -15,7 +15,7 @@ import SingleMilestoneAccordion from "../../../components/SingleMilestoneAccordi
 import SingleBudgetAccordion from "../../../components/SingleBudgetAccordian";
 
 const Details = (props) => {
-  const { handleClick = () => null, createProposal, fromManageProject } = props;
+  const { handleClick = () => null, villa, fromManageProject } = props;
 
   const { proposalDetails } = useSelector((state) => state.auth);
   const {
@@ -122,58 +122,57 @@ const Details = (props) => {
   };
 
   const handleSubmit = () => {
-    if (createProposal) {
-      const projectFiles = convertProjectToFiles();
-      let i = 0;
-      const transformedData = {
-        email: proposalDetails?.email,
-        name: proposalDetails?.name,
-        username: proposalDetails?.customer_name,
-        project_type: proposalDetails?.project_type.project_name,
-        exp_id: proposalDetails?.project_type.id,
-        description: proposalDetails?.description,
-        start_date: proposalDetails?.start_date,
-        end_date: proposalDetails?.end_date,
-        project_image: projectFiles,
-        proposal: JSON.stringify({
-          scope_of_work: proposalDetails?.scope_of_work,
-          milestone_details: proposalDetails?.milestone_details?.milestone?.map(
-            (milestone, index) => {
-              let mainObj = {
-                milestone_name: milestone?.milestone_name,
-                description: milestone?.description,
-                start_date: milestone?.start_date,
-                end_date: milestone?.end_date,
-                budget_item: proposalDetails?.budget_details?.budgets
-                  ?.filter((item) => item?.milestone?.id === milestone?.id)
-                  .map((item) => {
-                    const obj = {
-                      name: item?.name,
-                      budget_id: i + 1,
-                      material_type: item?.material_type,
-                      material_unit: item?.material_unit || "",
-                      material_unit_price: item?.material_unit_price || "0",
-                      qty: item?.qty || "0",
-                      manpower_rate: item?.manpower_rate || "0",
-                      days: item?.days || "0",
-                      specification: item?.specification,
-                    };
-                    i++;
-                    return obj;
-                  }),
-              };
+    const projectFiles = convertProjectToFiles();
+    let i = 0;
+    const transformedData = {
+      email: proposalDetails?.email,
+      name: proposalDetails?.name,
+      username: proposalDetails?.customer_name || villa?.user_data?.username,
+      project_type:
+        proposalDetails?.project_type?.project_name || villa?.project_type,
+      exp_id: proposalDetails?.project_type.id || villa?.exp_id,
+      description: proposalDetails?.description,
+      start_date: proposalDetails?.start_date,
+      end_date: proposalDetails?.end_date,
+      project_image: projectFiles,
+      proposal: JSON.stringify({
+        scope_of_work: proposalDetails?.scope_of_work,
+        milestone_details: proposalDetails?.milestone_details?.milestone?.map(
+          (milestone, index) => {
+            let mainObj = {
+              milestone_name: milestone?.milestone_name,
+              description: milestone?.description,
+              start_date: milestone?.start_date,
+              end_date: milestone?.end_date,
+              budget_item: proposalDetails?.budget_details?.budgets
+                ?.filter((item) => item?.milestone?.id === milestone?.id)
+                .map((item) => {
+                  const obj = {
+                    name: item?.name,
+                    budget_id: i + 1,
+                    material_type: item?.material_type,
+                    material_unit: item?.material_unit || "",
+                    material_unit_price: item?.material_unit_price || "0",
+                    qty: item?.qty || "0",
+                    manpower_rate: item?.manpower_rate || "0",
+                    days: item?.days || "0",
+                    specification: item?.specification,
+                  };
+                  i++;
+                  return obj;
+                }),
+            };
 
-              return mainObj;
-            }
-          ),
-        }),
-      };
-      proposalDetails?.budget_details?.budgets?.forEach((budget, ind) => {
-        const photoOriginFiles = convertPhotoOriginToFiles(budget);
-        transformedData[`budget_image_${ind + 1}`] = photoOriginFiles;
-      });
-      createproposalApicall(transformedData);
-    }
+            return mainObj;
+          }
+        ),
+      }),
+    };
+    proposalDetails?.budget_details?.budgets?.forEach((budget, ind) => {
+      const photoOriginFiles = convertPhotoOriginToFiles(budget);
+      transformedData[`budget_image_${ind + 1}`] = photoOriginFiles;
+    });
+    createproposalApicall(transformedData);
   };
 
   return (
@@ -205,13 +204,13 @@ const Details = (props) => {
                 Project Type
               </Typography>
               <Typography className={classes.value}>
-                {project_type?.project_name}
+                {project_type?.project_name || villa?.project_type}
               </Typography>
             </Stack>
 
             <Stack>
               <Typography className={classes.informationCard}>Email</Typography>
-              <Typography className={classes.value}>{email}</Typography>
+              <Typography className={classes.value}>{email || "NA"}</Typography>
             </Stack>
             <Stack>
               <Typography className={classes.informationCard}>
