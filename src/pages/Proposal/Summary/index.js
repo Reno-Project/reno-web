@@ -96,12 +96,14 @@ export default function Summary(props) {
   const [disableDetailsTab, setDisableDetailsTab] = useState(true);
 
   useEffect(() => {
-    if (
-      !createProposal &&
-      (!_?.isObject(proposalDetails) || isEmpty(proposalDetails))
-    ) {
+    if (!createProposal) {
       setScope(villa?.proposal?.scope_of_work);
       setProjectType(villa?.project_type);
+      setName(villa?.name || "");
+      setDescription(villa?.description || "");
+      setCustomerName(villa?.customer_name || "");
+      setEmail(villa?.customer_email || "");
+      setOriginalDoc(proposalDetails?.project || []);
     } else if (_?.isObject(proposalDetails) && !isEmpty(proposalDetails)) {
       setScope(proposalDetails?.scope_of_work);
       setProjectType(proposalDetails?.project_type || "");
@@ -117,6 +119,7 @@ export default function Summary(props) {
     }
   }, []);
 
+  console.log(villa, ">>>>villa in summary requested");
   function validation() {
     const error = { ...errObj };
     let valid = true;
@@ -189,7 +192,12 @@ export default function Summary(props) {
           setProposalDetails({
             ...proposalDetails,
             scope_of_work: scope,
-            project_type: projectType,
+            project_type: villa?.project_type,
+            name: villa?.name,
+            description: villa?.description,
+            email: villa?.customer_email,
+            customer_name: villa?.username,
+            project: villa?.project_image || [],
           })
         );
       }
@@ -286,7 +294,6 @@ export default function Summary(props) {
       console.log("🚀 ~ file: index.js:63 ~ by id api ~ error:", error);
     }
   }
-
   function checkImgSize(img) {
     let valid = true;
     if (img.size > 3145728) {

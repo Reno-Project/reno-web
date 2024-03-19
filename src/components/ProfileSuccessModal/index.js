@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Backdrop, Box, Button, Fade, Modal, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { isEmpty } from "lodash";
 import Images from "../../config/images";
@@ -10,7 +10,7 @@ import useStyles from "./styles";
 
 function ProfileSuccessModal(props) {
   const {
-    visible = false,
+    visible,
     title = "Thank you!",
     msg = "We will review your profile and let you know once your profile is approved",
     btnTitle = "Start Exploring",
@@ -23,6 +23,7 @@ function ProfileSuccessModal(props) {
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const [isDisable, setIsDisable] = useState(false);
   const [isOpen, setIsOpen] = useState(visible);
+  const location = useLocation();
 
   const style = {
     position: "absolute",
@@ -41,10 +42,13 @@ function ProfileSuccessModal(props) {
       const { profile_completed, is_profile_verified } =
         userData?.contractor_data;
       if (profile_completed === "completed" && !is_profile_verified) {
+        setIsDisable(false);
+      }
+      if (location.pathname === "/dashboard" && !is_profile_verified) {
         setIsDisable(true);
       }
     }
-  }, [userData, visible]);
+  }, [userData, visible, location.pathname]);
 
   return (
     <div>
@@ -73,7 +77,8 @@ function ProfileSuccessModal(props) {
                   navigatePath
                     ? navigate(navigatePath)
                     : navigate("/dashboard");
-                  setIsOpen(!isOpen);
+                  setIsOpen(false);
+                  setIsDisable(true);
                 }}
               >
                 {btnTitle}
