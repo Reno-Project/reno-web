@@ -15,7 +15,12 @@ import SingleMilestoneAccordion from "../../../components/SingleMilestoneAccordi
 import SingleBudgetAccordion from "../../../components/SingleBudgetAccordian";
 
 const Details = (props) => {
-  const { handleClick = () => null, villa, fromManageProject } = props;
+  const {
+    handleClick = () => null,
+    villa,
+    fromManageProject,
+    createProposal,
+  } = props;
 
   const { proposalDetails } = useSelector((state) => state.auth);
   const {
@@ -87,7 +92,8 @@ const Details = (props) => {
   }
 
   const convertBase64ToImageFile = (base64String, filename) => {
-    const arr = base64String.split(",");
+    const arr = base64String?.split(",");
+    console.log(arr, ">>>>>>>>>>>>>>>>>>>>>>> arrrererere");
     const mimeType = arr[0].match(/:(.*?);/)[1];
     const bstr = atob(arr[1]);
     let n = bstr.length;
@@ -101,24 +107,31 @@ const Details = (props) => {
     return file;
   };
 
-  const convertPhotoOriginToFiles = (budget, budInd) => {
-    const photoOriginFiles = budget.photo_origin.map((base64String, index) => {
-      const filename = `photo_origin_${index + 1}.jpg`;
-      return convertBase64ToImageFile(base64String, filename);
-    });
+  const convertPhotoOriginToFiles = (budget) => {
+    const photoOriginFiles = budget?.photo_origin?.map(
+      (base64String, index) => {
+        const filename = `photo_origin_${index + 1}.jpg`;
 
+        return convertBase64ToImageFile(base64String, filename);
+      }
+    );
     return photoOriginFiles;
   };
 
   const convertProjectToFiles = () => {
-    const projectFiles = proposalDetails?.project?.map(
-      (base64String, index) => {
-        const filename = `project_image_${index + 1}.jpg`;
-        return convertBase64ToImageFile(base64String, filename);
-      }
-    );
+    if (!createProposal) {
+      const projectFiles = proposalDetails?.project?.map((item) => item.image);
+      return projectFiles;
+    } else {
+      const projectFiles = proposalDetails?.project?.map(
+        (base64String, index) => {
+          const filename = `project_image_${index + 1}.jpg`;
+          return convertBase64ToImageFile(base64String, filename);
+        }
+      );
 
-    return projectFiles;
+      return projectFiles;
+    }
   };
 
   const handleSubmit = () => {
