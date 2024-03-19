@@ -120,7 +120,9 @@ const Details = (props) => {
 
   const convertProjectToFiles = () => {
     if (!createProposal) {
-      const projectFiles = proposalDetails?.project?.map((item) => item.image);
+      const projectFiles = [];
+      const files = proposalDetails?.project?.map((item) => item.image);
+      projectFiles.push(files);
       return projectFiles;
     } else {
       const projectFiles = proposalDetails?.project?.map(
@@ -185,6 +187,9 @@ const Details = (props) => {
       const photoOriginFiles = convertPhotoOriginToFiles(budget);
       transformedData[`budget_image_${ind + 1}`] = photoOriginFiles;
     });
+    if (!createProposal) {
+      transformedData["proposal_id"] = villa?.proposal_id;
+    }
     createproposalApicall(transformedData);
   };
 
