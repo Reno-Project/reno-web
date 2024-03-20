@@ -23,7 +23,7 @@ import _, { isArray, isEmpty, isNull } from "lodash";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { Setting } from "../../../utils/Setting";
 import { toast } from "react-toastify";
-import { getApiData } from "../../../utils/APIHelper";
+import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
 import ConfirmModel from "../../../components/ConfirmModel";
@@ -57,8 +57,8 @@ const errorObj = {
   photoMsg: "",
 };
 
-export default function Budget(props) {
-  const { handleClick = () => null, villa, createProposal } = props;
+export default function SubmittedBudget(props) {
+  const { handleClick = () => null, villa, handleSetTabValue } = props;
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
   const [deleteIND, setDeleteIND] = useState(null);
@@ -80,6 +80,7 @@ export default function Budget(props) {
     updatedAt: moment().format("MMMM DD, YYYY"),
   };
   const [state, setState] = useState(initialFormvalues);
+  const [buttonLoader, setButtonLoader] = useState(false);
   const [budgetDetails, setBudgetDetails] = useState([]);
   const [budgetLoader, setBudgetLoader] = useState(false);
   const [milestones, setMilestones] = useState([]);
@@ -123,11 +124,9 @@ export default function Budget(props) {
   };
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (createProposal) {
-      setMilestones(proposalDetails?.milestone_details?.milestone);
-    } else {
-      getMilestoneList();
-    }
+    setMilestones(
+      proposalDetails?.milestone_details?.milestone || villa?.milestone
+    );
   }, []);
 
   useEffect(() => {
@@ -146,33 +145,9 @@ export default function Budget(props) {
       });
     }
     if (isArray(milestones) && !isEmpty(milestones)) {
-      if (createProposal) {
-        if (
-          proposalDetails?.budget_details?.previous ||
-          (isArray(proposalDetails?.budget_details?.budgets) &&
-            !isEmpty(proposalDetails?.budget_details?.budgets))
-        ) {
-          const updatedBudgets = proposalDetails?.budget_details?.budgets?.map(
-            (budget) => {
-              const matchingMilestone = milestones.find(
-                (milestone) => milestone.id === budget.milestone.id
-              );
-              if (matchingMilestone) {
-                return { ...budget, milestone: matchingMilestone };
-              }
-              return budget;
-            }
-          );
-          setBudgetDetails(updatedBudgets || []);
-        }
-      } else {
-        getBudgetList();
-        // milestones.map((milestone) => {
-        //   setBudgetDetails(milestone?.budget);
-        // });
-      }
+      getBudgetList();
     }
-  }, [milestones]);
+  }, [milestones, proposalDetails?.budget_details?.formvalues]);
 
   useEffect(() => {
     const newAmounts = [];
@@ -195,36 +170,6 @@ export default function Budget(props) {
     setAmounts(newAmounts);
   }, [budgetDetails, milestones]);
 
-  async function getMilestoneList() {
-    setmilestoneLoader(true);
-    try {
-      const response = await getApiData(
-        `${Setting.endpoints.milestoneProposalList}?proposal_id=${villa?.proposal_id}`,
-        "GET"
-      );
-      if (response.success) {
-        if (
-          proposalDetails?.milestone_details?.previous ||
-          (isArray(proposalDetails?.milestone_details?.milestone) &&
-            !isEmpty(proposalDetails?.milestone_details?.milestone))
-        ) {
-          setMilestones(proposalDetails?.milestone_details?.milestone);
-        } else if (
-          !proposalDetails?.milestone_details?.previous &&
-          isArray(response?.data) &&
-          !isEmpty(response?.data)
-        ) {
-          setMilestones(response?.data);
-        } else {
-          setMilestones([]);
-        }
-      }
-      setmilestoneLoader(false);
-    } catch (error) {
-      setmilestoneLoader(false);
-      console.log("err===>", error);
-    }
-  }
   async function getBudgetList() {
     setBudgetLoader(true);
     try {
@@ -255,6 +200,7 @@ export default function Budget(props) {
           isArray(response?.data?.budget) &&
           !isEmpty(response?.data?.budget)
         ) {
+          console.log("second");
           const modifiedArray = response?.data?.budget?.map((item) => ({
             ...item,
             photo_origin: item.photo_origin,
@@ -271,26 +217,9 @@ export default function Budget(props) {
     }
   }
 
-  const [expanded, setExpanded] = React.useState(false);
-  const handleChangeExpanded = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
-  };
-
-  const handleChange = (e, i) => {
-    let dummyarr = [...budgetDetails];
-    dummyarr[i].expanded = !dummyarr[i].expanded;
-    setBudgetDetails(dummyarr);
-  };
-
   const validate = (isUpdateModalVisible) => {
     const error = { ...errObj };
     let valid = true;
-
-    // if (!isArray(state.photo_url) || isEmpty(state.photo_url)) {
-    //   valid = false;
-    //   error.photoErr = true;
-    //   error.photoMsg = "Please upload photo";
-    // }
 
     if (isEmpty(state.name?.trim())) {
       valid = false;
@@ -304,9 +233,6 @@ export default function Budget(props) {
 
     const positiveIntRegex = /^[1-9]\d*$/;
     const regex = /^\d+(\.\d+)?$/;
-    const startDate = moment(state?.milestone?.start_date);
-    const endDate = moment(state?.milestone?.end_date);
-    const totalDays = endDate.diff(startDate, "days");
 
     if (
       isEmpty(state?.material_type?.trim()) &&
@@ -383,9 +309,10 @@ export default function Budget(props) {
       }
     } else {
       if (
-        !isEmpty(state.material_type?.trim()) ||
-        !isEmpty(state.material_unit_price?.toString()) ||
-        (!isEmpty(state.material_unit) && !isNull(state?.material_unit)) ||
+        !isEmpty(state.material_type?.trim()) &&
+        !isEmpty(state.material_unit_price?.toString()) &&
+        !isEmpty(state.material_unit) &&
+        !isNull(state?.material_unit) &&
         !isEmpty(state?.qty?.toString())
       ) {
         if (isEmpty(state.material_type?.trim())) {
@@ -473,7 +400,7 @@ export default function Budget(props) {
         _.isObject(selectedBudget?.data) &&
         !_.isEmpty(selectedBudget?.data)
       ) {
-        const newArray = [...budgetDetails]; // create a copy of the array
+        const newArray = [...budgetDetails];
         newArray[selectedBudget?.index] = state; // modify the copy
         setBudgetDetails(newArray);
         dispatch(
@@ -492,7 +419,6 @@ export default function Budget(props) {
           formvalues: {},
           budgets: budgetDetails ? [...budgetDetails, state] : [state],
         };
-
         setTimeout(() => {
           dispatch(
             setProposalDetails({
@@ -508,19 +434,6 @@ export default function Budget(props) {
     }
   };
 
-  function updateRedux() {
-    const budget_details = {
-      formvalues: state,
-      budgets: budgetDetails,
-      previous: true,
-    };
-    dispatch(
-      setProposalDetails({
-        ...proposalDetails,
-        budget_details,
-      })
-    );
-  }
   const handleRowClick = (event, budget, index) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
@@ -532,7 +445,6 @@ export default function Budget(props) {
 
   const handleClose = () => {
     setAnchorEl(null);
-    setSelectedBudget(null);
   };
 
   const handleEdit = (data, index) => {
@@ -566,218 +478,137 @@ export default function Budget(props) {
     setState(nextState);
   };
 
-  const handleDelete = () => {
-    if (selectedBudget?.data?.id) {
-      deleteBudget();
-    } else {
-      const newItems = [...budgetDetails]; // Create a copy of the array
-      newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
-      setBudgetDetails(newItems);
-      setVisible(false);
-      handleClose();
-      dispatch(
-        setProposalDetails({
-          ...proposalDetails,
-          budget_details: {
-            ...proposalDetails.budget_details,
-            budgets: newItems,
-          },
-        })
-      );
-      handleClose();
-    }
-  };
-
-  async function deleteBudget() {
-    setVisibleLoader(true);
+  async function updateproposalApicall(data) {
+    setButtonLoader(true);
     try {
-      const response = await getApiData(
-        `${Setting.endpoints.deleteBudget}/${selectedBudget?.data?.id}`,
-        "GET"
+      const response = await getAPIProgressData(
+        `${Setting.endpoints.updateProposal}/${villa?.proposal_id}`,
+        "POST",
+        data,
+        true
       );
       if (response.success) {
-        toast.success(response.message);
-        const newItems = [...budgetDetails]; // Create a copy of the array
-        newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
-        setBudgetDetails(newItems);
-        setVisible(false);
-        setSelectedBudget(null);
-        dispatch(
-          setProposalDetails({
-            ...proposalDetails,
-            budget_details: {
-              ...proposalDetails.budget_details,
-              budgets: newItems,
-            },
-          })
-        );
-        handleClose();
+        toast.success("Budget updated");
       } else {
         toast.error(response.message);
       }
-      setVisibleLoader(false);
+      setButtonLoader("");
     } catch (error) {
-      console.log("error===>>>>", error);
       toast.error(error.toString());
+      setButtonLoader("");
     }
-    setVisibleLoader(false);
   }
 
-  // async function getMilestoneList() {
-  //   try {
-  //     const response = await getApiData(
-  //       `${Setting.endpoints.milestoneProposalList}/${villa?.proposal_id}`,
-  //       "GET",
-  //       {}
-  //     );
-  //     if (response.success) {
-  //       setMilestones(response?.data);
-  //     }
-  //   } catch (error) {
-  //     console.log("err===>", error);
-  //   }
-  // }
+  const handleDelete = () => {
+    const newItems = [...budgetDetails]; // Create a copy of the array
+    newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
+    console.log(newItems, ">>>>>>newItems");
+    setBudgetDetails(newItems);
+    setVisible(false);
+    handleClose();
+    dispatch(
+      setProposalDetails({
+        ...proposalDetails,
+        budget_details: {
+          ...proposalDetails.budget_details,
+          budgets: newItems,
+        },
+      })
+    );
+    handleClose();
+  };
 
-  // async function addBudget() {
-  //   setButtonLoader(true);
-  //   setAlreadySubmittedPopLoader(true);
-  //   // const extractedData = budgetDetails?.map((item) => {
-  //   //   return {
-  //   //     name: item?.name,
-  //   //     material_type: item?.material_type,
-  //   //     material_unit: item?.material_unit || "",
-  //   //     material_unit_price: item?.material_unit_price || "0",
-  //   //     qty: item?.qty || "0",
-  //   //     milestone_id: item?.milestone?.id,
-  //   //     manpower_rate: item?.manpower_rate || "0",
-  //   //     days: item?.days || "0",
-  //   //     specification: item?.specification,
-  //   //     image: item?.photo_url,
-  //   //   };
-  //   // });
+  const convertBase64ToImageFile = (base64String, filename) => {
+    const arr = base64String.split(",");
+    const mimeType = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const uint8Array = new Uint8Array(n);
 
-  //   // const data = {
-  //   //   proposal_id: villa?.proposal_id,
-  //   //   budget_item: extractedData,
-  //   // };
-  //   let i = 0;
-  //   const transformedData = {
-  //     proposal_id: villa?.proposal_id,
-  //     project_type: villa?.project_type,
-  //     exp_id: villa?.exp_id,
-  //     scope_of_work: proposalDetails?.scope_of_work,
-  //     start_date: startDate,
-  //     end_date: endDate,
-  //     milestone_details: JSON.stringify(
-  //       proposalDetails?.milestone_details?.milestone?.map(
-  //         (milestone, index) => {
-  //           let mainObj = {
-  //             milestone_name: milestone?.milestone_name,
-  //             description: milestone?.description,
-  //             start_date: milestone?.start_date,
-  //             end_date: milestone?.end_date,
-  //             budget_item: proposalDetails?.budget_details?.budgets
-  //               ?.filter((item) => item?.milestone?.id === milestone?.id)
-  //               .map((item) => {
-  //                 const obj = {
-  //                   name: item?.name,
-  //                   budget_id: i + 1,
-  //                   material_type: item?.material_type,
-  //                   material_unit: item?.material_unit || "",
-  //                   material_unit_price: item?.material_unit_price || "0",
-  //                   qty: item?.qty || "0",
-  //                   manpower_rate: item?.manpower_rate || "0",
-  //                   days: item?.days || "0",
-  //                   specification: item?.specification,
-  //                 };
-  //                 i++;
-  //                 return obj;
-  //               }),
-  //           };
+    while (n--) {
+      uint8Array[n] = bstr.charCodeAt(n);
+    }
+    const file = new File([uint8Array], filename, { type: mimeType });
 
-  //           return mainObj;
-  //         }
-  //       )
-  //     ),
-  //   };
-  //   proposalDetails?.budget_details?.budgets?.forEach((budget, ind) => {
-  //     const photoOriginFiles = convertPhotoOriginToFiles(budget);
-  //     transformedData[`budget_image_${ind + 1}`] = photoOriginFiles;
-  //   });
-  //   // const extractedData = budgetDetails?.map((item) => {
-  //   //   return {
-  //   //     name: item?.name,
-  //   //     material_type: item?.material_type,
-  //   //     material_unit: item?.material_unit || "",
-  //   //     material_unit_price: item?.material_unit_price || "0",
-  //   //     qty: item?.qty || "0",
-  //   //     milestone_id: item?.milestone?.id,
-  //   //     manpower_rate: item?.manpower_rate || "0",
-  //   //     days: item?.days || "0",
-  //   //     specification: item?.specification,
-  //   //     image: item?.photo_url,
-  //   //   };
-  //   // });
+    return file;
+  };
+  const convertProjectToFiles = () => {
+    const projectFiles = villa?.project_image?.map((base64String, index) => {
+      const filename = `project_image_${index + 1}.jpg`;
+      return convertBase64ToImageFile(base64String, filename);
+    });
 
-  //   // const data = {
-  //   //   proposal_id: villa?.proposal_id,
-  //   //   budget_item: extractedData,
-  //   // };
-  //   try {
-  //     const response = await getAPIProgressData(
-  //       Setting.endpoints.createproposal,
-  //       "POST",
-  //       transformedData,
-  //       true
-  //     );
+    return projectFiles;
+  };
 
-  //     if (response.success) {
-  //       toast.success(response.message);
-  //       setAlreadySubmittedPop(false);
-  //       setVisibleFinal(false);
-  //       setProposalModal(true);
-  //       dispatch(setProposalDetails({}));
-  //     } else {
-  //       toast.error(response.message);
-  //     }
-  //     setButtonLoader("");
-  //     setAlreadySubmittedPopLoader(false);
-  //   } catch (error) {
-  //     console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
-  //     toast.error(error.toString());
-  //     setButtonLoader("");
-  //     setAlreadySubmittedPopLoader(false);
-  //   }
-  // }
+  const convertPhotoOriginToFiles = (budget, budInd) => {
+    const photoOriginFiles = budget.photo_origin.map((base64String, index) => {
+      const filename = `photo_origin_${index + 1}.jpg`;
+      return convertBase64ToImageFile(base64String, filename);
+    });
 
-  // async function checkSubmitted() {
-  //   setsubmitLoader(true);
-  //   try {
-  //     const response = await getApiData(
-  //       `${Setting.endpoints.alreadySentProposal}/${villa?.proposal_id}`,
-  //       "GET",
-  //       {}
-  //     );
-  //     if (response.success) {
-  //       setAlreadySubmittedPop(true);
-  //     } else {
-  //       setVisibleFinal(true);
-  //     }
-  //     setsubmitLoader(false);
-  //   } catch (error) {
-  //     setsubmitLoader(false);
-  //     console.log("err===>", error);
-  //   }
-  // }
+    return photoOriginFiles;
+  };
 
   const handleSubmit = () => {
     if (isEmpty(budgetDetails)) {
       toast.warning("Please add at least one budget");
     } else {
-      // dispatch(setProposalDetails)
-      handleClick("next");
+      updateBudgets();
+      handleSetTabValue();
     }
   };
+
+  function updateBudgets() {
+    const projectfiles = convertProjectToFiles();
+    const transformedData = {
+      email: villa?.customer_email,
+      name: villa?.name,
+      username: villa?.user_data?.username,
+      project_type: villa?.project_type,
+      exp_id: villa?.exp_id,
+      decsription: villa?.description,
+      start_date: villa?.start_date,
+      end_date: villa?.end_date,
+      project_image: projectfiles,
+      proposal: JSON.stringify({
+        scope_of_work: villa?.scope,
+        milestone_details: milestones?.map((milestone) => {
+          let mainObj = {
+            milestone_name: milestone?.milestone_name,
+            description: milestone?.description,
+            start_date: milestone?.start_date,
+            end_date: milestone?.end_date,
+            budget_item: budgetDetails
+              .filter(
+                (item) =>
+                  item?.milestone?.id === milestone?.id ||
+                  item?.milestone_name === milestone?.milestone_name
+              )
+              .map((item) => {
+                const obj = {
+                  name: item?.name,
+                  material_type: item?.material_type,
+                  material_unit: item?.material_unit || "",
+                  material_unit_price: item?.material_unit_price || "0",
+                  qty: item?.qty || "0",
+                  manpower_rate: item?.manpower_rate || "0",
+                  days: item?.days || "0",
+                  specification: item?.specification,
+                };
+                return obj;
+              }),
+          };
+          return mainObj;
+        }),
+      }),
+    };
+    milestones?.budget?.forEach((budget, index) => {
+      const photoOriginFiles = convertPhotoOriginToFiles(budget);
+      transformedData[`budget_image_${index + 1}`] = photoOriginFiles;
+    });
+    updateproposalApicall(transformedData);
+  }
 
   function clearData() {
     setState(initialFormvalues);
@@ -799,71 +630,6 @@ export default function Budget(props) {
     });
   }
 
-  // async function UploadFile(img) {
-  //   setUploadLoader(true);
-  //   const data = {
-  //     image: img,
-  //   };
-  //   try {
-  //     const response = await getAPIProgressData(
-  //       Setting.endpoints.uploadTemplate,
-  //       "POST",
-  //       data,
-  //       true
-  //     );
-  //     if (response.success) {
-  //       const nArr = state.photo_url ? [...state.photo_url] : [];
-  //       response?.data?.map((item) => nArr.push(item));
-
-  //       const nArr1 = state.photo_origin ? [...state.photo_origin] : [];
-  //       for (let i = 0; i < img.length; i++) {
-  //         const base64Data = await convertToBase64(img[i]);
-  //         nArr1.push(base64Data);
-  //       }
-  //       setState({ ...state, photo_url: nArr, photo_origin: nArr1 });
-
-  //       setErrObj({
-  //         ...errObj,
-  //         photoErr: false,
-  //         photoMsg: "",
-  //       });
-  //     } else {
-  //       toast.error(response.message);
-  //     }
-  //     setUploadLoader("");
-  //   } catch (error) {
-  //     console.log("error", error);
-  //     toast.error(error.toString());
-  //     setUploadLoader("");
-  //   }
-  // }
-
-  // async function deletePhoto(id, ind) {
-  //   setDeleteIND(ind);
-  //   try {
-  //     const response = await getApiData(
-  //       `${Setting.endpoints.deleteTemplate}/${id}`,
-  //       "GET",
-  //       {}
-  //     );
-  //     if (response?.success) {
-  //       const nArr = [...state.photo_url];
-  //       nArr.splice(ind, 1);
-  //       const nArr1 = [...state.photo_origin];
-  //       nArr1.splice(ind, 1);
-  //       setState({ ...state, photo_url: nArr, photo_origin: nArr1 });
-  //     } else {
-  //       toast.error(response?.message);
-  //     }
-  //     setDeleteIND(null);
-  //   } catch (error) {
-  //     setDeleteIND(null);
-
-  //     console.log("ERROR=====>>>>>", error);
-  //     toast.error(error.toString() || "Somthing went wromg try again later");
-  //   }
-  // }
-
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -878,6 +644,7 @@ export default function Budget(props) {
       };
     });
   };
+
   function checkImgSize(img) {
     let valid = true;
     if (img.size > 3145728) {
@@ -954,29 +721,12 @@ export default function Budget(props) {
                       color: "#8C92A4",
                     }}
                     onClick={() => {
-                      // if (createProposal) {
                       const nArr = [...state.photo_origin];
                       nArr.splice(index, 1);
                       setState({
                         ...state,
                         photo_origin: nArr,
                       });
-                      // } else {
-                      //   let uploadID = "";
-                      //   if (state?.photo_url[index]?.image) {
-                      //     const nArr = [...state.photo_origin];
-                      //     const nArr1 = [...state.photo_url];
-                      //     nArr.splice(index, 1);
-                      //     nArr1.splice(index, 1);
-                      //     setState({
-                      //       ...state,
-                      //       photo_origin: nArr,
-                      //       photo_url: nArr1,
-                      //     });
-                      //   }
-                      //   uploadID = state?.photo_url[index]?.image_id;
-                      //   uploadID?.toString() && deletePhoto(uploadID, index);
-                      // }
                     }}
                   />
                 )}
@@ -1563,7 +1313,13 @@ export default function Budget(props) {
           </Grid>
         ) : (
           <>
-            <Stack width="100%" gap="16px" height="100%" overflow="auto">
+            <Stack
+              width="100%"
+              gap="16px"
+              height="100%"
+              overflow="auto"
+              paddingRight="8px"
+            >
               <div className="secondaryTitle">Milestones</div>
               <Divider width="100%" />
               <Grid container>
@@ -1574,6 +1330,7 @@ export default function Budget(props) {
                         milestone={milestone}
                         index={index}
                         amounts={amounts}
+                        amount={milestone?.amount}
                       >
                         <Stack width="100%">
                           {budgetDetails?.map((budget, index) => {
@@ -1612,9 +1369,7 @@ export default function Budget(props) {
                               setIsCreationOpen(true);
                             }}
                           >
-                            <AddCircleOutlineOutlinedIcon
-                              style={{ marginRight: 4 }}
-                            />
+                            <AddCircleOutlineOutlinedIcon />
                             Add Budget
                           </Button>
                         </Grid>
@@ -1628,79 +1383,21 @@ export default function Budget(props) {
           // )
         )}
         <Divider sx={{ width: "100%" }} />
-        {createProposal ? (
-          <Grid
-            item
-            container
-            columnGap={1}
-            rowGap={1}
-            display="flex"
-            justifyContent={"space-between"}
-          >
-            <Grid item sm={5.9} xs={12}>
-              <Button
-                variant="outlined"
-                size="small"
-                sx={{ boxShadow: "none", padding: "12px 24px" }}
-                onClick={() => {
-                  updateRedux();
-                  handleClick("back");
-                }}
-              >
-                Previous Step
-              </Button>
-            </Grid>
-            <Grid display="flex" gap="12px">
-              <Grid item sm={5.9} xs={12}>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  className="conBtn"
-                  sx={{ boxShadow: "none", padding: "12px 24px" }}
-                  onClick={() => {
-                    updateRedux();
-                    handleClick("back");
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Grid>
-              <Grid item sm={5.9} xs={12}>
-                <Button
-                  variant="contained"
-                  size="small"
-                  className="conBtn"
-                  onClick={() => {
-                    handleSubmit();
-                  }}
-                  sx={{ padding: "12px 24px" }}
-                >
-                  {submitLoader ? (
-                    <CircularProgress style={{ color: "#fff" }} size={26} />
-                  ) : (
-                    "Continue"
-                  )}
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        ) : (
-          <Button
-            variant="contained"
-            size="small"
-            className="conBtn"
-            onClick={() => {
-              handleSubmit();
-            }}
-            sx={{ padding: "8px 24px", marginLeft: "auto" }}
-          >
-            {submitLoader ? (
-              <CircularProgress style={{ color: "#fff" }} size={26} />
-            ) : (
-              "Save"
-            )}
-          </Button>
-        )}
+        <Button
+          variant="contained"
+          size="small"
+          className="conBtn"
+          onClick={() => {
+            handleSubmit();
+          }}
+          sx={{ padding: "8px 24px", marginLeft: "auto" }}
+        >
+          {submitLoader ? (
+            <CircularProgress style={{ color: "#fff" }} size={26} />
+          ) : (
+            "Save"
+          )}
+        </Button>
       </Stack>
       <ConfirmModel
         visible={visible}
@@ -1979,25 +1676,6 @@ export default function Budget(props) {
                         helpertext={errObj.daysMsg}
                       />
                     </Grid>
-                    <Grid item xs={12} md={4} id="manpowerMilestone">
-                      <CAutocomplete
-                        label={<span className="fieldTitle">Milestone</span>}
-                        placeholder="N/A"
-                        value={state?.milestone}
-                        onChange={(e, newValue) => {
-                          setState({ ...state, milestone: newValue });
-                          setErrObj({
-                            ...errObj,
-                            manpowerMilestoneErr: false,
-                            manpowerMilestoneMsg: "",
-                          });
-                        }}
-                        options={milestones}
-                        getOptionLabel={(option) => option.milestone_name}
-                        error={errObj.manpowerMilestoneErr}
-                        helpertext={errObj.manpowerMilestoneMsg}
-                      />
-                    </Grid>
                   </Grid>
                   <Grid item xs={12} id="description">
                     <CInput
@@ -2138,7 +1816,6 @@ export default function Budget(props) {
                                 "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
                               );
                             }
-                            // if (createProposal) {
                             let shouldUpload =
                               isArray(newArr) &&
                               !isEmpty(newArr) &&
@@ -2148,15 +1825,6 @@ export default function Budget(props) {
                             if (shouldUpload) {
                               UploadFileDirectly(shouldUpload);
                             }
-                            // } else {
-                            //   let shouldUpload =
-                            //     isArray(newArr) &&
-                            //     !isEmpty(newArr) &&
-                            //     newArr?.filter((elem) => !elem?.image_id);
-                            //   if (shouldUpload) {
-                            //     UploadFile(shouldUpload);
-                            //   }
-                            // }
                           }}
                           ref={fileInputRef}
                         />
@@ -2206,7 +1874,7 @@ export default function Budget(props) {
                           color="primary"
                           fullWidth
                           onClick={() => {
-                            validate(true);
+                            validate(false);
                           }}
                         >
                           Update

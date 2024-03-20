@@ -36,12 +36,14 @@ export const Setting = {
     singleDeviceLogout: "api/user/other-devices-logout/",
     createproposal: "api/contractor/create-proposal",
     directproposal: "api/contractor/create-direct-proposal",
+    updateProposal: "api/contractor/update-direct-proposal",
     addFCMToken: "api/user/add-fcm-token",
     logout: "api/user/logout",
     createMilestone: "api/project/create-milestone-project",
     createBudget: "api/project/create-proposal-budget-item",
-    budgetList: "api/project/list-proposal-budget-item",
+
     projectDetails: "api/project/my-projects",
+    budgetList: "api/project/list-proposal-budget-item",
     uploadTemplate: "api/project/upload-template",
     deleteTemplate: "api/project/upload-template-delete",
     listcontractorproject: "api/project/list-contractor-project",
@@ -65,6 +67,7 @@ export const Setting = {
     contractorStates: "api/contractor/stats",
     balanceBreakdown: "api/project/balance-details",
     createUser: "api/contractor/user",
+    availableContractors: "/api/admin/available-contractors",
   },
 
   JS_Regex: {

@@ -27,10 +27,6 @@ import { toast } from "react-toastify";
 import { isMobile, isTablet } from "react-device-detect";
 import { HighlightOffOutlined, ImageOutlined } from "@mui/icons-material";
 import CAutocomplete from "../../../components/CAutocomplete";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import moment from "moment";
-import { FormControl } from "@mui/material";
 import Images from "../../../config/images";
 import Details from "../Details";
 
@@ -119,7 +115,6 @@ export default function Summary(props) {
     }
   }, []);
 
-  console.log(villa, ">>>>villa in summary requested");
   function validation() {
     const error = { ...errObj };
     let valid = true;

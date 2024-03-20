@@ -49,8 +49,8 @@ const Details = (props) => {
     milestone_details?.milestone?.forEach((milestone) => {
       let amount = 0;
       if (
-        isArray(budget_details.budgets) &&
-        budget_details.budgets.length > 0
+        isArray(budget_details?.budgets) &&
+        budget_details?.budgets?.length > 0
       ) {
         budget_details?.budgets?.forEach((bud) => {
           if (bud?.milestone?.id === milestone?.id) {
@@ -135,7 +135,6 @@ const Details = (props) => {
       return projectFiles;
     }
   };
-
   const handleSubmit = () => {
     const projectFiles = convertProjectToFiles();
     let i = 0;
@@ -347,6 +346,7 @@ const Details = (props) => {
           </Button>
         </Stack>
       </Stack>
+
       <ConfirmModel
         visible={visibleFinal}
         loader={buttonLoader}
@@ -355,6 +355,7 @@ const Details = (props) => {
         confirmation={handleSubmit}
         message={`Are you sure you want to submit proposal?`}
       />
+
       {proposalModal && (
         <ProfileSuccessModal
           title="Congrats!"

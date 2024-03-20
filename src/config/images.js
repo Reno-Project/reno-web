@@ -22,6 +22,7 @@ const Images = {
   add: "/assets/images/add.svg",
   file: "/assets/images/file.svg",
   arrow: "/assets/images/arrow.svg",
+  close: "/assets/images/closep.svg",
 
   Heart: "/assets/images/Heart.svg",
   reply: "/assets/images/reply.svg",
