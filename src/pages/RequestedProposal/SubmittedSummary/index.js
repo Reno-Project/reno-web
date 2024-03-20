@@ -232,12 +232,19 @@ const SubmittedSummary = ({ villa, handleSetTabValue }) => {
   };
 
   const convertProjectToFiles = () => {
-    const projectFiles = villa?.project_image?.map((base64String, index) => {
-      const filename = `project_image_${index + 1}.jpg`;
-      return convertBase64ToImageFile(base64String, filename);
-    });
+    if (villa?.project_image) {
+      const projectFiles = [];
+      const files = villa?.project_image.map((item) => item.image);
+      projectFiles.push(files);
+      return projectFiles;
+    } else {
+      const projectFiles = villa?.project_image?.map((base64String, index) => {
+        const filename = `project_image_${index + 1}.jpg`;
+        return convertBase64ToImageFile(base64String, filename);
+      });
 
-    return projectFiles;
+      return projectFiles;
+    }
   };
 
   function updateSummary() {

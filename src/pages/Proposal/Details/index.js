@@ -93,7 +93,6 @@ const Details = (props) => {
 
   const convertBase64ToImageFile = (base64String, filename) => {
     const arr = base64String?.split(",");
-    console.log(arr, ">>>>>>>>>>>>>>>>>>>>>>> arrrererere");
     const mimeType = arr[0].match(/:(.*?);/)[1];
     const bstr = atob(arr[1]);
     let n = bstr.length;

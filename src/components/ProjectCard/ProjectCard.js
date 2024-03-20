@@ -50,7 +50,9 @@ const ProjectCard = (props) => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography className={classes.name}>{villa?.name}</Typography>
+          <Typography className={classes.name}>
+            {villa?.name || "NA"}
+          </Typography>
           {/* <IconButton>
             <MoreVertIcon sx={{ color: color.black }} />
           </IconButton> */}

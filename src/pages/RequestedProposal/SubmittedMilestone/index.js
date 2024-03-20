@@ -205,7 +205,7 @@ export default function SubmittedMilestone(props) {
   };
 
   const convertPhotoOriginToFiles = (budget, budInd) => {
-    const photoOriginFiles = budget.photo_origin.map((base64String, index) => {
+    const photoOriginFiles = budget?.photo_origin.map((base64String, index) => {
       const filename = `photo_origin_${index + 1}.jpg`;
       return convertBase64ToImageFile(base64String, filename);
     });
@@ -214,12 +214,19 @@ export default function SubmittedMilestone(props) {
   };
 
   const convertProjectToFiles = () => {
-    const projectFiles = villa?.project_image?.map((base64String, index) => {
-      const filename = `project_image_${index + 1}.jpg`;
-      return convertBase64ToImageFile(base64String, filename);
-    });
+    if (villa?.project_image) {
+      const projectFiles = [];
+      const files = villa?.project_image.map((item) => item.image);
+      projectFiles.push(files);
+      return projectFiles;
+    } else {
+      const projectFiles = villa?.project_image?.map((base64String, index) => {
+        const filename = `project_image_${index + 1}.jpg`;
+        return convertBase64ToImageFile(base64String, filename);
+      });
 
-    return projectFiles;
+      return projectFiles;
+    }
   };
 
   function updateMilestone() {

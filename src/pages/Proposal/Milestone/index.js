@@ -123,15 +123,13 @@ export default function Milestone(props) {
         }
       );
     }
-    if (createProposal) {
-      if (
-        proposalDetails?.milestone_details?.previous ||
-        (isArray(proposalDetails?.milestone_details?.milestone) &&
-          !isEmpty(proposalDetails?.milestone_details?.milestone))
-      ) {
-        setMilestones(proposalDetails?.milestone_details?.milestone || []);
-        setState(proposalDetails?.milestone_details?.formvalues);
-      }
+    if (
+      proposalDetails?.milestone_details?.previous ||
+      (isArray(proposalDetails?.milestone_details?.milestone) &&
+        !isEmpty(proposalDetails?.milestone_details?.milestone))
+    ) {
+      setMilestones(proposalDetails?.milestone_details?.milestone || []);
+      setState(proposalDetails?.milestone_details?.formvalues);
     }
   }, []);
 
@@ -866,7 +864,8 @@ export default function Milestone(props) {
           {" "}
           <span className="label">Total Milestones Amount</span>
           <span className="cur">
-            AED {amounts.reduce((acc, curr) => acc + curr, 0) || villa?.budget}
+            AED{" "}
+            {amounts.reduce((acc, curr) => acc + curr, 0) || villa?.budget || 0}
           </span>
         </div>
 
@@ -925,60 +924,58 @@ export default function Milestone(props) {
 
         <Divider width="100%" />
 
-        {createProposal ? (
-          <Grid
-            item
-            container
-            columnGap={1}
-            rowGap={1}
-            justifyContent={"space-between"}
-          >
-            <Grid item sm={5.9} xs={12}>
-              <Button
-                variant="outlined"
-                size="small"
-                sx={{ boxShadow: "none", padding: "12px 24px" }}
-                onClick={() => {
-                  const milestone_details = {
-                    formvalues: state,
-                    milestone: milestones,
-                    previous: true,
-                  };
-                  dispatch(
-                    setProposalDetails({
-                      ...proposalDetails,
-                      milestone_details,
-                    })
-                  );
+        <Grid
+          item
+          container
+          columnGap={1}
+          rowGap={1}
+          justifyContent={"space-between"}
+        >
+          <Grid item sm={5.9} xs={12}>
+            <Button
+              variant="outlined"
+              size="small"
+              sx={{ boxShadow: "none", padding: "12px 24px" }}
+              onClick={() => {
+                const milestone_details = {
+                  formvalues: state,
+                  milestone: milestones,
+                  previous: true,
+                };
+                dispatch(
+                  setProposalDetails({
+                    ...proposalDetails,
+                    milestone_details,
+                  })
+                );
 
-                  handleClick("back");
-                }}
-              >
-                Previous Step
-              </Button>
-            </Grid>
-            <Grid item sm={5.9} xs={12} className="conBtn" gap="16px">
-              <Button
-                variant="outlined"
-                onClick={() => handleClick("back")}
-                style={{ padding: "12px 24px" }}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                onClick={handleSubmit}
-                style={{ padding: "12px 24px" }}
-              >
-                {buttonLoader ? (
-                  <CircularProgress size={26} style={{ color: "#fff" }} />
-                ) : (
-                  "Continue"
-                )}
-              </Button>
-            </Grid>
+                handleClick("back");
+              }}
+            >
+              Previous Step
+            </Button>
           </Grid>
-        ) : null}
+          <Grid item sm={5.9} xs={12} className="conBtn" gap="16px">
+            <Button
+              variant="outlined"
+              onClick={() => handleClick("back")}
+              style={{ padding: "12px 24px" }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              style={{ padding: "12px 24px" }}
+            >
+              {buttonLoader ? (
+                <CircularProgress size={26} style={{ color: "#fff" }} />
+              ) : (
+                "Continue"
+              )}
+            </Button>
+          </Grid>
+        </Grid>
       </Stack>
 
       <ConfirmModel

@@ -1628,79 +1628,61 @@ export default function Budget(props) {
           // )
         )}
         <Divider sx={{ width: "100%" }} />
-        {createProposal ? (
-          <Grid
-            item
-            container
-            columnGap={1}
-            rowGap={1}
-            display="flex"
-            justifyContent={"space-between"}
-          >
+        <Grid
+          item
+          container
+          columnGap={1}
+          rowGap={1}
+          display="flex"
+          justifyContent={"space-between"}
+        >
+          <Grid item sm={5.9} xs={12}>
+            <Button
+              variant="outlined"
+              size="small"
+              sx={{ boxShadow: "none", padding: "12px 24px" }}
+              onClick={() => {
+                updateRedux();
+                handleClick("back");
+              }}
+            >
+              Previous Step
+            </Button>
+          </Grid>
+          <Grid display="flex" gap="12px">
             <Grid item sm={5.9} xs={12}>
               <Button
                 variant="outlined"
                 size="small"
+                className="conBtn"
                 sx={{ boxShadow: "none", padding: "12px 24px" }}
                 onClick={() => {
                   updateRedux();
                   handleClick("back");
                 }}
               >
-                Previous Step
+                Cancel
               </Button>
             </Grid>
-            <Grid display="flex" gap="12px">
-              <Grid item sm={5.9} xs={12}>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  className="conBtn"
-                  sx={{ boxShadow: "none", padding: "12px 24px" }}
-                  onClick={() => {
-                    updateRedux();
-                    handleClick("back");
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Grid>
-              <Grid item sm={5.9} xs={12}>
-                <Button
-                  variant="contained"
-                  size="small"
-                  className="conBtn"
-                  onClick={() => {
-                    handleSubmit();
-                  }}
-                  sx={{ padding: "12px 24px" }}
-                >
-                  {submitLoader ? (
-                    <CircularProgress style={{ color: "#fff" }} size={26} />
-                  ) : (
-                    "Continue"
-                  )}
-                </Button>
-              </Grid>
+            <Grid item sm={5.9} xs={12}>
+              <Button
+                variant="contained"
+                size="small"
+                className="conBtn"
+                onClick={() => {
+                  handleSubmit();
+                }}
+                sx={{ padding: "12px 24px" }}
+              >
+                {submitLoader ? (
+                  <CircularProgress style={{ color: "#fff" }} size={26} />
+                ) : (
+                  "Continue"
+                )}
+              </Button>
             </Grid>
           </Grid>
-        ) : (
-          <Button
-            variant="contained"
-            size="small"
-            className="conBtn"
-            onClick={() => {
-              handleSubmit();
-            }}
-            sx={{ padding: "8px 24px", marginLeft: "auto" }}
-          >
-            {submitLoader ? (
-              <CircularProgress style={{ color: "#fff" }} size={26} />
-            ) : (
-              "Save"
-            )}
-          </Button>
-        )}
+        </Grid>
       </Stack>
       <ConfirmModel
         visible={visible}
