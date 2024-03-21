@@ -26,6 +26,7 @@ import { ChevronRight } from "@mui/icons-material";
 import Images from "../../config/images";
 import BlueAbout from "../../components/BlueAbout/index";
 import moment from "moment";
+import { string } from "slate";
 
 const data = [
   {
@@ -84,7 +85,7 @@ const Status = ({ status }) => {
             : "#F1C40F",
       }}
     >
-      {status}
+      {status.charAt(0).toUpperCase() + status.slice(1)}
     </p>
   );
 };

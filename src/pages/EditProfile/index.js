@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { isArray, isEmpty, isNumber, isObject, has } from "lodash";
+import _, { isArray, isEmpty, isNumber, isObject, has } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import { toast } from "react-toastify";
@@ -183,13 +183,13 @@ export default function EditProfile() {
   }, [profileData]);
 
   useEffect(() => {
-    if (state?.businessLogo && isObject(state?.businessLogo)) {
+    if (state?.businessLogo && _.isObject(state?.businessLogo)) {
       const imgUrl = URL.createObjectURL(state?.businessLogo);
       setBLogo(imgUrl);
     } else {
       setBLogo(state?.businessLogo || "");
     }
-  }, [state.businessLogo]);
+  }, [state?.businessLogo]);
 
   async function getprojectList() {
     try {
@@ -239,11 +239,11 @@ export default function EditProfile() {
         scroll = true;
         section = document.querySelector("#cname");
       }
-    } else if (state?.cname?.length > 30) {
+    } else if (state?.cname?.length > 200) {
       valid = false;
       error.cnameErr = true;
       error.cnameMsg =
-        "Company Name should not be greater than 30 characters  ";
+        "Company Name should not be greater than 200 characters  ";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#cname");
@@ -627,7 +627,7 @@ export default function EditProfile() {
   // this function checks image size validation
   function checkImgSize(img) {
     let valid = true;
-    if (img.size > 3145728) {
+    if (img.size > 5 * 1048576) {
       valid = false;
     } else {
       valid = true;
@@ -635,6 +635,34 @@ export default function EditProfile() {
     return valid;
   }
 
+  function checkUploadedFiles(img) {
+    if (
+      img.type === "image/png" ||
+      img.type === "image/jpeg" ||
+      img.type === "image/jpg" ||
+      img.type === "application/pdf"
+    )
+      return true;
+  }
+
+  function isUploadedImageOnly(img) {
+    if (
+      img.type === "image/png" ||
+      img.type === "image/jpeg" ||
+      img.type === "image/jpg"
+    )
+      return true;
+  }
+
+  function checkPortfolioSize(img) {
+    let valid = true;
+    if (img.size > 15 * 1048576) {
+      valid = false;
+    } else {
+      valid = true;
+    }
+    return valid;
+  }
   // this function renders ISO certificate
   function renderISOCertificate() {
     if (isArray(state.certificate) && state.certificate.length > 0) {
@@ -880,6 +908,9 @@ export default function EditProfile() {
                         cnameErr: false,
                         cnameMsg: "",
                       });
+                    }}
+                    inputProps={{
+                      maxLength: 200,
                     }}
                     error={errObj.cnameErr}
                     helpertext={errObj.cnameMsg}
@@ -1175,7 +1206,7 @@ export default function EditProfile() {
                       />
                       <input
                         type="file"
-                        accept="image/jpeg, image/png, image/jpg"
+                        accept="image/jpeg, image/png, image/jpg, application/pdf"
                         multiple
                         style={{
                           position: "absolute",
@@ -1192,22 +1223,43 @@ export default function EditProfile() {
                           const data = [...state.certificate];
                           let showMsg = false;
                           let limit = false;
-                          chosenFiles.map((item) => {
+                          let showTypeError = false;
+                          const rejected = chosenFiles.every(
+                            (item) =>
+                              item.type === "image/png" ||
+                              item.type === "image/jpg" ||
+                              item.type === "image/jpeg"
+                          );
+                          if (!rejected) {
+                            toast.error("You can only add jpeg,jpg or png");
+                          }
+                          const filteredFiles = chosenFiles.filter(
+                            (item) =>
+                              item.type === "image/png" ||
+                              item.type === "image/jpg" ||
+                              item.type === "image/jpeg"
+                          );
+                          filteredFiles.map((item) => {
+                            const checkFiles = checkUploadedFiles(item);
                             const bool = checkImgSize(item);
-                            if (bool && data.length < 5) {
+                            if (bool && data.length < 5 && checkFiles) {
                               data.push(item);
                             } else if (data.length >= 4) {
                               limit = true;
-                            } else {
+                            } else if (!bool) {
                               showMsg = true;
+                            } else {
+                              showTypeError = true;
                             }
                           });
                           if (limit) {
                             toast.error("You can upload maximum 5 files");
                           } else if (showMsg) {
                             toast.error(
-                              "Some certificate you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                              "Some certificate you are attempting to upload exceeds the maximum file size limit of 5 MB. Please reduce the size of your image and try again."
                             );
+                          } else if (showTypeError) {
+                            toast.error("Please Upload valid files ");
                           }
                           setState({ ...state, certificate: data });
                         }}
@@ -1215,7 +1267,7 @@ export default function EditProfile() {
                     </div>
                   )}
                 </Grid>
-                <Grid item xs={12} id="license">
+                <Grid item xs={12} d="license">
                   <InputLabel shrink htmlFor="bootstrap-input">
                     Licenses
                   </InputLabel>
@@ -1243,7 +1295,7 @@ export default function EditProfile() {
                       />
                       <input
                         type="file"
-                        accept="image/jpeg, image/png, image/jpg"
+                        accept="image/jpeg, image/png, image/jpg, application/pdf"
                         multiple
                         style={{
                           position: "absolute",
@@ -1260,22 +1312,28 @@ export default function EditProfile() {
                           const data = [...state.license];
                           let showMsg = false;
                           let limit = false;
+                          let showTypeError = false;
                           chosenFiles.map((item) => {
+                            const checkFiles = checkUploadedFiles(item);
                             const bool = checkImgSize(item);
-                            if (bool && data.length < 5) {
+                            if (bool && data.length < 5 && checkFiles) {
                               data.push(item);
                             } else if (data.length >= 4) {
                               limit = true;
-                            } else {
+                            } else if (!bool) {
                               showMsg = true;
+                            } else {
+                              showTypeError = true;
                             }
                           });
                           if (limit) {
                             toast.error("You can upload maximum 5 files");
                           } else if (showMsg) {
                             toast.error(
-                              "Some license you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                              "Some license you are attempting to upload exceeds the maximum file size limit of 5 MB. Please reduce the size of your image and try again."
                             );
+                          } else if (showTypeError) {
+                            toast.error("Please Upload valid files ");
                           }
                           setState({ ...state, license: data });
                         }}
@@ -1312,7 +1370,7 @@ export default function EditProfile() {
                       />
                       <input
                         type="file"
-                        accept="image/jpeg, image/png, image/jpg"
+                        accept="image/jpeg, image/png, image/jpg, application/pdf"
                         multiple
                         style={{
                           position: "absolute",
@@ -1329,22 +1387,28 @@ export default function EditProfile() {
                           const data = [...state.registraion];
                           let showMsg = false;
                           let limit = false;
+                          let showTypeError = false;
                           chosenFiles.map((item) => {
+                            const checkFiles = checkUploadedFiles(item);
                             const bool = checkImgSize(item);
-                            if (bool && data.length < 5) {
+                            if (bool && data.length < 5 && checkFiles) {
                               data.push(item);
                             } else if (data.length >= 4) {
                               limit = true;
-                            } else {
+                            } else if (!bool) {
                               showMsg = true;
+                            } else {
+                              showTypeError = true;
                             }
                           });
                           if (limit) {
                             toast.error("You can upload maximum 5 files");
                           } else if (showMsg) {
                             toast.error(
-                              "Some registraion you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                              "Some registraion you are attempting to upload exceeds the maximum file size limit of 5 MB. Please reduce the size of your image and try again."
                             );
+                          } else if (showTypeError) {
+                            toast.error("Please Upload valid files ");
                           }
                           setState({ ...state, registraion: data });
                         }}
@@ -1439,10 +1503,29 @@ export default function EditProfile() {
                           opacity: 0,
                         }}
                         onChange={(e) => {
-                          setState({
-                            ...state,
-                            businessLogo: e.target.files[0],
-                          });
+                          const imageUploaded = e.target.files[0];
+                          let showSizeError = false;
+                          let showTypeError = false;
+                          const checkImageType =
+                            isUploadedImageOnly(imageUploaded);
+                          const checkImageSize = checkImgSize(imageUploaded);
+                          if (checkImageType && checkImageSize) {
+                            setState({
+                              ...state,
+                              businessLogo: e.target.files[0],
+                            });
+                          } else if (!checkImageSize) {
+                            showSizeError = true;
+                          } else {
+                            showTypeError = true;
+                          }
+                          if (showSizeError) {
+                            toast.error(
+                              "Image you are attempting to upload exceeds the maximum file size limit of 15 MB. Please reduce the size of your image and try again."
+                            );
+                          } else if (showTypeError) {
+                            toast.error("Please Upload Image only");
+                          }
                         }}
                         ref={fileInputRef}
                       />
@@ -1745,18 +1828,24 @@ export default function EditProfile() {
                       );
                       const nArr = [...state.portfolio];
                       let showMsg = false;
+                      let imageType = false;
                       chosenFiles.map((item) => {
-                        const bool = checkImgSize(item);
-                        if (bool) {
+                        const checkImageType = isUploadedImageOnly(item);
+                        const bool = checkPortfolioSize(item);
+                        if (bool && checkImageType) {
                           nArr.push(item);
-                        } else {
+                        } else if (!bool) {
                           showMsg = true;
+                        } else {
+                          imageType = true;
                         }
                       });
                       if (showMsg) {
                         toast.error(
-                          "Some image you are attempting to upload exceeds the maximum file size limit of 3 MB. Please reduce the size of your image and try again."
+                          "Some image you are attempting to upload exceeds the maximum file size limit of 15 MB. Please reduce the size of your image and try again."
                         );
+                      } else if (imageType) {
+                        toast.error("Uploaded files should be image only ");
                       }
                       setState({ ...state, portfolio: nArr });
                     }}
