@@ -88,8 +88,10 @@ export default function Summary(props) {
     }
   }
   return (
-    <div>
-      <div style={{ padding: md ? 20 : 40, backgroundColor: "#F9F9FA" }}>
+    <div className={classes.wrapper}>
+      <div
+        style={{ padding: md ? 20 : 40, backgroundColor: "#F9F9FA", flex: "1" }}
+      >
         <Grid item container>
           <Typography className={classes.header}>Ongoing Project</Typography>
         </Grid>
