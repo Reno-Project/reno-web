@@ -1224,22 +1224,8 @@ export default function EditProfile() {
                           let showMsg = false;
                           let limit = false;
                           let showTypeError = false;
-                          const rejected = chosenFiles.every(
-                            (item) =>
-                              item.type === "image/png" ||
-                              item.type === "image/jpg" ||
-                              item.type === "image/jpeg"
-                          );
-                          if (!rejected) {
-                            toast.error("You can only add jpeg,jpg or png");
-                          }
-                          const filteredFiles = chosenFiles.filter(
-                            (item) =>
-                              item.type === "image/png" ||
-                              item.type === "image/jpg" ||
-                              item.type === "image/jpeg"
-                          );
-                          filteredFiles.map((item) => {
+
+                          chosenFiles.map((item) => {
                             const checkFiles = checkUploadedFiles(item);
                             const bool = checkImgSize(item);
                             if (bool && data.length < 5 && checkFiles) {
@@ -1259,9 +1245,12 @@ export default function EditProfile() {
                               "Some certificate you are attempting to upload exceeds the maximum file size limit of 5 MB. Please reduce the size of your image and try again."
                             );
                           } else if (showTypeError) {
-                            toast.error("Please Upload valid files ");
+                            toast.error(
+                              "You can only add JPEG, JPG, PNG or PDF"
+                            );
                           }
                           setState({ ...state, certificate: data });
+                          toast.success("Updated");
                         }}
                       />
                     </div>
@@ -1333,9 +1322,12 @@ export default function EditProfile() {
                               "Some license you are attempting to upload exceeds the maximum file size limit of 5 MB. Please reduce the size of your image and try again."
                             );
                           } else if (showTypeError) {
-                            toast.error("Please Upload valid files ");
+                            toast.error(
+                              "You can only add JPEG, JPG, PNG or PDF"
+                            );
                           }
                           setState({ ...state, license: data });
+                          toast.success("Updated");
                         }}
                       />
                     </div>
@@ -1403,14 +1395,17 @@ export default function EditProfile() {
                           });
                           if (limit) {
                             toast.error("You can upload maximum 5 files");
+                          } else if (showTypeError) {
+                            toast.error(
+                              "You can only add JPEG, JPG, PNG or PDF"
+                            );
                           } else if (showMsg) {
                             toast.error(
                               "Some registraion you are attempting to upload exceeds the maximum file size limit of 5 MB. Please reduce the size of your image and try again."
                             );
-                          } else if (showTypeError) {
-                            toast.error("Please Upload valid files ");
                           }
                           setState({ ...state, registraion: data });
+                          toast.success("Updated");
                         }}
                       />
                     </div>
@@ -1514,6 +1509,7 @@ export default function EditProfile() {
                               ...state,
                               businessLogo: e.target.files[0],
                             });
+                            toast.success("Updated");
                           } else if (!checkImageSize) {
                             showSizeError = true;
                           } else {
@@ -1524,7 +1520,7 @@ export default function EditProfile() {
                               "Image you are attempting to upload exceeds the maximum file size limit of 15 MB. Please reduce the size of your image and try again."
                             );
                           } else if (showTypeError) {
-                            toast.error("Please Upload Image only");
+                            toast.error("You can only add JPEG, JPG or PNG ");
                           }
                         }}
                         ref={fileInputRef}
@@ -1845,9 +1841,10 @@ export default function EditProfile() {
                           "Some image you are attempting to upload exceeds the maximum file size limit of 15 MB. Please reduce the size of your image and try again."
                         );
                       } else if (imageType) {
-                        toast.error("Uploaded files should be image only ");
+                        toast.error("You can only add JPEG, JPG or PNG");
                       }
                       setState({ ...state, portfolio: nArr });
+                      toast.success("Updated");
                     }}
                   />
                 </Grid>

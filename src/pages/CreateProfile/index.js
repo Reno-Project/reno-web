@@ -1229,7 +1229,7 @@ const CreateProfile = (props) => {
                           "Image you are attempting to upload exceeds the maximum file size limit of 15 MB. Please reduce the size of your image and try again."
                         );
                       } else if (showTypeError) {
-                        toast.error("Please Upload Image only");
+                        toast.error("You can only add JPEG, JPG or PNG");
                       }
                     }}
                     className={classes.uploadFileStyle}
@@ -1561,7 +1561,7 @@ const CreateProfile = (props) => {
                               );
                               if (!rejected) {
                                 toast.error(
-                                  "You can only add jpeg,jpg,png or pdf"
+                                  "You can only add JPEG, JPG, PNG or PDF"
                                 );
                               }
                               const filteredFiles = chosenFiles.filter(
