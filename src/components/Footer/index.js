@@ -24,7 +24,8 @@ function Footer(props) {
     pathname === "/request-proposal" ||
     pathname === "/balance-breakdown" ||
     pathname === "/user-management" ||
-    pathname === "/chat";
+    pathname === "/chat" ||
+    pathname === "/account-setting";
 
   const handleDragStart = (event) => {
     event.preventDefault();

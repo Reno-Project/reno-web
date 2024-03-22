@@ -129,6 +129,12 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "Poppins-Regular !important",
   },
 
+  label: {
+    fontSize: "16px !important",
+    padding: "4px 12px",
+    fontFamily: "Poppins-Regular !important",
+  },
+
   value: {
     fontSize: "16px !important",
     padding: "4px 12px",

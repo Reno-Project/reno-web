@@ -281,17 +281,17 @@ const ContractorProfile = (props) => {
                 <img src={Images.Location} alt="Location" />
               </Typography>
               <Typography className={classes.review}>
-                {`(${totalReview} Reviews)`}
-                <Rating
+                {/* {`(${totalReview} Reviews)`} */}
+                {/* <Rating
                   name="single-star"
                   value={1}
                   max={1}
                   precision={1}
                   style={{ marginLeft: 4 }}
                   readOnly
-                />
+                /> */}
                 <span style={{ color: "rgba(233, 181, 92, 1)" }}>
-                  {rating.toFixed(1)}
+                  {/* {rating.toFixed(1)} */}
                 </span>
               </Typography>
             </div>
@@ -363,7 +363,7 @@ const ContractorProfile = (props) => {
               </Typography>
             </Grid>
           </Grid>
-          <Grid
+          {/* <Grid
             item
             container
             md={6}
@@ -457,7 +457,7 @@ const ContractorProfile = (props) => {
                 />
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
         {isArray(portfolioList) && !isEmpty(portfolioList) && (
           <Grid container style={{ marginTop: 20 }}>
@@ -538,7 +538,7 @@ const ContractorProfile = (props) => {
           </Grid>
         )}
         <div className={classes.separator} />
-        <Grid contaier>
+        {/* <Grid contaier>
           <Grid item>
             <Typography className={classes.titleStyle}>Reviews</Typography>
           </Grid>
@@ -761,7 +761,7 @@ const ContractorProfile = (props) => {
                 </>
               );
             })}
-        </Grid>
+        </Grid> */}
         <Grid container mt={3}>
           <Typography className={classes.titleStyle} mb={1}>
             Expertise Area:

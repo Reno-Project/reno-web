@@ -1,0 +1,3 @@
+.react-select__menu-list {
+  height: calc(300px - 48px);
+}

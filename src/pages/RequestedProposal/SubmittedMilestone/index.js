@@ -27,13 +27,13 @@ import ConfirmModel from "../../../components/ConfirmModel";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import authActions from "../../../redux/reducers/auth/actions";
-import { getApiData } from "../../../utils/APIHelper";
+import { getAPIProgressData, getApiData } from "../../../utils/APIHelper";
 import { Setting } from "../../../utils/Setting";
 import "./index.css";
 import { Close } from "@mui/icons-material";
 import Images from "../../../config/images";
 import SingleMilestoneAccordion from "../../../components/SingleMilestoneAccordian";
-import { ConversationsRequestBuilder } from "@cometchat/chat-sdk-javascript";
+import { useNavigate } from "react-router";
 
 const errorObj = {
   nameErr: false,
@@ -48,10 +48,11 @@ const errorObj = {
   amountMsg: "",
 };
 
-export default function Milestone(props) {
-  const { handleClick = () => null, villa, createProposal } = props;
+export default function SubmittedMilestone(props) {
+  const { villa, handleSetTabValue } = props;
   const dispatch = useDispatch();
   const { proposalDetails } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const { setProposalDetails } = authActions;
   const [state, setState] = useState({
     milestone_name: "",
@@ -112,40 +113,6 @@ export default function Milestone(props) {
   const endDate = moment(new Date(maxEndDate)).format("MMMM DD, yyyy");
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    if (proposalDetails?.milestone_details?.previous) {
-      setState(
-        proposalDetails?.milestone_details?.formvalues || {
-          milestone_name: "",
-          description: "",
-          start_date: null,
-          end_date: null,
-        }
-      );
-    }
-    if (
-      proposalDetails?.milestone_details?.previous ||
-      (isArray(proposalDetails?.milestone_details?.milestone) &&
-        !isEmpty(proposalDetails?.milestone_details?.milestone))
-    ) {
-      setMilestones(proposalDetails?.milestone_details?.milestone || []);
-      setState(proposalDetails?.milestone_details?.formvalues);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isArray(milestones) && !isEmpty(milestones)) {
-      if (
-        proposalDetails?.budget_details?.previous ||
-        (isArray(proposalDetails?.budget_details?.budgets) &&
-          !isEmpty(proposalDetails?.budget_details?.budgets))
-      ) {
-        updateBudgetMilestone(proposalDetails?.budget_details?.budgets);
-      }
-    }
-  }, [milestones]);
-
-  useEffect(() => {
     const newAmounts = [];
 
     milestones.forEach((milestone) => {
@@ -165,6 +132,40 @@ export default function Milestone(props) {
     });
     setAmounts(newAmounts);
   }, [budgets, milestones]);
+
+  useEffect(() => {
+    if (isArray(milestones) && !isEmpty(milestones)) {
+      if (
+        proposalDetails?.budget_details?.previous ||
+        (isArray(proposalDetails?.budget_details?.budgets) &&
+          !isEmpty(proposalDetails?.budget_details?.budgets))
+      ) {
+        updateBudgetMilestone(proposalDetails?.budget_details?.budgets);
+      }
+    }
+  }, [
+    milestones,
+    proposalDetails?.budget_details?.budgets,
+    proposalDetails?.budget_details?.previous,
+    updateBudgetMilestone,
+  ]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (proposalDetails?.milestone_details?.previous) {
+      setState(
+        proposalDetails?.milestone_details?.formvalues || {
+          milestone_name: "",
+          description: "",
+          start_date: null,
+          end_date: null,
+        }
+      );
+    }
+    setMilestones(
+      proposalDetails?.milestone_details?.milestone || villa?.milestone
+    );
+  }, []);
 
   function updateBudgetMilestone(data) {
     const updatedBudgets = data.map((budget) => {
@@ -188,53 +189,108 @@ export default function Milestone(props) {
     setBudgets(updatedBudgets);
   }
 
-  async function addMilestone() {
-    setButtonLoader(true);
-    const extractedData = milestones?.map((item) => {
-      const { milestone_name, description, start_date, end_date, id } = item;
-      if (id) {
-        return { id, milestone_name, description, start_date, end_date };
-      } else {
-        return { milestone_name, description, start_date, end_date };
-      }
+  const convertBase64ToImageFile = (base64String, filename) => {
+    const arr = base64String.split(",");
+    const mimeType = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const uint8Array = new Uint8Array(n);
+
+    while (n--) {
+      uint8Array[n] = bstr.charCodeAt(n);
+    }
+    const file = new File([uint8Array], filename, { type: mimeType });
+
+    return file;
+  };
+
+  const convertPhotoOriginToFiles = (budget, budInd) => {
+    const photoOriginFiles = budget?.photo_origin.map((base64String, index) => {
+      const filename = `photo_origin_${index + 1}.jpg`;
+      return convertBase64ToImageFile(base64String, filename);
     });
 
-    const data = {
-      proposal_id: villa?.proposal_id?.toString(),
-      milestone_details: extractedData,
-    };
-    try {
-      const response = await getApiData(
-        Setting.endpoints.createMilestone,
-        "POST",
-        data
-      );
+    return photoOriginFiles;
+  };
 
+  const convertProjectToFiles = () => {
+    if (villa?.project_image) {
+      const projectFiles = [];
+      const files = villa?.project_image.map((item) => item.image);
+      projectFiles.push(files);
+      return projectFiles;
+    } else {
+      const projectFiles = villa?.project_image?.map((base64String, index) => {
+        const filename = `project_image_${index + 1}.jpg`;
+        return convertBase64ToImageFile(base64String, filename);
+      });
+
+      return projectFiles;
+    }
+  };
+
+  function updateMilestone() {
+    const projectfiles = convertProjectToFiles();
+    const transformedData = {
+      email: villa?.customer_email,
+      name: villa?.name,
+      username: villa?.user_data?.username,
+      project_type: villa?.project_type,
+      exp_id: villa?.exp_id,
+      decsription: villa?.description,
+      start_date: startDate,
+      end_date: endDate,
+      project_image: projectfiles,
+      proposal: JSON.stringify({
+        scope_of_work: villa?.scope,
+        milestone_details: milestones?.map((item) => {
+          let mainObj = {
+            milestone_name: item?.milestone_name,
+            description: item?.description,
+            start_date: item?.start_date,
+            end_date: item?.end_date,
+            budget_item: item?.budget?.map((item) => {
+              const obj = {
+                name: item?.name,
+                budget_id: item?.id,
+                material_type: item?.material_type,
+                material_unit: item?.material_unit || "",
+                material_unit_price: item?.material_unit_price || "0",
+                qty: item?.qty || "0",
+                manpower_rate: item?.manpower_rate || "0",
+                days: item?.days || "0",
+                specification: item?.specification,
+              };
+              return obj;
+            }),
+          };
+          return mainObj;
+        }),
+      }),
+    };
+    milestones?.budget?.forEach((budget, index) => {
+      const photoOriginFiles = convertPhotoOriginToFiles(budget);
+      transformedData[`budget_image_${index + 1}`] = photoOriginFiles;
+    });
+    updateproposalApicall(transformedData);
+  }
+
+  async function updateproposalApicall(data) {
+    setButtonLoader(true);
+    try {
+      const response = await getAPIProgressData(
+        `${Setting.endpoints.updateProposal}/${villa?.proposal_id}`,
+        "POST",
+        data,
+        true
+      );
       if (response.success) {
-        // toast.success(response.message);
-        const milestone_details = {
-          formvalues: {
-            milestone_name: "",
-            description: "",
-            start_date: null,
-            end_date: null,
-          },
-          milestone: [],
-          previous: false,
-        };
-        dispatch(
-          setProposalDetails({
-            ...proposalDetails,
-            milestone_details,
-          })
-        );
-        handleClick("next");
+        toast.success("Milestone Updated");
       } else {
         toast.error(response.message);
       }
       setButtonLoader("");
     } catch (error) {
-      console.log("🚀 ~ file: index.js:330 ~ addPortfolio ~ error:", error);
       toast.error(error.toString());
       setButtonLoader("");
     }
@@ -310,53 +366,6 @@ export default function Milestone(props) {
     setVisible(false);
     handleClose();
   };
-
-  async function deleteMilestone() {
-    setmilestoneLoader(true);
-    try {
-      const response = await getApiData(
-        `${Setting.endpoints.deleteMilestone}/${selectedBudget?.data?.id}`,
-        "GET"
-      );
-      if (response.success) {
-        toast.success(response.message);
-        const indices = budgets
-          .map((item, index) =>
-            item?.milestone?.id === selectedBudget?.data?.id ? index : -1
-          )
-          .filter((index) => index !== -1);
-        let newBudArr = budgets.filter(
-          (item, index) => !indices.includes(index)
-        );
-
-        const newItems = [...milestones]; // Create a copy of the array
-        newItems.splice(selectedBudget?.index, 1); // Delete the object at the specified index
-        setMilestones(newItems);
-        dispatch(
-          setProposalDetails({
-            ...proposalDetails,
-            milestone_details: {
-              ...proposalDetails.milestone_details,
-              milestone: newItems || [],
-            },
-            budget_details: {
-              ...proposalDetails?.budget_details,
-              budgets: newBudArr || [],
-            },
-          })
-        );
-        setVisible(false);
-        handleClose();
-      } else {
-        toast.error(response.message);
-      }
-      setmilestoneLoader(false);
-    } catch (error) {
-      console.log("error===>>>>", error);
-      toast.error(error.toString());
-    }
-    setmilestoneLoader(false);
-  }
 
   const validate = (isUpdateModalVisible) => {
     const error = { ...errObj };
@@ -460,56 +469,10 @@ export default function Milestone(props) {
       clearData();
     }
   };
-  const handleChange = (e, i) => {
-    let dummyarr = [...milestones];
-    dummyarr[i].expanded = !dummyarr[i].expanded;
-    setMilestones(dummyarr);
-  };
 
   const handleSubmit = () => {
-    if (isArray(milestones) && !isEmpty(milestones)) {
-      // if (createProposal) {
-      const extractedData = milestones?.map((item, ind) => {
-        const {
-          milestone_name,
-          description,
-          start_date,
-          end_date,
-          id,
-          milestone_amount,
-        } = item;
-
-        // if (id) {
-        //   return { id, milestone_name, description, start_date, end_date };
-        // } else {
-        // let idx = ind + 1;
-        return {
-          id,
-          milestone_name,
-          description,
-          start_date,
-          end_date,
-          milestone_amount,
-        };
-        // }
-      });
-      const milestone_details = {
-        formvalues: state,
-        milestone: extractedData,
-        previous: false,
-      };
-      dispatch(
-        setProposalDetails({
-          ...proposalDetails,
-          start_date: startDate,
-          end_date: endDate,
-          milestone_details,
-        })
-      );
-      handleClick("next");
-    } else {
-      toast.warning("Please add at least one milestone");
-    }
+    updateMilestone();
+    handleSetTabValue();
   };
 
   function clearData() {
@@ -542,10 +505,10 @@ export default function Milestone(props) {
                   placeholder="Enter Milestone Name..."
                   value={
                     mode === "modal" && visibleEditModal
-                      ? state.milestone_name
+                      ? state?.milestone_name
                       : mode === "form" && visibleEditModal
                       ? ""
-                      : state.milestone_name
+                      : state?.milestone_name
                   }
                   onChange={(e) => {
                     setState({ ...state, milestone_name: e.target.value });
@@ -580,10 +543,10 @@ export default function Milestone(props) {
                   placeholder="Write description here..."
                   value={
                     mode === "modal" && visibleEditModal
-                      ? state.description
+                      ? state?.description
                       : mode === "form" && visibleEditModal
                       ? ""
-                      : state.description
+                      : state?.description
                   }
                   onChange={(e) => {
                     setState({ ...state, description: e.target.value });
@@ -610,26 +573,26 @@ export default function Milestone(props) {
                 />
               </Grid>
               {/* <Grid item xs={12} id="amount">
-                <CInput
-                  type={"number"}
-                  label="Price:"
-                  placeholder="Enter Price "
-                  value={state.amount}
-                  inputProps={{
-                    onWheel: (event) => event.currentTarget.blur(),
-                  }}
-                  onChange={(e) => {
-                    setState({ ...state, amount: e.target.value });
-                    setErrObj({
-                      ...errObj,
-                      amountErr: false,
-                      amountMsg: "",
-                    });
-                  }}
-                  error={errObj.amountErr}
-                  helpertext={errObj.amountMsg}
-                />
-              </Grid> */}
+                  <CInput
+                    type={"number"}
+                    label="Price:"
+                    placeholder="Enter Price "
+                    value={state.amount}
+                    inputProps={{
+                      onWheel: (event) => event.currentTarget.blur(),
+                    }}
+                    onChange={(e) => {
+                      setState({ ...state, amount: e.target.value });
+                      setErrObj({
+                        ...errObj,
+                        amountErr: false,
+                        amountMsg: "",
+                      });
+                    }}
+                    error={errObj.amountErr}
+                    helpertext={errObj.amountMsg}
+                  />
+                </Grid> */}
               <Grid
                 item
                 container
@@ -658,10 +621,10 @@ export default function Milestone(props) {
                         disablePast
                         value={
                           mode === "modal" && visibleEditModal
-                            ? new Date(state.start_date)
+                            ? new Date(state?.start_date)
                             : mode === "form" && visibleEditModal
                             ? null
-                            : state.start_date
+                            : state?.start_date
                             ? new Date(state?.start_date)
                             : null
                         }
@@ -732,7 +695,7 @@ export default function Milestone(props) {
                         minDate={new Date(state?.start_date)}
                         value={
                           mode === "modal" && visibleEditModal
-                            ? new Date(state.end_date)
+                            ? new Date(state?.end_date)
                             : mode === "form" && visibleEditModal
                             ? null
                             : state?.end_date
@@ -856,7 +819,7 @@ export default function Milestone(props) {
       </Modal>
     );
   }
-
+  console.log(amounts, ">>>>>amounts");
   return (
     <>
       <Stack width="100%" height="90%" gap="16px">
@@ -864,8 +827,7 @@ export default function Milestone(props) {
           {" "}
           <span className="label">Total Milestones Amount</span>
           <span className="cur">
-            AED{" "}
-            {amounts.reduce((acc, curr) => acc + curr, 0) || villa?.budget || 0}
+            AED {amounts.reduce((acc, curr) => acc + curr, 0) || villa?.budget}
           </span>
         </div>
 
@@ -886,7 +848,13 @@ export default function Milestone(props) {
           </Grid>
         ) : (
           <>
-            <Stack width="100%" height="100%" gap="16px" overflow="auto">
+            <Stack
+              width="100%"
+              height="100%"
+              gap="16px"
+              overflow="auto"
+              paddingRight="8px"
+            >
               <div className="secondaryTitle">Milestones</div>
               <Divider width="100%" />
               <Grid container>
@@ -897,6 +865,7 @@ export default function Milestone(props) {
                         milestone={milestone}
                         index={index}
                         amounts={amounts}
+                        amount={milestone?.amount}
                         handleRowClick={handleRowClick}
                       />
                     );
@@ -924,58 +893,17 @@ export default function Milestone(props) {
 
         <Divider width="100%" />
 
-        <Grid
-          item
-          container
-          columnGap={1}
-          rowGap={1}
-          justifyContent={"space-between"}
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          style={{ padding: "8px 24px", marginLeft: "auto" }}
         >
-          <Grid item sm={5.9} xs={12}>
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{ boxShadow: "none", padding: "12px 24px" }}
-              onClick={() => {
-                const milestone_details = {
-                  formvalues: state,
-                  milestone: milestones,
-                  previous: true,
-                };
-                dispatch(
-                  setProposalDetails({
-                    ...proposalDetails,
-                    milestone_details,
-                  })
-                );
-
-                handleClick("back");
-              }}
-            >
-              Previous Step
-            </Button>
-          </Grid>
-          <Grid item sm={5.9} xs={12} className="conBtn" gap="16px">
-            <Button
-              variant="outlined"
-              onClick={() => handleClick("back")}
-              style={{ padding: "12px 24px" }}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              style={{ padding: "12px 24px" }}
-            >
-              {buttonLoader ? (
-                <CircularProgress size={26} style={{ color: "#fff" }} />
-              ) : (
-                "Continue"
-              )}
-            </Button>
-          </Grid>
-        </Grid>
+          {buttonLoader ? (
+            <CircularProgress size={26} style={{ color: "#fff" }} />
+          ) : (
+            "Save"
+          )}
+        </Button>
       </Stack>
 
       <ConfirmModel
@@ -1075,7 +1003,7 @@ export default function Milestone(props) {
                       <CInput
                         label={<span>Milestone Name</span>}
                         placeholder="Enter Milestone Name..."
-                        value={state.milestone_name}
+                        value={state?.milestone_name}
                         onChange={(e) => {
                           setState({
                             ...state,
@@ -1098,7 +1026,7 @@ export default function Milestone(props) {
                         rows={3}
                         label={<span>Description:</span>}
                         placeholder="Write description here..."
-                        value={state.description}
+                        value={state?.description}
                         onChange={(e) => {
                           setState({ ...state, description: e.target.value });
                           setErrObj({
@@ -1132,7 +1060,7 @@ export default function Milestone(props) {
                             <DatePicker
                               disablePast
                               value={
-                                state.start_date
+                                state?.start_date
                                   ? new Date(state?.start_date)
                                   : null
                               }

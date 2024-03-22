@@ -29,7 +29,7 @@ const SingleMilestoneAccordion = ({
   };
 
   return (
-    <Grid item xs={12} key={index}>
+    <Stack width="100%">
       <Accordion
         key={milestone.id}
         onChange={handleChangeExpanded(milestone?.id)}
@@ -101,7 +101,9 @@ const SingleMilestoneAccordion = ({
                   {moment(milestone?.end_date).format("MMM DD, YYYY")}
                 </div>
               </Grid>
-              {amounts?.reduce((acc, curr) => acc + curr, 0) > 0 || amount ? (
+              {amounts?.reduce((acc, curr) => acc + curr, 0) > 0 ||
+              amount ||
+              milestone?.milestone_amount ? (
                 <Grid
                   display={"flex"}
                   item
@@ -115,7 +117,11 @@ const SingleMilestoneAccordion = ({
                     Amount
                   </div>
                   <div component={"span"} className="accLabelValue">
-                    AED {amounts[index] || amount || "NA"}
+                    AED{" "}
+                    {amounts[index] ||
+                      amount ||
+                      milestone?.milestone_amount ||
+                      "NA"}
                   </div>
                 </Grid>
               ) : (
@@ -157,75 +163,49 @@ const SingleMilestoneAccordion = ({
             gap: "12px",
           }}
         >
-          <Grid item md={12} xs={12} style={{ display: "flex" }}>
-            <Grid
-              display={"flex"}
-              item
-              lg={3}
-              sm={12}
-              md={3}
-              xs={12}
-              direction={"column"}
-            >
+          <Stack direction="row" gap={8}>
+            <Stack>
               <div component={"span"} className="accLabel">
                 Start Date
               </div>
               <div component={"span"} className="accLabelValue">
                 {moment(milestone?.start_date).format("MMM DD, YYYY")}
               </div>
-            </Grid>
-            <Grid
-              display={"flex"}
-              item
-              lg={3}
-              sm={12}
-              md={3}
-              xs={12}
-              direction={"column"}
-            >
+            </Stack>
+            <Stack>
               <div component={"span"} className="accLabel">
                 End Date
               </div>
               <div component={"span"} className="accLabelValue">
                 {moment(milestone?.end_date).format("MMM DD, YYYY")}
               </div>
-            </Grid>
-            {amounts?.reduce((acc, curr) => acc + curr, 0) > 0 || amount ? (
-              <Grid
-                display={"flex"}
-                item
-                lg={6}
-                sm={12}
-                md={6}
-                xs={12}
-                direction={"column"}
-              >
+            </Stack>
+            {amounts?.reduce((acc, curr) => acc + curr, 0) > 0 ||
+            amount ||
+            milestone?.milestone_amount ? (
+              <Stack>
                 <div component={"span"} className="accLabel">
                   Amount
                 </div>
                 <div component={"span"} className="accLabelValue">
-                  AED {amounts[index] || amount || "NA"}
+                  AED{" "}
+                  {amounts[index] ||
+                    amount ||
+                    milestone?.milestone_amount ||
+                    "NA"}
                 </div>
-              </Grid>
+              </Stack>
             ) : (
-              <Grid
-                display={"flex"}
-                item
-                lg={5}
-                sm={12}
-                md={5}
-                xs={12}
-                direction={"column"}
-              >
+              <Stack>
                 <div component={"span"} className="accLabel">
                   Amount
                 </div>
                 <div component={"span"} className="accLabelValue">
                   NA
                 </div>
-              </Grid>
+              </Stack>
             )}
-          </Grid>
+          </Stack>
           <Stack>
             <Typography className="accLabel">Description</Typography>
             <Typography className="accLabelValue">
@@ -235,7 +215,7 @@ const SingleMilestoneAccordion = ({
         </AccordionDetails>
         {children}
       </Accordion>
-    </Grid>
+    </Stack>
   );
 };
 export default SingleMilestoneAccordion;
