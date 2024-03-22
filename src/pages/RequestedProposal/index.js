@@ -14,6 +14,9 @@ import {
   Modal,
   Box,
   Stack,
+  Backdrop,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
@@ -31,22 +34,14 @@ import Select from "react-select";
 import ConversationsWithMessagesWrapper from "../../components/Chat/ConversationsWithMessagesWrapper";
 import SingleMilestoneAccordion from "../../components/SingleMilestoneAccordian";
 import SingleBudgetAccordion from "../../components/SingleBudgetAccordian";
+import SubmittedDetails from "./SubmittedDetails";
+import SubmittedSummary from "./SubmittedSummary";
+import Images from "../../config/images";
+import SubmittedBudget from "./SubmittedBudget";
+import SubmittedMilestone from "./SubmittedMilestone";
+import "./index.css";
 
 export default function RequestedProposal() {
-  let data = [
-    { value: "Mohamed Negm", label: "Mohamed Negm" },
-    { value: "Hagar", label: "Hagar" },
-    { value: "Yassin", label: "Yassin" },
-    { value: "Ali", label: "Ali" },
-  ];
-  const options = [
-    { value: "Mohamed Negm", label: "Mohamed Negm" },
-    { value: "Hagar", label: "Hagar" },
-    { value: "Yassin", label: "Yassin" },
-    { value: "Ali", label: "Ali" },
-    { value: "Ibrahim", label: "Ibrahim" },
-    { value: "Ahmed", label: "Ahmed" },
-  ];
   const style = {
     position: "absolute",
     top: "50%",
@@ -62,30 +57,64 @@ export default function RequestedProposal() {
     pb: 3,
   };
 
+  const modalStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "75%",
+    height: "90%",
+    bgcolor: "background.paper",
+    padding: 4,
+    overflow: "hidden",
+  };
+
   const location = useLocation();
   const [villa, setVilla] = useState(location?.state?.villa);
   const nData = villa?.submitted_by_reno
     ? villa?.reno_data || {}
     : villa?.user_data || {};
   const isSubmitted = location?.state?.status === "submitted";
-  const fromManageProject = location?.state?.activeScreen === "/manage-project";
   const [isPressed, setIsPressed] = useState(false);
   const [pageLoad, setPageLoad] = useState(true);
-  const [assignedContractors, setAssignedContractors] = useState(data);
   const [url, setUrl] = useState("");
   const [imgurl, setImgUrl] = useState("");
   const [openAssign, setOpenAssign] = useState(false);
   const [isChatStarted, setIsChatStarted] = useState(false);
-  const classes = useStyles();
+  const [isOpen, setIsOpen] = useState(false);
+  const [tabValue, setTabValue] = useState(3);
+
+  const [availableContractors, setAvilableContractors] = useState([]);
+  const [assignedContractors, setAssignedContractors] = useState([]);
+  const [isAssigned, setIsAssigned] = useState(false);
+  const fromManageProject = location?.state?.fromManageProject || false;
   const navigate = useNavigate();
+
+  const classes = useStyles();
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
-  console.log(villa, ">>>>>villa");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     getProjectDetails();
+    getAvailableContractorsList();
   }, []);
+
+  const handleSetTabValue = () => {
+    setTabValue(3);
+  };
+  const handleOpen = () => {
+    setIsOpen(true);
+    setTabValue(0);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    navigate("/dashboard");
+  };
 
   async function getProjectDetails() {
     setPageLoad(true);
@@ -108,10 +137,43 @@ export default function RequestedProposal() {
       setPageLoad(false);
     }
   }
+
+  async function getAvailableContractorsList() {
+    setPageLoad(true);
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.availableContractors}`,
+        "GET"
+      );
+      if (
+        response.success &&
+        isArray(response?.contractors) &&
+        !isEmpty(response?.contractors)
+      ) {
+        setAvilableContractors(response?.contractors);
+      }
+      setPageLoad(false);
+    } catch (error) {
+      setPageLoad(false);
+    }
+  }
+
+  const transformedAvailableContractor = availableContractors?.map(
+    (contractor) => {
+      return { value: contractor.id, label: contractor.company_name };
+    }
+  );
+
   const handleAddContractor = () => {
     setOpenAssign(true);
   };
+
   const handleCloseAssign = () => {
+    setOpenAssign(false);
+  };
+
+  const handleAssignContractor = () => {
+    setIsAssigned(true);
     setOpenAssign(false);
   };
 
@@ -126,7 +188,6 @@ export default function RequestedProposal() {
         lg={12}
         alignItems="center"
         justifyContent="center"
-        flexDirection="column"
         style={{ padding: "40px 0 40px" }}
       >
         <Grid
@@ -162,28 +223,20 @@ export default function RequestedProposal() {
                     <div className={classes.activeStatus}></div>
                   </div>
                 </div>
-                <Grid item container style={{ width: "100%", margin: 0 }}>
-                  <Grid item lg={9} md={9} sm={9} xs={9}>
+                <Stack
+                  direction="row"
+                  width="100%"
+                  justifyContent="space-between"
+                >
+                  <Stack>
                     <Typography className={classes.titleText}>
                       {nData?.username}
                     </Typography>
-                  </Grid>
-                  <Grid item lg={3} md={3} sm={3} xs={3} textAlign={"end"}>
-                    <Typography className={classes.requestDate}>
-                      {isSubmitted ? "Submitted Date" : "Request Date"}
-                    </Typography>
-                  </Grid>
-                  <Grid
-                    item
-                    lg={9}
-                    md={9}
-                    sm={6}
-                    xs={6}
-                    style={{ marginTop: 5 }}
-                  >
                     <span
                       variant="contained"
                       style={{
+                        display: "flex",
+                        justifyContent: "center",
                         backgroundColor: isSubmitted ? "#32D583" : "#E9B55C",
                         padding: "8px",
                         fontSize: "10px",
@@ -195,15 +248,25 @@ export default function RequestedProposal() {
                     >
                       {isSubmitted ? "Submitted" : "Request"}
                     </span>
-                  </Grid>
-                  <Grid item lg={3} md={3} sm={6} xs={6}>
-                    <Typography className={classes.dateStyle}>
-                      {isSubmitted
-                        ? moment(villa?.updatedAt).format("MMMM DD, YYYY")
-                        : moment(villa?.createdAt).format("MMMM DD, YYYY")}
-                    </Typography>
-                  </Grid>
-                </Grid>
+                  </Stack>
+                  <Stack direction="row" gap="16px">
+                    <Stack>
+                      <Button variant="contained" onClick={handleOpen}>
+                        Edit
+                      </Button>
+                    </Stack>
+                    <Stack item lg={3} md={3} sm={3} xs={3} textAlign={"end"}>
+                      <Typography className={classes.requestDate}>
+                        {isSubmitted ? "Submitted Date" : "Request Date"}
+                      </Typography>
+                      <Typography className={classes.dateStyle}>
+                        {isSubmitted
+                          ? moment(villa?.updatedAt).format("MMMM DD, YYYY")
+                          : moment(villa?.createdAt).format("MMMM DD, YYYY")}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </Stack>
               </Grid>
 
               {/* {isSubmitted && ( */}
@@ -257,7 +320,7 @@ export default function RequestedProposal() {
                           Email
                         </Typography>
                         <Typography className={classes.value}>
-                          {villa.customer_email}
+                          {villa.customer_email || "NA"}
                         </Typography>
                       </Stack>
                       <Stack>
@@ -563,28 +626,89 @@ export default function RequestedProposal() {
         }}
       />
       <Dialog open={openAssign} onClose={handleCloseAssign}>
-        <DialogTitle>Assign Contractors</DialogTitle>
+        <DialogTitle>Available Contractors</DialogTitle>
         <DialogContent>
-          <Grid container width={450} height={200}>
-            <Grid item xs={12} md={12}>
-              <Select
-                options={options}
-                isMulti
-                defaultValue={assignedContractors}
-                closeMenuOnSelect={false}
-                onChange={(e) => setAssignedContractors(e)}
-                isOptionDisabled={() => assignedContractors.length == 5}
-              />
-            </Grid>
-          </Grid>
+          <Stack width="450px" height="300px" overflow="hidden">
+            <Select
+              options={transformedAvailableContractor}
+              isMulti
+              value={assignedContractors}
+              closeMenuOnSelect={false}
+              classNamePrefix="react-select"
+              onChange={(e) => setAssignedContractors(e)}
+              isOptionDisabled={() => assignedContractors.length >= 5}
+            />
+          </Stack>
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={handleCloseAssign}>
             Cancel
           </Button>
-          <Button variant="contained">Assign</Button>
+          <Button variant="contained" onClick={handleAssignContractor}>
+            Assign
+          </Button>
         </DialogActions>
       </Dialog>
+      {isOpen && (
+        <Modal
+          open={isOpen}
+          onClose={handleClose}
+          closeAfterTransition
+          disableAutoFocus
+          slotProps={{ backdrop: Backdrop }}
+        >
+          <Box sx={modalStyle}>
+            <Stack direction="row" justifyContent="space-between">
+              <Tabs
+                value={tabValue}
+                variant="scrollable"
+                onChange={(v, b) => {
+                  setTabValue(b);
+                }}
+              >
+                <Tab label="Summary" />
+                <Tab label="Milestone" />
+                <Tab label="Budget" />
+                <Tab label="Details" />
+              </Tabs>
+              <Stack width="32px" height="32px" sx={{ cursor: "pointer" }}>
+                <img
+                  src={Images.close}
+                  onClick={handleClose}
+                  alt="close"
+                  style={{ width: "100%", height: "100%" }}
+                ></img>
+              </Stack>
+            </Stack>
+            {tabValue === 0 ? (
+              <SubmittedSummary
+                villa={villa}
+                handleSetTabValue={handleSetTabValue}
+              />
+            ) : null}
+            {tabValue === 1 ? (
+              <SubmittedMilestone
+                villa={villa}
+                handleSetTabValue={handleSetTabValue}
+              />
+            ) : null}
+
+            {tabValue === 2 ? (
+              <SubmittedBudget
+                villa={villa}
+                handleSetTabValue={handleSetTabValue}
+              />
+            ) : null}
+            {tabValue === 3 ? (
+              <SubmittedDetails
+                villa={villa}
+                handleSetTabValue={handleSetTabValue}
+                handleClose={handleClose}
+              />
+            ) : null}
+          </Box>
+        </Modal>
+      )}
     </div>
   );
 }

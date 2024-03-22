@@ -11,6 +11,11 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px 20px 20px 20px",
     height: "max-content",
   },
+  wrapper: {
+    display: "flex",
+    flexDirection: "column",
+    flex: "1",
+  },
   header: {
     color: "#15252B",
     fontFamily: "Poppins-Regular !important",
@@ -61,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "14px !important",
     lineHeight: "24px !important",
     fontWeight: "500 !important",
-    color:"#274BF1"
+    color: "#274BF1",
   },
   titleStyle: {
     fontFamily: "Poppins-Regular  !important",

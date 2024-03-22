@@ -15,7 +15,12 @@ import SingleMilestoneAccordion from "../../../components/SingleMilestoneAccordi
 import SingleBudgetAccordion from "../../../components/SingleBudgetAccordian";
 
 const Details = (props) => {
-  const { handleClick = () => null, villa, fromManageProject } = props;
+  const {
+    handleClick = () => null,
+    villa,
+    fromManageProject,
+    createProposal,
+  } = props;
 
   const { proposalDetails } = useSelector((state) => state.auth);
   const {
@@ -44,8 +49,8 @@ const Details = (props) => {
     milestone_details?.milestone?.forEach((milestone) => {
       let amount = 0;
       if (
-        isArray(budget_details.budgets) &&
-        budget_details.budgets.length > 0
+        isArray(budget_details?.budgets) &&
+        budget_details?.budgets?.length > 0
       ) {
         budget_details?.budgets?.forEach((bud) => {
           if (bud?.milestone?.id === milestone?.id) {
@@ -87,7 +92,7 @@ const Details = (props) => {
   }
 
   const convertBase64ToImageFile = (base64String, filename) => {
-    const arr = base64String.split(",");
+    const arr = base64String?.split(",");
     const mimeType = arr[0].match(/:(.*?);/)[1];
     const bstr = atob(arr[1]);
     let n = bstr.length;
@@ -101,26 +106,34 @@ const Details = (props) => {
     return file;
   };
 
-  const convertPhotoOriginToFiles = (budget, budInd) => {
-    const photoOriginFiles = budget.photo_origin.map((base64String, index) => {
-      const filename = `photo_origin_${index + 1}.jpg`;
-      return convertBase64ToImageFile(base64String, filename);
-    });
+  const convertPhotoOriginToFiles = (budget) => {
+    const photoOriginFiles = budget?.photo_origin?.map(
+      (base64String, index) => {
+        const filename = `photo_origin_${index + 1}.jpg`;
 
+        return convertBase64ToImageFile(base64String, filename);
+      }
+    );
     return photoOriginFiles;
   };
 
   const convertProjectToFiles = () => {
-    const projectFiles = proposalDetails?.project?.map(
-      (base64String, index) => {
-        const filename = `project_image_${index + 1}.jpg`;
-        return convertBase64ToImageFile(base64String, filename);
-      }
-    );
+    if (!createProposal) {
+      const projectFiles = [];
+      const files = proposalDetails?.project?.map((item) => item.image);
+      projectFiles.push(files);
+      return projectFiles;
+    } else {
+      const projectFiles = proposalDetails?.project?.map(
+        (base64String, index) => {
+          const filename = `project_image_${index + 1}.jpg`;
+          return convertBase64ToImageFile(base64String, filename);
+        }
+      );
 
-    return projectFiles;
+      return projectFiles;
+    }
   };
-
   const handleSubmit = () => {
     const projectFiles = convertProjectToFiles();
     let i = 0;
@@ -172,6 +185,9 @@ const Details = (props) => {
       const photoOriginFiles = convertPhotoOriginToFiles(budget);
       transformedData[`budget_image_${ind + 1}`] = photoOriginFiles;
     });
+    if (!createProposal) {
+      transformedData["proposal_id"] = villa?.proposal_id;
+    }
     createproposalApicall(transformedData);
   };
 
@@ -329,6 +345,7 @@ const Details = (props) => {
           </Button>
         </Stack>
       </Stack>
+
       <ConfirmModel
         visible={visibleFinal}
         loader={buttonLoader}
@@ -337,6 +354,7 @@ const Details = (props) => {
         confirmation={handleSubmit}
         message={`Are you sure you want to submit proposal?`}
       />
+
       {proposalModal && (
         <ProfileSuccessModal
           title="Congrats!"

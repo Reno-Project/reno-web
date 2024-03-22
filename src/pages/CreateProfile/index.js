@@ -299,17 +299,16 @@ const CreateProfile = (props) => {
         scroll = true;
         section = document.querySelector("#cname");
       }
-    } else if (state?.cname?.length > 30) {
+    } else if (state?.cname?.length > 200) {
       valid = false;
       error.cnameErr = true;
       error.cnameMsg =
-        "Company Name should not be greater than 30 characters  ";
+        "Company Name should not be greater than 200 characters  ";
       if (!scroll) {
         scroll = true;
         section = document.querySelector("#cname");
       }
     }
-
     if (state.description.length > 1000) {
       valid = false;
       error.descriptionErr = true;
@@ -743,6 +742,15 @@ const CreateProfile = (props) => {
     }
   }
 
+  function isUploadedImageOnly(img) {
+    if (
+      img.type === "image/png" ||
+      img.type === "image/jpeg" ||
+      img.type === "image/jpg"
+    )
+      return true;
+  }
+
   // this function for add portfolio image
   async function addPortfolio() {
     setButtonLoader("step2");
@@ -900,6 +908,25 @@ const CreateProfile = (props) => {
   function checkImgSize(img) {
     let valid = true;
     if (img.size > 5 * 1048576) {
+      valid = false;
+    } else {
+      valid = true;
+    }
+    return valid;
+  }
+
+  function checkUploadedFiles(img) {
+    if (
+      img.type === "image/png" ||
+      img.type === "image/jpeg" ||
+      img.type === "image/jpg"
+    )
+      return true;
+  }
+
+  function checkPortfolioImageSize(img) {
+    let valid = true;
+    if (img.size > 15 * 1048576) {
       valid = false;
     } else {
       valid = true;
@@ -1181,11 +1208,29 @@ const CreateProfile = (props) => {
                     accept="image/jpeg, image/png, image/jpg"
                     multiple={false}
                     onChange={(e) => {
-                      setState({
-                        ...state,
-                        businessLogo: e.target.files[0],
-                      });
-                      toast.success("Logo updated successfully");
+                      const imageUploaded = e.target.files[0];
+                      let showSizeError = false;
+                      let showTypeError = false;
+                      const checkImageType = isUploadedImageOnly(imageUploaded);
+                      const checkImageSize = checkImgSize(imageUploaded);
+                      if (checkImageType && checkImageSize) {
+                        setState({
+                          ...state,
+                          businessLogo: e.target.files[0],
+                        });
+                        toast.success("Logo updated successfully");
+                      } else if (!checkImageSize) {
+                        showSizeError = true;
+                      } else {
+                        showTypeError = true;
+                      }
+                      if (showSizeError) {
+                        toast.error(
+                          "Image you are attempting to upload exceeds the maximum file size limit of 15 MB. Please reduce the size of your image and try again."
+                        );
+                      } else if (showTypeError) {
+                        toast.error("You can only add JPEG, JPG or PNG");
+                      }
                     }}
                     className={classes.uploadFileStyle}
                   />
@@ -1507,7 +1552,26 @@ const CreateProfile = (props) => {
                               const data = [...state.certificate];
                               let showMsg = false;
                               let limit = false;
-                              chosenFiles.map((item) => {
+                              const rejected = chosenFiles.every(
+                                (item) =>
+                                  item.type === "image/png" ||
+                                  item.type === "image/jpg" ||
+                                  item.type === "image/jpeg" ||
+                                  item.type === "application/pdf"
+                              );
+                              if (!rejected) {
+                                toast.error(
+                                  "You can only add JPEG, JPG, PNG or PDF"
+                                );
+                              }
+                              const filteredFiles = chosenFiles.filter(
+                                (item) =>
+                                  item.type === "image/png" ||
+                                  item.type === "image/jpg" ||
+                                  item.type === "image/jpeg" ||
+                                  item.type === "application/pdf"
+                              );
+                              filteredFiles.map((item) => {
                                 const bool = checkImgSize(item);
                                 if (bool && data.length < 5) {
                                   data.push(item);
@@ -1576,7 +1640,26 @@ const CreateProfile = (props) => {
                               const data = [...state.license];
                               let showMsg = false;
                               let limit = false;
-                              chosenFiles.map((item) => {
+                              const rejected = chosenFiles.every(
+                                (item) =>
+                                  item.type === "image/png" ||
+                                  item.type === "image/jpg" ||
+                                  item.type === "image/jpeg" ||
+                                  item.type === "application/pdf"
+                              );
+                              if (!rejected) {
+                                toast.error(
+                                  "You can only add JPEG, JPG, PNG or PDF"
+                                );
+                              }
+                              const filteredFiles = chosenFiles.filter(
+                                (item) =>
+                                  item.type === "image/png" ||
+                                  item.type === "image/jpg" ||
+                                  item.type === "image/jpeg" ||
+                                  item.type === "application/pdf"
+                              );
+                              filteredFiles.map((item) => {
                                 const bool = checkImgSize(item);
                                 if (bool && data.length < 5) {
                                   data.push(item);
@@ -1648,7 +1731,26 @@ const CreateProfile = (props) => {
 
                               let showMsg = false;
                               let limit = false;
-                              chosenFiles.map((item) => {
+                              const rejected = chosenFiles.every(
+                                (item) =>
+                                  item.type === "image/png" ||
+                                  item.type === "image/jpg" ||
+                                  item.type === "image/jpeg" ||
+                                  item.type === "application/pdf"
+                              );
+                              if (!rejected) {
+                                toast.error(
+                                  "You can only add JPEG, JPG, PNG or PDF"
+                                );
+                              }
+                              const filteredFiles = chosenFiles.filter(
+                                (item) =>
+                                  item.type === "image/png" ||
+                                  item.type === "image/jpg" ||
+                                  item.type === "image/jpeg" ||
+                                  item.type === "application/pdf"
+                              );
+                              filteredFiles.map((item) => {
                                 const bool = checkImgSize(item);
                                 if (bool && data.length < 5) {
                                   data.push(item);
@@ -1935,6 +2037,7 @@ const CreateProfile = (props) => {
                           const nArr = [...state.portfolio];
                           let showMsg = false;
                           let limit = false;
+                          let showTypeError = false;
                           const rejected = chosenFiles.every(
                             (item) =>
                               item.type === "image/png" ||
@@ -1951,21 +2054,26 @@ const CreateProfile = (props) => {
                               item.type === "image/jpeg"
                           );
                           filteredFiles.map((item) => {
-                            const bool = checkImgSize(item);
-                            if (bool && nArr.length < 15) {
+                            const checkFiles = checkUploadedFiles(item);
+                            const bool = checkPortfolioImageSize(item);
+                            if (bool && nArr.length < 15 && checkFiles) {
                               nArr.push(item);
                             } else if (nArr.length >= 15) {
                               limit = true;
-                            } else {
+                            } else if (!bool) {
                               showMsg = true;
+                            } else {
+                              showTypeError = true;
                             }
                           });
                           if (limit) {
                             toast.error("You can upload maximum 15 files");
                           } else if (showMsg) {
                             toast.error(
-                              "Some registraion you are attempting to upload exceeds the maximum file size limit of 5 MB. Please reduce the size of your image and try again."
+                              "Some Photos you are attempting to upload exceeds the maximum file size limit of 15 MB. Please reduce the size of your image and try again."
                             );
+                          } else if (showTypeError) {
+                            toast.error("Please Upload valid files ");
                           }
                           setState({ ...state, portfolio: nArr });
                         }}

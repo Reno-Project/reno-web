@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { FormControl, FormHelperText, InputLabel, styled } from "@mui/material";
+
 const CustomAutocomplete = styled(Autocomplete)(({ theme }) => ({
   marginTop: 24,
   "& .MuiOutlinedInput-root": {
@@ -63,7 +64,7 @@ const CAutocomplete = ({
         value={value}
         onChange={onChange}
         options={options}
-        getOptionLabel={props?.getOptionLabel}
+        getOptionLabel={props?.getOptionLabel ? props?.getOptionLabel : ""}
         renderOption={props?.renderOption}
         style={{
           border: props?.error ? "1px solid red" : "",
@@ -79,7 +80,7 @@ const CAutocomplete = ({
       />
       <FormHelperText
         error={props?.error || false}
-        style={{ marginBottom: 20, fontFamily: "Poppins-Regular" }}
+        style={{ fontFamily: "Poppins-Regular" }}
       >
         {props?.helpertext || ""}
       </FormHelperText>
