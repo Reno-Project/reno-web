@@ -455,7 +455,7 @@ export default function Summary(props) {
                 }}
               >
                 <Tab label="Summary" />
-                <Tab label="Milestone" disabled={disableMilestone} />
+                <Tab label="Milestones" disabled={disableMilestone} />
                 <Tab label="Budget" disabled={disableBudget} />
                 <Tab label="Details" disabled={disableDetailsTab} />
               </Tabs>

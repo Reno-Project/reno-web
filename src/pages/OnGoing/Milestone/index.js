@@ -186,7 +186,6 @@ export default function Milestone(props) {
     milestone: null,
     specification: "",
   });
-  console.log("stateBudget", stateBudget);
 
   const [visibleEditModal, setVisibleEditModal] = useState(false);
   const [visibleBudgetModal, setVisibleBudgetModal] = useState(false);
@@ -2152,35 +2151,6 @@ export default function Milestone(props) {
           </Grid>
         </Grid>
 
-        <Grid container display={"flex"} justifyContent={"space-between"}>
-          <Grid item xl={6}>
-            <Typography
-              style={{ fontSize: 14 }}
-              variant="caption"
-              color={"#8C92A4"}
-            >
-              Project Starting date
-            </Typography>
-            <Typography style={{ fontSize: 18 }} fontFamily={"Poppins-Medium"}>
-              March 12, 2023
-            </Typography>
-          </Grid>
-          <Grid item xl={6}>
-            <Typography
-              style={{ fontSize: 14 }}
-              variant="caption"
-              color={"#8C92A4"}
-            >
-              Project Ending date
-            </Typography>
-            <Typography style={{ fontSize: 18 }} fontFamily={"Poppins-Medium"}>
-              March 23, 2023
-            </Typography>
-          </Grid>
-        </Grid>
-        {/* <Grid item container py={2}>
-          <Typography className={classes.MainTitle}>Items:</Typography>
-        </Grid> */}
         <Grid
           item
           container
@@ -2385,7 +2355,7 @@ export default function Milestone(props) {
                                 ? "Paid"
                                 : milestone?.payment_status === "requested"
                                 ? "Requested"
-                                : "Payment under review"}
+                                : "Pending"}
                             </span>
                           </div>
                         )}

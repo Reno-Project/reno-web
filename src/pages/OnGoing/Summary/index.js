@@ -87,6 +87,9 @@ export default function Summary(props) {
       setPageLoad(false);
     }
   }
+
+  console.log(villa, ">>>>>>>villa");
+  console.log(projectDetails, ">>>>>detils");
   return (
     <div className={classes.wrapper}>
       <div
@@ -219,7 +222,7 @@ export default function Summary(props) {
                         >
                           <Grid item lg={5} sm={6} md={6} xs={12}>
                             <Typography className={classes.acctext}>
-                              Serial ID:
+                              Proposal Type:
                             </Typography>
                           </Grid>
                           <Grid
@@ -232,7 +235,7 @@ export default function Summary(props) {
                             pb={1}
                           >
                             <Typography className={classes.accRightText}>
-                              {projectDetails?.project_slug}
+                              {projectDetails?.project_type}
                             </Typography>
                           </Grid>
                         </Grid>
@@ -374,7 +377,7 @@ export default function Summary(props) {
                         >
                           <Grid item lg={5} sm={6} md={6} xs={12}>
                             <Typography className={classes.acctext}>
-                              Project Type:
+                              Project End Date:
                             </Typography>
                           </Grid>
                           <Grid
@@ -386,7 +389,7 @@ export default function Summary(props) {
                             textAlign={sm ? "start" : "end"}
                           >
                             <Typography className={classes.accRightText}>
-                              {projectDetails?.project_type}
+                              {projectDetails?.end_date}
                             </Typography>
                           </Grid>
                         </Grid>
@@ -441,7 +444,7 @@ export default function Summary(props) {
                         >
                           <Grid item lg={5} sm={6} md={6} xs={12}>
                             <Typography className={classes.acctext}>
-                              Project End Date:
+                              Proposal Value:
                             </Typography>
                           </Grid>
                           <Grid
@@ -453,7 +456,81 @@ export default function Summary(props) {
                             textAlign={sm ? "start" : "end"}
                           >
                             <Typography className={classes.accRightText}>
-                              {projectDetails?.end_date || "NA"}
+                              AED{" "}
+                              {projectDetails?.budget_without_commission ||
+                                "NA"}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item container justifyContent={"space-between"}>
+                        <Grid
+                          item
+                          container
+                          alignItems="center"
+                          justifyContent={"flex-end"}
+                          margin={0}
+                          xl={5.8}
+                          md={5.5}
+                          sm={12}
+                          pb={2}
+                        >
+                          <Grid
+                            item
+                            lg={5}
+                            sm={6}
+                            md={6}
+                            xs={12}
+                            textAlign={"start"}
+                          >
+                            <Typography className={classes.acctext}>
+                              Reno Commission:
+                            </Typography>
+                          </Grid>
+                          <Grid
+                            item
+                            lg={7}
+                            sm={6}
+                            md={6}
+                            xs={12}
+                            textAlign={sm ? "start" : "end"}
+                          >
+                            <Typography className={classes.accRightText}>
+                              AED{" "}
+                              {projectDetails?.milestone_budget_data
+                                .reno_commission || "NA"}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid
+                          item
+                          container
+                          alignItems="center"
+                          justifyContent={"flex-end"}
+                          margin={0}
+                          xl={5.8}
+                          md={5.5}
+                          sm={12}
+                          pb={2}
+                        >
+                          <Grid item lg={5} sm={6} md={6} xs={12}>
+                            <Typography className={classes.acctext}>
+                              Final Project Value:
+                            </Typography>
+                          </Grid>
+                          <Grid
+                            item
+                            lg={7}
+                            sm={6}
+                            md={6}
+                            xs={12}
+                            textAlign={sm ? "start" : "end"}
+                          >
+                            <Typography className={classes.accRightText}>
+                              AED{" "}
+                              {projectDetails?.budget_without_commission -
+                                projectDetails?.milestone_budget_data
+                                  .reno_commission || "NA"}
                             </Typography>
                           </Grid>
                         </Grid>
@@ -1878,6 +1955,21 @@ export default function Summary(props) {
                         )}
                     </Grid>
                     <Stack flexDirection="column" gap="16px">
+                      <Stack direction="row" width="50%" gap="60px">
+                        <Grid item lg={12} sm={12} md={12} xs={12}>
+                          <Typography className={classes.acctext}>
+                            Serial ID:
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={12} sm={12} md={12} xs={12}>
+                          <Typography
+                            className={classes.accRightText}
+                            textAlign={sm ? "start" : "end"}
+                          >
+                            {projectDetails?.project_slug}
+                          </Typography>
+                        </Grid>
+                      </Stack>
                       <Stack>
                         <Grid item lg={12} sm={12} md={12} xs={12}>
                           <Typography className={classes.acctext}>
@@ -1890,6 +1982,7 @@ export default function Summary(props) {
                           </Typography>
                         </Grid>
                       </Stack>
+
                       <Stack>
                         {isArray(projectDetails?.project_image) &&
                           projectDetails?.project_image.length > 0 && (

@@ -68,6 +68,7 @@ export const Setting = {
     balanceBreakdown: "api/project/balance-details",
     createUser: "api/contractor/user",
     availableContractors: "/api/admin/available-contractors",
+    assignContractors: "api/project/project-submit-contractor",
   },
 
   JS_Regex: {

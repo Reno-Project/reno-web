@@ -43,6 +43,8 @@ export default function ProposalCard(props) {
 
   const [tabValueforcard, setTabValueforcard] = useState(0);
 
+  console.log(villa, ">>>>>>>>>>>>>>>>>>>>> vilaaa");
+
   return (
     <Grid item container xs={12}>
       <Grid
@@ -81,7 +83,7 @@ export default function ProposalCard(props) {
                 color: "#FFFFFF",
               }}
             >
-              {villa?.status === "ongoing" ? "Ongoing" : "Request"}
+              {villa?.status === "ongoing" ? "Ongoing" : "Requested"}
             </span>
           </Grid>
         </Grid>
@@ -202,7 +204,9 @@ export default function ProposalCard(props) {
                 </Grid>
                 <Grid item lg={8} sm={8} md={8} xs={8} textAlign={"end"}>
                   <Typography className={classes.accRightText}>
-                    AED {villa?.budget_without_commission || "NA"}
+                    AED{" "}
+                    {villa?.budget_without_commission -
+                      villa?.milestone_budget_data.reno_commission || "NA"}
                   </Typography>
                 </Grid>
                 <Grid item lg={4} sm={4} md={4} xs={4}>

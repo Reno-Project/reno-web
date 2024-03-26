@@ -200,6 +200,8 @@ export default function Budget(props) {
       console.log("err===>", error);
     }
   }
+
+  console.log(budgetDetails, ">>>>>>budgetDetails");
   const handleChange = (e, i) => {
     let dummyarr = [...budgetDetails];
     dummyarr[i].expanded = !dummyarr[i].expanded;
@@ -224,41 +226,6 @@ export default function Budget(props) {
   return (
     <>
       <Grid container>
-        {/* <Grid
-          item
-          container
-          xs={12}
-          justifyContent={"space-between"}
-          pt={"25px"}
-          pb={2}
-        >
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "Poppins-SemiBold",
-            }}
-          >
-            Total Budget amount
-          </Typography>
-          <Typography
-            variant="h5"
-            style={{
-              fontFamily: "Poppins-SemiBold",
-            }}
-          >
-            AED{" "}
-            {(isArray(budgetDetails) &&
-              !isEmpty(budgetDetails) &&
-              budgetDetails?.reduce((acc, bud) => {
-                const amount =
-                  parseInt(bud?.material_unit_price || 0) *
-                    parseInt(bud?.qty || 0) +
-                  parseInt(bud?.manpower_rate || 0) * parseInt(bud?.days || 0);
-                return acc + amount;
-              }, 0)) ||
-              0}
-          </Typography>
-        </Grid> */}
         <Grid item container justifyContent={"space-between"} pt={2}>
           <Grid
             item
@@ -317,6 +284,30 @@ export default function Budget(props) {
               </Typography>
             </Grid>
           </Grid>
+        </Grid>
+        <Grid
+          item
+          container
+          xs={12}
+          justifyContent={"space-between"}
+          padding="12px 0px"
+        >
+          <Typography fontSize="20px" fontFamily="Poppins-Medium">
+            Total Budget amount
+          </Typography>
+          <Typography fontSize="20px" fontFamily="Poppins-Medium">
+            AED{" "}
+            {(isArray(budgetDetails) &&
+              !isEmpty(budgetDetails) &&
+              budgetDetails?.reduce((acc, bud) => {
+                const amount =
+                  parseInt(bud?.material_unit_price || 0) *
+                    parseInt(bud?.qty || 0) +
+                  parseInt(bud?.manpower_rate || 0) * parseInt(bud?.days || 0);
+                return acc + amount;
+              }, 0)) ||
+              0}
+          </Typography>
         </Grid>
         {/* <Grid item container className={classes.contentContainer}>
           <Grid item lg={12} sm={12} md={12} xs={12} pb={2}>
@@ -446,9 +437,7 @@ export default function Budget(props) {
             <Divider />
           </div>
         </Grid> */}
-        <Grid item container py={2}>
-          <Typography className={classes.MainTitle}>Items:</Typography>
-        </Grid>
+
         {/* <Grid item xs={12} style={{ borderBottom: "1px solid #F2F3F4" }}>
           <Tabs
             value={tabValue}

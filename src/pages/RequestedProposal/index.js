@@ -40,6 +40,7 @@ import Images from "../../config/images";
 import SubmittedBudget from "./SubmittedBudget";
 import SubmittedMilestone from "./SubmittedMilestone";
 import "./index.css";
+import { toast } from "react-toastify";
 
 export default function RequestedProposal() {
   const style = {
@@ -158,6 +159,26 @@ export default function RequestedProposal() {
     }
   }
 
+  async function assignProjectToContractor() {
+    setPageLoad(true);
+    try {
+      const response = await getApiData(
+        `${Setting.endpoints.assignContractors}?project_id=${
+          villa?.proposal_id
+        }&contractor_id=${assignedContractors
+          .map((contractor) => contractor.value)
+          .join(",")}`,
+        "GET"
+      );
+      if (response.success) {
+        toast.success(response.message);
+      }
+    } catch (error) {
+      toast.error(error);
+      setPageLoad(false);
+    }
+  }
+
   const transformedAvailableContractor = availableContractors?.map(
     (contractor) => {
       return { value: contractor.id, label: contractor.company_name };
@@ -173,6 +194,7 @@ export default function RequestedProposal() {
   };
 
   const handleAssignContractor = () => {
+    assignProjectToContractor();
     setIsAssigned(true);
     setOpenAssign(false);
   };
@@ -246,15 +268,17 @@ export default function RequestedProposal() {
                         color: color.white,
                       }}
                     >
-                      {isSubmitted ? "Submitted" : "Request"}
+                      {isSubmitted ? "Submitted" : "Requested"}
                     </span>
                   </Stack>
                   <Stack direction="row" gap="16px">
-                    <Stack>
-                      <Button variant="contained" onClick={handleOpen}>
-                        Edit
-                      </Button>
-                    </Stack>
+                    {isSubmitted && (
+                      <Stack>
+                        <Button variant="contained" onClick={handleOpen}>
+                          Edit
+                        </Button>
+                      </Stack>
+                    )}
                     <Stack item lg={3} md={3} sm={3} xs={3} textAlign={"end"}>
                       <Typography className={classes.requestDate}>
                         {isSubmitted ? "Submitted Date" : "Request Date"}
@@ -432,6 +456,53 @@ export default function RequestedProposal() {
                     })}
                   </Stack>
                 </Stack>
+                {villa?.project_image.length > 0 && (
+                  <Stack padding="0px 12px" gap="8px">
+                    <Typography fontFamily="Poppins-Medium" padding="0px 4px">
+                      Project Files
+                    </Typography>
+                    <Stack width="150px" height="150px" direction="row">
+                      {villa?.project_image?.map((item) => {
+                        return (
+                          <a
+                            href={
+                              item?.type?.includes("pdf")
+                                ? `${item?.image}`
+                                : null
+                            }
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <img
+                              onClick={() => {
+                                if (item?.type?.includes("image")) {
+                                  setIsPressed(true);
+                                  setImgUrl(item?.image);
+                                } else {
+                                  setImgUrl("");
+                                }
+                              }}
+                              alt="logo"
+                              src={
+                                item?.type?.includes("image")
+                                  ? item?.image
+                                  : Images.pdf
+                              }
+                              style={{
+                                cursor: "pointer",
+                                width: "140px",
+                                height: "140px",
+                                borderRadius: "7px",
+                                margin: "15px 5px",
+                                objectFit: "contain",
+                              }}
+                            />
+                          </a>
+                        );
+                      })}
+                    </Stack>
+                  </Stack>
+                )}
               </>
               {/* )} */}
 
@@ -442,7 +513,6 @@ export default function RequestedProposal() {
                   justifyContent="end"
                   gap="8px"
                 >
-                  <Button variant="outlined">Request Clarifications</Button>
                   <Button
                     variant="contained"
                     onClick={() => {
@@ -667,7 +737,7 @@ export default function RequestedProposal() {
                 }}
               >
                 <Tab label="Summary" />
-                <Tab label="Milestone" />
+                <Tab label="Milestones" />
                 <Tab label="Budget" />
                 <Tab label="Details" />
               </Tabs>

@@ -864,8 +864,7 @@ export default function Milestone(props) {
           {" "}
           <span className="label">Total Milestones Amount</span>
           <span className="cur">
-            AED{" "}
-            {amounts.reduce((acc, curr) => acc + curr, 0) || villa?.budget || 0}
+            AED {amounts.reduce((acc, curr) => acc + curr, 0) || 0}
           </span>
         </div>
 
